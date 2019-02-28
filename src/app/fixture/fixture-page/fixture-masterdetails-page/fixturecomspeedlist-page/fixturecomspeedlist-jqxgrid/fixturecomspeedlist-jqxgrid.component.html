@@ -1,0 +1,46 @@
+<div [hidden]="!islistBoxVisible">
+  <jqxListBox #myListBox
+              [theme]="'material'"
+              style="float: left"
+              (onCheckChange)="myListBoxOnCheckChange($event)"
+              [width]="150"
+              [height]="heightGrid"
+              [source]="listBoxSource"
+              [checkboxes]="true"
+              [filterable]="true"
+              [allowDrag]="true"
+  >
+  </jqxListBox>
+</div>
+
+<jqxGrid #myGrid
+         [theme]="'material'"
+         [width]="getWidth()"
+         [height]="heightGrid"
+         [source]="dataAdapter_jqxgrid"
+         [columns]="columns"
+         [columnsresize]="true"
+
+         [sortable]="true"
+         [filterable]="true"
+         [altrows]="true"
+         [selectionmode]="selectionmode"
+
+         (onRowclick)="onRowclick($event)"
+         (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
+         (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
+>
+</jqxGrid>
+
+<app-fixturecomspeededit-form #editWindow
+                              [speedDirectiones]="speedDirectiones"
+
+                              (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-fixturecomspeededit-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>
+
+

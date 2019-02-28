@@ -1,0 +1,56 @@
+<app-gatewaylist-page #gatewaylistPageComponent
+
+                      [geographs]="geographs"
+                      [owner_gateways]="owner_gateways"
+                      [gatewayTypes]="gatewayTypes"
+                      [contract_gateways]="contract_gateways"
+
+                      [heightGrid]="300"
+                      [isMasterGrid]="true"
+
+                      [isAdd]="true"
+                      [isUpdate]="true"
+                      [isDelete]="true"
+                      [isRefresh]="true"
+                      [isFilter_none]="true"
+                      [isFilter_list]="true"
+                      [isPlace]="false"
+                      [isPin_drop]="false"
+
+                      (onRefreshChildGrid)="refreshChildGrid($event)"
+                      (onRefreshMap)="refreshMap()"
+></app-gatewaylist-page>
+
+<jqxTabs
+  [theme]="'material'"
+>
+  <ul>
+    <li style="margin-left: 30px">Группа узлов шлюза</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-nodelist-page #nodelistPageComponent
+
+                       [geographs]="geographs"
+                       [owner_nodes]="owner_nodes"
+                       [nodeTypes]="nodeTypes"
+                       [contract_nodes]="contract_nodes"
+
+                       [heightGrid]="300"
+                       [id_gateway_select]="id_gateway_select"
+                       [selectionmode]="'checkbox'"
+                       [isMasterGrid]="false"
+
+                       [isAdd]=true
+                       [isUpdate]=true
+                       [isDelete]=true
+                       [isRefresh]=false
+                       [isFilter_none]=false
+                       [isFilter_list]=false
+                       [isPlace]=true
+                       [isPin_drop]=true
+    ></app-nodelist-page>
+  </div>
+</jqxTabs>
+
+<!--(onRefreshChildGrid)="refreshChildGrid($event)"-->
+<!--(onRefreshMap)="refreshMap()"-->

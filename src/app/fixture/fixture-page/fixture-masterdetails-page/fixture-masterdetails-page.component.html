@@ -1,0 +1,83 @@
+<app-fixturelist-page #fixturelistPageComponent
+
+                      [geographs]="geographs"
+
+                      [owner_fixtures]="owner_fixtures"
+                      [fixtureTypes]="fixtureTypes"
+                      [substations]="substations"
+                      [contract_fixtures]="contract_fixtures"
+                      [installers]="installers"
+                      [heightTypes]="heightTypes"
+
+                      [heightGrid]="300"
+                      [isMasterGrid]="true"
+                      [id_contract_select]="-1"
+                      [id_node_select]="-1"
+
+                      [isAdd]=true
+                      [isUpdate]=true
+                      [isDelete]=true
+                      [isRefresh]=true
+                      [isFilter_none]=true
+                      [isFilter_list]=true
+                      [isPlace]=false
+                      [isPin_drop]=false
+
+                      (onRefreshChildGrid)="refreshChildGrid($event)"
+></app-fixturelist-page>
+
+<jqxTabs
+  [theme]="'material'"
+  (onSelected)="selected($event)"
+>
+  <ul>
+    <li style="margin-left: 30px">Команды режимов освещения</li>
+    <li>Команды скорости возгорания/затухания</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
+
+                             [commandTypes]="commandTypes"
+                             [commandStatuses]="commandStatuses"
+
+                             [heightGrid]="300"
+                             [isMasterGrid]="false"
+                             [selectionmode]="'checkbox'"
+                             [id_fixture_select]="id_fixture_select"
+                             [filterCommandSwitch]="filterCommandSwitch"
+
+                             [isAdd]=true
+                             [isSwitchOff]=true
+                             [isUpdate]=false
+                             [isDelete]=true
+                             [isRefresh]=true
+                             [isFilter_none]=true
+                             [isFilter_list]=true
+
+                             (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-fixturecomlist-page>
+  </div>
+  <div style="overflow: hidden">
+    <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
+
+                             [speedDirectiones]="speedDirectiones"
+                             [commandStatuses]="commandStatuses"
+
+                             [heightGrid]="300"
+                             [isMasterGrid]="false"
+                             [selectionmode]="'checkbox'"
+                             [id_fixture_select]="id_fixture_select"
+                             [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
+
+                             [isAdd]=true
+                             [isUpdate]=false
+                             [isDelete]=true
+                             [isRefresh]=true
+                             [isFilter_none]=true
+                             [isFilter_list]=true
+
+                             (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-fixturecomspeedlist-page>
+  </div>
+
+</jqxTabs>

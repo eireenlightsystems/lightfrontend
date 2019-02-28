@@ -1,0 +1,44 @@
+<div class="filter">
+  <div class="fr">
+
+    <div class="input-field inline order-position-input">
+      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="id_geograph" #select>
+        <option value="-1" selected>Геогр. понятие</option>
+        <option *ngFor="let geograph of geographs" value="{{geograph.id_geograph}}">
+          {{geograph.code_geograph}}
+        </option>
+      </select>
+      <label for="number" *ngIf="!id_geograph">Геогр. понятие</label>
+    </div>
+
+    <div class="input-field inline order-position-input">
+      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="id_owner" #select>
+        <option value="-1" selected>Владелец</option>
+        <option *ngFor="let owner of owner_gateways" value="{{owner.id_owner}}">
+          {{owner.name_owner}}
+        </option>
+      </select>
+      <label for="number" *ngIf="!id_owner">Владелец</label>
+    </div>
+
+    <div class="input-field inline order-position-input">
+      <select id="fixture-fixture_type-input" class="browser-default" name="gateway_type" [(ngModel)]="id_gateway_type" #select>
+        <option value="-1" selected>Тип</option>
+        <option *ngFor="let gatewayType of gatewayTypes" value="{{gatewayType.id_gateway_type}}">
+          {{gatewayType.code_gateway_type}}
+        </option>
+      </select>
+      <label for="number" *ngIf="!id_gateway_type">Тип</label>
+    </div>
+
+    <div class="input-field inline order-position-input">
+      <button
+        class="btn btn-small waves-effect waves-orange white blue-text"
+        (click)="submitFilter()"
+        [disabled]="!isValid"
+      >Применить
+      </button>
+    </div>
+  </div>
+
+</div>

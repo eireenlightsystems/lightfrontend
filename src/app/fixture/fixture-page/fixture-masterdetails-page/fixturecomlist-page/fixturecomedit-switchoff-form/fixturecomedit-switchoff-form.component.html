@@ -1,0 +1,55 @@
+<jqxWindow #editWindow
+           [theme]="'material'"
+           [autoOpen]="false"
+           [isModal]="true" [modalOpacity]="'0.3'"
+           [width]="500" [height]="180"
+           [maxHeight]="180" [minHeight]="180" [maxWidth]="500" [minWidth]="500"
+>
+  <div #windowHeader>
+    <div class="fr">
+      <!--<i class="material-icons">add</i>-->
+      <b>Сформировать команду на выключение</b>
+    </div>
+  </div>
+
+  <div>
+    <table>
+
+      <tr>
+        <td align="right">
+          <b>Дата/Время выключения:</b>
+        </td>
+        <td align="left">
+          <div id="dateend">
+            <jqxDateTimeInput #dateend
+                              [theme]="'material'"
+                              [width]="300" [height]="30"
+                              [showTimeButton]="true"
+                              [formatString]="'yyyy-MM-dd HH:mm'"
+            >
+            </jqxDateTimeInput>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"></td>
+        <td style="padding-top: 10px;" align="right">
+          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="saveBtn()"
+          >
+            Сохранить
+          </jqxButton>
+          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="cancelBtn()"
+          >
+            Отмена
+          </jqxButton>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</jqxWindow>

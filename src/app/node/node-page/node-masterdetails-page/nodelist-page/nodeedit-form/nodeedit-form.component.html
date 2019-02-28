@@ -1,0 +1,150 @@
+<jqxWindow #editWindow
+           [theme]="'material'"
+           [autoOpen]="false"
+           [isModal]="true" [modalOpacity]="0.3"
+           [width]="550" [height]="500"
+           [maxHeight]="600" [minHeight]="500" [maxWidth]="550" [minWidth]="550"
+
+>
+  <div #windowHeader>
+    <div class="fr">
+      <!--<i class="material-icons">add</i>-->
+      <b>Редактировать узел/столб</b>
+    </div>
+  </div>
+
+  <div>
+    <table>
+      <tr>
+        <td align="right"><b>Географическое понятие:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_geograph
+                           [theme]="'material'"
+                           [width]="330"
+                           [height]="20"
+                           [source]="dataAdapter_geogr"
+                           [displayMember]="'code_geograph'"
+                           [valueMember]="'id_geograph'"
+                           [selectedIndex]="id_geograph_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Договор:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_contract
+                           [theme]="'material'"
+                           [width]="330"
+                           [height]="20"
+                           [source]="dataAdapter_contract"
+                           [displayMember]="'code_contract'"
+                           [valueMember]="'id_contract'"
+                           [selectedIndex]="id_contract_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Тип узла/столба:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_node_type
+                           [theme]="'material'"
+                           [width]="330"
+                           [height]="20"
+                           [source]="dataAdapter_nodeType"
+                           [displayMember]="'code_node_type'"
+                           [valueMember]="'id_node_type'"
+                           [selectedIndex]="id_node_type_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Координата север:</b></td>
+        <td align="left">
+          <jqxNumberInput
+            [theme]="'material'"
+            [width]="330" [height]="20"
+            [min]="0" [spinButtons]="true"
+            [spinMode]="'simple'"
+            [digits]="2"
+            [decimalDigits]="6"
+            [(ngModel)]="saveNode.n_coordinate"
+          >
+          </jqxNumberInput>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Координата восток:</b></td>
+        <td align="left">
+          <jqxNumberInput
+            [theme]="'material'"
+            [width]="330" [height]="20"
+            [min]="0" [spinButtons]="true"
+            [spinMode]="'simple'"
+            [digits]="2"
+            [decimalDigits]="6"
+            [(ngModel)]="saveNode.e_coordinate"
+          >
+          </jqxNumberInput>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Цена:</b></td>
+        <td align="left">
+          <jqxNumberInput
+            [theme]="'material'"
+            [width]="330" [height]="20"
+            [min]="0" [spinButtons]="true"
+            [spinMode]="'simple'"
+            [(ngModel)]="saveNode.price"
+          >
+          </jqxNumberInput>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Комментарий:</b></td>
+        <td align="left">
+          <jqxTextArea
+            [theme]="'material'"
+            [width]="330" [height]="50"
+            [(ngModel)]="saveNode.comments"
+          >
+          </jqxTextArea>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"></td>
+        <td style="padding-top: 10px;" align="right">
+          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="saveBtn()"
+          >
+            Сохранить
+          </jqxButton>
+          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="cancelBtn()"
+          >
+            Отмена
+          </jqxButton>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</jqxWindow>

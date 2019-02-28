@@ -1,0 +1,45 @@
+<div class="filter">
+  <div class="fr">
+
+    <div class="input-field inline order-position-input">
+      <select id="commandStatuseInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId" #select>
+        <option value="0" selected>Статус команды</option>
+        <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id_command_status}}">
+          {{commandStatus.name_command_status}}
+        </option>
+      </select>
+      <label for="commandStatuseInput" *ngIf="!statusId">Статус команды</label>
+    </div>
+
+    <div class="button_margin">
+      <jqxDateTimeInput #startDateTime
+                        [theme]="'material'"
+                        [width]="200" [height]="43"
+                        [showTimeButton]="true"
+                        [formatString]="'yyyy-MM-dd HH:mm'"
+      >
+      </jqxDateTimeInput>
+    </div>
+
+    <div class="button_margin">
+      <jqxDateTimeInput #endDateTime
+                        [theme]="'material'"
+                        [width]="200" [height]="43"
+                        [showTimeButton]="true"
+                        [formatString]="'yyyy-MM-dd HH:mm'"
+      >
+      </jqxDateTimeInput>
+    </div>
+
+    <div class="button_margin input-field inline order-position-input">
+      <button
+        class="button_height btn btn-small waves-effect waves-orange white blue-text"
+        (click)="submitFilter()"
+        [disabled]="!isValid"
+      >Применить
+      </button>
+    </div>
+  </div>
+
+</div>
+

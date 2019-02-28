@@ -1,0 +1,39 @@
+<jqxTabs
+  [theme]="'material'"
+  [width]="'99%'"
+>
+  <ul>
+    <li style="margin-left: 30px">Светильники</li>
+    <li>Карта</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-fixture-masterdetails-page
+
+      [geographs]="geographs"
+
+      [owner_fixtures]="owner_fixtures"
+      [fixtureTypes]="fixtureTypes"
+      [substations]="substations"
+      [contract_fixtures]="contract_fixtures"
+      [installers]="installers"
+      [heightTypes]="heightTypes"
+
+      [commandTypes]="commandTypes"
+      [commandStatuses]="commandStatuses"
+      [speedDirectiones]="speedDirectiones"
+
+    ></app-fixture-masterdetails-page>
+  </div>
+
+  <div style="overflow: hidden">
+    <app-fixturemap-page #fixturemapPageComponent
+                         [geographs]="geographs"
+                         [owner_fixtures]="owner_fixtures"
+                         [fixtureTypes]="fixtureTypes"
+                         [substations]="substations"
+                         [contract_fixtures]="contract_fixtures"
+                         [installers]="installers"
+                         [heightTypes]="heightTypes"
+    ></app-fixturemap-page>
+  </div>
+</jqxTabs>

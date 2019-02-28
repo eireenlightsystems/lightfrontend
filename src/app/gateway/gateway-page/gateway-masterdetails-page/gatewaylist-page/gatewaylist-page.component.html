@@ -1,0 +1,146 @@
+<div class="fr">
+
+  <div *ngIf="isAdd">
+    <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
+                [content]="'Добавить команду изменения режимов освещения'">
+      <Button [disabled]="isAddBtnDisabled"
+              (click)="ins()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="material-icons">add</i>
+      </Button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isUpdate">
+    <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
+                [content]="'Редактировать команду изменения режимов освещения'">
+      <Button [disabled]="isEditBtnDisabled"
+              (click)="upd()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="material-icons">edit</i>
+      </Button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isDelete">
+    <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
+                [content]="'Удалить команду изменения режимов освещения'">
+      <Button [disabled]="isDeleteBtnDisabled"
+              (click)="del()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="material-icons">delete</i>
+      </Button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isRefresh">
+    <jqxTooltip [position]="'bottom'" [name]="'refreshTooltip'"
+                [content]="'Обновить таблицу'">
+      <button [disabled]="isRefreshBtnDisabled"
+              (click)="refreshGrid()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="small material-icons">refresh</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isFilter_none">
+    <jqxTooltip [position]="'bottom'" [name]="'fieldTooltip'"
+                [content]="'Открыть фильтр по полям таблицы'">
+      <button [disabled]="isFilter_noneBtnDisabled"
+              (click)="gatewaylistJqxgridComponent.islistBoxVisible = !gatewaylistJqxgridComponent.islistBoxVisible"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="material-icons">filter_none</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isFilter_list">
+    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
+                [content]="'Открыть фильтр'">
+      <button [disabled]="isFilter_listBtnDisabled"
+              (click)="isFilterVisible = !isFilterVisible"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              [ngClass]="{
+      'active':isFilterVisible
+    }"
+      >
+        <i class="material-icons">filter_list</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isPlace">
+    <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
+                [content]="'Привязать узел/столб к шлюзу'">
+      <button [disabled]="isPlaceBtnDisabled"
+              (click)="place()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="small material-icons">place</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isPin_drop">
+    <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
+                [content]="'Отвязать узел/столб от шлюза'">
+      <button [disabled]="isPin_dropBtnDisabled"
+              (click)="pin_drop()"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+      >
+        <i class="small material-icons">pin_drop</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+</div>
+
+<app-gatewaylist-filter
+  *ngIf="isFilterVisible"
+  (onFilter)="applyFilter($event)"
+  [geographs]="geographs"
+  [owner_gateways]="owner_gateways"
+  [gatewayTypes]="gatewayTypes"
+></app-gatewaylist-filter>
+
+<div *ngIf="!reloading; else reloadingBlock">
+  <!--*ngIf="nodes.length > 0; else empty"-->
+  <div>
+    <app-gatewaylist-jqxgrid #gatewaylistJqxgridComponent
+                             [gateways]="gateways"
+                             [geographs]="geographs"
+                             [owner_gateways]="owner_gateways"
+                             [gatewayTypes]="gatewayTypes"
+                             [contract_gateways]="contract_gateways"
+
+                             [heightGrid]="heightGrid"
+                             [selectionmode]="selectionmode"
+                             [id_node_select]="id_node_select"
+                             [isMasterGrid]="isMasterGrid"
+
+                             (onRefreshGrid)="refreshGrid()"
+                             (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-gatewaylist-jqxgrid>
+    <div
+      class="center mb2"
+      *ngIf="!noMoreNodes; else "
+    >
+      <ng-template #loader>
+        <app-loader></app-loader>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template #empty>
+    <div class="center">Узлов пока нет</div>
+  </ng-template>
+</div>
+
+<ng-template #reloadingBlock>
+  <app-loader></app-loader>
+</ng-template>

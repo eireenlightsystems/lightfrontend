@@ -1,0 +1,60 @@
+<div [hidden]="!islistBoxVisible">
+  <jqxListBox #myListBox
+              [theme]="'material'"
+              style="float: left"
+              (onCheckChange)="myListBoxOnCheckChange($event)"
+              [width]="150"
+              [height]="heightGrid"
+              [source]="listBoxSource"
+              [checkboxes]="true"
+              [filterable]="true"
+              [allowDrag]="true"
+  >
+  </jqxListBox>
+</div>
+
+<jqxGrid #myGrid
+         [theme]="'material'"
+         [width]="getWidth()"
+         [height]="heightGrid"
+         [source]="dataAdapter_jqxgrid"
+         [columns]="columns"
+         [columnsresize]="true"
+
+         [sortable]="true"
+         [filterable]="true"
+         [altrows]="true"
+         [selectionmode]="selectionmode"
+
+         (onRowclick)="onRowclick($event)"
+         (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
+         (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
+
+>
+</jqxGrid>
+
+<app-fixtureedit-form #editWindow
+
+                      [geographs]="geographs"
+                      [owner_fixtures]="owner_fixtures"
+                      [fixtureTypes]="fixtureTypes"
+                      [substations]="substations"
+                      [contract_fixtures]="contract_fixtures"
+                      [installers]="installers"
+                      [heightTypes]="heightTypes"
+
+                      (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-fixtureedit-form>
+
+<app-fixturelink-form #linkWindow
+                      [columns]="columns"
+                      [id_node_select]="id_node_select"
+
+                      (onSaveLinkwinBtn)="saveLinkwinBtn()"
+></app-fixturelink-form>
+
+<app-event-window #eventWindow
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+                  [warning]="warningEventWindow"
+></app-event-window>
+

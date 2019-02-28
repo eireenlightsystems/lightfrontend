@@ -1,0 +1,59 @@
+<ul id="dropdown-mode" class="dropdown-content" #menu>
+  <li routerLinkActive="active" (click)="onClickOperator($event)" #operator>
+    <a routerLink="/operator" class="waves-effect waves-orange white blue-text"><i class="material-icons">touch_app</i>Управление оборудованием</a>
+  </li>
+  <li class="divider"></li>
+  <li routerLinkActive="active" (click)="onClickHandbook($event)" #handbook>
+    <a routerLink="/handbook" class="waves-effect waves-orange white blue-text"><i class="material-icons">import_contacts</i>Управление справочниками</a>
+  </li>
+  <li class="divider"></li>
+  <li routerLinkActive="active" (click)="onClickAdmin($event)" #admin>
+    <a routerLink="/admin" class="waves-effect waves-orange white blue-text"><i class="material-icons">settings</i>Администирование приложения</a>
+  </li>
+</ul>
+
+<ul id="slide-out" class="sidenav ul-menu" #sidenav>
+  <li
+    class="bold"
+    *ngFor="let link of sidenavLinks"
+    routerLinkActive="active"
+  >
+    <a [routerLink]="[link.url]" class="sidenav-close waves-effect waves-orange">
+      <i class="material-icons">{{link.icon}}</i> {{link.name}}
+    </a>
+  </li>
+</ul>
+
+<nav>
+  <div class="nav-wrapper">
+    <ul class="left hide-on-med-and-down">
+      <li>
+        <a data-target="slide-out" class="sidenav-trigger display_menu"><i class="material-icons">menu</i></a>
+      </li>
+      <li>
+        <a class="brand-logo">Light</a>
+      </li>
+      <!-- Dropdown Trigger -->
+      <li style="margin: 0px 0px 0px 100px;">
+        <a class="dropdown-trigger" data-target="dropdown-mode">{{itemMenu}}<i class="material-icons right">arrow_drop_down</i></a>
+      </li>
+    </ul>
+
+
+    <ul id="nav-mobile-right" class="right hide-on-med-and-down">
+      <li routerLinkActive="active" (click)="onClickAdmin($event)">
+        <a routerLink="/admin" class="waves-effect waves-orange"><i class="material-icons">settings</i></a>
+      </li>
+      <li routerLinkActive="active">
+        <a href="#" class="waves-effect waves-orange" (click)="logout($event)">Выйти</a>
+      </li>
+      <!--<li routerLinkActive="active">-->
+      <!--<a routerLink="/register">Регистрация</a>-->
+      <!--</li>-->
+    </ul>
+
+  </div>
+</nav>
+
+
+<router-outlet></router-outlet>

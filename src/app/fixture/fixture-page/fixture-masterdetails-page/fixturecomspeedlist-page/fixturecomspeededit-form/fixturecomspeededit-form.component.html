@@ -1,0 +1,81 @@
+<jqxWindow #editWindow
+           [theme]="'material'"
+           [autoOpen]="false"
+           [isModal]="true" [modalOpacity]="'0.3'"
+           [width]="600" [height]="310"
+           [maxHeight]="310" [minHeight]="310" [maxWidth]="600" [minWidth]="600"
+>
+  <div #windowHeader>
+    <div class="fr">
+      <!--<i class="material-icons">add</i>-->
+      <b>Сформировать команду</b>
+    </div>
+  </div>
+
+  <div>
+    <table>
+
+      <tr>
+        <td align="right"><b>Дата/Время включения:</b></td>
+        <td align="left">
+          <div id="datebeg">
+            <jqxDateTimeInput #datebeg
+                              [theme]="'material'"
+                              [width]="400" [height]="30"
+                              [showTimeButton]="true"
+                              [formatString]="'yyyy-MM-dd HH:mm'"
+            >
+            </jqxDateTimeInput>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Тип команды:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_speed_direction
+                           [theme]="'material'"
+                           [width]="400"
+                           [height]="20"
+                           [source]="dataAdapter_speedDirection"
+                           [displayMember]="'name_speed_direction'"
+                           [valueMember]="'id_speed_direction'"
+                           [selectedIndex]="id_speed_direction_index"
+                           [filterable]="true"
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Время перехода, сек:</b></td>
+        <td align="left">
+          <div class="fr">
+            <input #speedLevel type="range" step="1" min="0" max="255"
+                   (input)="getSpeedLevel($event)"/>
+            <output #speedLevelOutput></output>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"></td>
+        <td style="padding-top: 10px;" align="right">
+          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-left: 55px;"
+                     [width]="80"
+                     (onClick)="saveBtn()"
+          >
+            Сохранить
+          </jqxButton>
+          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-left: 5px;"
+                     [width]="80"
+                     (onClick)="cancelBtn()"
+          >
+            Отмена
+          </jqxButton>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</jqxWindow>

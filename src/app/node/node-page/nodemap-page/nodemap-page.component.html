@@ -1,0 +1,16 @@
+<!--<div *ngIf="errorText" class="alert alert-danger" role="alert">-->
+  <!--{{errorText}}-->
+<!--</div>-->
+<div id="node_yamaps"></div>
+
+<app-nodeedit-form #editWindow
+                   [geographs]="geographs"
+                   [nodeTypes]="nodeTypes"
+                   [contract_nodes]="contract_nodes"
+                   (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-nodeedit-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

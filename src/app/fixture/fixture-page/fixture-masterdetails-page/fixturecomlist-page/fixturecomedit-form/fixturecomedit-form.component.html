@@ -1,0 +1,106 @@
+<jqxWindow #editWindow
+           [theme]="'material'"
+           [autoOpen]="false"
+           [isModal]="true" [modalOpacity]="'0.3'"
+           [width]="500" [height]="450"
+           [maxHeight]="450" [minHeight]="450" [maxWidth]="500" [minWidth]="500"
+>
+  <div #windowHeader>
+    <div class="fr">
+      <!--<i class="material-icons">add</i>-->
+      <b>Сформировать команду</b>
+    </div>
+  </div>
+
+  <div>
+    <table>
+
+      <tr>
+        <td align="right"><b>Дата/Время включения:</b></td>
+        <td align="left">
+          <div id="datebeg">
+            <jqxDateTimeInput #datebeg
+                              [theme]="'material'"
+                              [width]="300" [height]="30"
+                              [showTimeButton]="true"
+                              [formatString]="'yyyy-MM-dd HH:mm'"
+            >
+            </jqxDateTimeInput>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right">
+          <jqxCheckBox
+            [theme]="'material'"
+            [checked]="false"
+            [(ngModel)]="flg_dateend"
+            (click)="onClicCheckBox()"
+          >Команда на выключение
+          </jqxCheckBox>
+        </td>
+        <td align="left">
+        </td>
+      </tr>
+      <!--*ngIf="flg_dateend"-->
+      <tr>
+        <td align="right">
+          <b>Дата/Время выключения:</b>
+        </td>
+        <td align="left">
+          <div id="dateend">
+            <jqxDateTimeInput #dateend
+                              [theme]="'material'"
+                              [width]="300" [height]="30"
+                              [showTimeButton]="true"
+                              [formatString]="'yyyy-MM-dd HH:mm'"
+            >
+            </jqxDateTimeInput>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Рабочий режим:</b></td>
+        <td align="left">
+          <div class="fr">
+            <input #workLevel type="range" step="5" min="0" max="100"
+                   (input)="getWorkLevel($event)"/>
+            <output #workLevelOutput></output>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Дежурный режим:</b></td>
+        <td align="left">
+          <div class="fr">
+           <input #standbyLevel type="range" step="5" min="0" max="100"
+                   (input)="getStandbyLevel($event)"/>
+            <output #standbyLevelOutput></output>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"></td>
+        <td style="padding-top: 10px;" align="right">
+          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="saveBtn()"
+          >
+            Сохранить
+          </jqxButton>
+          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="cancelBtn()"
+          >
+            Отмена
+          </jqxButton>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</jqxWindow>

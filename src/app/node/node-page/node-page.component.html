@@ -1,0 +1,44 @@
+<jqxTabs
+  [theme]="'material'"
+  [width]="'99%'"
+  (onSelected)="selected($event)"
+>
+  <ul>
+    <li style="margin-left: 30px">Узлы/столбы</li>
+    <li>Карта</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-node-masterdetails-page #nodeMasterdetailsPageComponent
+
+                                 [geographs]="geographs"
+                                 [owner_nodes]="owner_nodes"
+                                 [nodeTypes]="nodeTypes"
+                                 [contract_nodes]="contract_nodes"
+
+                                 [owner_fixtures]="owner_fixtures"
+                                 [fixtureTypes]="fixtureTypes"
+                                 [substations]="substations"
+                                 [contract_fixtures]="contract_fixtures"
+                                 [installers]="installers"
+                                 [heightTypes]="heightTypes"
+
+                                 [owner_gateways]="owner_gateways"
+                                 [gatewayTypes]="gatewayTypes"
+                                 [contract_gateways]="contract_gateways"
+
+                                 (onRefreshMap)="refreshMap()"
+    ></app-node-masterdetails-page>
+  </div>
+  <div style="overflow: hidden">
+    <app-nodemap-page #nodemapPageComponent
+                      [geographs]="geographs"
+                      [owner_nodes]="owner_nodes"
+                      [nodeTypes]="nodeTypes"
+                      [contract_nodes]="contract_nodes"
+                      (onRefreshGrid)="refreshGrid()"
+    ></app-nodemap-page>
+  </div>
+</jqxTabs>
+
+
+

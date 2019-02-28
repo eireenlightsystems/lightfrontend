@@ -1,0 +1,218 @@
+<jqxWindow #editWindow
+           [theme]="'material'"
+           [autoOpen]="false"
+           [isModal]="true" [modalOpacity]="'0.3'"
+           [width]="500" [height]="600"
+           [maxHeight]="800" [minHeight]="600" [maxWidth]="800" [minWidth]="500"
+
+>
+  <div #windowHeader>
+    <div class="fr">
+      <!--<i class="material-icons">add</i>-->
+      <b>Редактировать светильник</b>
+    </div>
+  </div>
+
+  <div>
+    <table>
+      <tr>
+        <td align="right"><b>Географическое понятие:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_geograph
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_geogr"
+                           [displayMember]="'code_geograph'"
+                           [valueMember]="'id_geograph'"
+                           [selectedIndex]="id_geograph_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Договор:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_contract
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_contract"
+                           [displayMember]="'code_contract'"
+                           [valueMember]="'id_contract'"
+                           [selectedIndex]="id_contract_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Тип светильника:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_fixture_type
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_fixtureType"
+                           [displayMember]="'code_fixture_type'"
+                           [valueMember]="'id_fixture_type'"
+                           [selectedIndex]="id_fixture_type_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Подстанция:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_substation
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_substation"
+                           [displayMember]="'code'"
+                           [valueMember]="'id_substation'"
+                           [selectedIndex]="id_substation_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Установщик:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_installer
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_installer"
+                           [displayMember]="'code'"
+                           [valueMember]="'id_installer'"
+                           [selectedIndex]="id_installer_index"
+                           [filterable]="true"
+
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Код высоты:</b></td>
+        <td align="left">
+          <jqxDropDownList #id_height_type
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_heightType"
+                           [displayMember]="'code'"
+                           [valueMember]="'id_height_type'"
+                           [selectedIndex]="id_height_type_index"
+                           [filterable]="true"
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Номер полосы:</b></td>
+        <td align="left">
+          <jqxDropDownList #numline
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_numline"
+                           [displayMember]="'numline'"
+                           [valueMember]="'numline'"
+                           [selectedIndex]="id_numline_index"
+                           [filterable]="true"
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Сторона:</b></td>
+        <td align="left">
+          <jqxDropDownList #side
+                           [theme]="'material'"
+                           [width]="300"
+                           [height]="20"
+                           [source]="dataAdapter_side"
+                           [displayMember]="'side'"
+                           [valueMember]="'side'"
+                           [selectedIndex]="id_side_index"
+                           [filterable]="true"
+          >
+          </jqxDropDownList>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b></b></td>
+        <td align="left">
+          <jqxCheckBox
+            [theme]="'material'"
+            [width]="300"
+            [checked]="saveFixture.flg_chief"
+            [(ngModel)]="saveFixture.flg_chief"
+          >Признак главного столба
+          </jqxCheckBox>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Цена:</b></td>
+        <td align="left">
+          <jqxNumberInput
+            [theme]="'material'"
+            [width]="300" [height]="20"
+            [min]="0" [spinButtons]="true"
+            [spinMode]="'simple'"
+            [(ngModel)]="saveFixture.price"
+          >
+          </jqxNumberInput>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Комментарий:</b></td>
+        <td align="left">
+          <jqxTextArea
+            [theme]="'material'"
+            [width]="300" [height]="50"
+            [(ngModel)]="saveFixture.comments"
+          >
+          </jqxTextArea>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"></td>
+        <td style="padding-top: 10px;" align="right">
+          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="saveBtn()"
+          >
+            Сохранить
+          </jqxButton>
+          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-right: 5px;"
+                     [width]="80"
+                     (onClick)="cancelBtn()"
+          >
+            Отмена
+          </jqxButton>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+</jqxWindow>
