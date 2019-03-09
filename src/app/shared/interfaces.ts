@@ -114,6 +114,7 @@ export interface Node {
   id_geograph: number;
   id_owner_node: number;
 
+  num_node: string;
   code_contract: string;
   code_node_type: string;
   code_geograph: string;
@@ -188,6 +189,36 @@ export interface GatewayType {
   id_gateway_type: number
   code_gateway_type: string
 }
+
+export interface GatewayNode {
+  gatewayNodeId: number;
+  gatewayId: number;
+  nodeId: number;
+  numNode: number;
+}
+
+export interface NodeGateway {
+  nodeId: number;
+  gatewayId: number;
+}
+
+export interface GatewayGroup {
+  id_gateway: number;
+  id_node: number;
+  n_coordinate: number;
+  e_coordinate: number;
+  name_group: string;
+}
+
+export interface NodeInGroup {
+  id_node: number;
+  id_gateway_node: number;
+  id_gateway: number;
+  num_node: string;
+  n_coordinate: number;
+  e_coordinate: number;
+}
+
 
 export interface CommandSwitch {
   commandId: number;

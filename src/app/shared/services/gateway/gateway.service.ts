@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core'
 import {HttpClient, HttpParams} from '@angular/common/http'
-import {Fixture, Gateway, Message} from '../../interfaces'
 import {Observable} from 'rxjs/index'
+
+import {Gateway, GatewayGroup, Message, NodeGateway, NodeInGroup} from '../../interfaces'
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,14 @@ export class GatewayService {
     })
   }
 
+  getGatewayGroups(id_gateway: number): Observable<GatewayGroup[]> {
+    return this.http.get<GatewayGroup[]>(`/api/gateway/gatewayGr/${id_gateway}`)
+  }
+
+  getNodesInGroup(id_gateway: number): Observable<NodeInGroup[]> {
+    return this.http.get<NodeInGroup[]>(`/api/gateway/get_node_in_group/${id_gateway}`)
+  }
+
   ins(gateway: Gateway): Observable<Gateway> {
     return this.http.post<Gateway>('/api/gateway', gateway)
   }
@@ -29,11 +38,12 @@ export class GatewayService {
     return this.http.patch<Gateway>('/api/gateway', gateway)
   }
 
-  set_id_node(gateway: Gateway): Observable<Gateway> {
-    return this.http.patch<Gateway>('/api/gateway/set_id_node', gateway)
+  set_id_node(nodeGateway: NodeGateway): Observable<NodeGateway> {
+    return this.http.patch<NodeGateway>('/api/gateway/set_id_node', nodeGateway)
   }
 
   del(id_gateway: number): Observable<Message> {
     return this.http.delete<Message>(`/api/gateway/${id_gateway}`)
   }
+
 }

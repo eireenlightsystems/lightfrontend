@@ -1,7 +1,7 @@
 <div class="fr">
   <div *ngIf="isAdd">
     <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
-                [content]="'Добавить команду изменения режимов освещения'">
+                [content]="'Добавить команду ВКЛ. светильника'">
       <Button [disabled]="isAddBtnDisabled"
         (click)="ins()"
         class="button_margin btn btn-small waves-effect waves-yellow orange blue-text"
@@ -13,7 +13,7 @@
 
   <div *ngIf="isSwitchOff">
     <jqxTooltip [position]="'bottom'" [name]="'switchOffTooltip'"
-                [content]="'Добавить команду выключения светильника'">
+                [content]="'Добавить команду ВЫКЛ. светильника'">
       <Button [disabled]="isRemoveBtnDisabled"
         (click)="switchOff()"
         class="button_margin btn btn-small waves-effect waves-yellow orange blue-text"
@@ -25,7 +25,7 @@
 
   <div *ngIf="isUpdate">
     <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать команду изменения режимов освещения'">
+                [content]="'Редактировать команду'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -37,7 +37,7 @@
 
   <div *ngIf="isDelete">
     <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить команду изменения режимов освещения'">
+                [content]="'Удалить команду'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"

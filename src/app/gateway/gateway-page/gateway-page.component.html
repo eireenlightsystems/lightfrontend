@@ -10,25 +10,31 @@
   <div style="overflow: hidden">
     <app-gateway-masterdetails-page #gatewayMasterdetailsPageComponent
 
-                          [geographs]="geographs"
-                          [owner_gateways]="owner_gateways"
-                          [gatewayTypes]="gatewayTypes"
-                          [contract_gateways]="contract_gateways"
+                                    [geographs]="geographs"
+                                    [owner_gateways]="owner_gateways"
+                                    [gatewayTypes]="gatewayTypes"
+                                    [contract_gateways]="contract_gateways"
 
-                          [owner_nodes]="owner_nodes"
-                          [nodeTypes]="nodeTypes"
-                          [contract_nodes]="contract_nodes"
+                                    [owner_nodes]="owner_nodes"
+                                    [nodeTypes]="nodeTypes"
+                                    [contract_nodes]="contract_nodes"
+                                    [nodeSortcolumn]="nodeSortcolumn"
+                                    [nodeColumns]="nodeColumns"
+                                    [nodeListBoxSource]="nodeListBoxSource"
 
-                          (onRefreshMap)="refreshMap()"
+                                    (onRefreshMap)="refreshMap()"
     ></app-gateway-masterdetails-page>
   </div>
   <div style="overflow: hidden">
     <app-gatewaymap-page #gatewaymapPageComponent
-                          [geographs]="geographs"
-                          [owner_gateways]="owner_gateways"
-                          [gatewayTypes]="gatewayTypes"
-                          [contract_gateways]="contract_gateways"
-                          (onRefreshGrid)="refreshGrid()"
+                         [geographs]="geographs"
+                         [owner_gateways]="owner_gateways"
+                         [gatewayTypes]="gatewayTypes"
+                         [contract_gateways]="contract_gateways"
+
+                         [nodeColumns]="nodeColumns"
+
+                         (onRefreshGrid)="refreshGrid()"
     ></app-gatewaymap-page>
   </div>
 </jqxTabs>

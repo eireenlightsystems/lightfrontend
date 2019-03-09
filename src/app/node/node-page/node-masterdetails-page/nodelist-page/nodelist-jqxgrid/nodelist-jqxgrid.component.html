@@ -5,7 +5,7 @@
               (onCheckChange)="myListBoxOnCheckChange($event)"
               [width]="150"
               [height]="heightGrid"
-              [source]="listBoxSource"
+              [source]="nodeListBoxSource"
               [checkboxes]="true"
               [filterable]="true"
               [allowDrag]="true"
@@ -18,7 +18,7 @@
          [width]="getWidth()"
          [height]="heightGrid"
          [source]="dataAdapter_jqxgrid"
-         [columns]="columns"
+         [columns]="nodeColumns"
          [columnsresize]="true"
 
          [sortable]="true"
@@ -31,6 +31,13 @@
          (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
 >
 </jqxGrid>
+
+<app-nodelink-form #linkWindow
+                      [columns]="nodeColumns"
+                      [id_gateway_select]="id_gateway_select"
+
+                      (onSaveLinkwinBtn)="saveLinkwinBtn()"
+></app-nodelink-form>
 
 <app-nodeedit-form #editWindow
                    [geographs]="geographs"

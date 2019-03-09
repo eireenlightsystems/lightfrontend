@@ -1,3 +1,13 @@
-<p>
-  gatewaymap-page works!
-</p>
+<div id="node_yamaps"></div>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>
+
+<app-nodelink-form #linkWindow
+                   [columns]="nodeColumns"
+                   [id_gateway_select]="selectGatewayId"
+
+                   (onSaveLinkwinBtn)="saveLinkwinBtn()"
+></app-nodelink-form>

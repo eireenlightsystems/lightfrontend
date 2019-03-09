@@ -4,25 +4,25 @@ import {MaterialService} from "../../../../../shared/classes/material.service";
 import {jqxWindowComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow";
 import {jqxGridComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid";
 
-import {Gateway} from "../../../../../shared/models/gateway";
-import {NodeGateway} from "../../../../../shared/models/nodeGateway";
-import {FilterGateway} from "../../../../../shared/interfaces";
-import {GatewayService} from "../../../../../shared/services/gateway/gateway.service";
+import {Node} from "../../../../../shared/models/node";
+import {GatewayNode} from "../../../../../shared/models/gatewayNode";
+import {FilterNode} from "../../../../../shared/interfaces";
+import {NodeService} from "../../../../../shared/services/node/node.service";
 
 
 const STEP = 1000000000000
 
 
 @Component({
-  selector: 'app-gatewaylink-form',
-  templateUrl: './gatewaylink-form.component.html',
-  styleUrls: ['./gatewaylink-form.component.css']
+  selector: 'app-nodelink-form',
+  templateUrl: './nodelink-form.component.html',
+  styleUrls: ['./nodelink-form.component.css']
 })
-export class GatewaylinkFormComponent implements OnInit, OnDestroy {
+export class NodelinkFormComponent implements OnInit, OnDestroy {
 
-  //variables from master component
+//variables from master component
   @Input() columns: any[]
-  @Input() id_node_select: number
+  @Input() id_gateway_select: number
 
   //determine the functions that need to be performed in the parent component
   @Output() onSaveLinkwinBtn = new EventEmitter()
@@ -32,22 +32,21 @@ export class GatewaylinkFormComponent implements OnInit, OnDestroy {
   @ViewChild('myGrid') myGrid: jqxGridComponent
 
   //other variables
-  saveNodeGateway: NodeGateway = new NodeGateway()
+  saveGatewayNode: GatewayNode = new GatewayNode()
   rowcount: number = 0
-  gateways: Gateway[] = []
-  // id_fixture: number = 0
-  filter: FilterGateway = {
+  nodes: Node[] = []
+  filter: FilterNode = {
     id_geograph: -1,
     id_owner: -1,
-    id_gateway_type: -1,
+    id_node_type: -1,
     id_contract: -1,
-    id_node: 1
+    id_gateway: -1
   }
   oSub: Subscription
   offset = 0
   limit = STEP
 
-  constructor(private gatewayService: GatewayService) { }
+  constructor(private nodeService: NodeService) { }
 
   ngOnInit() {
     this.getAll()
@@ -59,9 +58,9 @@ export class GatewaylinkFormComponent implements OnInit, OnDestroy {
 
   //refresh table
   refreshGrid() {
-    if (this.gateways && this.gateways.length > 0 && this.rowcount !== this.gateways.length) {
-      this.source_jqxgrid.localdata = this.gateways;
-      this.rowcount = this.gateways.length;
+    if (this.nodes && this.nodes.length > 0 && this.rowcount !== this.nodes.length) {
+      this.source_jqxgrid.localdata = this.nodes;
+      this.rowcount = this.nodes.length;
       this.myGrid.updatebounddata('cells');// passing `cells` to the `updatebounddata` method will refresh only the cells values when the new rows count is equal to the previous rows count.
     }
   }
@@ -73,8 +72,8 @@ export class GatewaylinkFormComponent implements OnInit, OnDestroy {
       },
       this.filter)
 
-    this.oSub = this.gatewayService.getAll(params).subscribe(gateways => {
-      this.gateways = this.gateways.concat(gateways)
+    this.oSub = this.nodeService.getAll(params).subscribe(nodes => {
+      this.nodes = this.nodes.concat(nodes)
       this.refreshGrid();
     })
   }
@@ -83,21 +82,19 @@ export class GatewaylinkFormComponent implements OnInit, OnDestroy {
   source_jqxgrid: any =
     {
       datatype: 'array',
-      localdata: this.gateways,
-      id: 'id_gateway',
+      localdata: this.nodes,
+      id: 'id_node',
 
-      sortcolumn: ['id_gateway'],
+      sortcolumn: ['id_node'],
       sortdirection: 'desc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
 
   saveBtn() {
     for(var i=0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++){
-
-      this.saveNodeGateway.nodeId = this.id_node_select
-      this.saveNodeGateway.gatewayId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_gateway
-
-      this.oSub = this.gatewayService.set_id_node(this.saveNodeGateway).subscribe(
+      this.saveGatewayNode.nodeId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_node
+      this.saveGatewayNode.gatewayId = this.id_gateway_select
+      this.oSub = this.nodeService.ins_gateway_node(this.saveGatewayNode).subscribe(
         response => {
           // MaterialService.toast(`Шлюз id = ${response.id_gateway} привязан к узлу id = ${this.id_node_select}.`)
         },

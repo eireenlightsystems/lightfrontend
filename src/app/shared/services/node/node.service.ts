@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {HttpClient, HttpParams} from '@angular/common/http'
-import {Node, Message} from '../../interfaces'
+import {Node, Message, GatewayNode} from '../../interfaces'
 import {Observable} from 'rxjs/index'
 
 @Injectable({
@@ -35,5 +35,13 @@ export class NodeService {
 
   del(id_node: number): Observable<Message> {
     return this.http.delete<Message>(`/api/node/${id_node}`)
+  }
+
+  ins_gateway_node(gatewayNode: GatewayNode): Observable<GatewayNode> {
+    return this.http.post<GatewayNode>('/api/node/ins_gateway_node', gatewayNode)
+  }
+
+  del_gateway_node(gatewayNode: GatewayNode): Observable<GatewayNode> {
+    return this.http.patch<GatewayNode>('/api/node/del_gateway_node', gatewayNode)
   }
 }

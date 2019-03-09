@@ -41,6 +41,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @Input() isPlace: boolean
   @Input() isPin_drop: boolean
 
+  @Input() nodeSortcolumn: any[]
+  @Input() nodeColumns: any[]
+  @Input() nodeListBoxSource: any[]
+
   //determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>()
   @Output() onRefreshMap = new EventEmitter()

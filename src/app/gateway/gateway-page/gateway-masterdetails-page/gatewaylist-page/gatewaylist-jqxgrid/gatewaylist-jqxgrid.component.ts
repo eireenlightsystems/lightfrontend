@@ -12,7 +12,7 @@ import {GatewayService} from "../../../../../shared/services/gateway/gateway.ser
 import {EventWindowComponent} from "../../../../../shared/components/event-window/event-window.component";
 import {GatewayeditFormComponent} from "../gatewayedit-form/gatewayedit-form.component";
 import {FixturelinkFormComponent} from "../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component";
-import {Fixture} from "../../../../../shared/models/fixture";
+import {NodeGateway} from "../../../../../shared/models/nodeGateway";
 
 @Component({
   selector: 'app-gatewaylist-jqxgrid',
@@ -48,7 +48,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   //other variables
   selectGateway: Gateway = new Gateway()
-  saveGateway: Gateway = new Gateway()
+  saveNodeGateway: NodeGateway = new NodeGateway()
   oSub: Subscription
   editrow: number
   rowcount: number = 0
@@ -290,9 +290,9 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
     if (this.actionEventWindow === "pin_drop") {
       for(var i=0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++){
-        this.saveGateway = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]]
-        this.saveGateway.id_node = 1
-        this.oSub = this.gatewayService.set_id_node(this.saveGateway).subscribe(
+        this.saveNodeGateway.gatewayId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_gateway
+        this.saveNodeGateway.nodeId = 1
+        this.oSub = this.gatewayService.set_id_node(this.saveNodeGateway).subscribe(
           response => {
             // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
           },

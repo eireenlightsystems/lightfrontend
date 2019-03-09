@@ -31,6 +31,9 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   @Input() owner_nodes: Owner_node[]
   @Input() nodeTypes: NodeType[]
   @Input() contract_nodes: Contract[]
+  @Input() nodeSortcolumn: any[]
+  @Input() nodeColumns: any[]
+  @Input() nodeListBoxSource: any[]
 
   //determine the functions that need to be performed in the parent component
   @Output() onRefreshMap = new EventEmitter()

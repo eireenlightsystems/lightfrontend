@@ -1,7 +1,7 @@
 <div class="fr">
   <div *ngIf="isAdd">
     <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
-                [content]="'Добавить команду изменения режимов освещения'">
+                [content]="'Добавить узел/столб'">
       <Button [disabled]="isAddBtnDisabled"
               (click)="ins()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -13,7 +13,7 @@
 
   <div *ngIf="isUpdate">
     <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать команду изменения режимов освещения'">
+                [content]="'Редактировать узел/столб'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -25,7 +25,7 @@
 
   <div *ngIf="isDelete">
     <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить команду изменения режимов освещения'">
+                [content]="'Удалить узел/столб'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -117,9 +117,13 @@
                           [owner_nodes]="owner_nodes"
                           [nodeTypes]="nodeTypes"
                           [contract_nodes]="contract_nodes"
+                          [nodeSortcolumn]="nodeSortcolumn"
+                          [nodeColumns]="nodeColumns"
+                          [nodeListBoxSource]="nodeListBoxSource"
 
                           [heightGrid]="heightGrid"
                           [selectionmode]="selectionmode"
+                          [id_gateway_select]="id_gateway_select"
                           [isMasterGrid]="isMasterGrid"
 
                           (onRefreshGrid)="refreshGrid()"

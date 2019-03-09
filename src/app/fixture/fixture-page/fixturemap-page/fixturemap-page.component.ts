@@ -144,6 +144,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
             maxWidth: [170, 190, 220]
           }
         });
+
       this.map.controls.add(buttonIns, {
         right: 5,
         top: 5
@@ -234,17 +235,22 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
             
       <table class="table table-sm">
       <tbody>
-      <tr><th>Договор</th><td>{{properties.code_contract}}</td></tr>
-      <tr><th>Географическое понятие</th><td>{{properties.code_geograph}}</td></tr>
-      <tr><th>Тип светильника</th><td>{{properties.code_fixture_type}}</td></tr>
-      <tr><th>Владелец</th><td>{{properties.code_owner}}</td></tr>
-      <tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>
-      <tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>
+      
+      <!--<tr><th>Режимы рабочий/дежурный, %</th><td>{{properties.work_level}}/{{properties.standby_level}}</td></tr>-->
+      <!--<tr><th>Время перехода 0-100/100-0, сек</th><td>{{properties.speed_zero_to_full}}/{{properties.speed_full_to_zero}}</td></tr>-->
       
       <tr><th>Рабочий режим, %</th><td>{{properties.work_level}}</td></tr>
       <tr><th>Дежурный режим, %</th><td>{{properties.standby_level}}</td></tr>
       <tr><th>Время перехода 0-100, сек</th><td>{{properties.speed_zero_to_full}}</td></tr>
       <tr><th>Время перехода 100-0, сек</th><td>{{properties.speed_full_to_zero}}</td></tr>
+      
+      <!--<tr><th>Договор</th><td>{{properties.code_contract}}</td></tr>-->
+      <!--<tr><th>Географическое понятие</th><td>{{properties.code_geograph}}</td></tr>-->
+      <!--<tr><th>Тип светильника</th><td>{{properties.code_fixture_type}}</td></tr>-->
+      <!--<tr><th>Владелец</th><td>{{properties.code_owner}}</td></tr>-->
+      <!--<tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>-->
+      <!--<tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>-->
+       
       </tbody>
       </table>`, {
         build: (function () {

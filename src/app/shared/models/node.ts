@@ -5,6 +5,7 @@ export class Node {
   id_geograph: number;
   id_owner_node: number;
 
+  num_node: string;
   code_contract: string;
   code_node_type: string;
   code_geograph: string;

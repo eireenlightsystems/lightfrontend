@@ -62,11 +62,11 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit {
 
   logout(event: Event) {
     event.preventDefault()
-    //this.aSub нужен чтобы удалить компонент из памяти
+    //this.aSub need to remove a component from memory
     this.aSub = this.auth.logout().subscribe(
       () => this.router.navigate(['/login']),
     )
-    //Обязательно очистить токен
+    //it is necessary to clear the token
     this.auth.clearToken();
   }
 

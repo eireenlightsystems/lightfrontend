@@ -1,14 +1,9 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core'
 import {Subscription} from 'rxjs/index'
 
-import {
-  Node,
-  Geograph,
-  Contract, FilterNode, NodeType, Owner_node, Owner_gateway, GatewayType, Gateway, FilterGateway
-} from '../../../../shared/interfaces'
+import {Geograph, Contract, Owner_gateway, GatewayType, Gateway, FilterGateway} from '../../../../shared/interfaces'
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service'
 import {GatewaylistJqxgridComponent} from "./gatewaylist-jqxgrid/gatewaylist-jqxgrid.component";
-import {NodeService} from "../../../../shared/services/node/node.service";
 
 
 const STEP = 1000000000000
@@ -83,7 +78,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //if this.node is child grid, then we need update this.filter.id_node
-    if(!this.isMasterGrid) this.filter.id_node = this.id_node_select
+    if (!this.isMasterGrid) this.filter.id_node = this.id_node_select
 
     this.getAll()
     this.reloading = true
@@ -100,7 +95,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.id_gateway_select = 0
 
     //if this.nodes id master grid, then we need refresh child grid
-    if(this.isMasterGrid)this.refreshChildGrid(this.id_gateway_select)
+    if (this.isMasterGrid) this.refreshChildGrid(this.id_gateway_select)
 
     //refresh map
     this.onRefreshMap.emit()
@@ -124,7 +119,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.isFilter_listBtnDisabled = true
       this.isPlaceBtnDisabled = true
       this.isPin_dropBtnDisabled = true
-    }else {
+    } else {
       this.isAddBtnDisabled = false
       this.isEditBtnDisabled = false
       this.isDeleteBtnDisabled = false
@@ -175,11 +170,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.gatewaylistJqxgridComponent.del()
   }
 
-  place(){
+  place() {
     this.gatewaylistJqxgridComponent.place()
   }
 
-  pin_drop(){
+  pin_drop() {
     this.gatewaylistJqxgridComponent.pin_drop()
   }
 }

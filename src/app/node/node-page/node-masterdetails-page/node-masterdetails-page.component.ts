@@ -86,6 +86,46 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     id_contract: -1,
     id_node: -1
   }
+  //define columns for table Node
+  nodeSortcolumn: string[] = ['id_node']
+  nodeColumns: any[] =
+    [
+      {text: 'id_node', datafield: 'id_node', width: 150},
+      {text: 'Договор', datafield: 'code_contract', width: 150},
+      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
+      {text: 'Тип узла', datafield: 'code_node_type', width: 150},
+      {text: 'Владелец', datafield: 'code_owner', width: 150},
+
+      {text: 'Номер узла в группе', datafield: 'num_node', width: 150},
+
+      {text: 'Широта', datafield: 'n_coordinate', width: 150},
+      {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+
+      {text: 'Цена', datafield: 'price', width: 150},
+      {text: 'Коментарий', datafield: 'comments', width: 150},
+      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
+      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
+    ];
+
+  //define a data source for filtering table columns Node
+  nodeListBoxSource: any[] =
+    [
+      {label: 'id_node', value: 'id_node', checked: true},
+      {label: 'Договор', value: 'code_contract', checked: true},
+      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
+      {label: 'Тип узла', value: 'code_node_type', checked: true},
+      {label: 'Владелец', value: 'code_owner', checked: true},
+
+      {label: 'Номер узла в группе', value: 'num_node', checked: true},
+
+      {label: 'Широта', value: 'n_coordinate', checked: true},
+      {label: 'Долгота', value: 'e_coordinate', checked: true},
+
+      {label: 'Цена', value: 'price', checked: false},
+      {label: 'Коментарий', value: 'comments', checked: false},
+      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
+      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
+    ];
 
   constructor() { }
 

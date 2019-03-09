@@ -34,20 +34,24 @@
                        [owner_nodes]="owner_nodes"
                        [nodeTypes]="nodeTypes"
                        [contract_nodes]="contract_nodes"
+                       [nodeSortcolumn]="nodeSortcolumn"
+                       [nodeColumns]="nodeColumns"
+                       [nodeListBoxSource]="nodeListBoxSource"
 
                        [heightGrid]="300"
                        [id_gateway_select]="id_gateway_select"
                        [selectionmode]="'checkbox'"
                        [isMasterGrid]="false"
 
-                       [isAdd]=true
+                       [isAdd]=false
                        [isUpdate]=true
-                       [isDelete]=true
+                       [isDelete]=false
                        [isRefresh]=false
-                       [isFilter_none]=false
+                       [isFilter_none]=true
                        [isFilter_list]=false
                        [isPlace]=true
                        [isPin_drop]=true
+
     ></app-nodelist-page>
   </div>
 </jqxTabs>

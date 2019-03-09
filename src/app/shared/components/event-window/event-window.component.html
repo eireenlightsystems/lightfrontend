@@ -2,8 +2,9 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="0.3"
-           [width]="270" [height]="155"
-           [maxHeight]="160" [maxWidth]="280" [minHeight]="30" [minWidth]="250"
+
+           [width]="300" [minWidth]="300" [maxWidth]="400"
+           [height]="155" [minHeight]="155" [maxHeight]="500"
 
            [cancelButton]="'.cancel'" [okButton]="'.ok'" [resizable]="false"
            [position]="{ x: 500, y: 200 }"
@@ -17,17 +18,17 @@
     <div>
       {{warning}}
     </div>
-    <div style="float: right; margin-top: 25px;">
-      <div style="float: right;">
+    <div style="margin-left: 20px; margin-top: 20px;">
+      <div>
         <jqxButton #okButton class="ok waves-effect waves-orange white blue-text"
-                   style="display: inline-block; margin-right: 10px;"
+                   style="display: inline-block; margin-left: 45px;"
                    [width]="80"
                    (click)="okEvenwinBtn()"
         >
           OK
         </jqxButton>
         <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text"
-                   style="display: inline-block;"
+                   style="display: inline-block; margin-left: 10px;"
                    [width]="80"
                    (click)="cancelEvenwinBtn()"
         >

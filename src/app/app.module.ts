@@ -69,6 +69,7 @@ import {FixturecomspeedlistFilterComponent} from './fixture/fixture-page/fixture
 import {FixturecomspeedlistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {LimitedSliderComponent} from './shared/components/limited-slider/limited-slider.component';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
+import {NodelinkFormComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
 
 @NgModule({
   declarations: [
@@ -138,7 +139,8 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
     FixturecomspeedlistFilterComponent,
     FixturecomspeedlistJqxgridComponent,
     LimitedSliderComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    NodelinkFormComponent
 
   ],
   imports: [

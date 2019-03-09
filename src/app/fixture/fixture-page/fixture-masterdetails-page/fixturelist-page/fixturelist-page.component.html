@@ -2,7 +2,7 @@
 
   <div *ngIf="isAdd">
     <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
-                [content]="'Добавить команду изменения режимов освещения'">
+                [content]="'Добавить светильник'">
       <Button [disabled]="isAddBtnDisabled"
               (click)="ins()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -14,7 +14,7 @@
 
   <div *ngIf="isUpdate">
     <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать команду изменения режимов освещения'">
+                [content]="'Редактировать светильник'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -26,7 +26,7 @@
 
   <div *ngIf="isDelete">
     <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить команду изменения режимов освещения'">
+                [content]="'Удалить светильник'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -77,7 +77,7 @@
 
   <div *ngIf="isPlace">
     <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
-                [content]="'Привязать узел/столб к шлюзу'">
+                [content]="'Привязать светильник к узлу/столбу'">
       <button [disabled]="isPlaceBtnDisabled"
               (click)="place()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"
@@ -89,7 +89,7 @@
 
   <div *ngIf="isPin_drop">
     <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
-                [content]="'Отвязать узел/столб от шлюза'">
+                [content]="'Отвязать светильник от узла/столба'">
       <button [disabled]="isPin_dropBtnDisabled"
               (click)="pin_drop()"
               class="button_margin btn btn-small waves-effect waves-orange white blue-text"

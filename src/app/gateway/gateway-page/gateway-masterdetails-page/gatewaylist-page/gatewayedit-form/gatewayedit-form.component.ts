@@ -15,7 +15,7 @@ import {GatewayService} from "../../../../../shared/services/gateway/gateway.ser
 })
 export class GatewayeditFormComponent implements OnInit, OnDestroy {
 
-//variables from master component
+  //variables from master component
   @Input() geographs: Geograph[]
   @Input() gatewayTypes: GatewayType[]
   @Input() contract_gateways: Contract[]

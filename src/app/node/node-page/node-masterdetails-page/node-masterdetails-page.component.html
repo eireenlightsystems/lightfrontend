@@ -17,6 +17,10 @@
                    [isPlace]=false
                    [isPin_drop]=false
 
+                   [nodeSortcolumn]="nodeSortcolumn"
+                   [nodeColumns]="nodeColumns"
+                   [nodeListBoxSource]="nodeListBoxSource"
+
                    (onRefreshChildGrid)="refreshChildGrid($event)"
                    (onRefreshMap)="refreshMap()"
 ></app-nodelist-page>
@@ -46,9 +50,9 @@
                           [id_node_select]="id_node_select"
                           [selectionmode]="'checkbox'"
 
-                          [isAdd]=true
+                          [isAdd]=false
                           [isUpdate]=true
-                          [isDelete]=true
+                          [isDelete]=false
                           [isRefresh]=false
                           [isFilter_none]=false
                           [isFilter_list]=false
@@ -69,9 +73,9 @@
                           [isMasterGrid]="false"
                           [selectionmode]="'checkbox'"
 
-                          [isAdd]=true
+                          [isAdd]=false
                           [isUpdate]=true
-                          [isDelete]=true
+                          [isDelete]=false
                           [isRefresh]=false
                           [isFilter_none]=false
                           [isFilter_list]=false
