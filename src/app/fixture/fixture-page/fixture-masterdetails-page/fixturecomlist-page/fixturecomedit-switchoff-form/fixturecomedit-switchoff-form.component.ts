@@ -8,14 +8,14 @@ import {
   ViewChild,
   AfterViewInit, ElementRef
 } from '@angular/core';
-import {Subscription} from "rxjs";
-import {MaterialService} from "../../../../../shared/classes/material.service";
-import {jqxWindowComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow";
-import {jqxDateTimeInputComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput";
+import {Subscription} from 'rxjs';
+import {MaterialService} from '../../../../../shared/classes/material.service';
+import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
+import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 
-import {CommandSwitchService} from "../../../../../shared/services/command/commandSwitch.service";
-import {CommandSwitch} from "../../../../../shared/models/command/commandSwitch";
-import {DateTimeFormat} from "../../../../../shared/classes/DateTimeFormat";
+import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
+import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
+import {DateTimeFormat} from '../../../../../shared/classes/DateTimeFormat';
 
 @Component({
   selector: 'app-fixturecomedit-switchoff-form',
@@ -24,21 +24,21 @@ import {DateTimeFormat} from "../../../../../shared/classes/DateTimeFormat";
 })
 export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
+  // variables from master component
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onSaveEditSwitchOffwinBtn = new EventEmitter()
+  // determine the functions that need to be performed in the parent component
+  @Output() onSaveEditSwitchOffwinBtn = new EventEmitter();
 
-  //define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent
-  @ViewChild('dateend') dateend: jqxDateTimeInputComponent
+  // define variables - link to view objects
+  @ViewChild('editWindow') editWindow: jqxWindowComponent;
+  @ViewChild('dateend') dateend: jqxDateTimeInputComponent;
 
-  //other variables
-  fixtureId: number
-  commandSwitchs: CommandSwitch[] = []
+  // other variables
+  fixtureIds: number[];
+  commandSwitchs: CommandSwitch[] = [];
   // commandSwitch: CommandSwitch = new CommandSwitch
-  oSub: Subscription
-  typeWindow: string = ""
+  oSub: Subscription;
+  typeWindow: string = '';
 
   constructor(private fixturecommandService: CommandSwitchService) {
   }
@@ -48,52 +48,53 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   }
 
   ngAfterViewInit() {
-    this.dateend.value(new Date())
+    this.dateend.value(new Date());
   }
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
   }
 
-  //perform insert/update fixture
+  // perform insert/update fixture
   saveBtn() {
-    //command switch off
-    let commandSwitchOff: CommandSwitch = new CommandSwitch
-    commandSwitchOff.fixtureId = this.fixtureId
-    commandSwitchOff.startDateTime = new DateTimeFormat().fromDataPickerString(this.dateend.ngValue)
-    commandSwitchOff.workLevel = 0
-    commandSwitchOff.standbyLevel = 0
-    this.commandSwitchs[0] = commandSwitchOff
+    // command switch off
+    for (var i = 0; i < this.fixtureIds.length; i++) {
+      let commandSwitchOff: CommandSwitch = new CommandSwitch;
+      commandSwitchOff.fixtureId = this.fixtureIds[i];
+      commandSwitchOff.startDateTime = new DateTimeFormat().fromDataPickerString(this.dateend.ngValue);
+      commandSwitchOff.workLevel = 0;
+      commandSwitchOff.standbyLevel = 0;
+      this.commandSwitchs[i] = commandSwitchOff;
+    }
 
     this.oSub = this.fixturecommandService.send(this.commandSwitchs).subscribe(
       response => {
-        // MaterialService.toast(`Команда на выключение отправлена.`)
+        MaterialService.toast(`Команда на выключение отправлена.`);
       },
       response => MaterialService.toast(response.error.message),
       () => {
-        //close edit window
+        // close edit window
         this.hideWindow();
-        //update data source
-        this.onSaveEditSwitchOffwinBtn.emit()
+        // update data source
+        this.onSaveEditSwitchOffwinBtn.emit();
       }
-    )
+    );
   }
 
   cancelBtn() {
-    this.hideWindow()
+    this.hideWindow();
   }
 
-  openWindow(fixtureId: number, typeWindow: string) {
-    // this.saveFixture = saveFixture
-    this.fixtureId = fixtureId
-    this.typeWindow = typeWindow
-    this.editWindow.open()
+  openWindow(fixtureIds: number[], typeWindow: string) {
+    this.fixtureIds = fixtureIds;
+    this.typeWindow = typeWindow;
+    this.editWindow.open();
   }
 
   destroyWindow() {
-    this.editWindow.destroy()
+    this.editWindow.destroy();
   }
 
   hideWindow() {
@@ -101,7 +102,7 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   }
 
   positionWindow(coord: any) {
-    this.editWindow.position({x: coord.x, y: coord.y})
+    this.editWindow.position({x: coord.x, y: coord.y});
   }
 
 }

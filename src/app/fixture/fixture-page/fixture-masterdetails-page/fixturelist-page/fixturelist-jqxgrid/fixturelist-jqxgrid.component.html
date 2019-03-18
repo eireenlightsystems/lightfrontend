@@ -5,7 +5,7 @@
               (onCheckChange)="myListBoxOnCheckChange($event)"
               [width]="150"
               [height]="heightGrid"
-              [source]="listBoxSource"
+              [source]="listBoxSourceFixture"
               [checkboxes]="true"
               [filterable]="true"
               [allowDrag]="true"
@@ -18,7 +18,7 @@
          [width]="getWidth()"
          [height]="heightGrid"
          [source]="dataAdapter_jqxgrid"
-         [columns]="columns"
+         [columns]="columnsFixture"
          [columnsresize]="true"
 
          [sortable]="true"
@@ -29,12 +29,10 @@
          (onRowclick)="onRowclick($event)"
          (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
          (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
-
 >
 </jqxGrid>
 
 <app-fixtureedit-form #editWindow
-
                       [geographs]="geographs"
                       [owner_fixtures]="owner_fixtures"
                       [fixtureTypes]="fixtureTypes"
@@ -47,7 +45,7 @@
 ></app-fixtureedit-form>
 
 <app-fixturelink-form #linkWindow
-                      [columns]="columns"
+                      [columns]="columnsFixture"
                       [id_node_select]="id_node_select"
 
                       (onSaveLinkwinBtn)="saveLinkwinBtn()"

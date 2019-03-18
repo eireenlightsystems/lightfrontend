@@ -26,14 +26,12 @@
          [altrows]="true"
          [selectionmode]="selectionmode"
 
-         (onRowclick)="onRowclick($event)"
-         (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
-         (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
+         (onRowselect)="onRowSelect($event)"
 >
 </jqxGrid>
 
 <app-fixturecom-form #editWindow
-                     (onSaveEditwinBtn)="saveEditwinBtn()"
+                     (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"
 ></app-fixturecom-form>
 
 <app-fixturecomedit-switchoff-form #editSwitchOffWindow

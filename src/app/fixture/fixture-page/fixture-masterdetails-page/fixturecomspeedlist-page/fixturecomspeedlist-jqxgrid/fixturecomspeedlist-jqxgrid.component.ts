@@ -1,52 +1,51 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {MaterialService} from '../../../../../shared/classes/material.service'
-import {jqxGridComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid";
-import {jqxListBoxComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox";
-import {jqxButtonComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons";
+import {Subscription} from 'rxjs';
+import {MaterialService} from '../../../../../shared/classes/material.service';
+import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
+import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
+import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {CommandSpeedSwitch} from '../../../../../shared/models/command/commandSpeedSwitch'
-import {EventWindowComponent} from "../../../../../shared/components/event-window/event-window.component";
-import {FixturecomspeededitFormComponent} from "../fixturecomspeededit-form/fixturecomspeededit-form.component";
-import {CommandSpeedSwitchService} from "../../../../../shared/services/command/commandSpeedSwitch.service";
-import {SpeedDirection} from "../../../../../shared/interfaces";
+import {CommandSpeedSwitch} from '../../../../../shared/models/command/commandSpeedSwitch';
+import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
+import {FixturecomspeededitFormComponent} from '../fixturecomspeededit-form/fixturecomspeededit-form.component';
+import {CommandSpeedSwitchService} from '../../../../../shared/services/command/commandSpeedSwitch.service';
+import {SpeedDirection} from '../../../../../shared/interfaces';
 
 @Component({
   selector: 'app-fixturecomspeedlist-jqxgrid',
   templateUrl: './fixturecomspeedlist-jqxgrid.component.html',
   styleUrls: ['./fixturecomspeedlist-jqxgrid.component.css']
 })
-export class FixturecomspeedlistJqxgridComponent implements OnInit {
+export class FixturecomspeedlistJqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
-  @Input() commandSpeedSwitches: CommandSpeedSwitch[]
-  @Input() speedDirectiones: SpeedDirection[]
+  // variables from master component
+  @Input() commandSpeedSwitches: CommandSpeedSwitch[];
+  @Input() speedDirectiones: SpeedDirection[];
 
-  @Input() heightGrid: number
-  @Input() selectionmode: string
-  @Input() isMasterGrid: boolean
-  @Input() id_fixture_select: number
+  @Input() heightGrid: number;
+  @Input() selectionmode: string;
+  @Input() isMasterGrid: boolean;
+  @Input() id_fixture_select: number;
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshGrid = new EventEmitter()
-  @Output() onRefreshChildGrid = new EventEmitter<number>()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshGrid = new EventEmitter();
+  @Output() onRefreshChildGrid = new EventEmitter<number>();
 
-  //define variables - link to view objects
-  @ViewChild('myListBox') myListBox: jqxListBoxComponent
-  @ViewChild('myGrid') myGrid: jqxGridComponent
-  @ViewChild('editWindow') editWindow: FixturecomspeededitFormComponent
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent
-  @ViewChild('warningEventWindow') warningEventWindow: string
-  @ViewChild('okButton') okButton: jqxButtonComponent
+  // define variables - link to view objects
+  @ViewChild('myListBox') myListBox: jqxListBoxComponent;
+  @ViewChild('myGrid') myGrid: jqxGridComponent;
+  @ViewChild('editWindow') editWindow: FixturecomspeededitFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow') warningEventWindow: string;
+  @ViewChild('okButton') okButton: jqxButtonComponent;
 
-  //other variables
-  selectCommandSpeedSwitch: CommandSpeedSwitch = new CommandSpeedSwitch()
-  oSub: Subscription
-  editrow: number
-  rowcount: number = 0
-  islistBoxVisible: boolean = false
-  // actionEventWindow: string = ""
-  commandIds: number[] = []
+  // other variables
+  selectCommandSpeedSwitch: CommandSpeedSwitch = new CommandSpeedSwitch();
+  oSub: Subscription;
+  editrow: number;
+  rowcount = 0;
+  islistBoxVisible = false;
+  commandIds: number[] = [];
 
   constructor(private commandSpeedSwitchService: CommandSpeedSwitchService) {
   }
@@ -56,12 +55,12 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.refreshListBox()
+    this.refreshListBox();
   }
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -77,9 +76,9 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
     }
   }
 
-  //TABLE
+  // TABLE
 
-  //refresh table
+  // refresh table
   refreshGrid() {
     if (this.commandSpeedSwitches && this.commandSpeedSwitches.length > 0 && this.rowcount !== this.commandSpeedSwitches.length) {
       this.source_jqxgrid.localdata = this.commandSpeedSwitches;
@@ -94,30 +93,51 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
   //define width of table
   getWidth(): any {
     if (document.body.offsetWidth > 1600) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1400) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1200) {
-      if (this.islistBoxVisible) return '80%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '80%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1000) {
-      if (this.islistBoxVisible) return '75%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '75%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 800) {
-      if (this.islistBoxVisible) return '70%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '70%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 600) {
-      if (this.islistBoxVisible) return '65%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '65%';
+      } else {
+        return '99.8%';
+      }
     } else {
-      if (this.islistBoxVisible) return '40%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '40%';
+      } else {
+        return '99.8%';
+      }
     }
   }
 
-  //define the data source for the table
+  // define the data source for the table
   source_jqxgrid: any =
     {
       datatype: 'array',
@@ -129,7 +149,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
 
-  //define columns for table
+  // define columns for table
   columns: any[] =
     [
       {text: 'commandId', datafield: 'commandId', width: 150},
@@ -140,7 +160,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
       {text: 'Тип команды', datafield: 'speedDirectionName', width: 300},
     ];
 
-  //define a data source for filtering table columns
+  // define a data source for filtering table columns
   listBoxSource: any[] =
     [
       {label: 'commandId', value: 'commandId', checked: false},
@@ -151,7 +171,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
       {label: 'Тип команды', value: 'speedDirectionName', checked: true},
     ];
 
-  //table filtering
+  // table filtering
   myListBoxOnCheckChange(event: any) {
     this.myGrid.beginupdate();
     if (event.args.checked) {
@@ -174,7 +194,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
     this.myGrid.endupdate();
   };
 
-  //functions-events when allocating a string
+  // functions-events when allocating a string
   onRowclick(event: any) {
   };
 
@@ -185,8 +205,10 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
       this.selectCommandSpeedSwitch = event.args.row;
       this.editrow = this.selectCommandSpeedSwitch.commandId;
 
-      //refresh child grid
-      if (this.isMasterGrid) this.onRefreshChildGrid.emit(this.selectCommandSpeedSwitch.commandId)
+      // refresh child grid
+      if (this.isMasterGrid) {
+        this.onRefreshChildGrid.emit(this.selectCommandSpeedSwitch.commandId);
+      }
     }
     // this.updateButtons('Select');
   };
@@ -207,50 +229,50 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
   };
 
 
-//INSERT, UPDATE, DELETE
+// INSERT, UPDATE, DELETE
 
-  //insert
+  // insert
   ins() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(this.id_fixture_select, "ins")
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow(this.id_fixture_select, 'ins');
   }
 
-  //update
+  // update
   upd() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(this.id_fixture_select, "upd")
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow(this.id_fixture_select, 'upd');
   }
 
   saveEditwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
   saveEditSwitchOffwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
-  //delete
+  // delete
   del() {
     if (this.selectCommandSpeedSwitch.commandId) {
 
-      this.commandIds = []
+      this.commandIds = [];
       for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        this.commandIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].commandId
+        this.commandIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].commandId;
       }
 
-      this.eventWindow.okButtonDisabled(false)
+      this.eventWindow.okButtonDisabled(false);
       if (this.commandIds.length > 1) {
-        this.warningEventWindow = `Удалить команды?`
+        this.warningEventWindow = `Удалить команды?`;
       } else {
-        this.warningEventWindow = `Удалить команду id = "${this.selectCommandSpeedSwitch.commandId}"?`
+        this.warningEventWindow = `Удалить команду id = "${this.selectCommandSpeedSwitch.commandId}"?`;
       }
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать команду для удаления`
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать команду для удаления`;
     }
-    this.eventWindow.openEventWindow()
+    this.eventWindow.openEventWindow();
   }
 
   okEvenwinBtn() {
@@ -261,7 +283,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
         },
         response => MaterialService.toast(response.error.message),
         () => {
-          //update the table without contacting the database
+          // update the table without contacting the database
           // this.nodes.splice(selectedrowindex, 1)
           // this.refreshGrid();
           this.onRefreshGrid.emit()
@@ -269,6 +291,5 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit {
       )
     }
   }
-
 
 }

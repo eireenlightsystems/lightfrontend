@@ -1,6 +1,6 @@
 {
   "/api2/*": {
-    "target": "http://192.168.0.10:8000",
+    "target": "http://31.134.167.47:8095",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -8,6 +8,7 @@
 
   "/api/*": {
     "target": "http://localhost:5000",
+
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -20,3 +21,4 @@
     "changeOrigin": true
   }
 }
+

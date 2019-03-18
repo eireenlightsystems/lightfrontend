@@ -1,17 +1,18 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
-import {FixturelistPageComponent} from "../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component";
+import {FixturelistPageComponent} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {
   Contract,
   FilterFixture, FilterGateway,
-  FilterNode, FixtureType, GatewayType,
+  FilterNode, FilterSensor, FixtureType, GatewayType,
   Geograph, HeightType, Installer,
   NodeType,
   Owner_fixture, Owner_gateway,
-  Owner_node, Substation
-} from "../../../shared/interfaces";
-import {NodelistPageComponent} from "./nodelist-page/nodelist-page.component";
-import {GatewaylistPageComponent} from "../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component";
+  Owner_node, OwnerSensor, SensorType, Substation
+} from '../../../shared/interfaces';
+import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
+import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
+import {SensorlistPageComponent} from '../../../sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
 
 
 @Component({
@@ -22,53 +23,58 @@ import {GatewaylistPageComponent} from "../../../gateway/gateway-page/gateway-ma
 
 export class NodeMasterdetailsPageComponent implements OnInit {
 
-  //variables from master component
-  @Input() isAdd: boolean
-  @Input() isUpdate: boolean
-  @Input() isDelete: boolean
-  @Input() isRefresh: boolean
-  @Input() isFilter_none: boolean
-  @Input() isFilter_list: boolean
-  @Input() isPlace: boolean
-  @Input() isPin_drop: boolean
+  // variables from master component
+  @Input() isAdd: boolean;
+  @Input() isUpdate: boolean;
+  @Input() isDelete: boolean;
+  @Input() isRefresh: boolean;
+  @Input() isFilter_none: boolean;
+  @Input() isFilter_list: boolean;
+  @Input() isPlace: boolean;
+  @Input() isPin_drop: boolean;
 
-  //node source
-  @Input() geographs: Geograph[]
-  @Input() owner_nodes: Owner_node[]
-  @Input() nodeTypes: NodeType[]
-  @Input() contract_nodes: Contract[]
-  //fixture source
-  @Input() owner_fixtures: Owner_fixture[]
-  @Input() fixtureTypes: FixtureType[]
-  @Input() substations: Substation[]
-  @Input() contract_fixtures: Contract[]
-  @Input() installers: Installer[]
-  @Input() heightTypes: HeightType[]
-  //gateway source
-  @Input() owner_gateways: Owner_gateway[]
-  @Input() gatewayTypes: GatewayType[]
-  @Input() contract_gateways: Contract[]
+  // node source
+  @Input() geographs: Geograph[];
+  @Input() owner_nodes: Owner_node[];
+  @Input() nodeTypes: NodeType[];
+  @Input() contract_nodes: Contract[];
+  // fixture source
+  @Input() owner_fixtures: Owner_fixture[];
+  @Input() fixtureTypes: FixtureType[];
+  @Input() substations: Substation[];
+  @Input() contract_fixtures: Contract[];
+  @Input() installers: Installer[];
+  @Input() heightTypes: HeightType[];
+  // gateway source
+  @Input() owner_gateways: Owner_gateway[];
+  @Input() gatewayTypes: GatewayType[];
+  @Input() contract_gateways: Contract[];
+  // sensor source
+  @Input() ownerSensors: OwnerSensor[];
+  @Input() sensorTypes: SensorType[];
+  @Input() contractSensors: Contract[];
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshMap = new EventEmitter()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshMap = new EventEmitter();
 
-  //define variables - link to view objects
-  @ViewChild("id_node_select") id_node_select: number = -2;
-  @ViewChild("nodelistPageComponent") nodelistPageComponent: NodelistPageComponent;
-  @ViewChild("fixturelistPageComponent") fixturelistPageComponent: FixturelistPageComponent;
-  @ViewChild("gatewaylistPageComponent") gatewaylistPageComponent: GatewaylistPageComponent;
+  // define variables - link to view objects
+  @ViewChild('id_node_select') id_node_select = -2;
+  @ViewChild('nodelistPageComponent') nodelistPageComponent: NodelistPageComponent;
+  @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
+  @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
+  @ViewChild('sensorlistPageComponent') sensorlistPageComponent: SensorlistPageComponent;
 
-  //other variables
-  isTabFixture: boolean = false
-  isTabGateway: boolean = false
-  isTabSensor: boolean = false
+  // other variables
+  isTabFixture = false;
+  isTabGateway = false;
+  isTabSensor = false;
   filterNode: FilterNode = {
     id_geograph: -1,
     id_owner: -1,
     id_node_type: -1,
     id_contract: -1,
     id_gateway: -1
-  }
+  };
   filterFixture: FilterFixture = {
     id_geograph: -1,
     id_owner: -1,
@@ -78,16 +84,24 @@ export class NodeMasterdetailsPageComponent implements OnInit {
 
     id_contract: -1,
     id_node: -1
-  }
+  };
   filterGateway: FilterGateway = {
     id_geograph: -1,
     id_owner: -1,
     id_gateway_type: -1,
     id_contract: -1,
     id_node: -1
-  }
-  //define columns for table Node
-  nodeSortcolumn: string[] = ['id_node']
+  };
+  filterSensor: FilterSensor = {
+    geographId: -1,
+    ownerId: -1,
+    sensorTypeId: -1,
+    contractId: -1,
+    nodeId: -1
+  };
+
+  // define columns for table Node
+  nodeSortcolumn: string[] = ['id_node'];
   nodeColumns: any[] =
     [
       {text: 'id_node', datafield: 'id_node', width: 150},
@@ -107,7 +121,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
       {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
     ];
 
-  //define a data source for filtering table columns Node
+  // define a data source for filtering table columns Node
   nodeListBoxSource: any[] =
     [
       {label: 'id_node', value: 'id_node', checked: true},
@@ -127,53 +141,64 @@ export class NodeMasterdetailsPageComponent implements OnInit {
       {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
     ];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
-    this.id_node_select = -2
-    this.isTabFixture = true
-    this.isTabGateway = false
-    this.isTabSensor = false
+    this.id_node_select = -2;
+    this.isTabFixture = true;
+    this.isTabGateway = false;
+    this.isTabSensor = false;
   }
 
   refreshGrid() {
-    this.nodelistPageComponent.applyFilter(this.filterNode)
-    this.refreshChildGrid(0)
+    this.nodelistPageComponent.applyFilter(this.filterNode);
+    this.refreshChildGrid(0);
   }
 
   refreshMap() {
-    //make flag to refresh map
-    this.onRefreshMap.emit()
+    // make flag to refresh map
+    this.onRefreshMap.emit();
   }
 
   refreshChildGrid(id_node: number) {
-    //refresh child grid
-    this.id_node_select = id_node
+    // refresh child grid
+    this.id_node_select = id_node;
 
-    //fixture
-    this.filterFixture.id_node = id_node
-    if(this.isTabFixture)this.fixturelistPageComponent.applyFilter(this.filterFixture)
+    // fixture
+    this.filterFixture.id_node = id_node;
+    if (this.isTabFixture) {
+      this.fixturelistPageComponent.applyFilter(this.filterFixture);
+    }
 
-    //gateway
-    this.filterGateway.id_node = id_node
-    if(this.isTabGateway)this.gatewaylistPageComponent.applyFilter(this.filterGateway)
+    // gateway
+    this.filterGateway.id_node = id_node;
+    if (this.isTabGateway) {
+      this.gatewaylistPageComponent.applyFilter(this.filterGateway);
+    }
+
+    // sensor
+    this.filterSensor.nodeId = id_node;
+    if (this.isTabSensor) {
+      this.sensorlistPageComponent.applyFilter(this.filterSensor);
+    }
   }
 
   selected(event: any): void {
     if (event.args.item === 0) {
-      this.isTabFixture = true
-      this.isTabGateway = false
-      this.isTabSensor = false
+      this.isTabFixture = true;
+      this.isTabGateway = false;
+      this.isTabSensor = false;
     }
     if (event.args.item === 1) {
-      this.isTabFixture = false
-      this.isTabGateway = true
-      this.isTabSensor = false
+      this.isTabFixture = false;
+      this.isTabGateway = true;
+      this.isTabSensor = false;
     }
     if (event.args.item === 2) {
-      this.isTabFixture = false
-      this.isTabGateway = false
-      this.isTabSensor = true
+      this.isTabFixture = false;
+      this.isTabGateway = false;
+      this.isTabSensor = true;
     }
   }
 }

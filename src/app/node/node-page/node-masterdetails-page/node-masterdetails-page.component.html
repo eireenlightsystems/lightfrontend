@@ -5,7 +5,7 @@
                    [nodeTypes]="nodeTypes"
                    [contract_nodes]="contract_nodes"
 
-                   [heightGrid]="300"
+                   [heightGrid]="320"
                    [isMasterGrid]="true"
 
                    [isAdd]=true
@@ -45,14 +45,15 @@
                           [installers]="installers"
                           [heightTypes]="heightTypes"
 
-                          [heightGrid]="300"
                           [id_contract_select]="-1"
                           [id_node_select]="id_node_select"
+
+                          [heightGrid]="300"
                           [selectionmode]="'checkbox'"
 
-                          [isAdd]=false
+                          [isAdd]=true
                           [isUpdate]=true
-                          [isDelete]=false
+                          [isDelete]=true
                           [isRefresh]=false
                           [isFilter_none]=false
                           [isFilter_list]=false
@@ -68,14 +69,15 @@
                           [gatewayTypes]="gatewayTypes"
                           [contract_gateways]="contract_gateways"
 
-                          [heightGrid]="310"
                           [id_node_select]="id_node_select"
+
+                          [heightGrid]="310"
                           [isMasterGrid]="false"
                           [selectionmode]="'checkbox'"
 
-                          [isAdd]=false
+                          [isAdd]=true
                           [isUpdate]=true
-                          [isDelete]=false
+                          [isDelete]=true
                           [isRefresh]=false
                           [isFilter_none]=false
                           [isFilter_list]=false
@@ -84,7 +86,27 @@
     ></app-gatewaylist-page>
   </div>
   <div style="overflow: hidden">
-    <p>Сенсоры</p>
+    <app-sensorlist-page *ngIf="this.isTabSensor" #sensorlistPageComponent
+
+                         [geographs]="geographs"
+                         [ownerSensors]="ownerSensors"
+                         [sensorTypes]="sensorTypes"
+                         [contractSensors]="contractSensors"
+
+                         [nodeSelectId]="id_node_select"
+
+                         [heightGrid]="310"
+                         [isMasterGrid]="false"
+
+                         [isAdd]="true"
+                         [isUpdate]="true"
+                         [isDelete]="true"
+                         [isRefresh]="false"
+                         [isFilter_none]="false"
+                         [isFilter_list]="false"
+                         [isPlace]="false"
+                         [isPin_drop]="false"
+    ></app-sensorlist-page>
   </div>
 </jqxTabs>
 

@@ -1,5 +1,5 @@
 <!--<div *ngIf="errorText" class="alert alert-danger" role="alert">-->
-  <!--{{errorText}}-->
+<!--{{errorText}}-->
 <!--</div>-->
 
 <div id="fixture_yamaps"></div>
@@ -17,10 +17,13 @@
                       (onSaveEditwinBtn)="saveEditwinBtn()"
 ></app-fixtureedit-form>
 
-<app-fixturecom-form #comWindow
-
-                      (onSaveComwinBtn)="saveComwinBtn()"
+<app-fixturecom-form #editSwitchOnWindow
+                     (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"
 ></app-fixturecom-form>
+
+<app-fixturecomedit-switchoff-form #editSwitchOffWindow
+                                   (onSaveEditSwitchOffwinBtn)="saveEditSwitchOffwinBtn()"
+></app-fixturecomedit-switchoff-form>
 
 <app-event-window #eventWindow
                   [warning]="warningEventWindow"

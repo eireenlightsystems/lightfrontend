@@ -1,21 +1,24 @@
-import {Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {Observable, Subscription, timer} from "rxjs";
-import {MaterialService} from "../../../shared/classes/material.service";
+import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable, Subscription, timer} from 'rxjs';
+import {MaterialService} from '../../../shared/classes/material.service';
 
 import {
-  Contract, FilterFixture,
+  Contract, FilterFixture, FilterFixtureGroup, FilterFixtureInGroup, FixtureGroup,
   FixtureType,
   Geograph, HeightType,
   Installer,
   Owner_fixture,
   Substation
-} from "../../../shared/interfaces";
-import {FixtureService} from "../../../shared/services/fixture/fixture.service";
-import {EventWindowComponent} from "../../../shared/components/event-window/event-window.component";
+} from '../../../shared/interfaces';
+import {FixtureService} from '../../../shared/services/fixture/fixture.service';
+import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {Fixture} from 'src/app/shared/models/fixture';
-import {FixtureeditFormComponent} from "../fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component";
-import {FixturecomeditFormComponent} from "../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component";
+import {FixtureeditFormComponent} from '../fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component';
+import {FixturecomeditFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
+import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup.service';
+import {FixturecomeditSwitchoffFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
+import {isUndefined} from "util";
 
 
 declare var ymaps: any;
@@ -26,42 +29,35 @@ declare var ymaps: any;
   templateUrl: './fixturemap-page.component.html',
   styleUrls: ['./fixturemap-page.component.css']
 })
-export class FixturemapPageComponent implements OnInit, OnDestroy {
+export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
-  @Input() geographs: Geograph[]
-  @Input() owner_fixtures: Owner_fixture[]
-  @Input() fixtureTypes: FixtureType[]
-  @Input() substations: Substation[]
-  @Input() contract_fixtures: Contract[]
-  @Input() installers: Installer[]
-  @Input() heightTypes: HeightType[]
+  // variables from master component
+  @Input() geographs: Geograph[];
+  @Input() owner_fixtures: Owner_fixture[];
+  @Input() fixtureTypes: FixtureType[];
+  @Input() substations: Substation[];
+  @Input() contract_fixtures: Contract[];
+  @Input() installers: Installer[];
+  @Input() heightTypes: HeightType[];
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshGrid = new EventEmitter()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshGrid = new EventEmitter();
 
-  //define variables - link to view objects
-  @ViewChild('editWindow') editWindow: FixtureeditFormComponent
-  @ViewChild('comWindow') comWindow: FixturecomeditFormComponent
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent
-  @ViewChild('warningEventWindow') warningEventWindow: string
+  // define variables - link to view objects
+  @ViewChild('editWindow') editWindow: FixtureeditFormComponent;
+  @ViewChild('editSwitchOnWindow') editSwitchOnWindow: FixturecomeditFormComponent;
+  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow') warningEventWindow: string;
 
-  //other variables
-  fixtures: Fixture[]
-  fixture: Fixture = new Fixture()
-  id_fixture_del: number
-  map: any
-  actionEventWindow: string = ""
-  //
-  oSub: Subscription
-  timerSub: Subscription
-  //
-  timerSource: any
-  private errorText: string;
-  offset = 0
-  limit = 1000000000000
-  // draggableIcon: boolean = false
-  filter: FilterFixture = {
+  // other variables
+  nCoord = 60.0503;
+  eCoord = 30.4269;
+
+  fixtures: Fixture[];
+  fixture: Fixture = new Fixture;
+  id_fixture_del: number;
+  filterFixture: FilterFixture = {
     id_geograph: -1,
     id_owner: -1,
     id_fixture_type: -1,
@@ -70,145 +66,362 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
 
     id_contract: -1,
     id_node: -1
-  }
+  };
+  myMap: any;
+  actionEventWindow: string = '';
+  //
+  oSub: Subscription;
+  oSubFixtureGroups: Subscription;
+  timerSub: Subscription;
+  //
+  timerSource: any;
+  private errorText: string;
+  offset = 0;
+  limit = 1000000000000;
+  //
+  fixtureGroups: FixtureGroup[] = [];
+  selectFixtureGroupId = 0;
+  filterFixtureGroups: FilterFixtureGroup = {
+    ownerId: '',
+    fixtureGroupTypeId: '',
+  };
+  filterFixtureInGroup: FilterFixtureInGroup = {
+    id_geograph: -1,
+    id_owner: -1,
+    id_fixture_type: -1,
+    id_substation: -1,
+    id_mode: -1,
 
-  constructor(private zone: NgZone, private fixtureService: FixtureService, public router: Router, public route: ActivatedRoute) {
+    id_contract: -1,
+    id_node: -1,
+    id_fixture_group: -1
+  };
+
+  constructor(private zone: NgZone,
+              public router: Router,
+              public route: ActivatedRoute,
+              private fixtureGroupService: FixtureGroupService,
+              private fixtureService: FixtureService) {
   }
 
   ngOnInit() {
-    this.mapInit();
+    // this.mapInit();
 
-    //Timer refresh map: 0,10,20,...
+    // get all fixtures
+    this.getAll();
+
+    // // get fixture groups
+    // this.getFixtureGroups();
+
+    // Timer refresh map: 0,10,20,...
     this.timerSource = timer(1000, 10000);
-    this.timerRefreshMapSub()
+    this.timerRefreshMapSub();
+  }
+
+  ngAfterViewInit() {
+    this.mapInit();
   }
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
-    this.timerRefreshMapUbsub()
-    if (this.map) {
-      this.map.destroy();
+    if (this.oSubFixtureGroups) {
+      this.oSubFixtureGroups.unsubscribe();
+    }
+    this.timerRefreshMapUbsub();
+    if (this.myMap) {
+      this.myMap.destroy();
     }
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
     }
   }
 
-  //map initialization
-  mapInit(): void {
-    ymaps.ready().then(() => {
-      this.map = new ymaps.Map('fixture_yamaps', {
-        center: [60.0503, 30.4269],
-        zoom: 17,
-        controls: ['zoomControl']
-      });
-
-      let ButtonLayout = ymaps.templateLayoutFactory.createClass([
-          `<div class="fr">
-            <Button id="refreshMap"
-              class="btn btn-small waves-effect waves-orange white blue-text"
-              style="margin: 2px 2px 2px 2px;"
-            >
-              <i class="material-icons">refresh</i>
-            </Button>
-          </div>`
-        ].join(''),
-        {
-          build: function () {
-            ButtonLayout.superclass.build.call(this);
-            $('#refreshMap').bind('click', this.refreshMap(this.getData().properties));
-          },
-
-          refreshMap: (function () {
-            let mapComponent: FixturemapPageComponent = this;
-            return function (properties: any) {
-              return function () {
-                mapComponent.refreshMap();
-              }
-            };
-          }).call(this)
-
-        },
-        ),
-
-        buttonIns = new ymaps.control.Button({
-          data: {
-            content: "Жмак-жмак-жмак",
-            image: 'images/pen.png',
-            title: "Жмак-жмак-жмак"
-          },
-          options: {
-            layout: ButtonLayout,
-            maxWidth: [170, 190, 220]
-          }
-        });
-
-      this.map.controls.add(buttonIns, {
-        right: 5,
-        top: 5
-      });
-
-      //Refresh map
-      this.getAll()
+  // get fixture groups
+  getFixtureGroups() {
+    this.oSubFixtureGroups = this.fixtureGroupService.getAll(this.filterFixtureGroups).subscribe(fixtureGroups => {
+      this.fixtureGroups = fixtureGroups;
+      // init list box fixture groups
+      this.listBoxInit();
     });
   }
 
-  //get a set of objects
+  // get nodes ib gateway group
+  getFixturesInGroup(fixtureGroupId: number) {
+    this.filterFixtureInGroup.id_fixture_group = fixtureGroupId;
+    const params = Object.assign({}, {
+        offset: this.offset,
+        limit: this.limit
+      },
+      this.filterFixtureInGroup);
+
+    this.oSub = this.fixtureService.getFixtureInGroupAll(params).subscribe(fixtures => {
+      this.fixtures = fixtures;
+      this.addItemsToMap();
+      this.selectFixtureGroupId = fixtureGroupId;
+    });
+  }
+
+  // get a set of objects
   getAll() {
     const params = Object.assign({}, {
         offset: this.offset,
         limit: this.limit
       },
-      this.filter)
+      this.filterFixture);
 
     this.oSub = this.fixtureService.getAll(params).subscribe(fixtures => {
-      this.fixtures = fixtures
-      this.addItemsToMap()
-    })
+      this.fixtures = fixtures;
+      this.addItemsToMap();
+    });
   }
 
-  //refresh Map
+  // refresh Map
   refreshMap() {
-    this.getAll();
-    //refresh grid
-    // this.onRefreshGrid.emit()
+    if (this.selectFixtureGroupId === 0) {
+      this.getAll();
+    } else {
+      this.getFixturesInGroup(this.selectFixtureGroupId);
+    }
   }
 
-  //timer refresh map subscribe
-  timerRefreshMapSub() {
-    if (!this.timerSub) {
-      this.timerSub = this.timerSource.subscribe(function () {
-        let mapComponent: FixturemapPageComponent = this;
-        return (val) => {
-          mapComponent.refreshMap()
+  // map initialization
+  mapInit(): void {
+    ymaps.ready().then(() => {
+      this.myMap = new ymaps.Map('fixture_yamaps', {
+        center: [this.nCoord, this.eCoord],
+        zoom: 17,
+        controls: ['zoomControl']
+      });
+      // get fixture groups
+      this.getFixtureGroups();
+    });
+  }
+
+  // buttons on the map init
+  buttonsInit() {
+    const ButtonLayout = ymaps.templateLayoutFactory.createClass([
+        `<div class="fr">
+            <Div id="refreshMap"
+              class="btn btn-small waves-effect waves-orange white blue-text"
+            >
+              <a><i class='material-icons'>refresh</i>  все светильники</a>
+            </Div>
+          
+            <Button id="switchOnBtn"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              style="margin-left: 10px"
+            >
+              <i class="material-icons" style="color: orange">highlight</i>
+            </Button>
+            
+            <Button id="switchOffBtn"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              style="margin-left: 10px"
+            >
+              <i class="material-icons" >highlight</i>
+            </Button>
+          </div>
+        `
+      ].join(''),
+      {
+        build: function () {
+          ButtonLayout.superclass.build.call(this);
+          $('#refreshMap').bind('click', this.refreshMap(this.getData().properties));
+          $('#switchOnBtn').bind('click', this.switchOnBtn(this.getData().properties));
+          $('#switchOffBtn').bind('click', this.switchOffBtn(this.getData().properties));
+        },
+
+        refreshMap: (function () {
+          const mapComponent: FixturemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              mapComponent.selectFixtureGroupId = 0;
+              mapComponent.refreshMap();
+            };
+          };
+        }).call(this),
+
+        switchOnBtn: (function () {
+          const mapComponent: FixturemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              const fixtureIds: number[] = [];
+              for (var i = 0; i < mapComponent.fixtures.length; i++) {
+                fixtureIds[i] = +mapComponent.fixtures[i].id_fixture;
+              }
+              mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
+              mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
+            };
+          };
+        }).call(this),
+
+        switchOffBtn: (function () {
+          const mapComponent: FixturemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              const fixtureIds: number[] = [];
+              for (var i = 0; i < mapComponent.fixtures.length; i++) {
+                fixtureIds[i] = +mapComponent.fixtures[i].id_fixture;
+              }
+              mapComponent.editSwitchOffWindow.positionWindow({x: 600, y: 90});
+              mapComponent.editSwitchOffWindow.openWindow(fixtureIds, 'ins');
+            };
+          };
+        }).call(this)
+      },
+      ),
+
+      buttonIns = new ymaps.control.Button({
+        data: {
+          content: 'Жмак-жмак-жмак',
+          image: 'images/pen.png',
+          title: 'Жмак-жмак-жмак'
+        },
+        options: {
+          layout: ButtonLayout,
+          maxWidth: [170, 190, 220]
         }
-      }.call(this));
-    }
+      });
+
+    this.myMap.controls.add(buttonIns, {
+      right: 1,
+      top: 1
+    });
   }
 
-  //timer refresh map unsubscribe
-  timerRefreshMapUbsub() {
-    if (this.timerSub) {
-      this.timerSub.unsubscribe()
-      this.timerSub = undefined
-    }
+  listBoxInit() {
+    // Создадим собственный макет выпадающего списка.
+    const ListBoxLayout = ymaps.templateLayoutFactory.createClass(
+      // "<ul id='my-listbox' class='dropdown-content' style='display: {% if state.expanded %}block{% else %}none{% endif %};' role='menu' aria-labelledby='dropdownMenu'>\n" +
+      // "</ul>"
+      // +
+      // "<a id='my-listbox-header' class='dropdown-trigger' data-target='my-listbox'>{{data.title}}<i class='material-icons right'>arrow_drop_down</i></a>"
+      // +
+      '<button id=\'my-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-orange white blue-text\' data-toggle=\'dropdown\'>' +
+      '{{data.title}} <span class=\'caret\'></span>' +
+      '</button>' +
+      // Этот элемент будет служить контейнером для элементов списка.
+      // В зависимости от того, свернут или развернут список, этот контейнер будет
+      // скрываться или показываться вместе с дочерними элементами.
+      '<ul id=\'my-listbox\'' +
+      ' class=\'dropdown-menu\' role=\'menu\' aria-labelledby=\'dropdownMenu\'' +
+      ' style=\'display: {% if state.expanded %}block{% else %}none{% endif %};\'></ul>'
+      ,
+      {
+        build: function () {
+          // Вызываем метод build родительского класса перед выполнением
+          // дополнительных действий.
+          ListBoxLayout.superclass.build.call(this);
+
+          this.childContainerElement = $('#my-listbox').get(0);
+          // Генерируем специальное событие, оповещающее элемент управления
+          // о смене контейнера дочерних элементов.
+          this.events.fire('childcontainerchange', {
+            newChildContainerElement: this.childContainerElement,
+            oldChildContainerElement: null
+          });
+        },
+
+        // Переопределяем интерфейсный метод, возвращающий ссылку на
+        // контейнер дочерних элементов.
+        getChildContainerElement: function () {
+          return this.childContainerElement;
+        },
+
+        clear: function () {
+          // Заставим элемент управления перед очисткой макета
+          // откреплять дочерние элементы от родительского.
+          // Это защитит нас от неожиданных ошибок,
+          // связанных с уничтожением dom-элементов в ранних версиях ie.
+          this.events.fire('childcontainerchange', {
+            newChildContainerElement: null,
+            oldChildContainerElement: this.childContainerElement
+          });
+          this.childContainerElement = null;
+          // Вызываем метод clear родительского класса после выполнения
+          // дополнительных действий.
+          ListBoxLayout.superclass.clear.call(this);
+        }
+      }),
+
+      // Также создадим макет для отдельного элемента списка.
+      ListBoxItemLayout = ymaps.templateLayoutFactory.createClass(
+        '<li><a class=\'waves-effect waves-orange white blue-text\'><i class=\'material-icons\'>lightbulb_outline</i> {{data.content}}</a></li>'
+      ),
+
+      // Создадим 2 пункта выпадающего списка
+      listBoxItems = this.getlistBoxItemGroups(),
+
+      // Теперь создадим список, содержащий 2 пункта.
+      listBox = new ymaps.control.ListBox({
+        items: listBoxItems,
+        data: {
+          title: 'Выберите группу светильников'
+        },
+        options: {
+          // С помощью опций можно задать как макет непосредственно для списка,
+          layout: ListBoxLayout,
+          // так и макет для дочерних элементов списка. Для задания опций дочерних
+          // элементов через родительский элемент необходимо добавлять префикс
+          // 'item' к названиям опций.
+          itemLayout: ListBoxItemLayout
+        }
+      });
+
+    listBox.events.add('click',
+      (function () {
+        // var map = this.myMap;
+        const mapComponent: FixturemapPageComponent = this;
+        return function (e) {
+          // Получаем ссылку на объект, по которому кликнули.
+          // События элементов списка пропагируются
+          // и их можно слушать на родительском элементе.
+          var item = e.get('target');
+          // Клик на заголовке выпадающего списка обрабатывать не надо.
+          if (item != listBox) {
+            mapComponent.myMap.setCenter(item.data.get('center'), item.data.get('zoom'));
+            mapComponent.getFixturesInGroup(item.data.get('fixtureGroupId'));
+          }
+        };
+      }).call(this)
+    );
+    this.myMap.controls.add(listBox, {float: 'left'});
+
+    // buttons on the map init
+    this.buttonsInit();
   }
 
-  //place the object from the set "getAll()" on the map
+  // get gateway groups for listBox
+  getlistBoxItemGroups(): any {
+    const listBoxItemGroups: any[] = [];
+    for (var i = 0; i < this.fixtureGroups.length; i++) {
+      listBoxItemGroups[i] = new ymaps.control.ListBoxItem({
+        data: {
+          content: this.fixtureGroups[i].fixtureGroupName,
+          center: [+this.fixtureGroups[i].n_coordinate === 0 ? this.nCoord : this.fixtureGroups[i].n_coordinate, +this.fixtureGroups[i].e_coordinate === 0 ? this.eCoord : this.fixtureGroups[i].e_coordinate],
+          zoom: 17,
+          fixtureGroupId: this.fixtureGroups[i].fixtureGroupId
+        }
+      });
+    }
+    return listBoxItemGroups;
+  }
+
+  // place the object from the set "getAll()" on the map
   addItemsToMap() {
-    let collection = new ymaps.GeoObjectCollection(null, {});
+    const collection = new ymaps.GeoObjectCollection(null, {});
 
-    let BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+    const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
       `<div class="fr">
         <jqxTooltip [position]="'bottom'" [name]="'comTooltip'"
                     [content]="'Вкл./выкл.'">
           <Button id="comItems"
-            class="btn btn-small waves-effect waves-yellow orange blue-text"
+            class="btn btn-small waves-effect waves-orange white blue-text"
             style="margin: 2px 2px 2px 2px;"
           >
-            <i class="material-icons">lightbulb_outline</i>
+            <i class="material-icons" style="color: orange">highlight</i>
           </Button>
         </jqxTooltip>
         
@@ -222,15 +435,6 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
           </Button>
         </jqxTooltip>
         
-        <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                    [content]="'Удалить узел'">
-          <Button id="delItems"
-            class="btn btn-small waves-effect waves-orange white blue-text"
-            style="margin: 2px 2px 2px 2px;"
-          >
-            <i class="material-icons">delete</i>
-          </Button>
-        </jqxTooltip>
       </div>
             
       <table class="table table-sm">
@@ -257,72 +461,73 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
           let mapComponent: FixturemapPageComponent = this;
           return function () {
 
-            //timer refresh map unsubscribe
+            // timer refresh map unsubscribe
             mapComponent.timerRefreshMapUbsub();
 
             BalloonContentLayout.superclass.build.call(this);
             $('#comItems').bind('click', this.comItems(this.getData().properties));
             $('#updItems').bind('click', this.updItems(this.getData().properties));
-            $('#delItems').bind('click', this.delItems(this.getData().properties));
-          }
+          };
         }).call(this),
 
         clear: (function () {
           let mapComponent: FixturemapPageComponent = this;
           return function () {
 
-            //timer refresh map subscribe
+            // timer refresh map subscribe
             mapComponent.timerRefreshMapSub();
 
             BalloonContentLayout.superclass.clear.call(this);
-          }
+          };
         }).call(this),
 
         comItems: (function () {
-          let mapComponent: FixturemapPageComponent = this;
+          const mapComponent: FixturemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.comWindow.positionWindow({x: 600, y: 90})
-              mapComponent.comWindow.openWindow(properties._data.id_fixture, "ins")
-            }
+              const fixtureIds: number[] = [];
+              fixtureIds[0] = properties._data.id_fixture;
+              mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
+              mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
+            };
           };
         }).call(this),
 
         updItems: (function () {
-          let mapComponent: FixturemapPageComponent = this;
+          const mapComponent: FixturemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.editWindow.positionWindow({x: 600, y: 90})
-              mapComponent.editWindow.openWindow(properties._data, properties._data.id_node, "upd")
-            }
+              mapComponent.editWindow.positionWindow({x: 600, y: 90});
+              mapComponent.editWindow.openWindow(properties._data, properties._data.id_node, 'upd');
+            };
           };
         }).call(this),
 
-        delItems: (function () {
-          let mapComponent: FixturemapPageComponent = this;
-          return function (properties: any) {
-            return function () {
-              mapComponent.warningEventWindow = "Удалить узел?"
-              mapComponent.actionEventWindow = "del"
-              mapComponent.eventWindow.openEventWindow()
-              mapComponent.id_fixture_del = properties._data.id_fixture
-            }
-          };
-        }).call(this)
+        // delItems: (function () {
+        //   const mapComponent: FixturemapPageComponent = this;
+        //   return function (properties: any) {
+        //     return function () {
+        //       mapComponent.warningEventWindow = 'Удалить светильник?';
+        //       mapComponent.actionEventWindow = 'del';
+        //       mapComponent.eventWindow.openEventWindow();
+        //       mapComponent.id_fixture_del = properties._data.id_fixture;
+        //     };
+        //   };
+        // }).call(this)
       }
     );
 
-    this.map.geoObjects.removeAll();
-    this.map.geoObjects.add(collection);
-    for (let fixture of this.fixtures) {
-      let myGeoObject = new ymaps.GeoObject(
+    this.myMap.geoObjects.removeAll();
+    this.myMap.geoObjects.add(collection);
+    for (const fixture of this.fixtures) {
+      const myGeoObject = new ymaps.GeoObject(
         {
-          //description geometry
+          // description geometry
           geometry: {
-            type: "Point",
+            type: 'Point',
             coordinates: [fixture.n_coordinate, fixture.e_coordinate]
           },
-          //properties
+          // properties
           properties: {
             // Content of icon
             iconContent: fixture.id_fixture,
@@ -354,78 +559,63 @@ export class FixturemapPageComponent implements OnInit, OnDestroy {
           }
         },
         {
-          //options
+          // options
           balloonContentLayout: BalloonContentLayout,
           balloonPanelMaxMapArea: 0,
-          //icon will be change width
+          // icon will be change width
           preset: 'islands#circleIcon',
           iconColor: fixture.flg_light ? '#FFCF40'
             : '#000000'
-        })
+        });
 
       collection.add(myGeoObject);
     }
   }
 
-  //untie the fixture from the map
-  delItem(id: number) {
-    this.clearErrorText();
-
-    if (+id >= 0) {
-      this.fixtureService.del(+id).subscribe(
-        response => {
-          MaterialService.toast(response.message)
-        },
-        response => MaterialService.toast(response.error.message),
-        () => {
-          //hide event window
-          this.eventWindow.hideEventWindow();
-          //refresh map
-          this.refreshMap();
-          //refresh grid
-          this.onRefreshGrid.emit()
-        }
-      )
-    }
-  }
-
-  //event window
+  // event window
   okEvenwinBtn() {
-    if (this.actionEventWindow === "del") {
-      this.delItem(this.id_fixture_del)
-    }
+
   }
 
-  //save result edit window
+  // save result edit window
   saveEditwinBtn() {
-    //refresh map
+    // refresh map
     this.refreshMap();
-    //refresh grid
+    // refresh grid
     // this.onRefreshGrid.emit()
   }
 
-  //save result com window
+  // save result com window
   saveComwinBtn() {
 
   }
 
-  //error message
-  errorHandler(response: any) {
-    this.zone.run(() => {
-      this.errorText = response.json().error;
-    });
+  // timer refresh map subscribe
+  timerRefreshMapSub() {
+    if (!this.timerSub) {
+      this.timerSub = this.timerSource.subscribe(function () {
+        const mapComponent: FixturemapPageComponent = this;
+        return (val) => {
+          mapComponent.refreshMap();
+        };
+      }.call(this));
+    }
   }
 
-  setErrorText(errorText: string) {
-    this.zone.run(() => {
-      this.errorText = errorText;
-    });
+  // timer refresh map unsubscribe
+  timerRefreshMapUbsub() {
+    if (this.timerSub) {
+      this.timerSub.unsubscribe();
+      this.timerSub = undefined;
+    }
   }
 
-  clearErrorText() {
-    this.zone.run(() => {
-      this.errorText = '';
-    });
+  saveSwitchOnEditwinBtn() {
+    this.refreshMap();
+  }
+
+  saveEditSwitchOffwinBtn() {
+    this.refreshMap();
   }
 
 }

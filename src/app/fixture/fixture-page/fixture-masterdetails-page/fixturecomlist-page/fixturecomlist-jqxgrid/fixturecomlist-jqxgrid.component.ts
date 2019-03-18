@@ -1,16 +1,16 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {MaterialService} from '../../../../../shared/classes/material.service'
-import {jqxGridComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid";
-import {jqxListBoxComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox";
-import {jqxButtonComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons";
+import {Subscription} from 'rxjs';
+import {MaterialService} from '../../../../../shared/classes/material.service';
+import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
+import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
+import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch'
-import {CommandType, CommandStatus} from '../../../../../shared/interfaces'
-import {EventWindowComponent} from "../../../../../shared/components/event-window/event-window.component";
-import {CommandSwitchService} from "../../../../../shared/services/command/commandSwitch.service";
-import {FixturecomeditFormComponent} from "../fixturecomedit-form/fixturecomedit-form.component";
-import {FixturecomeditSwitchoffFormComponent} from "../fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component";
+import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
+import {CommandType, CommandStatus} from '../../../../../shared/interfaces';
+import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
+import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
+import {FixturecomeditFormComponent} from '../fixturecomedit-form/fixturecomedit-form.component';
+import {FixturecomeditSwitchoffFormComponent} from '../fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 
 
 @Component({
@@ -18,39 +18,74 @@ import {FixturecomeditSwitchoffFormComponent} from "../fixturecomedit-switchoff-
   templateUrl: './fixturecomlist-jqxgrid.component.html',
   styleUrls: ['./fixturecomlist-jqxgrid.component.css']
 })
-export class FixturecomlistJqxgridComponent implements OnInit {
+export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
-  @Input() commandSwitches: CommandSwitch[]
+  // variables from master component
+  @Input() commandSwitches: CommandSwitch[];
   // @Input() commandTypes: CommandType[]
   // @Input() command_statuses: CommandStatus[]
 
-  @Input() heightGrid: number
-  @Input() selectionmode: string
-  @Input() isMasterGrid: boolean
-  @Input() id_fixture_select: number
+  @Input() heightGrid: number;
+  @Input() selectionmode: string;
+  @Input() isMasterGrid: boolean;
+  @Input() id_fixture_select: number;
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshGrid = new EventEmitter()
-  @Output() onRefreshChildGrid = new EventEmitter<number>()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshGrid = new EventEmitter();
+  @Output() onRefreshChildGrid = new EventEmitter<number>();
 
-  //define variables - link to view objects
-  @ViewChild('myListBox') myListBox: jqxListBoxComponent
-  @ViewChild('myGrid') myGrid: jqxGridComponent
-  @ViewChild('editWindow') editWindow: FixturecomeditFormComponent
-  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent
-  @ViewChild('warningEventWindow') warningEventWindow: string
-  @ViewChild('okButton') okButton: jqxButtonComponent
+  // define variables - link to view objects
+  @ViewChild('myListBox') myListBox: jqxListBoxComponent;
+  @ViewChild('myGrid') myGrid: jqxGridComponent;
+  @ViewChild('editWindow') editWindow: FixturecomeditFormComponent;
+  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow') warningEventWindow: string;
+  @ViewChild('okButton') okButton: jqxButtonComponent;
 
-  //other variables
-  selectCommandSwitch: CommandSwitch = new CommandSwitch()
-  oSub: Subscription
-  editrow: number
-  rowcount: number = 0
-  islistBoxVisible: boolean = false
+  // other variables
+  selectCommandSwitch: CommandSwitch = new CommandSwitch();
+  oSub: Subscription;
+  editrow: number;
+  rowcount: number = 0;
+  islistBoxVisible: boolean = false;
   // actionEventWindow: string = ""
-  commandIds: number[] = []
+  commandIds: number[] = [];
+
+  // define the data source for the table
+  source_jqxgrid: any =
+    {
+      datatype: 'array',
+      localdata: this.commandSwitches,
+      id: 'commandId',
+
+      sortcolumn: ['startDateTime'],
+      sortdirection: 'desc'
+    };
+  dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
+
+  // define columns for table
+  columns: any[] =
+    [
+      {text: 'commandId', datafield: 'commandId', width: 150},
+      {text: 'Время начала', datafield: 'startDateTime', width: 150},
+
+      {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
+      {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
+      {text: 'Статус', datafield: 'statusName', width: 200},
+    ];
+
+  // define a data source for filtering table columns
+  listBoxSource: any[] =
+    [
+      {label: 'commandId', value: 'commandId', checked: false},
+      {label: 'Время начала', value: 'startDateTime', checked: true},
+
+      {label: 'Рабочий режим', value: 'workLevel', checked: true},
+      {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
+      {label: 'Статус', value: 'statusName', checked: true},
+    ];
+
 
   constructor(private commandSwitchService: CommandSwitchService) {
   }
@@ -60,12 +95,12 @@ export class FixturecomlistJqxgridComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.refreshListBox()
+    this.refreshListBox();
   }
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -81,81 +116,65 @@ export class FixturecomlistJqxgridComponent implements OnInit {
     }
   }
 
-  //TABLE
+  // TABLE
 
-  //refresh table
+  // refresh table
   refreshGrid() {
     if (this.commandSwitches && this.commandSwitches.length > 0 && this.rowcount !== this.commandSwitches.length) {
       this.source_jqxgrid.localdata = this.commandSwitches;
       this.rowcount = this.commandSwitches.length;
-      // this.myGrid.refresh();
-      // this.myGrid.refreshdata();
       this.myGrid.updatebounddata('data');
-      // this.myGrid.updatebounddata('cells');// passing `cells` to the `updatebounddata` method will refresh only the cells values when the new rows count is equal to the previous rows count.
     }
   }
 
-  //define width of table
+  // define width of table
   getWidth(): any {
     if (document.body.offsetWidth > 1600) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1400) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1200) {
-      if (this.islistBoxVisible) return '80%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '80%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 1000) {
-      if (this.islistBoxVisible) return '75%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '75%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 800) {
-      if (this.islistBoxVisible) return '70%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '70%';
+      } else {
+        return '99.8%';
+      }
     } else if (document.body.offsetWidth > 600) {
-      if (this.islistBoxVisible) return '65%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '65%';
+      } else {
+        return '99.8%';
+      }
     } else {
-      if (this.islistBoxVisible) return '40%';
-      else return '99.8%';
+      if (this.islistBoxVisible) {
+        return '40%';
+      } else {
+        return '99.8%';
+      }
     }
   }
 
-  //define the data source for the table
-  source_jqxgrid: any =
-    {
-      datatype: 'array',
-      localdata: this.commandSwitches,
-      id: 'commandId',
-
-      sortcolumn: ['startDateTime'],
-      sortdirection: 'desc'
-    };
-  dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
-
-  //define columns for table
-  columns: any[] =
-    [
-      {text: 'commandId', datafield: 'commandId', width: 150},
-      {text: 'Время начала', datafield: 'startDateTime', width: 150},
-
-      {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
-      {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
-      {text: 'Статус', datafield: 'statusName', width: 200},
-    ];
-
-  //define a data source for filtering table columns
-  listBoxSource: any[] =
-    [
-      {label: 'commandId', value: 'commandId', checked: false},
-      {label: 'Время начала', value: 'startDateTime', checked: true},
-
-      {label: 'Рабочий режим', value: 'workLevel', checked: true},
-      {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
-      {label: 'Статус', value: 'statusName', checked: true},
-    ];
-
-  //table filtering
+  // table filtering
   myListBoxOnCheckChange(event: any) {
     this.myGrid.beginupdate();
     if (event.args.checked) {
@@ -168,7 +187,7 @@ export class FixturecomlistJqxgridComponent implements OnInit {
 
   refreshListBox() {
     this.myGrid.beginupdate();
-    for (var i = 0; i < this.myListBox.attrSource.length; i++) {
+    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
       if (this.myListBox.attrSource[i].checked) {
         this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
       } else {
@@ -178,10 +197,7 @@ export class FixturecomlistJqxgridComponent implements OnInit {
     this.myGrid.endupdate();
   };
 
-  //functions-events when allocating a string
-  onRowclick(event: any) {
-  };
-
+  // functions-events when allocating a string
   onRowSelect(event: any) {
     // console.log("onRowSelect")
     if (event.args.row
@@ -189,78 +205,64 @@ export class FixturecomlistJqxgridComponent implements OnInit {
       this.selectCommandSwitch = event.args.row;
       this.editrow = this.selectCommandSwitch.commandId;
 
-      //refresh child grid
-      if (this.isMasterGrid) this.onRefreshChildGrid.emit(this.selectCommandSwitch.commandId)
+      // refresh child grid
+      if (this.isMasterGrid) {
+        this.onRefreshChildGrid.emit(this.selectCommandSwitch.commandId);
+      }
     }
     // this.updateButtons('Select');
   };
 
-  onRowUnselect(event: any) {
-    // console.log("onRowUnselect")
-    // this.updateButtons('Unselect');
-  };
+// INSERT, UPDATE, DELETE
 
-  onRowBeginEdit(event: any) {
-    // console.log("onRowBeginEdit")
-    // this.updateButtons('Edit');
-  };
-
-  onRowEndEdit(event: any) {
-    // console.log("onRowEndEdit")
-    // this.updateButtons('End Edit');
-  };
-
-
-//INSERT, UPDATE, DELETE
-
-  //insert
+  // insert
   ins() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(this.id_fixture_select, "ins")
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow([this.id_fixture_select], 'ins');
   }
 
-  //switchOff
+  // switchOff
   switchOff() {
-    this.editSwitchOffWindow.positionWindow({x: 600, y: 90})
-    this.editSwitchOffWindow.openWindow(this.id_fixture_select, "ins")
+    this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
+    this.editSwitchOffWindow.openWindow([this.id_fixture_select], 'ins');
   }
 
-  //update
+  // update
   upd() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(this.id_fixture_select, "upd")
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow([this.id_fixture_select], 'upd');
   }
 
-  saveEditwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+  saveSwitchOnEditwinBtn() {
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
   saveEditSwitchOffwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
-  //delete
+  // delete
   del() {
     if (this.selectCommandSwitch.commandId) {
 
-      this.commandIds = []
+      this.commandIds = [];
       for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        this.commandIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].commandId
+        this.commandIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].commandId;
       }
 
-      this.eventWindow.okButtonDisabled(false)
+      this.eventWindow.okButtonDisabled(false);
       if (this.commandIds.length > 1) {
-        this.warningEventWindow = `Удалить команды?`
+        this.warningEventWindow = `Удалить команды?`;
       } else {
-        this.warningEventWindow = `Удалить команду id = "${this.selectCommandSwitch.commandId}"?`
+        this.warningEventWindow = `Удалить команду id = "${this.selectCommandSwitch.commandId}"?`;
       }
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать команду для удаления`
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать команду для удаления`;
     }
-    this.eventWindow.openEventWindow()
+    this.eventWindow.openEventWindow();
   }
 
   okEvenwinBtn() {
@@ -271,12 +273,12 @@ export class FixturecomlistJqxgridComponent implements OnInit {
         },
         response => MaterialService.toast(response.error.message),
         () => {
-          //update the table without contacting the database
+          // update the table without contacting the database
           // this.nodes.splice(selectedrowindex, 1)
           // this.refreshGrid();
-          this.onRefreshGrid.emit()
+          this.onRefreshGrid.emit();
         }
-      )
+      );
     }
   }
 

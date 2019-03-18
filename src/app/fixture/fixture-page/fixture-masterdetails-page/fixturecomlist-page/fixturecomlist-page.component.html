@@ -4,9 +4,9 @@
                 [content]="'Добавить команду ВКЛ. светильника'">
       <Button [disabled]="isAddBtnDisabled"
         (click)="ins()"
-        class="button_margin btn btn-small waves-effect waves-yellow orange blue-text"
+        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
       >
-        <i class="material-icons">add</i>
+        <i class="material-icons" style="color: orange">highlight</i>
       </Button>
     </jqxTooltip>
   </div>
@@ -16,9 +16,9 @@
                 [content]="'Добавить команду ВЫКЛ. светильника'">
       <Button [disabled]="isRemoveBtnDisabled"
         (click)="switchOff()"
-        class="button_margin btn btn-small waves-effect waves-yellow orange blue-text"
+        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
       >
-        <i class="material-icons">remove</i>
+        <i class="material-icons" >highlight</i>
       </Button>
     </jqxTooltip>
   </div>
@@ -85,6 +85,7 @@
       </button>
     </jqxTooltip>
   </div>
+
 </div>
 
 <app-fixturecomlist-filter

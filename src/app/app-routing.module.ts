@@ -9,7 +9,6 @@ import {RegisterPageComponent} from './auth/register-page/register-page.componen
 import {OperatorLayoutComponent} from "./shared/layouts/site-layout/operator-layout/operator-layout.component";
 import {AdminLayoutComponent} from "./shared/layouts/site-layout/admin-layout/admin-layout.component";
 import {FixturelistPageComponent} from "./fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component";
-import {FixturegrouplistPageComponent} from "./fixture/fixturegroup-page/fixturegrouplist-page.component";
 import {HandbookLayoutComponent} from "./shared/layouts/site-layout/handbook-layout/handbook-layout.component";
 import {FixturemapPageComponent} from "./fixture/fixture-page/fixturemap-page/fixturemap-page.component";
 import {FixturePageComponent} from "./fixture/fixture-page/fixture-page.component";
@@ -20,6 +19,9 @@ import {GatewaylistPageComponent} from "./gateway/gateway-page/gateway-masterdet
 import {GatewayPageComponent} from "./gateway/gateway-page/gateway-page.component";
 import {GatewaymapPageComponent} from "./gateway/gateway-page/gatewaymap-page/gatewaymap-page.component";
 import {NotFoundComponent} from "./shared/components/not-found/not-found.component";
+import {FixtureGrlistPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
+import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
+import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
 
 //canActivate: [AuthGuard] - защита роутов
 const routes: Routes = [
@@ -51,15 +53,22 @@ const routes: Routes = [
             ]
           },
 
+          {
+            path: 'sensor', component: SensorPageComponent, canActivate: [AuthGuard], children: [
+              {path: 'sensorlist', component: SensorlistPageComponent}
+            ]
+          },
+
           // {path: '', redirectTo: 'fixture', pathMatch: 'full'},
           {
             path: 'fixture', component: FixturePageComponent, canActivate: [AuthGuard], children: [
               {path: 'fixturelist', component: FixturelistPageComponent},
+              {path: 'fixturegroup', component: FixtureGrlistPageComponent},
               {path: 'fixturemap', component: FixturemapPageComponent}
             ]
-          },
+          }
 
-          {path: 'fixturegroup', component: FixturegrouplistPageComponent}
+
         ]
       },
       {

@@ -9,8 +9,8 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {Subscription} from "rxjs";
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 import {
   Contract, GatewayGroup,
@@ -18,13 +18,13 @@ import {
   Geograph,
   NodeInGroup,
   Owner_gateway,
-} from "../../../shared/interfaces";
-import {GatewayService} from "../../../shared/services/gateway/gateway.service";
-import {MaterialService} from "../../../shared/classes/material.service";
-import {GatewayNode} from "../../../shared/models/gatewayNode";
-import {NodeService} from "../../../shared/services/node/node.service";
-import {EventWindowComponent} from "../../../shared/components/event-window/event-window.component";
-import {NodelinkFormComponent} from "../../../node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component";
+} from '../../../shared/interfaces';
+import {GatewayService} from '../../../shared/services/gateway/gateway.service';
+import {MaterialService} from '../../../shared/classes/material.service';
+import {GatewayNode} from '../../../shared/models/gatewayNode';
+import {NodeService} from '../../../shared/services/node/node.service';
+import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
+import {NodelinkFormComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
 
 
 declare var ymaps: any;
@@ -36,37 +36,37 @@ declare var ymaps: any;
 })
 export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
-  @Input() geographs: Geograph[]
-  @Input() owner_gateways: Owner_gateway[]
-  @Input() gatewayTypes: GatewayType[]
-  @Input() contract_gateways: Contract[]
+  // variables from master component
+  @Input() geographs: Geograph[];
+  @Input() owner_gateways: Owner_gateway[];
+  @Input() gatewayTypes: GatewayType[];
+  @Input() contract_gateways: Contract[];
 
-  @Input() nodeColumns: any[]
+  @Input() nodeColumns: any[];
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshGrid = new EventEmitter()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshGrid = new EventEmitter();
 
-  //define variables - link to view objects
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent
-  @ViewChild('warningEventWindow') warningEventWindow: string
-  @ViewChild('linkWindow') linkWindow: NodelinkFormComponent
+  // define variables - link to view objects
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow') warningEventWindow: string;
+  @ViewChild('linkWindow') linkWindow: NodelinkFormComponent;
 
-  //other variables
-  gatewayGroups: GatewayGroup[]
-  nodeInGroups: NodeInGroup[]
-  pindropGatewayNode: GatewayNode = new GatewayNode()
-  selectGatewayId: number
-  selectNodeId: number
-  selectGatewayNodeId: number
-  myMap: any
-  actionEventWindow: string = ""
+  // other variables
+  gatewayGroups: GatewayGroup[];
+  nodeInGroups: NodeInGroup[];
+  pindropGatewayNode: GatewayNode = new GatewayNode();
+  selectGatewayId: number;
+  selectNodeId: number;
+  selectGatewayNodeId: number;
+  myMap: any;
+  actionEventWindow: string = '';
   //
-  oSub: Subscription
-  oSubGatewayGroups: Subscription
-  oSubNodesInGroup: Subscription
+  oSub: Subscription;
+  oSubGatewayGroups: Subscription;
+  oSubNodesInGroup: Subscription;
   //
-  draggableIcon: boolean = false
+  draggableIcon: boolean = false;
 
   constructor(private zone: NgZone,
               private gatewayService: GatewayService,
@@ -76,29 +76,53 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
-    this.getGatewayGroups()
+    this.getGatewayGroups();
   }
 
   ngAfterViewInit() {
-    this.mapInit()
+    this.mapInit();
   }
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
     if (this.oSubGatewayGroups) {
-      this.oSubGatewayGroups.unsubscribe()
+      this.oSubGatewayGroups.unsubscribe();
     }
     if (this.oSubNodesInGroup) {
-      this.oSubNodesInGroup.unsubscribe()
+      this.oSubNodesInGroup.unsubscribe();
     }
     if (this.myMap) {
       this.myMap.destroy();
     }
   }
 
-  //map initialization
+  // get gateway groups
+  getGatewayGroups() {
+    this.oSubGatewayGroups = this.gatewayService.getGatewayGroups(1).subscribe(gatewayGroups => {
+      this.gatewayGroups = gatewayGroups;
+      this.listBoxInit();
+    });
+  }
+
+  // get nodes ib gateway group
+  getNodesInGroup(id_gateway: number) {
+    this.oSubNodesInGroup = this.gatewayService.getNodesInGroup(id_gateway).subscribe(nodeInGroups => {
+      this.nodeInGroups = nodeInGroups;
+      this.addItemsToMap();
+      this.selectGatewayId = id_gateway;
+    });
+  }
+
+  // refresh Map
+  refreshMap() {
+    this.getNodesInGroup(this.selectGatewayId);
+    // refresh grid
+    // this.onRefreshGrid.emit()
+  }
+
+  // map initialization
   mapInit() {
     ymaps.ready().then(() => {
       this.myMap = new ymaps.Map('node_yamaps', {
@@ -109,7 +133,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     });
   }
 
-  buttonsInit(){
+  // buttons on the map init
+  buttonsInit() {
     let ButtonLayout = ymaps.templateLayoutFactory.createClass([
         `<div class="fr">
                   <Button id="placeNodesInGroup"
@@ -131,7 +156,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           return function (properties: any) {
             return function () {
               mapComponent.placeNodesInGroup();
-            }
+            };
           };
         }).call(this),
       },
@@ -139,9 +164,9 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
       buttonIns = new ymaps.control.Button({
         data: {
-          content: "Жмак-жмак-жмак",
+          content: 'Жмак-жмак-жмак',
           image: 'images/pen.png',
-          title: "Жмак-жмак-жмак"
+          title: 'Жмак-жмак-жмак'
         },
         options: {
           layout: ButtonLayout,
@@ -162,17 +187,18 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       // +
       // "<a id='my-listbox-header' class='dropdown-trigger' data-target='my-listbox'>{{data.title}}<i class='material-icons right'>arrow_drop_down</i></a>"
       // +
-      "<button id='my-listbox-header' class='dropdown-toggle btn btn-small waves-effect waves-orange white blue-text' data-toggle='dropdown'>" +
-      "{{data.title}} <span class='caret'></span>" +
-      "</button>" +
+      '<button id=\'my-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-orange white blue-text\' data-toggle=\'dropdown\'>' +
+      '{{data.title}} <span class=\'caret\'></span>' +
+      '</button>' +
       // Этот элемент будет служить контейнером для элементов списка.
       // В зависимости от того, свернут или развернут список, этот контейнер будет
       // скрываться или показываться вместе с дочерними элементами.
-      "<ul id='my-listbox'" +
-      " class='dropdown-menu' role='menu' aria-labelledby='dropdownMenu'" +
-      " style='display: {% if state.expanded %}block{% else %}none{% endif %};'></ul>"
+      '<ul id=\'my-listbox\'' +
+      ' class=\'dropdown-menu\' role=\'menu\' aria-labelledby=\'dropdownMenu\'' +
+      ' style=\'display: {% if state.expanded %}block{% else %}none{% endif %};\'></ul>'
       ,
-      { build: function () {
+      {
+        build: function () {
           // Вызываем метод build родительского класса перед выполнением
           // дополнительных действий.
           ListBoxLayout.superclass.build.call(this);
@@ -210,7 +236,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
       // Также создадим макет для отдельного элемента списка.
       ListBoxItemLayout = ymaps.templateLayoutFactory.createClass(
-        "<li><a class='waves-effect waves-orange white blue-text'><i class='material-icons'>rss_feed</i> {{data.content}}</a></li>"
+        '<li><a class=\'waves-effect waves-orange white blue-text\'><i class=\'material-icons\'>router</i> {{data.content}}</a></li>'
       ),
 
       // Создадим 2 пункта выпадающего списка
@@ -247,7 +273,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
             mapComponent.getNodesInGroup(item.data.get('id_gateway'));
             mapComponent.selectGatewayNodeId = item.data.get('id_node');
           }
-        }
+        };
       }).call(this)
     );
     this.myMap.controls.add(listBox, {float: 'left'});
@@ -255,9 +281,9 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.buttonsInit();
   }
 
-  //get gateway groups for listBox
+  // get gateway groups for listBox
   getlistBoxItemGroups(): any {
-    let listBoxItemGroups: any[] = []
+    let listBoxItemGroups: any[] = [];
     for (var i = 0; i < this.gatewayGroups.length; i++) {
       listBoxItemGroups[i] = new ymaps.control.ListBoxItem({
         data: {
@@ -267,19 +293,12 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           id_gateway: this.gatewayGroups[i].id_gateway,
           id_node: this.gatewayGroups[i].id_node
         }
-      })
+      });
     }
-    return listBoxItemGroups
+    return listBoxItemGroups;
   }
 
-  //refresh Map
-  refreshMap() {
-    this.getNodesInGroup(this.selectGatewayId);
-    //refresh grid
-    // this.onRefreshGrid.emit()
-  }
-
-  //place the object from the set "getAll()" on the map
+  // place the object from the set "getAll()" on the map
   addItemsToMap() {
     let collection = new ymaps.GeoObjectCollection(null, {});
 
@@ -318,12 +337,12 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           let mapComponent: GatewaymapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.selectNodeId = properties._data.id_node
-              mapComponent.eventWindow.okButtonDisabled(false)
-              mapComponent.warningEventWindow = "Исключить узел из группы?"
-              mapComponent.actionEventWindow = "visibility"
-              mapComponent.eventWindow.openEventWindow()
-            }
+              mapComponent.selectNodeId = properties._data.id_node;
+              mapComponent.eventWindow.okButtonDisabled(false);
+              mapComponent.warningEventWindow = 'Исключить узел из группы?';
+              mapComponent.actionEventWindow = 'visibility';
+              mapComponent.eventWindow.openEventWindow();
+            };
           };
         }).call(this),
       }
@@ -333,12 +352,12 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.myMap.geoObjects.add(collection);
     for (let node of this.nodeInGroups) {
       let myGeoObject = new ymaps.GeoObject(
-        { //description geometry
+        { // description geometry
           geometry: {
-            type: "Point",
+            type: 'Point',
             coordinates: [node.n_coordinate, node.e_coordinate]
           },
-          //properties
+          // properties
           properties: {
             // Content of icon
             iconContent: node.num_node,
@@ -347,46 +366,29 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
             e_coordinate: node.e_coordinate
           }
         },
-        { //options
+        { // options
           balloonContentLayout: BalloonContentLayout,
           balloonPanelMaxMapArea: 0,
-          //icon will be change width
+          // icon will be change width
           preset: node.id_node === this.selectGatewayNodeId ? 'islands#redStretchyIcon' : 'islands#blackStretchyIcon',
-          //icon move
+          // icon move
           draggable: this.draggableIcon
-        })
+        });
 
       collection.add(myGeoObject);
     }
   }
 
-  //get gateway groups
-  getGatewayGroups() {
-    this.oSubGatewayGroups = this.gatewayService.getGatewayGroups(1).subscribe(gatewayGroups => {
-      this.gatewayGroups = gatewayGroups;
-      this.listBoxInit()
-    })
-  }
-
-  //get nodes ib gateway group
-  getNodesInGroup(id_gateway: number) {
-    this.oSubNodesInGroup = this.gatewayService.getNodesInGroup(id_gateway).subscribe(nodeInGroups => {
-      this.nodeInGroups = nodeInGroups;
-      this.addItemsToMap();
-      this.selectGatewayId = id_gateway
-    })
-  }
-
-  //event window
+  // event window
   okEvenwinBtn() {
-    if (this.actionEventWindow === "visibility") {
-      this.pinDropNode()
+    if (this.actionEventWindow === 'visibility') {
+      this.pinDropNode();
     }
   }
 
-  pinDropNode(){
-    this.pindropGatewayNode.gatewayId = this.selectGatewayId
-    this.pindropGatewayNode.nodeId = this.selectNodeId
+  pinDropNode() {
+    this.pindropGatewayNode.gatewayId = this.selectGatewayId;
+    this.pindropGatewayNode.nodeId = this.selectNodeId;
 
     this.oSub = this.nodeService.del_gateway_node(this.pindropGatewayNode).subscribe(
       response => {
@@ -394,27 +396,27 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       },
       error => MaterialService.toast(error.message),
       () => {
-        //refresh map
-        this.refreshMap()
+        // refresh map
+        this.refreshMap();
       }
-    )
+    );
   }
 
-  placeNodesInGroup(){
+  placeNodesInGroup() {
     if (this.selectGatewayId > 1) {
-      this.eventWindow.okButtonDisabled(false)
-      this.linkWindow.openWindow()
+      this.eventWindow.okButtonDisabled(false);
+      this.linkWindow.openWindow();
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать шлюз для привязки узлов`
-      this.eventWindow.openEventWindow()
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для привязки узлов`;
+      this.eventWindow.openEventWindow();
     }
   }
 
   saveLinkwinBtn() {
-    //refresh map
-    this.refreshMap()
-    //refresh table
+    // refresh map
+    this.refreshMap();
+    // refresh table
     // this.onRefreshGrid.emit()
   }
 }

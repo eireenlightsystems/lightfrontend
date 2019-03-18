@@ -99,6 +99,30 @@
     </jqxTooltip>
   </div>
 
+  <div *ngIf="isGroup_in">
+    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
+                [content]="'Добавить светильники в группу'">
+      <button [disabled]="isGroup_inBtnDisabled"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="group_in()"
+      >
+        <i class="material-icons">file_download</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isGroup_out">
+    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
+                [content]="'Удалить светильники из группы'">
+      <button [disabled]="isGroup_outBtnDisabled"
+              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="group_out()"
+      >
+        <i class="material-icons">file_upload</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
 </div>
 
 <app-fixturelist-filter
@@ -118,6 +142,8 @@
   <div>
     <app-fixturelist-jqxgrid #fixturelistJqxgridComponent
                              [fixtures]="fixtures"
+                             [columnsFixture]="columnsFixture"
+                             [listBoxSourceFixture]="listBoxSourceFixture"
 
                              [geographs]="geographs"
                              [owner_fixtures]="owner_fixtures"
@@ -128,10 +154,12 @@
                              [heightTypes]="heightTypes"
 
                              [heightGrid]="heightGrid"
-                             [id_contract_select]="id_contract_select"
-                             [id_node_select]="id_node_select"
                              [selectionmode]="selectionmode"
                              [isMasterGrid]="isMasterGrid"
+
+                             [id_fixture_select]="id_fixture_select"
+                             [id_contract_select]="id_contract_select"
+                             [id_node_select]="id_node_select"
 
                              (onRefreshGrid)="refreshGrid()"
                              (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -160,3 +188,16 @@
 <ng-template #reloadingBlock>
   <app-loader></app-loader>
 </ng-template>
+
+
+<app-fixture-grlink-form #linkWindow
+                   [columns]="columnsFixture"
+                   [fixtureGroupId]="fixtureGroupId"
+
+                   (onSaveLinkwinBtn)="saveLinkwinBtn()"
+></app-fixture-grlink-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

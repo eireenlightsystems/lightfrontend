@@ -1,17 +1,17 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core'
-import {Subscription} from 'rxjs/index'
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs/index';
 
 import {
   CommandSwitch,
   CommandType,
   CommandStatus,
   FilterCommandSwitch
-} from '../../../../shared/interfaces'
-import {FixturecomlistJqxgridComponent} from "./fixturecomlist-jqxgrid/fixturecomlist-jqxgrid.component";
-import {CommandSwitchService} from "../../../../shared/services/command/commandSwitch.service";
+} from '../../../../shared/interfaces';
+import {FixturecomlistJqxgridComponent} from './fixturecomlist-jqxgrid/fixturecomlist-jqxgrid.component';
+import {CommandSwitchService} from '../../../../shared/services/command/commandSwitch.service';
 
 
-const STEP = 1000000000000
+const STEP = 1000000000000;
 
 
 @Component({
@@ -21,107 +21,107 @@ const STEP = 1000000000000
 })
 export class FixturecomlistPageComponent implements OnInit, OnDestroy {
 
-  //variables from master component
-  @Input() commandTypes: CommandType[]
-  @Input() commandStatuses: CommandStatus[]
+  // variables from master component
+  @Input() commandTypes: CommandType[];
+  @Input() commandStatuses: CommandStatus[];
 
-  @Input() heightGrid: number
-  @Input() id_fixture_select: number
-  @Input() selectionmode: string
-  @Input() isMasterGrid: boolean
-  @Input() filterCommandSwitch: FilterCommandSwitch
+  @Input() heightGrid: number;
+  @Input() id_fixture_select: number;
+  @Input() selectionmode: string;
+  @Input() isMasterGrid: boolean;
+  @Input() filterCommandSwitch: FilterCommandSwitch;
 
-  @Input() isAdd: boolean
-  @Input() isSwitchOff: boolean
-  @Input() isUpdate: boolean
-  @Input() isDelete: boolean
-  @Input() isRefresh: boolean
-  @Input() isFilter_none: boolean
-  @Input() isFilter_list: boolean
+  @Input() isAdd: boolean;
+  @Input() isSwitchOff: boolean;
+  @Input() isUpdate: boolean;
+  @Input() isDelete: boolean;
+  @Input() isRefresh: boolean;
+  @Input() isFilter_none: boolean;
+  @Input() isFilter_list: boolean;
 
-  //determine the functions that need to be performed in the parent component
+  // determine the functions that need to be performed in the parent component
   // @Output() onRefreshChildGrid = new EventEmitter<number>()
   // @Output() onRefreshMap = new EventEmitter()
 
-  //define variables - link to view objects
-  @ViewChild("fixturecomlistJqxgridComponent") fixturecomlistJqxgridComponent: FixturecomlistJqxgridComponent;
+  // define variables - link to view objects
+  @ViewChild('fixturecomlistJqxgridComponent') fixturecomlistJqxgridComponent: FixturecomlistJqxgridComponent;
 
-  //other variables
-  commandSwitches: CommandSwitch[] = []
-  oSub: Subscription
-  isFilterVisible = false
+  // other variables
+  commandSwitches: CommandSwitch[] = [];
+  oSub: Subscription;
+  isFilterVisible = false;
   //
-  offset = 0
-  limit = STEP
+  offset = 0;
+  limit = STEP;
   //
-  loading = false
-  reloading = false
-  noMoreCommand_switches = false
+  loading = false;
+  reloading = false;
+  noMoreCommand_switches = false;
   //
   id_command_switch_select: number = 0;
   //
-  isAddBtnDisabled: boolean
-  isRemoveBtnDisabled: boolean
-  isEditBtnDisabled: boolean
-  isDeleteBtnDisabled: boolean
-  isRefreshBtnDisabled: boolean
-  isFilter_noneBtnDisabled: boolean
-  isFilter_listBtnDisabled: boolean
+  isAddBtnDisabled: boolean;
+  isRemoveBtnDisabled: boolean;
+  isEditBtnDisabled: boolean;
+  isDeleteBtnDisabled: boolean;
+  isRefreshBtnDisabled: boolean;
+  isFilter_noneBtnDisabled: boolean;
+  isFilter_listBtnDisabled: boolean;
 
   constructor(private fixturecommandService: CommandSwitchService) {
   }
 
   ngOnInit() {
-    //if this.commandSwitch is child grid, then we need update this.filter.id_fixture
+    // if this.commandSwitch is child grid, then we need update this.filter.id_fixture
     if (!this.isMasterGrid) {
-      this.filterCommandSwitch.fixtureId = this.id_fixture_select
+      this.filterCommandSwitch.fixtureId = this.id_fixture_select;
     }
-    this.getAll()
-    this.reloading = true
+    this.getAll();
+    this.reloading = true;
   }
 
   ngOnDestroy() {
-    this.oSub.unsubscribe()
+    this.oSub.unsubscribe();
   }
 
   refreshGrid() {
-    this.commandSwitches = []
-    this.getAll()
-    this.reloading = true
+    this.commandSwitches = [];
+    this.getAll();
+    this.reloading = true;
     // this.id_command_switch_select = 0
 
-    //if this.nodes id master grid, then we need refresh child grid
+    // if this.nodes id master grid, then we need refresh child grid
     // if (this.isMasterGrid) this.refreshChildGrid(this.id_command_switch_select)
 
-    //refresh map
+    // refresh map
     // this.onRefreshMap.emit()
   }
 
   refreshChildGrid(id_command_switch: number) {
     // this.id_command_switch_select = id_command_switch
-    //refresh child grid
+    // refresh child grid
     // this.onRefreshChildGrid.emit(id_command_switch)
   }
 
   getAll() {
 
-    //Disabled/available buttons
+    // Disabled/available buttons
     if (!this.isMasterGrid && this.filterCommandSwitch.fixtureId <= 0) {
-      this.isAddBtnDisabled = true
-      this.isRemoveBtnDisabled = true
-      this.isEditBtnDisabled = true
-      this.isDeleteBtnDisabled = true
-      this.isRefreshBtnDisabled = true
-      this.isFilter_noneBtnDisabled = true
-      this.isFilter_listBtnDisabled = true
-    }else {
-      this.isAddBtnDisabled = false
-      this.isRemoveBtnDisabled = false
-      this.isEditBtnDisabled = false
-      this.isDeleteBtnDisabled = false
-      this.isRefreshBtnDisabled = false
-      this.isFilter_noneBtnDisabled = false
-      this.isFilter_listBtnDisabled = false
+      this.isAddBtnDisabled = true;
+      this.isRemoveBtnDisabled = true;
+      this.isEditBtnDisabled = true;
+      this.isDeleteBtnDisabled = true;
+      this.isRefreshBtnDisabled = true;
+      this.isFilter_noneBtnDisabled = true;
+      this.isFilter_listBtnDisabled = true;
+    } else {
+      this.isAddBtnDisabled = false;
+      this.isRemoveBtnDisabled = false;
+      this.isEditBtnDisabled = false;
+      this.isDeleteBtnDisabled = false;
+      this.isRefreshBtnDisabled = false;
+      this.isFilter_noneBtnDisabled = false;
+      this.isFilter_listBtnDisabled = false;
     }
 
     const params = Object.assign({}, {
@@ -129,50 +129,50 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         limit: this.limit
       },
       this.filterCommandSwitch
-    )
+    );
     this.oSub = this.fixturecommandService.getAll(params).subscribe(commandSwitches => {
 
-      //Link statusName
+      // Link statusName
       let commandSwitchesStatusName = commandSwitches;
       commandSwitchesStatusName.forEach(currentCommand => {
-        currentCommand.statusName = this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id_command_status === currentCommand.statusId).name_command_status
-      })
+        currentCommand.statusName = this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id_command_status === currentCommand.statusId).name_command_status;
+      });
 
-      this.commandSwitches = this.commandSwitches.concat(commandSwitchesStatusName)
-      this.noMoreCommand_switches = commandSwitches.length < STEP
-      this.loading = false
-      this.reloading = false
-    })
+      this.commandSwitches = this.commandSwitches.concat(commandSwitchesStatusName);
+      this.noMoreCommand_switches = commandSwitches.length < STEP;
+      this.loading = false;
+      this.reloading = false;
+    });
   }
 
   loadMore() {
-    this.offset += STEP
-    this.loading = true
-    this.getAll()
+    this.offset += STEP;
+    this.loading = true;
+    this.getAll();
   }
 
   applyFilter(filter: FilterCommandSwitch) {
-    this.commandSwitches = []
-    this.offset = 0
-    this.filterCommandSwitch = filter
-    this.reloading = true
-    this.getAll()
+    this.commandSwitches = [];
+    this.offset = 0;
+    this.filterCommandSwitch = filter;
+    this.reloading = true;
+    this.getAll();
   }
 
   ins() {
-    this.fixturecomlistJqxgridComponent.ins()
+    this.fixturecomlistJqxgridComponent.ins();
   }
 
   switchOff() {
-    this.fixturecomlistJqxgridComponent.switchOff()
+    this.fixturecomlistJqxgridComponent.switchOff();
   }
 
   upd() {
-    this.fixturecomlistJqxgridComponent.upd()
+    this.fixturecomlistJqxgridComponent.upd();
   }
 
   del() {
-    this.fixturecomlistJqxgridComponent.del()
+    this.fixturecomlistJqxgridComponent.del();
   }
 
 }

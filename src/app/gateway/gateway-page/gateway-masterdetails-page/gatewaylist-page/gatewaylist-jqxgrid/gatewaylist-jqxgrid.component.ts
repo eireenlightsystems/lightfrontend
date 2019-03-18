@@ -1,18 +1,19 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {MaterialService} from '../../../../../shared/classes/material.service'
-import {jqxGridComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid";
-import {jqxListBoxComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox";
-import {jqxButtonComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons";
+import {Subscription} from 'rxjs';
+import {MaterialService} from '../../../../../shared/classes/material.service';
+import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
+import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
+import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Gateway} from '../../../../../shared/models/gateway'
-import {Geograph, Contract, Owner_gateway, GatewayType} from '../../../../../shared/interfaces'
+import {Gateway} from '../../../../../shared/models/gateway';
+import {Geograph, Contract, Owner_gateway, GatewayType} from '../../../../../shared/interfaces';
 
-import {GatewayService} from "../../../../../shared/services/gateway/gateway.service";
-import {EventWindowComponent} from "../../../../../shared/components/event-window/event-window.component";
-import {GatewayeditFormComponent} from "../gatewayedit-form/gatewayedit-form.component";
-import {FixturelinkFormComponent} from "../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component";
-import {NodeGateway} from "../../../../../shared/models/nodeGateway";
+import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
+import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
+import {GatewayeditFormComponent} from '../gatewayedit-form/gatewayedit-form.component';
+import {FixturelinkFormComponent} from '../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component';
+import {NodeGateway} from '../../../../../shared/models/nodeGateway';
+import {Sensor} from '../../../../../shared/models/sensor';
 
 @Component({
   selector: 'app-gatewaylist-jqxgrid',
@@ -21,111 +22,41 @@ import {NodeGateway} from "../../../../../shared/models/nodeGateway";
 })
 export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  //variables from master component
-  @Input() gateways: Gateway[]
-  @Input() geographs: Geograph[]
-  @Input() owner_gateways: Owner_gateway[]
-  @Input() gatewayTypes: GatewayType[]
-  @Input() contract_gateways: Contract[]
+  // variables from master component
+  @Input() gateways: Gateway[];
+  @Input() geographs: Geograph[];
+  @Input() owner_gateways: Owner_gateway[];
+  @Input() gatewayTypes: GatewayType[];
+  @Input() contract_gateways: Contract[];
 
-  @Input() heightGrid: number
-  @Input() isMasterGrid: number
-  @Input() selectionmode: string
-  @Input() id_node_select: number
+  @Input() heightGrid: number;
+  @Input() isMasterGrid: number;
+  @Input() selectionmode: string;
+  @Input() id_node_select: number;
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onRefreshGrid = new EventEmitter()
-  @Output() onRefreshChildGrid = new EventEmitter<number>()
+  // determine the functions that need to be performed in the parent component
+  @Output() onRefreshGrid = new EventEmitter();
+  @Output() onRefreshChildGrid = new EventEmitter<number>();
 
-  //define variables - link to view objects
-  @ViewChild('myListBox') myListBox: jqxListBoxComponent
-  @ViewChild('myGrid') myGrid: jqxGridComponent
-  @ViewChild('editWindow') editWindow: GatewayeditFormComponent
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent
-  @ViewChild('warningEventWindow') warningEventWindow: string
-  @ViewChild('okButton') okButton: jqxButtonComponent
-  @ViewChild('linkWindow') linkWindow: FixturelinkFormComponent
+  // define variables - link to view objects
+  @ViewChild('myListBox') myListBox: jqxListBoxComponent;
+  @ViewChild('myGrid') myGrid: jqxGridComponent;
+  @ViewChild('editWindow') editWindow: GatewayeditFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow') warningEventWindow: string;
+  @ViewChild('okButton') okButton: jqxButtonComponent;
+  @ViewChild('linkWindow') linkWindow: FixturelinkFormComponent;
 
-  //other variables
-  selectGateway: Gateway = new Gateway()
-  saveNodeGateway: NodeGateway = new NodeGateway()
-  oSub: Subscription
-  editrow: number
-  rowcount: number = 0
-  islistBoxVisible: boolean = false
-  actionEventWindow: string = ""
+  // other variables
+  selectGateway: Gateway = new Gateway();
+  saveNodeGateway: NodeGateway = new NodeGateway();
+  oSub: Subscription;
+  editrow: number;
+  rowcount = 0;
+  islistBoxVisible = false;
+  actionEventWindow = '';
 
-  constructor(private gatewayService: GatewayService) {
-  }
-
-  ngOnInit() {
-    this.refreshGrid();
-
-  }
-
-  ngAfterViewInit(): void {
-    this.refreshListBox()
-  }
-
-  ngOnDestroy() {
-    if (this.oSub) {
-      this.oSub.unsubscribe()
-    }
-    if (this.myListBox) {
-      this.myListBox.destroy();
-    }
-    if (this.myGrid) {
-      this.myGrid.destroy();
-    }
-    if (this.editWindow) {
-      this.editWindow.destroyWindow();
-    }
-    if (this.eventWindow) {
-      this.eventWindow.destroyEventWindow();
-    }
-  }
-
-  //TABLE
-
-  //refresh table
-  refreshGrid() {
-    if (this.gateways && this.gateways.length > 0 && this.rowcount !== this.gateways.length) {
-      this.source_jqxgrid.localdata = this.gateways;
-      this.rowcount = this.gateways.length;
-      // this.myGrid.refresh();
-      // this.myGrid.refreshdata();
-      this.myGrid.updatebounddata('data');
-      // this.myGrid.updatebounddata('cells');// passing `cells` to the `updatebounddata` method will refresh only the cells values when the new rows count is equal to the previous rows count.
-    }
-  }
-
-  //define width of table
-  getWidth(): any {
-    if (document.body.offsetWidth > 1600) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
-    } else if (document.body.offsetWidth > 1400) {
-      if (this.islistBoxVisible) return '85%';
-      else return '99.8%';
-    } else if (document.body.offsetWidth > 1200) {
-      if (this.islistBoxVisible) return '80%';
-      else return '99.8%';
-    } else if (document.body.offsetWidth > 1000) {
-      if (this.islistBoxVisible) return '75%';
-      else return '99.8%';
-    } else if (document.body.offsetWidth > 800) {
-      if (this.islistBoxVisible) return '70%';
-      else return '99.8%';
-    } else if (document.body.offsetWidth > 600) {
-      if (this.islistBoxVisible) return '65%';
-      else return '99.8%';
-    } else {
-      if (this.islistBoxVisible) return '40%';
-      else return '99.8%';
-    }
-  }
-
-  //define the data source for the table
+  // define the data source for the table
   source_jqxgrid: any =
     {
       datatype: 'array',
@@ -137,7 +68,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
 
-  //define columns for table
+  // define columns for table
   columns: any[] =
     [
       {text: 'id_gateway', datafield: 'id_gateway', width: 150},
@@ -155,7 +86,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
       {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
     ];
 
-  //define a data source for filtering table columns
+  // define a data source for filtering table columns
   listBoxSource: any[] =
     [
       {label: 'id_gateway', value: 'id_gateway', checked: true},
@@ -173,7 +104,100 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
       {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
     ];
 
-  //table filtering
+
+  constructor(private gatewayService: GatewayService) {
+  }
+
+  ngOnInit() {
+    this.refresh_jqxgGrid();
+
+  }
+
+  ngAfterViewInit() {
+    this.refreshListBox();
+  }
+
+  ngOnDestroy() {
+    if (this.oSub) {
+      this.oSub.unsubscribe();
+    }
+    if (this.myListBox) {
+      this.myListBox.destroy();
+    }
+    if (this.myGrid) {
+      this.myGrid.destroy();
+    }
+    if (this.editWindow) {
+      this.editWindow.destroyWindow();
+    }
+    if (this.eventWindow) {
+      this.eventWindow.destroyEventWindow();
+    }
+  }
+
+  // TABLE
+
+  // refresh table
+  refresh_jqxgGrid() {
+    if (this.gateways && this.gateways.length > 0 && this.rowcount !== this.gateways.length) {
+      this.source_jqxgrid.localdata = this.gateways;
+      this.rowcount = this.gateways.length;
+      this.myGrid.updatebounddata('data');
+    }
+  }
+
+  refresh_del() {
+    this.myGrid.deleterow(this.selectGateway.id_gateway);
+  }
+
+  // define width of table
+  getWidth(): any {
+    if (document.body.offsetWidth > 1600) {
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
+    } else if (document.body.offsetWidth > 1400) {
+      if (this.islistBoxVisible) {
+        return '85%';
+      } else {
+        return '99.8%';
+      }
+    } else if (document.body.offsetWidth > 1200) {
+      if (this.islistBoxVisible) {
+        return '80%';
+      } else {
+        return '99.8%';
+      }
+    } else if (document.body.offsetWidth > 1000) {
+      if (this.islistBoxVisible) {
+        return '75%';
+      } else {
+        return '99.8%';
+      }
+    } else if (document.body.offsetWidth > 800) {
+      if (this.islistBoxVisible) {
+        return '70%';
+      } else {
+        return '99.8%';
+      }
+    } else if (document.body.offsetWidth > 600) {
+      if (this.islistBoxVisible) {
+        return '65%';
+      } else {
+        return '99.8%';
+      }
+    } else {
+      if (this.islistBoxVisible) {
+        return '40%';
+      } else {
+        return '99.8%';
+      }
+    }
+  }
+
+  // table filtering
   myListBoxOnCheckChange(event: any) {
     this.myGrid.beginupdate();
     if (event.args.checked) {
@@ -186,7 +210,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   refreshListBox() {
     this.myGrid.beginupdate();
-    for (var i = 0; i < this.myListBox.attrSource.length; i++) {
+    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
       if (this.myListBox.attrSource[i].checked) {
         this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
       } else {
@@ -196,7 +220,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     this.myGrid.endupdate();
   };
 
-  //functions-events when allocating a string
+  // functions-events when allocating a string
   onRowclick(event: any) {
     // console.log("onRowclick")
   };
@@ -208,8 +232,10 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
       this.selectGateway = event.args.row;
       this.editrow = this.selectGateway.id_gateway;
 
-      //refresh child grid
-      if (this.isMasterGrid) this.onRefreshChildGrid.emit(this.selectGateway.id_gateway)
+      // refresh child grid
+      if (this.isMasterGrid) {
+        this.onRefreshChildGrid.emit(this.selectGateway.id_gateway);
+      }
     }
     // this.updateButtons('Select');
   };
@@ -230,101 +256,106 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   };
 
 
-//INSERT, UPDATE, DELETE
+// INSERT, UPDATE, DELETE
 
-  //insert node
+  // insert node
   ins() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(null, "ins")
+    const selectGateway: Gateway = new Gateway();
+    selectGateway.id_node = this.id_node_select;
+
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow(selectGateway, 'ins');
   }
 
-  //update node
+  // update node
   upd() {
-    this.editWindow.positionWindow({x: 600, y: 90})
-    this.editWindow.openWindow(this.selectGateway, "upd")
+    this.editWindow.positionWindow({x: 600, y: 90});
+    this.editWindow.openWindow(this.selectGateway, 'upd');
   }
 
   saveEditwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
   saveLinkwinBtn() {
-    //refresh table
-    this.onRefreshGrid.emit()
+    // refresh table
+    this.onRefreshGrid.emit();
   }
 
-  //delete node
+  // delete node
   del() {
     if (this.selectGateway.id_gateway) {
-      this.eventWindow.okButtonDisabled(false)
-      this.actionEventWindow = "del"
-      this.warningEventWindow = `Удалить шлюз id = "${this.selectGateway.id_gateway}"?`
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'del';
+      this.warningEventWindow = `Удалить шлюз id = "${this.selectGateway.id_gateway}"?`;
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать шлюз для удаления`
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для удаления`;
     }
-    this.eventWindow.openEventWindow()
+    this.eventWindow.openEventWindow();
   }
 
   okEvenwinBtn() {
-    if (this.actionEventWindow === "del") {
-      let selectedrowindex = this.myGrid.getselectedrowindex();
-      let id = this.myGrid.getrowid(selectedrowindex);
+    if (this.actionEventWindow === 'del') {
+      const selectedrowindex = this.myGrid.getselectedrowindex();
+      const id = this.myGrid.getrowid(selectedrowindex);
 
       if (+id >= 0) {
         this.gatewayService.del(+id).subscribe(
           response => {
-            MaterialService.toast(response.message)
+            MaterialService.toast(response.message);
           },
           error => MaterialService.toast(error.message),
           () => {
-            //update the table without contacting the database
+            // update the table without contacting the database
             // this.nodes.splice(selectedrowindex, 1)
             // this.refreshGrid();
-            this.onRefreshGrid.emit()
+            // this.onRefreshGrid.emit();
+
+            this.refresh_del();
           }
-        )
+        );
       }
     }
 
-    if (this.actionEventWindow === "pin_drop") {
-      for(var i=0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++){
-        this.saveNodeGateway.gatewayId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_gateway
-        this.saveNodeGateway.nodeId = 1
+    if (this.actionEventWindow === 'pin_drop') {
+      for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        this.saveNodeGateway.gatewayId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_gateway;
+        this.saveNodeGateway.nodeId = 1;
         this.oSub = this.gatewayService.set_id_node(this.saveNodeGateway).subscribe(
           response => {
             // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
           },
           error => MaterialService.toast(error.message),
           () => {
-            //refresh table
-            this.onRefreshGrid.emit()
+            // refresh table
+            this.onRefreshGrid.emit();
           }
-        )
+        );
       }
     }
   }
 
   place() {
     if (this.id_node_select > 1) {
-      this.linkWindow.openWindow()
+      this.linkWindow.openWindow();
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`
-      this.eventWindow.openEventWindow()
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
+      this.eventWindow.openEventWindow();
     }
   }
 
   pin_drop() {
     if (this.selectGateway.id_gateway) {
-      this.eventWindow.okButtonDisabled(false)
-      this.actionEventWindow = "pin_drop"
-      this.warningEventWindow = `Отвязать шлюз от узла?`
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'pin_drop';
+      this.warningEventWindow = `Отвязать шлюз от узла?`;
     } else {
-      this.eventWindow.okButtonDisabled(true)
-      this.warningEventWindow = `Вам следует выбрать шлюз для отвязки от узла`
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для отвязки от узла`;
     }
-    this.eventWindow.openEventWindow()
+    this.eventWindow.openEventWindow();
   }
 }

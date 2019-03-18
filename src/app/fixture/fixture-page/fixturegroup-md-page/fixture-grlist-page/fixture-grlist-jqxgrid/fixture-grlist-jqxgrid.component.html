@@ -1,0 +1,45 @@
+<div [hidden]="!islistBoxVisible">
+  <jqxListBox #myListBox
+              [theme]="'material'"
+              style="float: left"
+              (onCheckChange)="myListBoxOnCheckChange($event)"
+              [width]="150"
+              [height]="heightGrid/3"
+              [source]="listBoxSource"
+              [checkboxes]="true"
+              [filterable]="true"
+              [allowDrag]="true"
+  >
+  </jqxListBox>
+</div>
+
+<jqxGrid #myGrid
+         [theme]="'material'"
+         [width]="widthGrid"
+         [height]="heightGrid"
+         [source]="dataAdapter_jqxgrid"
+         [columns]="columns"
+         [columnsresize]="true"
+
+         [sortable]="true"
+         [filterable]="true"
+         [altrows]="true"
+         [selectionmode]="selectionmode"
+
+         (onRowselect)="onRowSelect($event)"
+>
+</jqxGrid>
+
+<app-fixture-gredit-form #editWindow
+                         [fixtureGroupTypes]="fixtureGroupTypes"
+                         [fixtureGroupOwners]="fixtureGroupOwners"
+
+                         (onInsEditwinBtn)="insEditwinBtn($event)"
+                         (onUpdEditwinBtn)="updEditwinBtn()"
+></app-fixture-gredit-form>
+
+<app-event-window #eventWindow
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+                  [warning]="warningEventWindow"
+></app-event-window>
+

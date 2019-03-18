@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {jqxWindowComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow";
-import {jqxButtonComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons";
+import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
+import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 @Component({
   selector: 'app-event-window',
@@ -10,10 +10,10 @@ import {jqxButtonComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxbutt
 
 export class EventWindowComponent implements AfterViewInit {
 
-  @Input() warning = ""
+  @Input() warning = '';
 
-  @Output() onOkEvenwinBtn = new EventEmitter()
-  @Output() onCancelEvenwinBtn = new EventEmitter()
+  @Output() onOkEvenwinBtn = new EventEmitter();
+  @Output() onCancelEvenwinBtn = new EventEmitter();
 
   @ViewChild('eventWindow') eventWindow: jqxWindowComponent;
   @ViewChild('okButton') okButton: jqxButtonComponent;
@@ -24,19 +24,19 @@ export class EventWindowComponent implements AfterViewInit {
   }
 
   okEvenwinBtn() {
-    this.onOkEvenwinBtn.emit()
+    this.onOkEvenwinBtn.emit();
   }
 
   cancelEvenwinBtn() {
-    this.onCancelEvenwinBtn.emit()
+    this.onCancelEvenwinBtn.emit();
   }
 
   openEventWindow() {
-    this.eventWindow.open()
+    this.eventWindow.open();
   }
 
   destroyEventWindow() {
-    this.eventWindow.destroy()
+    this.eventWindow.destroy();
   }
 
   hideEventWindow() {
@@ -44,6 +44,6 @@ export class EventWindowComponent implements AfterViewInit {
   }
 
   okButtonDisabled(flg_disable: boolean) {
-    this.okButton.disabled(flg_disable)
+    this.okButton.disabled(flg_disable);
   }
 }

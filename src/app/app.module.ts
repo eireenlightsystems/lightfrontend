@@ -1,7 +1,7 @@
-import {BrowserModule} from '@angular/platform-browser'
-import {NgModule} from '@angular/core'
-import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http'
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
 import {jqxPivotDesignerComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotdesigner';
@@ -22,20 +22,19 @@ import {jqxResponsivePanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angula
 import {jqxPanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpanel';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 
-import {AppComponent} from './app.component'
-import {LoginPageComponent} from './auth/login-page/login-page.component'
-import {AppRoutingModule} from './app-routing.module'
-import {AuthLayoutComponent} from './shared/layouts/auth-layout/auth-layout.component'
-import {SiteLayoutComponent} from './shared/layouts/site-layout/site-layout.component'
-import {RegisterPageComponent} from './auth/register-page/register-page.component'
-import {TokenInterceptor} from './shared/classes/token.interceptor'
-import {LoaderComponent} from './shared/components/loader/loader.component'
+import {AppComponent} from './app.component';
+import {LoginPageComponent} from './auth/login-page/login-page.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AuthLayoutComponent} from './shared/layouts/auth-layout/auth-layout.component';
+import {SiteLayoutComponent} from './shared/layouts/site-layout/site-layout.component';
+import {RegisterPageComponent} from './auth/register-page/register-page.component';
+import {TokenInterceptor} from './shared/classes/token.interceptor';
+import {LoaderComponent} from './shared/components/loader/loader.component';
 import {OperatorLayoutComponent} from './shared/layouts/site-layout/operator-layout/operator-layout.component';
 import {AdminLayoutComponent} from './shared/layouts/site-layout/admin-layout/admin-layout.component';
 import {FixturemapPageComponent} from './fixture/fixture-page/fixturemap-page/fixturemap-page.component';
 import {FixturelistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {FixturelistFilterComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-filter/fixturelist-filter.component';
-import {FixturegrouplistPageComponent} from './fixture/fixturegroup-page/fixturegrouplist-page.component';
 import {HandbookLayoutComponent} from './shared/layouts/site-layout/handbook-layout/handbook-layout.component';
 import {FixturelistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 import {FixturePageComponent} from './fixture/fixture-page/fixture-page.component';
@@ -70,6 +69,16 @@ import {FixturecomspeedlistJqxgridComponent} from './fixture/fixture-page/fixtur
 import {LimitedSliderComponent} from './shared/components/limited-slider/limited-slider.component';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {NodelinkFormComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
+import {FixturegroupMdPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixturegroup-md-page.component';
+import {FixtureGrlistPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
+import {FixtureGrlistJqxgridComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
+import {FixtureGrlinkFormComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlink-form/fixture-grlink-form.component';
+import {FixtureGreditFormComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-gredit-form/fixture-gredit-form.component';
+import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
+import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-md-page.component';
+import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
+import {SensorlistJqxgridComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-jqxgrid/sensorlist-jqxgrid.component';
+import {SensoreditFormComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensoredit-form/sensoredit-form.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +93,6 @@ import {NodelinkFormComponent} from './node/node-page/node-masterdetails-page/no
     FixturemapPageComponent,
     FixturelistPageComponent,
     FixturelistFilterComponent,
-    FixturegrouplistPageComponent,
     HandbookLayoutComponent,
 
     jqxGridComponent,
@@ -140,7 +148,17 @@ import {NodelinkFormComponent} from './node/node-page/node-masterdetails-page/no
     FixturecomspeedlistJqxgridComponent,
     LimitedSliderComponent,
     NotFoundComponent,
-    NodelinkFormComponent
+    NodelinkFormComponent,
+    FixturegroupMdPageComponent,
+    FixtureGrlistPageComponent,
+    FixtureGrlistJqxgridComponent,
+    FixtureGrlinkFormComponent,
+    FixtureGreditFormComponent,
+    SensorPageComponent,
+    SensorMdPageComponent,
+    SensorlistPageComponent,
+    SensorlistJqxgridComponent,
+    SensoreditFormComponent
 
   ],
   imports: [

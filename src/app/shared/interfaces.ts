@@ -1,15 +1,15 @@
 export interface User {
-  login: string
-  password: string
+  login: string;
+  password: string;
 }
 
 export interface Message {
-  message: string
+  message: string;
 }
 
 export interface Geograph {
-  id_geograph: number
-  code_geograph: string
+  id_geograph: number;
+  code_geograph: string;
 }
 
 export interface Contract {
@@ -17,7 +17,6 @@ export interface Contract {
   code_contract: string;
   name_contract: string;
 }
-
 
 
 export interface Fixture {
@@ -64,33 +63,63 @@ export interface Fixture {
   useredit: number;
 }
 
-export interface FilterFixture {
-  id_geograph: number
-  id_owner: number
-  id_fixture_type: number
-  id_substation: number
-  id_mode: number
-
-  id_contract: number
-  id_node: number
+export interface FixtureGroup {
+  fixtureGroupId: number;
+  fixtureGroupTypeId: number;
+  ownerId: number;
+  geographId: number;
+  fixtureGroupName: string;
+  nameFixtureGroupType: string;
+  ownerCode: string;
+  geographCode: string;
+  n_coordinate: string;
+  e_coordinate: string;
 }
 
-export interface Owner_fixture{
-  id_owner: number
-  name_owner: string
+export interface FilterFixture {
+  id_geograph: number;
+  id_owner: number;
+  id_fixture_type: number;
+  id_substation: number;
+  id_mode: number;
+
+  id_contract: number;
+  id_node: number;
+}
+
+export interface FilterFixtureInGroup {
+  id_geograph: number;
+  id_owner: number;
+  id_fixture_type: number;
+  id_substation: number;
+  id_mode: number;
+
+  id_contract: number;
+  id_node: number;
+  id_fixture_group: number;
+}
+
+export interface FilterFixtureGroup {
+  ownerId: any;
+  fixtureGroupTypeId: any;
+}
+
+export interface Owner_fixture {
+  id_owner: number;
+  name_owner: string;
 }
 
 export interface FixtureType {
-  id_fixture_type: number
-  code_fixture_type: string
-  model_fixture_type: string
+  id_fixture_type: number;
+  code_fixture_type: string;
+  model_fixture_type: string;
 }
 
-export interface Substation{
-  id_substation: number
-  code: string
-  name: string
-  power: number
+export interface Substation {
+  id_substation: number;
+  code: string;
+  name: string;
+  power: number;
 }
 
 export interface Installer {
@@ -99,13 +128,21 @@ export interface Installer {
   name: string;
 }
 
-export interface HeightType{
+export interface HeightType {
   id_height_type: number;
   code: string;
   name: string;
 }
 
+export interface FixtureGroupOwner {
+  id: number;
+  name: string;
+}
 
+export interface FixtureGroupType {
+  id: number;
+  name: string;
+}
 
 export interface Node {
   id_node: number;
@@ -130,24 +167,23 @@ export interface Node {
 }
 
 export interface FilterNode {
-  id_geograph: number
-  id_owner: number
-  id_node_type: number
-  id_contract: number
+  id_geograph: number;
+  id_owner: number;
+  id_node_type: number;
+  id_contract: number;
 
-  id_gateway: number
+  id_gateway: number;
 }
 
-export interface Owner_node{
-  id_owner: number
-  name_owner: string
+export interface Owner_node {
+  id_owner: number;
+  name_owner: string;
 }
 
 export interface NodeType {
-  id_node_type: number
-  code_node_type: string
+  id_node_type: number;
+  code_node_type: string;
 }
-
 
 
 export interface Gateway {
@@ -173,21 +209,21 @@ export interface Gateway {
 }
 
 export interface FilterGateway {
-  id_geograph: number
-  id_owner: number
-  id_gateway_type: number
-  id_contract: number
-  id_node: number
+  id_geograph: number;
+  id_owner: number;
+  id_gateway_type: number;
+  id_contract: number;
+  id_node: number;
 }
 
-export interface Owner_gateway{
-  id_owner: number
-  name_owner: string
+export interface Owner_gateway {
+  id_owner: number;
+  name_owner: string;
 }
 
 export interface GatewayType {
-  id_gateway_type: number
-  code_gateway_type: string
+  id_gateway_type: number;
+  code_gateway_type: string;
 }
 
 export interface GatewayNode {
@@ -231,10 +267,10 @@ export interface CommandSwitch {
 }
 
 export interface FilterCommandSwitch {
-  fixtureId: number
-  statusId: number
-  startDateTime: string
-  endDateTime: string
+  fixtureId: number;
+  statusId: number;
+  startDateTime: string;
+  endDateTime: string;
 }
 
 export interface CommandSwitchDflt {
@@ -253,11 +289,11 @@ export interface CommandSpeedSwitch {
 }
 
 export interface FilterCommandSpeedSwitch {
-  fixtureId: number
-  statusId: number
-  speedDirectionId: number
-  startDateTime: string
-  endDateTime: string
+  fixtureId: number;
+  statusId: number;
+  speedDirectionId: number;
+  startDateTime: string;
+  endDateTime: string;
 }
 
 export interface CommandSpeedSwitchDflt {
@@ -271,13 +307,59 @@ export interface SpeedDirection {
 }
 
 export interface CommandType {
-  id_command_type: number
-  code_command_type: string
-  name_command_type: string
+  id_command_type: number;
+  code_command_type: string;
+  name_command_type: string;
 }
 
 export interface CommandStatus {
-  id_command_status: number
-  code_command_status: string
-  name_command_status: string
+  id_command_status: number;
+  code_command_status: string;
+  name_command_status: string;
+}
+
+
+export interface Sensor {
+  id_sensor: number;
+  id_contract: number;
+  id_sensor_type: number;
+  id_owner: number;
+  id_geograph: number;
+  id_node: number;
+
+  code_contract: string;
+  code_owner: string;
+  code_sensor_type: string;
+  code_geograph: string;
+
+  n_coordinate: number;
+  e_coordinate: number;
+  serial_number: string;
+  comments: string;
+
+  dateedit: string;
+  useredit: number;
+}
+
+export interface FilterSensor {
+  geographId: number;
+  ownerId: number;
+  sensorTypeId: number;
+  contractId: number;
+  nodeId: number;
+}
+
+export interface OwnerSensor {
+  id_owner: number;
+  name_owner: string;
+}
+
+export interface SensorType {
+  id_sensor_type: number;
+  code_sensor_type: string;
+}
+
+export interface NodeSensor {
+  nodeId: number;
+  sensorId: number;
 }
