@@ -1,20 +1,22 @@
 export class Node {
-  id_node: number;
-  id_contract: number;
-  id_node_type: number;
-  id_geograph: number;
-  id_owner_node: number;
+  nodeId: number;
+  contractId: number;
+  nodeTypeId: number;
+  geographId: number;
+  ownerId: number;
+  gatewayId: number;
 
-  num_node: string;
-  code_contract: string;
-  code_node_type: string;
-  code_geograph: string;
-  code_owner: string;
+  numberInGroup: string;
+  contractCode: string;
+  nodeTypeCode: string;
+  geographCode: string;
+  ownerCode: string;
 
   n_coordinate: number;
   e_coordinate: number;
-  price: number;
-  comments: string;
+
+  serialNumber: string;
+  comment: string;
 
   dateedit: string;
   useredit: number;

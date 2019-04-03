@@ -2,8 +2,8 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="0.3"
-           [width]="550" [height]="500"
-           [maxHeight]="600" [minHeight]="500" [maxWidth]="550" [minWidth]="550"
+           [width]="550" [maxWidth]="550" [minWidth]="550"
+           [height]="550" [maxHeight]="550" [minHeight]="550"
 
 >
   <div #windowHeader>
@@ -18,14 +18,14 @@
       <tr>
         <td align="right"><b>Географическое понятие:</b></td>
         <td align="left">
-          <jqxDropDownList #id_geograph
+          <jqxDropDownList #geographId
                            [theme]="'material'"
                            [width]="330"
                            [height]="20"
                            [source]="dataAdapter_geogr"
-                           [displayMember]="'code_geograph'"
-                           [valueMember]="'id_geograph'"
-                           [selectedIndex]="id_geograph_index"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="geographId_index"
                            [filterable]="true"
 
           >
@@ -36,14 +36,14 @@
       <tr>
         <td align="right"><b>Договор:</b></td>
         <td align="left">
-          <jqxDropDownList #id_contract
+          <jqxDropDownList #contractId
                            [theme]="'material'"
                            [width]="330"
                            [height]="20"
                            [source]="dataAdapter_contract"
-                           [displayMember]="'code_contract'"
-                           [valueMember]="'id_contract'"
-                           [selectedIndex]="id_contract_index"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="contractId_index"
                            [filterable]="true"
 
           >
@@ -54,14 +54,14 @@
       <tr>
         <td align="right"><b>Тип узла/столба:</b></td>
         <td align="left">
-          <jqxDropDownList #id_node_type
+          <jqxDropDownList #nodeTypeId
                            [theme]="'material'"
                            [width]="330"
                            [height]="20"
                            [source]="dataAdapter_nodeType"
-                           [displayMember]="'code_node_type'"
-                           [valueMember]="'id_node_type'"
-                           [selectedIndex]="id_node_type_index"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="nodeTypeId_index"
                            [filterable]="true"
 
           >
@@ -102,16 +102,14 @@
       </tr>
 
       <tr>
-        <td align="right"><b>Цена:</b></td>
+        <td align="right"><b>Серийный номер:</b></td>
         <td align="left">
-          <jqxNumberInput
+          <jqxTextArea
             [theme]="'material'"
-            [width]="330" [height]="20"
-            [min]="0" [spinButtons]="true"
-            [spinMode]="'simple'"
-            [(ngModel)]="saveNode.price"
+            [width]="330" [height]="50"
+            [(ngModel)]="saveNode.serialNumber"
           >
-          </jqxNumberInput>
+          </jqxTextArea>
         </td>
       </tr>
 
@@ -121,7 +119,7 @@
           <jqxTextArea
             [theme]="'material'"
             [width]="330" [height]="50"
-            [(ngModel)]="saveNode.comments"
+            [(ngModel)]="saveNode.comment"
           >
           </jqxTextArea>
         </td>

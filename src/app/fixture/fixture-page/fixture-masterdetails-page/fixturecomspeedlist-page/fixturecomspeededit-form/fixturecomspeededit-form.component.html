@@ -2,8 +2,8 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="'0.3'"
-           [width]="600" [height]="310"
-           [maxHeight]="310" [minHeight]="310" [maxWidth]="600" [minWidth]="600"
+           [width]="600" [maxWidth]="600" [minWidth]="600"
+           [height]="310" [maxHeight]="310" [minHeight]="310"
 >
   <div #windowHeader>
     <div class="fr">
@@ -33,14 +33,14 @@
       <tr>
         <td align="right"><b>Тип команды:</b></td>
         <td align="left">
-          <jqxDropDownList #id_speed_direction
+          <jqxDropDownList #speedDirectionId
                            [theme]="'material'"
                            [width]="400"
                            [height]="20"
                            [source]="dataAdapter_speedDirection"
-                           [displayMember]="'name_speed_direction'"
-                           [valueMember]="'id_speed_direction'"
-                           [selectedIndex]="id_speed_direction_index"
+                           [displayMember]="'name'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="speedDirectionId_index"
                            [filterable]="true"
           >
           </jqxDropDownList>

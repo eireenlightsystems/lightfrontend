@@ -7,7 +7,7 @@ import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_j
 import {Gateway} from '../../../../../shared/models/gateway';
 import {Contract, GatewayType, Geograph} from '../../../../../shared/interfaces';
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
-import {isUndefined} from "util";
+import {isUndefined} from 'util';
 
 @Component({
   selector: 'app-gatewayedit-form',
@@ -19,33 +19,29 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
   // variables from master component
   @Input() geographs: Geograph[];
   @Input() gatewayTypes: GatewayType[];
-  @Input() contract_gateways: Contract[];
+  @Input() contractGateways: Contract[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onSaveEditwinBtn = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('id_contract') id_contract: jqxDropDownListComponent;
-  @ViewChild('id_geograph') id_geograph: jqxDropDownListComponent;
-  @ViewChild('id_gateway_type') id_gatewayType: jqxDropDownListComponent;
+  @ViewChild('contractId') contractId: jqxDropDownListComponent;
+  @ViewChild('gatewayTypeId') gatewayTypeId: jqxDropDownListComponent;
 
   // define variables for drop-down lists in the edit form
-  // source_geogr: any
-  // dataAdapter_geogr: any
   source_gatewayType: any;
   dataAdapter_gatewayType: any;
   source_contract: any;
   dataAdapter_contract: any;
 
-  id_contract_index = 0;
-  // id_geograph_index = 0
-  id_gateway_type_index = 0;
+  contractId_index = 0;
+  gatewayTypeId_index = 0;
 
   // other variables
   saveGateway: Gateway = new Gateway();
   oSub: Subscription;
-  typeEditWindow: string = '';
+  typeEditWindow = '';
 
   constructor(private gatewayService: GatewayService) {
   }
@@ -65,24 +61,16 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
     this.source_contract =
       {
         datatype: 'array',
-        localdata: this.contract_gateways,
-        id: 'id_contract',
+        localdata: this.contractGateways,
+        id: 'id',
       };
     this.dataAdapter_contract = new jqx.dataAdapter(this.source_contract);
-
-    // this.source_geogr =
-    //   {
-    //     datatype: 'array',
-    //     localdata: this.geographs,
-    //     id: 'id_geograph',
-    //   };
-    // this.dataAdapter_geogr = new jqx.dataAdapter(this.source_geogr);
 
     this.source_gatewayType =
       {
         datatype: 'array',
         localdata: this.gatewayTypes,
-        id: 'id_gateway_type',
+        id: 'id',
       };
     this.dataAdapter_gatewayType = new jqx.dataAdapter(this.source_gatewayType);
   }
@@ -92,47 +80,39 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       this.saveGateway = saveGateway;
       // determine the desired positions in the drop-down lists
-      for (let i = 0; i < this.contract_gateways.length; i++) {
-        if (this.contract_gateways[i].id_contract === this.saveGateway.id_contract) {
-          this.id_contract_index = i;
+      for (let i = 0; i < this.contractGateways.length; i++) {
+        if (this.contractGateways[i].id === this.saveGateway.contractId) {
+          this.contractId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.gatewayTypes.length; i++) {
-        if (this.gatewayTypes[i].id_gateway_type === this.saveGateway.id_gateway_type) {
-          this.id_gateway_type_index = i;
+        if (this.gatewayTypes[i].id === this.saveGateway.gatewayTypeId) {
+          this.gatewayTypeId_index = i;
           break;
         }
       }
-      // for (let i = 0; i < this.geographs.length; i++) {
-      //   if (this.geographs[i].id_geograph === this.saveGateway.id_geograph) {
-      //     this.id_geograph_index = i;
-      //     break;
-      //   }
-      // }
     }
     if (this.typeEditWindow === 'ins') {
-      this.id_contract_index = 0;
-      this.id_gateway_type_index = 0;
-      // this.id_geograph_index = 0
-
-      this.saveGateway.id_node = !isUndefined(saveGateway.id_node) && saveGateway.id_node > 0 ? saveGateway.id_node : 1;
-      this.saveGateway.price = 0;
-      this.saveGateway.comments = 'пусто';
+      this.contractId_index = 0;
+      this.gatewayTypeId_index = 0;
+      this.saveGateway.nodeId = !isUndefined(saveGateway.nodeId) && saveGateway.nodeId > 0 ? saveGateway.nodeId : 1;
+      this.saveGateway.nodeGroupName = 'пусто';
+      this.saveGateway.serialNumber = 'пусто';
+      this.saveGateway.comment = 'пусто';
     }
   }
 
   // perform insert/update fixture
   saveBtn() {
-    this.saveGateway.id_contract = this.id_contract.val();
-    this.saveGateway.id_gateway_type = this.id_gatewayType.val();
-    // this.saveGateway.id_geograph = this.id_geograph.val();
+    this.saveGateway.contractId = this.contractId.val();
+    this.saveGateway.gatewayTypeId = this.gatewayTypeId.val();
 
     if (this.typeEditWindow === 'ins') {
       this.oSub = this.gatewayService.ins(this.saveGateway).subscribe(
         response => {
-          this.saveGateway.id_gateway = response.id_gateway;
-          MaterialService.toast(`Шлюз c id = ${response.id_gateway} был добавлен.`);
+          this.saveGateway.gatewayId = +response;
+          MaterialService.toast(`Шлюз c id = ${this.saveGateway.gatewayId} был добавлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
@@ -146,7 +126,7 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       this.oSub = this.gatewayService.upd(this.saveGateway).subscribe(
         response => {
-          MaterialService.toast(`Шлюз c id = ${response.id_gateway} был обновлен.`);
+          MaterialService.toast(`Шлюз c id = ${this.saveGateway.gatewayId} был обновлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
@@ -160,7 +140,6 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
   }
 
   cancelBtn() {
-    // this.onCancelEditwinBtn.emit()
     this.hideWindow();
   }
 

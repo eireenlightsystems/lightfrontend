@@ -2,8 +2,8 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="0.3"
-           [width]="420" [height]="350"
-           [maxHeight]="350" [minHeight]="350" [maxWidth]="420" [minWidth]="420"
+           [width]="460" [maxWidth]="460" [minWidth]="460"
+           [height]="470" [maxHeight]="470" [minHeight]="470"
 
 >
   <div #windowHeader>
@@ -18,14 +18,14 @@
       <tr>
         <td align="right"><b>Договор:</b></td>
         <td align="left">
-          <jqxDropDownList #id_contract
+          <jqxDropDownList #contractId
                            [theme]="'material'"
                            [width]="280"
                            [height]="20"
                            [source]="dataAdapter_contract"
-                           [displayMember]="'code_contract'"
-                           [valueMember]="'id_contract'"
-                           [selectedIndex]="id_contract_index"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="contractId_index"
                            [filterable]="true"
 
           >
@@ -36,14 +36,14 @@
       <tr>
         <td align="right"><b>Тип шлюза:</b></td>
         <td align="left">
-          <jqxDropDownList #id_gateway_type
+          <jqxDropDownList #gatewayTypeId
                            [theme]="'material'"
                            [width]="280"
                            [height]="20"
                            [source]="dataAdapter_gatewayType"
-                           [displayMember]="'code_gateway_type'"
-                           [valueMember]="'id_gateway_type'"
-                           [selectedIndex]="id_gateway_type_index"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
+                           [selectedIndex]="gatewayTypeId_index"
                            [filterable]="true"
 
           >
@@ -52,16 +52,26 @@
       </tr>
 
       <tr>
-        <td align="right"><b>Цена:</b></td>
+        <td align="right"><b>Наимен. гр. узлов:</b></td>
         <td align="left">
-          <jqxNumberInput
+          <jqxTextArea
             [theme]="'material'"
-            [width]="280" [height]="20"
-            [min]="0" [spinButtons]="true"
-            [spinMode]="'simple'"
-            [(ngModel)]="saveGateway.price"
+            [width]="280" [height]="50"
+            [(ngModel)]="saveGateway.nodeGroupName"
           >
-          </jqxNumberInput>
+          </jqxTextArea>
+        </td>
+      </tr>
+
+      <tr>
+        <td align="right"><b>Серийный номер:</b></td>
+        <td align="left">
+          <jqxTextArea
+            [theme]="'material'"
+            [width]="280" [height]="50"
+            [(ngModel)]="saveGateway.serialNumber"
+          >
+          </jqxTextArea>
         </td>
       </tr>
 
@@ -71,7 +81,7 @@
           <jqxTextArea
             [theme]="'material'"
             [width]="280" [height]="50"
-            [(ngModel)]="saveGateway.comments"
+            [(ngModel)]="saveGateway.comment"
           >
           </jqxTextArea>
         </td>

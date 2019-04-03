@@ -13,21 +13,23 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
 import {
-  Contract, GatewayGroup,
+  FilterGateway, FilterNode, Gateway, Node,
+  Contract,
   GatewayType,
   Geograph,
-  NodeInGroup,
-  Owner_gateway,
+  OwnerGateway,
 } from '../../../shared/interfaces';
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
 import {MaterialService} from '../../../shared/classes/material.service';
-import {GatewayNode} from '../../../shared/models/gatewayNode';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {NodelinkFormComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
 
 
 declare var ymaps: any;
+
+// const STEP = 1000000000000;
+
 
 @Component({
   selector: 'app-gatewaymap-page',
@@ -38,9 +40,9 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() owner_gateways: Owner_gateway[];
+  @Input() ownerGateways: OwnerGateway[];
   @Input() gatewayTypes: GatewayType[];
-  @Input() contract_gateways: Contract[];
+  @Input() contractGateways: Contract[];
 
   @Input() nodeColumns: any[];
 
@@ -53,20 +55,18 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('linkWindow') linkWindow: NodelinkFormComponent;
 
   // other variables
-  gatewayGroups: GatewayGroup[];
-  nodeInGroups: NodeInGroup[];
-  pindropGatewayNode: GatewayNode = new GatewayNode();
+  gatewayGroups: Gateway[];
+  nodeInGroups: Node[];
   selectGatewayId: number;
   selectNodeId: number;
   selectGatewayNodeId: number;
   myMap: any;
-  actionEventWindow: string = '';
-  //
+  actionEventWindow = '';
   oSub: Subscription;
   oSubGatewayGroups: Subscription;
   oSubNodesInGroup: Subscription;
-  //
-  draggableIcon: boolean = false;
+  draggableIcon = false;
+
 
   constructor(private zone: NgZone,
               private gatewayService: GatewayService,
@@ -100,26 +100,26 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // get gateway groups
   getGatewayGroups() {
-    this.oSubGatewayGroups = this.gatewayService.getGatewayGroups(1).subscribe(gatewayGroups => {
-      this.gatewayGroups = gatewayGroups;
+    this.oSubGatewayGroups = this.gatewayService.getAllWithoutParam().subscribe(gateways => {
+      this.gatewayGroups = gateways;
+
       this.listBoxInit();
     });
   }
 
-  // get nodes ib gateway group
-  getNodesInGroup(id_gateway: number) {
-    this.oSubNodesInGroup = this.gatewayService.getNodesInGroup(id_gateway).subscribe(nodeInGroups => {
-      this.nodeInGroups = nodeInGroups;
+  // get nodes in gateway group
+  getNodesInGroup(gatewayId: number) {
+    this.oSubNodesInGroup = this.nodeService.getNodeInGroup(gatewayId).subscribe(nodes => {
+      this.nodeInGroups = nodes;
+
       this.addItemsToMap();
-      this.selectGatewayId = id_gateway;
+      this.selectGatewayId = gatewayId;
     });
   }
 
   // refresh Map
   refreshMap() {
     this.getNodesInGroup(this.selectGatewayId);
-    // refresh grid
-    // this.onRefreshGrid.emit()
   }
 
   // map initialization
@@ -135,7 +135,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // buttons on the map init
   buttonsInit() {
-    let ButtonLayout = ymaps.templateLayoutFactory.createClass([
+    const ButtonLayout = ymaps.templateLayoutFactory.createClass([
         `<div class="fr">
                   <Button id="placeNodesInGroup"
                     class="btn btn-small waves-effect waves-orange white blue-text"
@@ -152,7 +152,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         },
 
         placeNodesInGroup: (function () {
-          let mapComponent: GatewaymapPageComponent = this;
+          const mapComponent: GatewaymapPageComponent = this;
           return function (properties: any) {
             return function () {
               mapComponent.placeNodesInGroup();
@@ -181,7 +181,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   listBoxInit() {
     // Создадим собственный макет выпадающего списка.
-    let ListBoxLayout = ymaps.templateLayoutFactory.createClass(
+    const ListBoxLayout = ymaps.templateLayoutFactory.createClass(
       // "<ul id='my-listbox' class='dropdown-content' style='display: {% if state.expanded %}block{% else %}none{% endif %};' role='menu' aria-labelledby='dropdownMenu'>\n" +
       // "</ul>"
       // +
@@ -261,17 +261,17 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     listBox.events.add('click',
       (function () {
         // var map = this.myMap;
-        let mapComponent: GatewaymapPageComponent = this;
+        const mapComponent: GatewaymapPageComponent = this;
         return function (e) {
           // Получаем ссылку на объект, по которому кликнули.
           // События элементов списка пропагируются
           // и их можно слушать на родительском элементе.
-          var item = e.get('target');
+          const item = e.get('target');
           // Клик на заголовке выпадающего списка обрабатывать не надо.
-          if (item != listBox) {
+          if (item !== listBox) {
             mapComponent.myMap.setCenter(item.data.get('center'), item.data.get('zoom'));
-            mapComponent.getNodesInGroup(item.data.get('id_gateway'));
-            mapComponent.selectGatewayNodeId = item.data.get('id_node');
+            mapComponent.getNodesInGroup(item.data.get('gatewayId'));
+            mapComponent.selectGatewayNodeId = item.data.get('nodeId');
           }
         };
       }).call(this)
@@ -283,15 +283,15 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // get gateway groups for listBox
   getlistBoxItemGroups(): any {
-    let listBoxItemGroups: any[] = [];
-    for (var i = 0; i < this.gatewayGroups.length; i++) {
+    const listBoxItemGroups: any[] = [];
+    for (let i = 0; i < this.gatewayGroups.length; i++) {
       listBoxItemGroups[i] = new ymaps.control.ListBoxItem({
         data: {
-          content: this.gatewayGroups[i].name_group,
+          content: this.gatewayGroups[i].nodeGroupName,
           center: [this.gatewayGroups[i].n_coordinate, this.gatewayGroups[i].e_coordinate],
           zoom: 17,
-          id_gateway: this.gatewayGroups[i].id_gateway,
-          id_node: this.gatewayGroups[i].id_node
+          gatewayId: this.gatewayGroups[i].gatewayId,
+          nodeId: this.gatewayGroups[i].nodeId
         }
       });
     }
@@ -300,9 +300,9 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // place the object from the set "getAll()" on the map
   addItemsToMap() {
-    let collection = new ymaps.GeoObjectCollection(null, {});
+    const collection = new ymaps.GeoObjectCollection(null, {});
 
-    let BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+    const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
       `<div class="fr">
         <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
                     [content]="'Удалить узел с карты'">
@@ -318,7 +318,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       <table class="table table-sm">
       <tbody>
 
-      <tr><th>ID узла</th><td>{{properties.id_node}}</td></tr>
+      <tr><th>ID узла</th><td>{{properties.nodeId}}</td></tr>
       <tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>
       <tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>
 
@@ -334,10 +334,10 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         },
 
         visibilityItems: (function () {
-          let mapComponent: GatewaymapPageComponent = this;
+          const mapComponent: GatewaymapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.selectNodeId = properties._data.id_node;
+              mapComponent.selectNodeId = properties._data.nodeId;
               mapComponent.eventWindow.okButtonDisabled(false);
               mapComponent.warningEventWindow = 'Исключить узел из группы?';
               mapComponent.actionEventWindow = 'visibility';
@@ -350,8 +350,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
     this.myMap.geoObjects.removeAll();
     this.myMap.geoObjects.add(collection);
-    for (let node of this.nodeInGroups) {
-      let myGeoObject = new ymaps.GeoObject(
+    for (const node of this.nodeInGroups) {
+      const myGeoObject = new ymaps.GeoObject(
         { // description geometry
           geometry: {
             type: 'Point',
@@ -360,8 +360,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // properties
           properties: {
             // Content of icon
-            iconContent: node.num_node,
-            id_node: node.id_node,
+            iconContent: node.numberInGroup,
+            nodeId: node.nodeId,
             n_coordinate: node.n_coordinate,
             e_coordinate: node.e_coordinate
           }
@@ -370,7 +370,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           balloonContentLayout: BalloonContentLayout,
           balloonPanelMaxMapArea: 0,
           // icon will be change width
-          preset: node.id_node === this.selectGatewayNodeId ? 'islands#redStretchyIcon' : 'islands#blackStretchyIcon',
+          preset: node.nodeId === this.selectGatewayNodeId ? 'islands#redStretchyIcon' : 'islands#blackStretchyIcon',
           // icon move
           draggable: this.draggableIcon
         });
@@ -387,14 +387,15 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   pinDropNode() {
-    this.pindropGatewayNode.gatewayId = this.selectGatewayId;
-    this.pindropGatewayNode.nodeId = this.selectNodeId;
-
-    this.oSub = this.nodeService.del_gateway_node(this.pindropGatewayNode).subscribe(
+    const nodeIds = [];
+    nodeIds[0] = this.selectNodeId;
+    this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
       response => {
-        // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
+        MaterialService.toast('Узлы удалены из группы!');
       },
-      error => MaterialService.toast(error.message),
+      error => {
+        MaterialService.toast(error.error.message);
+      },
       () => {
         // refresh map
         this.refreshMap();
@@ -414,9 +415,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   saveLinkwinBtn() {
-    // refresh map
     this.refreshMap();
-    // refresh table
-    // this.onRefreshGrid.emit()
   }
 }

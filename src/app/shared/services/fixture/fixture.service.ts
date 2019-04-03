@@ -14,70 +14,61 @@ export class FixtureService {
   constructor(private http: HttpClient) {
   }
 
+  // get
+
   getAll(params: any = {}): Observable<Fixture[]> {
-    return this.http.get<Fixture[]>('/api/fixture', {
+    return this.http.get<Fixture[]>('/api2/fixtures', {
       params: new HttpParams({
         fromObject: params
       })
     });
   }
 
-  getFixtureInGroupAll(params: any = {}): Observable<Fixture[]> {
-    return this.http.get<Fixture[]>('/api/fixture/get-fixture-in-group', {
-      params: new HttpParams({
-        fromObject: params
-      })
-    });
+  getFixtureInGroup(fixtureGroupId: string): Observable<Fixture[]> {
+    return this.http.get<Fixture[]>(`/api2/fixtures-groups/${fixtureGroupId}/fixtures`);
   }
 
-  // getFixtureNotInThisGroup(fixtureGroupId: number): Observable<Fixture[]> {
-  //   return this.http.get<Fixture[]>(`/api/fixture/get-fixture-not-in-this-group/${fixtureGroupId}`);
-  // }
-
-  getFixtureNotInThisGroup(params: any = {}): Observable<Fixture[]> {
-    return this.http.get<Fixture[]>('/api/fixture/get-fixture-not-in-this-group', {
-      params: new HttpParams({
-        fromObject: params
-      })
-    });
-  }
-
+  // post
 
   ins(fixture: Fixture): Observable<Fixture> {
-    return this.http.post<Fixture>('/api/fixture', fixture);
+    return this.http.post<Fixture>('/api2/fixtures', fixture);
   }
-
-  upd(fixture: Fixture): Observable<Fixture> {
-    return this.http.patch<Fixture>('/api/fixture', fixture);
-  }
-
-  set_id_node(fixture: Fixture): Observable<Fixture> {
-    return this.http.patch<Fixture>('/api/fixture/set_id_node', fixture);
-  }
-
-  del(id_fixture: number): Observable<Message> {
-    return this.http.delete<Message>(`/api/fixture/${id_fixture}`);
-  }
-
-  // setFixtureInGroup(fixtureGroupId: number, fixtureId: number): Observable<any> {
-  //   // @ts-ignore
-  //   return this.http.post<any>(`/api2/fixture-group/${fixtureGroupId}/item/${fixtureId}`);
-  // }
 
   setFixtureInGroup(fixtureGroupId: number, fixtureIds: number[]): Observable<any> {
     const options = JSON.stringify(fixtureIds);
-    return this.http.post<any>(`/api2/fixture-group/${fixtureGroupId}/item`, options);
+    return this.http.post<any>(`/api2/fixtures-groups/${fixtureGroupId}/fixtures`, options);
   }
 
-  // delFixtureInGroup(fixtureGroupId: number, fixtureId: number): Observable<any> {
-  //   return this.http.delete<any>(`/api2/fixture-group/${fixtureGroupId}/item/${fixtureId}`);
-  // }
+  setNodeId(nodeId: number, fixtureIds: number[]): Observable<any> {
+    const options = JSON.stringify(fixtureIds);
+    return this.http.post<any>(`/api2/nodes/${nodeId}/fixtures`, options);
+  }
+
+  // patch
+
+  upd(fixture: Fixture): Observable<Fixture> {
+    return this.http.patch<Fixture>('/api2/fixtures', fixture);
+  }
+
+  // delete
 
   delFixtureInGroup(fixtureGroupId: number, fixtureIds: number[]): Observable<any> {
     const options = {
       headers: new HttpHeaders({}),
       body: JSON.stringify(fixtureIds)
     };
-    return this.http.delete<any>(`/api2/fixture-group/${fixtureGroupId}/item`, options);
+    return this.http.delete<any>(`/api2/fixtures-groups/${fixtureGroupId}/fixtures`, options);
+  }
+
+  delNodeId(nodeId: number, fixtureIds: number[]): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({}),
+      body: JSON.stringify(fixtureIds)
+    };
+    return this.http.delete<any>(`/api2/nodes/${nodeId}/fixtures`, options);
+  }
+
+  del(id_fixture: number): Observable<Message> {
+    return this.http.delete<Message>(`/api2/fixtures/${id_fixture}`);
   }
 }

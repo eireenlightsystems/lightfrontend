@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {FilterFixture, FixtureType, Geograph, Owner_fixture, Substation} from "../../../../../shared/interfaces";
+import {FilterFixture, FixtureType, Geograph, OwnerFixture, Substation} from '../../../../../shared/interfaces';
 
 
 @Component({
@@ -10,74 +10,75 @@ import {FilterFixture, FixtureType, Geograph, Owner_fixture, Substation} from ".
 })
 export class FixturelistFilterComponent {
 
-  //variables from master component
-  @Input() geographs: Geograph[]
-  @Input() owner_fixtures: Owner_fixture[]
-  @Input() fixtureTypes: FixtureType[]
-  @Input() substations: Substation[]
-  //for filtering from master component
-  @Input() id_contract_select: number
-  @Input() id_node_select: number
+  // variables from master component
+  @Input() geographs: Geograph[];
+  @Input() ownerFixtures: OwnerFixture[];
+  @Input() fixtureTypes: FixtureType[];
+  @Input() substations: Substation[];
+  // for filtering from master component
+  @Input() selectContractId: number;
+  @Input() selectNodeId: number;
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onFilter = new EventEmitter<FilterFixture>()
+  // determine the functions that need to be performed in the parent component
+  @Output() onFilter = new EventEmitter<FilterFixture>();
 
-  //other variables
-  isValid = true
-  id_geograph: number
-  id_owner: number
-  id_fixture_type: number
-  id_substation: number
-  id_mode: number
+  // other variables
+  isValid = true;
+  geographId: number;
+  ownerId: number;
+  fixtureTypeId: number;
+  substationId: number;
+  modeId: number;
+  nullVar = '';
   modes = [
     {
-      id_mode: 0,
-      name_mode: "Вкл."
+      id: 0,
+      code: 'Выкл.'
     },
     {
-      id_mode: 1,
-      name_mode: "Выкл."
+      id: 1,
+      code: 'Вкл.'
     }
-  ]
+  ];
 
   constructor() {
   }
 
   validate() {
-    if (!(this.id_geograph && this.id_owner && this.id_fixture_type && this.id_substation && this.id_mode)) {
-      this.isValid = false
-      return
+    if (!(this.geographId && this.ownerId && this.fixtureTypeId && this.substationId && this.modeId)) {
+      this.isValid = false;
+      return;
     }
   }
 
   submitFilter() {
     const filter: FilterFixture = {
-      id_geograph: -1,
-      id_owner: -1,
-      id_fixture_type: -1,
-      id_substation: -1,
-      id_mode: -1,
-      id_contract: this.id_contract_select,
-      id_node: this.id_node_select
+      geographId: '',
+      ownerId: '',
+      fixtureTypeId: '',
+      substationId: '',
+      modeId: '',
+      contractId: this.selectContractId.toString(),
+      nodeId: this.selectNodeId.toString()
+    };
+
+    if (this.geographId) {
+      filter.geographId = this.geographId.toString();
+    }
+    if (this.ownerId) {
+      filter.ownerId = this.ownerId.toString();
+    }
+    if (this.fixtureTypeId) {
+      filter.fixtureTypeId = this.fixtureTypeId.toString();
+    }
+    if (this.substationId) {
+      filter.substationId = this.substationId.toString();
+    }
+    if (this.modeId) {
+      filter.modeId = this.modeId.toString();
     }
 
-    if (this.id_geograph) {
-      filter.id_geograph = this.id_geograph
-    }
-    if (this.id_owner) {
-      filter.id_owner = this.id_owner
-    }
-    if (this.id_fixture_type) {
-      filter.id_fixture_type = this.id_fixture_type
-    }
-    if (this.id_substation) {
-      filter.id_substation = this.id_substation
-    }
-    if (this.id_mode) {
-      filter.id_mode = this.id_mode
-    }
-
-    this.onFilter.emit(filter)
+    this.onFilter.emit(filter);
   }
 
 }

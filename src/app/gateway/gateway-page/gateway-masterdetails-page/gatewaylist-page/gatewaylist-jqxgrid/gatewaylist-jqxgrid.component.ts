@@ -6,14 +6,13 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {Gateway} from '../../../../../shared/models/gateway';
-import {Geograph, Contract, Owner_gateway, GatewayType} from '../../../../../shared/interfaces';
+import {Geograph, Contract, OwnerGateway, GatewayType} from '../../../../../shared/interfaces';
 
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {GatewayeditFormComponent} from '../gatewayedit-form/gatewayedit-form.component';
 import {FixturelinkFormComponent} from '../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component';
 import {NodeGateway} from '../../../../../shared/models/nodeGateway';
-import {Sensor} from '../../../../../shared/models/sensor';
 
 @Component({
   selector: 'app-gatewaylist-jqxgrid',
@@ -25,14 +24,14 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   // variables from master component
   @Input() gateways: Gateway[];
   @Input() geographs: Geograph[];
-  @Input() owner_gateways: Owner_gateway[];
+  @Input() ownerGateways: OwnerGateway[];
   @Input() gatewayTypes: GatewayType[];
-  @Input() contract_gateways: Contract[];
+  @Input() contractGateways: Contract[];
 
   @Input() heightGrid: number;
   @Input() isMasterGrid: number;
   @Input() selectionmode: string;
-  @Input() id_node_select: number;
+  @Input() selectNodeId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -49,7 +48,6 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   // other variables
   selectGateway: Gateway = new Gateway();
-  saveNodeGateway: NodeGateway = new NodeGateway();
   oSub: Subscription;
   editrow: number;
   rowcount = 0;
@@ -61,9 +59,9 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     {
       datatype: 'array',
       localdata: this.gateways,
-      id: 'id_gateway',
+      id: 'gatewayId',
 
-      sortcolumn: ['id_gateway'],
+      sortcolumn: ['gatewayId'],
       sortdirection: 'desc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
@@ -71,37 +69,35 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   // define columns for table
   columns: any[] =
     [
-      {text: 'id_gateway', datafield: 'id_gateway', width: 150},
-      {text: 'Договор', datafield: 'code_contract', width: 150},
-      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-      {text: 'Тип узла', datafield: 'code_gateway_type', width: 150},
-      {text: 'Владелец', datafield: 'code_owner', width: 150},
+      {text: 'gatewayId', datafield: 'gatewayId', width: 150},
+      {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
+      {text: 'Договор', datafield: 'contractCode', width: 150},
+      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
+      {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
       {text: 'Широта', datafield: 'n_coordinate', width: 150},
       {text: 'Долгота', datafield: 'e_coordinate', width: 150},
 
-      {text: 'Цена', datafield: 'price', width: 150},
-      {text: 'Коментарий', datafield: 'comments', width: 150},
-      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
+      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+      {text: 'Коментарий', datafield: 'comment', width: 150},
     ];
 
   // define a data source for filtering table columns
   listBoxSource: any[] =
     [
-      {label: 'id_gateway', value: 'id_gateway', checked: true},
-      {label: 'Договор', value: 'code_contract', checked: true},
-      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-      {label: 'Тип узла', value: 'code_gateway_type', checked: true},
-      {label: 'Владелец', value: 'code_owner', checked: true},
+      {label: 'gatewayId', value: 'gatewayId', checked: true},
+      {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
+      {label: 'Договор', value: 'contractCode', checked: true},
+      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
+      {label: 'Владелец', value: 'ownerCode', checked: true},
 
       {label: 'Широта', value: 'n_coordinate', checked: true},
       {label: 'Долгота', value: 'e_coordinate', checked: true},
 
-      {label: 'Цена', value: 'price', checked: true},
-      {label: 'Коментарий', value: 'comments', checked: true},
-      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
+      {label: 'Серийный номер', value: 'serialNumber', checked: true},
+      {label: 'Коментарий', value: 'comment', checked: true},
     ];
 
 
@@ -147,7 +143,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   }
 
   refresh_del() {
-    this.myGrid.deleterow(this.selectGateway.id_gateway);
+    this.myGrid.deleterow(this.selectGateway.gatewayId);
   }
 
   // define width of table
@@ -221,47 +217,26 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   };
 
   // functions-events when allocating a string
-  onRowclick(event: any) {
-    // console.log("onRowclick")
-  };
-
   onRowSelect(event: any) {
-    // console.log("onRowSelect")
     if (event.args.row
     ) {
       this.selectGateway = event.args.row;
-      this.editrow = this.selectGateway.id_gateway;
+      this.editrow = this.selectGateway.gatewayId;
 
       // refresh child grid
       if (this.isMasterGrid) {
-        this.onRefreshChildGrid.emit(this.selectGateway.id_gateway);
+        this.onRefreshChildGrid.emit(this.selectGateway.gatewayId);
       }
     }
     // this.updateButtons('Select');
   };
 
-  onRowUnselect(event: any) {
-    // console.log("onRowUnselect")
-    // this.updateButtons('Unselect');
-  };
-
-  onRowBeginEdit(event: any) {
-    // console.log("onRowBeginEdit")
-    // this.updateButtons('Edit');
-  };
-
-  onRowEndEdit(event: any) {
-    // console.log("onRowEndEdit")
-    // this.updateButtons('End Edit');
-  };
-
-
-// INSERT, UPDATE, DELETE
+  // INSERT, UPDATE, DELETE
 
   // insert node
   ins() {
     const selectGateway: Gateway = new Gateway();
-    selectGateway.id_node = this.id_node_select;
+    selectGateway.nodeId = this.selectNodeId;
 
     this.editWindow.positionWindow({x: 600, y: 90});
     this.editWindow.openWindow(selectGateway, 'ins');
@@ -285,10 +260,10 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   // delete node
   del() {
-    if (this.selectGateway.id_gateway) {
+    if (this.selectGateway.gatewayId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить шлюз id = "${this.selectGateway.id_gateway}"?`;
+      this.warningEventWindow = `Удалить шлюз id = "${this.selectGateway.gatewayId}"?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = `Вам следует выбрать шлюз для удаления`;
@@ -304,15 +279,10 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
       if (+id >= 0) {
         this.gatewayService.del(+id).subscribe(
           response => {
-            MaterialService.toast(response.message);
+            MaterialService.toast('Шлюз был удален!');
           },
-          error => MaterialService.toast(error.message),
+          error => MaterialService.toast(error.error.message),
           () => {
-            // update the table without contacting the database
-            // this.nodes.splice(selectedrowindex, 1)
-            // this.refreshGrid();
-            // this.onRefreshGrid.emit();
-
             this.refresh_del();
           }
         );
@@ -320,25 +290,27 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
 
     if (this.actionEventWindow === 'pin_drop') {
-      for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        this.saveNodeGateway.gatewayId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_gateway;
-        this.saveNodeGateway.nodeId = 1;
-        this.oSub = this.gatewayService.set_id_node(this.saveNodeGateway).subscribe(
-          response => {
-            // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
-          },
-          error => MaterialService.toast(error.message),
-          () => {
-            // refresh table
-            this.onRefreshGrid.emit();
-          }
-        );
+      const gatewayIds = [];
+      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        gatewayIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].gatewayId;
       }
+      this.oSub = this.gatewayService.delNodeId(this.selectNodeId, gatewayIds).subscribe(
+        response => {
+          MaterialService.toast('Шлюзы отвязаны от узла!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
     }
   }
 
   place() {
-    if (this.id_node_select > 1) {
+    if (this.selectNodeId > 1) {
       this.linkWindow.openWindow();
     } else {
       this.eventWindow.okButtonDisabled(true);
@@ -348,7 +320,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   }
 
   pin_drop() {
-    if (this.selectGateway.id_gateway) {
+    if (this.selectGateway.gatewayId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
       this.warningEventWindow = `Отвязать шлюз от узла?`;

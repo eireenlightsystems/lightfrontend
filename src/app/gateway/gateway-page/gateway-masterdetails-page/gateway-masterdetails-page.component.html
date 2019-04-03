@@ -1,9 +1,9 @@
 <app-gatewaylist-page #gatewaylistPageComponent
 
                       [geographs]="geographs"
-                      [owner_gateways]="owner_gateways"
+                      [ownerGateways]="ownerGateways"
                       [gatewayTypes]="gatewayTypes"
-                      [contract_gateways]="contract_gateways"
+                      [contractGateways]="contractGateways"
 
                       [heightGrid]="300"
                       [isMasterGrid]="true"
@@ -31,15 +31,15 @@
     <app-nodelist-page #nodelistPageComponent
 
                        [geographs]="geographs"
-                       [owner_nodes]="owner_nodes"
+                       [ownerNodes]="ownerNodes"
                        [nodeTypes]="nodeTypes"
-                       [contract_nodes]="contract_nodes"
+                       [contractNodes]="contractNodes"
                        [nodeSortcolumn]="nodeSortcolumn"
                        [nodeColumns]="nodeColumns"
                        [nodeListBoxSource]="nodeListBoxSource"
 
                        [heightGrid]="320"
-                       [id_gateway_select]="id_gateway_select"
+                       [selectGatewayId]="selectGatewayId"
                        [selectionmode]="'checkbox'"
                        [isMasterGrid]="false"
 

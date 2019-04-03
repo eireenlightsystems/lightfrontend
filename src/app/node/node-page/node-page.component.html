@@ -11,20 +11,20 @@
     <app-node-masterdetails-page #nodeMasterdetailsPageComponent
 
                                  [geographs]="geographs"
-                                 [owner_nodes]="owner_nodes"
+                                 [ownerNodes]="ownerNodes"
                                  [nodeTypes]="nodeTypes"
-                                 [contract_nodes]="contract_nodes"
+                                 [contractNodes]="contractNodes"
 
-                                 [owner_fixtures]="owner_fixtures"
+                                 [ownerFixtures]="owner_fixtures"
                                  [fixtureTypes]="fixtureTypes"
                                  [substations]="substations"
-                                 [contract_fixtures]="contract_fixtures"
+                                 [contractFixtures]="contract_fixtures"
                                  [installers]="installers"
                                  [heightTypes]="heightTypes"
 
-                                 [owner_gateways]="owner_gateways"
+                                 [ownerGateways]="ownerGateways"
                                  [gatewayTypes]="gatewayTypes"
-                                 [contract_gateways]="contract_gateways"
+                                 [contractGateways]="contractGateways"
 
                                  [ownerSensors]="ownerSensors"
                                  [sensorTypes]="sensorTypes"
@@ -36,9 +36,10 @@
   <div style="overflow: hidden">
     <app-nodemap-page #nodemapPageComponent
                       [geographs]="geographs"
-                      [owner_nodes]="owner_nodes"
+                      [ownerNodes]="ownerNodes"
                       [nodeTypes]="nodeTypes"
-                      [contract_nodes]="contract_nodes"
+                      [contractNodes]="contractNodes"
+
                       (onRefreshGrid)="refreshGrid()"
     ></app-nodemap-page>
   </div>

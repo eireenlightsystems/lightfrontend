@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {HeightType} from '../../interfaces'
-import {Observable} from 'rxjs/index'
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/index';
+
+import {HeightType} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,9 @@ import {Observable} from 'rxjs/index'
 export class HeightTypeService {
   constructor(private http: HttpClient) {
   }
+
   fetch(): Observable<HeightType[]> {
-    return this.http.get<HeightType[]>('/api/heightType')
+    return this.http.get<HeightType[]>('/api2/fixtures-height-types');
   }
 
 }

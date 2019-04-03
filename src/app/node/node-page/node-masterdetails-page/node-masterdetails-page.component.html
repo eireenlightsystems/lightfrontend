@@ -1,9 +1,9 @@
 <app-nodelist-page #nodelistPageComponent
 
                    [geographs]="geographs"
-                   [owner_nodes]="owner_nodes"
+                   [ownerNodes]="ownerNodes"
                    [nodeTypes]="nodeTypes"
-                   [contract_nodes]="contract_nodes"
+                   [contractNodes]="contractNodes"
 
                    [heightGrid]="320"
                    [isMasterGrid]="true"
@@ -38,15 +38,15 @@
     <app-fixturelist-page *ngIf="this.isTabFixture" #fixturelistPageComponent
 
                           [geographs]="geographs"
-                          [owner_fixtures]="owner_fixtures"
+                          [ownerFixtures]="ownerFixtures"
                           [fixtureTypes]="fixtureTypes"
                           [substations]="substations"
-                          [contract_fixtures]="contract_fixtures"
+                          [contractFixtures]="contractFixtures"
                           [installers]="installers"
                           [heightTypes]="heightTypes"
 
-                          [id_contract_select]="-1"
-                          [id_node_select]="id_node_select"
+                          [selectContractId]="''"
+                          [selectNodeId]="selectNodeId"
 
                           [heightGrid]="300"
                           [selectionmode]="'checkbox'"
@@ -65,11 +65,11 @@
     <app-gatewaylist-page *ngIf="this.isTabGateway" #gatewaylistPageComponent
 
                           [geographs]="geographs"
-                          [owner_gateways]="owner_gateways"
+                          [ownerGateways]="ownerGateways"
                           [gatewayTypes]="gatewayTypes"
-                          [contract_gateways]="contract_gateways"
+                          [contractGateways]="contractGateways"
 
-                          [id_node_select]="id_node_select"
+                          [selectNodeId]="selectNodeId"
 
                           [heightGrid]="310"
                           [isMasterGrid]="false"
@@ -93,7 +93,7 @@
                          [sensorTypes]="sensorTypes"
                          [contractSensors]="contractSensors"
 
-                         [nodeSelectId]="id_node_select"
+                         [nodeSelectId]="selectNodeId"
 
                          [heightGrid]="310"
                          [isMasterGrid]="false"

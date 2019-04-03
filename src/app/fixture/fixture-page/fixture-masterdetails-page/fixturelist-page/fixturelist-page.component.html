@@ -129,12 +129,12 @@
   *ngIf="isFilterVisible"
   (onFilter)="applyFilter($event)"
   [geographs]="geographs"
-  [owner_fixtures]="owner_fixtures"
+  [ownerFixtures]="ownerFixtures"
   [fixtureTypes]="fixtureTypes"
   [substations]="substations"
 
-  [id_contract_select]="id_contract_select"
-  [id_node_select]="id_node_select"
+  [selectContractId]="selectContractId"
+  [selectNodeId]="selectNodeId"
 ></app-fixturelist-filter>
 
 <div *ngIf="!reloading; else reloadingBlock">
@@ -146,10 +146,10 @@
                              [listBoxSourceFixture]="listBoxSourceFixture"
 
                              [geographs]="geographs"
-                             [owner_fixtures]="owner_fixtures"
+                             [ownerFixtures]="ownerFixtures"
                              [fixtureTypes]="fixtureTypes"
                              [substations]="substations"
-                             [contract_fixtures]="contract_fixtures"
+                             [contractFixtures]="contractFixtures"
                              [installers]="installers"
                              [heightTypes]="heightTypes"
 
@@ -157,9 +157,9 @@
                              [selectionmode]="selectionmode"
                              [isMasterGrid]="isMasterGrid"
 
-                             [id_fixture_select]="id_fixture_select"
-                             [id_contract_select]="id_contract_select"
-                             [id_node_select]="id_node_select"
+                             [selectFixtureId]="selectFixtureId"
+                             [selectContractId]="selectContractId"
+                             [selectNodeId]="selectNodeId"
 
                              (onRefreshGrid)="refreshGrid()"
                              (onRefreshChildGrid)="refreshChildGrid($event)"

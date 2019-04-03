@@ -82,7 +82,7 @@
   [commandStatuses]="commandStatuses"
   [speedDirectiones]="speedDirectiones"
   [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
-  [id_fixture_select]="id_fixture_select"
+  [selectFixtureId]="selectFixtureId"
 ></app-fixturecomspeedlist-filter>
 
 <div *ngIf="!reloading; else reloadingBlock">
@@ -95,7 +95,7 @@
                                      [heightGrid]="heightGrid"
                                      [selectionmode]="selectionmode"
                                      [isMasterGrid]="isMasterGrid"
-                                     [id_fixture_select]="id_fixture_select"
+                                     [selectFixtureId]="selectFixtureId"
 
                                      (onRefreshGrid)="refreshGrid()"
                                      (onRefreshChildGrid)="refreshChildGrid($event)"

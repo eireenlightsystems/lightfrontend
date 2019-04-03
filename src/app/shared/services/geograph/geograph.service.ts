@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {Geograph} from '../../interfaces'
-import {Observable} from 'rxjs/index'
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/index';
+
+import {Geograph} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,9 @@ import {Observable} from 'rxjs/index'
 export class GeographService {
   constructor(private http: HttpClient) {
   }
+
   fetch(): Observable<Geograph[]> {
-    return this.http.get<Geograph[]>('/api/geograph')
+    return this.http.get<Geograph[]>('/api2/geographs');
   }
 
 }

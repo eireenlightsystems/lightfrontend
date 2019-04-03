@@ -7,8 +7,8 @@ import {
   FilterNode, FilterSensor, FixtureType, GatewayType,
   Geograph, HeightType, Installer,
   NodeType,
-  Owner_fixture, Owner_gateway,
-  Owner_node, OwnerSensor, SensorType, Substation
+  OwnerFixture, OwnerGateway,
+  OwnerNode, OwnerSensor, SensorType, Substation
 } from '../../../shared/interfaces';
 import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
 import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
@@ -35,20 +35,20 @@ export class NodeMasterdetailsPageComponent implements OnInit {
 
   // node source
   @Input() geographs: Geograph[];
-  @Input() owner_nodes: Owner_node[];
+  @Input() ownerNodes: OwnerNode[];
   @Input() nodeTypes: NodeType[];
-  @Input() contract_nodes: Contract[];
+  @Input() contractNodes: Contract[];
   // fixture source
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() ownerFixtures: OwnerFixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   // gateway source
-  @Input() owner_gateways: Owner_gateway[];
+  @Input() ownerGateways: OwnerGateway[];
   @Input() gatewayTypes: GatewayType[];
-  @Input() contract_gateways: Contract[];
+  @Input() contractGateways: Contract[];
   // sensor source
   @Input() ownerSensors: OwnerSensor[];
   @Input() sensorTypes: SensorType[];
@@ -58,7 +58,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @Output() onRefreshMap = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('id_node_select') id_node_select = -2;
+  @ViewChild('selectNodeId') selectNodeId = 0;
   @ViewChild('nodelistPageComponent') nodelistPageComponent: NodelistPageComponent;
   @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
@@ -69,83 +69,75 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   isTabGateway = false;
   isTabSensor = false;
   filterNode: FilterNode = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_node_type: -1,
-    id_contract: -1,
-    id_gateway: -1
+    geographId: '',
+    ownerId: '',
+    nodeTypeId: '',
+    contractId: '',
+    gatewayId: ''
   };
   filterFixture: FilterFixture = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
+    geographId: '',
+    ownerId: '',
+    fixtureTypeId: '',
+    substationId: '',
+    modeId: '',
 
-    id_contract: -1,
-    id_node: -1
+    contractId: '',
+    nodeId: ''
   };
   filterGateway: FilterGateway = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_gateway_type: -1,
-    id_contract: -1,
-    id_node: -1
+    geographId: '',
+    ownerId: '',
+    gatewayTypeId: '',
+    contractId: '',
+    nodeId: ''
   };
   filterSensor: FilterSensor = {
-    geographId: -1,
-    ownerId: -1,
-    sensorTypeId: -1,
-    contractId: -1,
-    nodeId: -1
+    geographId: '',
+    ownerId: '',
+    sensorTypeId: '',
+    contractId: '',
+    nodeId: ''
   };
 
   // define columns for table Node
-  nodeSortcolumn: string[] = ['id_node'];
+  nodeSortcolumn: string[] = ['nodeId'];
   nodeColumns: any[] =
     [
-      {text: 'id_node', datafield: 'id_node', width: 150},
-      {text: 'Договор', datafield: 'code_contract', width: 150},
-      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-      {text: 'Тип узла', datafield: 'code_node_type', width: 150},
-      {text: 'Владелец', datafield: 'code_owner', width: 150},
-
-      {text: 'Номер узла в группе', datafield: 'num_node', width: 150},
+      {text: 'nodeId', datafield: 'nodeId', width: 150},
+      {text: 'Договор', datafield: 'contractCode', width: 150},
+      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+      {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
       {text: 'Широта', datafield: 'n_coordinate', width: 150},
       {text: 'Долгота', datafield: 'e_coordinate', width: 150},
 
-      {text: 'Цена', datafield: 'price', width: 150},
-      {text: 'Коментарий', datafield: 'comments', width: 150},
-      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
+      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+      {text: 'Коментарий', datafield: 'comment', width: 150},
     ];
 
   // define a data source for filtering table columns Node
   nodeListBoxSource: any[] =
     [
-      {label: 'id_node', value: 'id_node', checked: true},
-      {label: 'Договор', value: 'code_contract', checked: true},
-      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-      {label: 'Тип узла', value: 'code_node_type', checked: true},
-      {label: 'Владелец', value: 'code_owner', checked: true},
-
-      {label: 'Номер узла в группе', value: 'num_node', checked: true},
+      {label: 'nodeId', value: 'nodeId', checked: true},
+      {label: 'Договор', value: 'contractCode', checked: true},
+      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
+      {label: 'Владелец', value: 'ownerCode', checked: true},
 
       {label: 'Широта', value: 'n_coordinate', checked: true},
       {label: 'Долгота', value: 'e_coordinate', checked: true},
 
-      {label: 'Цена', value: 'price', checked: false},
-      {label: 'Коментарий', value: 'comments', checked: false},
-      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
+      {label: 'Серийный номер', value: 'serialNumber', checked: true},
+      {label: 'Коментарий', value: 'comment', checked: true},
     ];
 
   constructor() {
   }
 
   ngOnInit() {
-    this.id_node_select = -2;
+    this.selectNodeId = 0;
     this.isTabFixture = true;
     this.isTabGateway = false;
     this.isTabSensor = false;
@@ -163,22 +155,22 @@ export class NodeMasterdetailsPageComponent implements OnInit {
 
   refreshChildGrid(id_node: number) {
     // refresh child grid
-    this.id_node_select = id_node;
+    this.selectNodeId = id_node;
 
     // fixture
-    this.filterFixture.id_node = id_node;
+    this.filterFixture.nodeId = id_node.toString();
     if (this.isTabFixture) {
       this.fixturelistPageComponent.applyFilter(this.filterFixture);
     }
 
     // gateway
-    this.filterGateway.id_node = id_node;
+    this.filterGateway.nodeId = id_node.toString();
     if (this.isTabGateway) {
       this.gatewaylistPageComponent.applyFilter(this.filterGateway);
     }
 
     // sensor
-    this.filterSensor.nodeId = id_node;
+    this.filterSensor.nodeId = id_node.toString();
     if (this.isTabSensor) {
       this.sensorlistPageComponent.applyFilter(this.filterSensor);
     }

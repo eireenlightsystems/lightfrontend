@@ -61,7 +61,7 @@ export class SensoreditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.contractSensors,
-        id: 'id_contract',
+        id: 'contractId',
       };
     this.dataAdapter_contract = new jqx.dataAdapter(this.source_contract);
 
@@ -69,7 +69,7 @@ export class SensoreditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.sensorTypes,
-        id: 'id_sensor_type',
+        id: 'sensorTypeId',
       };
     this.dataAdapter_sensorType = new jqx.dataAdapter(this.source_sensorType);
   }
@@ -80,37 +80,38 @@ export class SensoreditFormComponent implements OnInit, OnDestroy {
       this.saveSensor = saveSensor;
       // determine the desired positions in the drop-down lists
       for (let i = 0; i < this.contractSensors.length; i++) {
-        if (this.contractSensors[i].id_contract === this.saveSensor.id_contract) {
+        if (this.contractSensors[i].id === this.saveSensor.contractId) {
           this.contractIdIndex = i;
           break;
         }
       }
       for (let i = 0; i < this.sensorTypes.length; i++) {
-        if (this.sensorTypes[i].id_sensor_type === this.saveSensor.id_sensor_type) {
+        if (this.sensorTypes[i].id === this.saveSensor.sensorTypeId) {
           this.sensorTypeIdIndex = i;
           break;
         }
       }
     }
+
     if (this.typeEditWindow === 'ins') {
       this.contractIdIndex = 0;
       this.sensorTypeIdIndex = 0;
-      this.saveSensor.id_node = !isUndefined(saveSensor.id_node) && saveSensor.id_node > 0 ? saveSensor.id_node : 1;
-      this.saveSensor.serial_number = null;
-      this.saveSensor.comments = 'пусто';
+      this.saveSensor.nodeId = !isUndefined(saveSensor.nodeId) && saveSensor.nodeId > 0 ? saveSensor.nodeId : 1;
+      this.saveSensor.serialNumber = null;
+      this.saveSensor.comment = 'пусто';
     }
   }
 
   // perform insert/update fixture
   saveBtn() {
-    this.saveSensor.id_contract = this.contractId.val();
-    this.saveSensor.id_sensor_type = this.sensorTypeId.val();
+    this.saveSensor.contractId = this.contractId.val();
+    this.saveSensor.sensorTypeId = this.sensorTypeId.val();
 
     if (this.typeEditWindow === 'ins') {
       this.oSub = this.sensorService.ins(this.saveSensor).subscribe(
         response => {
-          this.saveSensor.id_sensor = response.id_sensor;
-          MaterialService.toast(`Сенсор c id = ${response.id_sensor} был добавлен.`);
+          this.saveSensor.sensorId = +response;
+          MaterialService.toast(`Датчик c id = ${this.saveSensor.sensorId} был добавлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
@@ -124,7 +125,7 @@ export class SensoreditFormComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       this.oSub = this.sensorService.upd(this.saveSensor).subscribe(
         response => {
-          MaterialService.toast(`Сенсор c id = ${response.id_sensor} был обновлен.`);
+          MaterialService.toast(`Датчик c id = ${this.saveSensor.sensorId} был обновлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {

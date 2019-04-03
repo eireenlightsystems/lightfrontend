@@ -3,9 +3,9 @@
 
     <div class="input-field inline order-position-input">
       <select id="commandStatuseInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId" #select>
-        <option value="0" selected>Статус команды</option>
-        <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id_command_status}}">
-          {{commandStatus.name_command_status}}
+        <option value="{{nullVar}}" selected>Статус команды</option>
+        <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id}}">
+          {{commandStatus.name}}
         </option>
       </select>
       <label for="commandStatuseInput" *ngIf="!statusId">Статус команды</label>

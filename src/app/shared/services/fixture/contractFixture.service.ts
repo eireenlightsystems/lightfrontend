@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {FixtureType} from '../../interfaces';
+import {Contract} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FixtureTypeService {
+export class ContractFixtureService {
   constructor(private http: HttpClient) {
   }
 
-  fetch(): Observable<FixtureType[]> {
-    return this.http.get<FixtureType[]>('/api2/fixtures-types');
+  fetch(): Observable<Contract[]> {
+    return this.http.get<Contract[]>('/api2/fixtures-contracts');
   }
 
 }

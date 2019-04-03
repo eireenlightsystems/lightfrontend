@@ -7,8 +7,8 @@ import {
   Geograph,
   HeightType,
   Installer,
-  Owner_fixture,
-  Substation, SpeedDirection, FilterCommandSpeedSwitch, CommandSpeedSwitchDflt, CommandSwitchDflt, FilterFixtureInGroup, Fixture
+  OwnerFixture,
+  Substation, SpeedDirection, FilterCommandSpeedSwitch, CommandSpeedSwitchDflt, CommandSwitchDflt, Fixture
 } from '../../../shared/interfaces';
 import {FixturecomlistPageComponent} from './fixturecomlist-page/fixturecomlist-page.component';
 import {FixturelistPageComponent} from './fixturelist-page/fixturelist-page.component';
@@ -27,7 +27,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
 
   // variables from master component
   @Input() widthGrid: number;
-  @Input() fixtureGroupId: number;
+  @Input() fixtureGroupId: string;
   @Input() selectionmode: number;
 
   @Input() isAdd: boolean;
@@ -45,10 +45,10 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() geographs: Geograph[];
 
   // fixture source
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() ownerFixtures: OwnerFixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
 
@@ -61,34 +61,13 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Output() onGetFixtures = new EventEmitter<Fixture[]>();
 
   // define variables - link to view objects
-  @ViewChild('id_fixture_select') id_fixture_select: number;
+  @ViewChild('selectFixtureId') selectFixtureId: number;
   @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('fixturecomlistPageComponent') fixturecomlistPageComponent: FixturecomlistPageComponent;
   @ViewChild('fixturecomspeedlistPageComponent') fixturecomspeedlistPageComponent: FixturecomspeedlistPageComponent;
 
   // other variables
   todayEndStart: any;
-  filterFixture: FilterFixture = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
-
-    id_contract: -1,
-    id_node: -1
-  };
-  filterFixtureInGroup: FilterFixtureInGroup = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
-
-    id_contract: -1,
-    id_node: -1,
-    id_fixture_group: -1
-  };
   filterCommandSwitch: FilterCommandSwitch;
   filterCommandSpeedSwitch: FilterCommandSpeedSwitch;
   isTabCommandSwitchOn = false;
@@ -101,7 +80,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id_fixture_select = 0;
+    this.selectFixtureId = 0;
     this.isTabCommandSwitchOn = true;
     this.isTabCommandSpeed = false;
     this.commandSwitchDflt = this.commandSwitchService.dfltParams();
@@ -117,49 +96,39 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
     this.filterCommandSwitch = {
       startDateTime: this.todayEndStart.iso8601TZ.start(),
       endDateTime: this.todayEndStart.iso8601TZ.end(),
-      fixtureId: 0,
-      statusId: this.commandSwitchDflt.statusId // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
+      fixtureId: '',
+      statusId: this.commandSwitchDflt.statusId.toString() // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
     };
 
     this.filterCommandSpeedSwitch = {
       startDateTime: this.todayEndStart.iso8601TZ.start(),
       endDateTime: this.todayEndStart.iso8601TZ.end(),
-      fixtureId: 0,
-      statusId: this.commandSpeedSwitchDflt.statusId, // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
-      speedDirectionId: 0
+      fixtureId: '',
+      statusId: this.commandSpeedSwitchDflt.statusId.toString(), // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
+      speedDirectionId: ''
     };
   }
 
   refreshChildGrid(fixtureId: number) {
     // refresh child grid
-    this.id_fixture_select = fixtureId;
+    this.selectFixtureId = fixtureId;
     // command_switchon
-    this.filterCommandSwitch.fixtureId = fixtureId;
-    if (this.isTabCommandSwitchOn) {
+    this.filterCommandSwitch.fixtureId = fixtureId.toString();
+    if (this.isTabCommandSwitchOn && this.fixturecomlistPageComponent) {
       this.fixturecomlistPageComponent.applyFilter(this.filterCommandSwitch);
     }
     // command_speed_switchon
-    this.filterCommandSpeedSwitch.fixtureId = fixtureId;
-    if (this.isTabCommandSpeed) {
+    this.filterCommandSpeedSwitch.fixtureId = fixtureId.toString();
+    if (this.isTabCommandSpeed && this.fixturecomspeedlistPageComponent) {
       this.fixturecomspeedlistPageComponent.applyFilter(this.filterCommandSpeedSwitch);
     }
   }
 
-  refreshMDGrid(fixtureGroupId: number) {
-    this.fixtureGroupId = fixtureGroupId;
-
-    if(!isUndefined(this.fixtureGroupId)){
-      this.filterFixtureInGroup.id_fixture_group = this.fixtureGroupId;
-      this.fixturelistPageComponent.applyFilterFixtureInGroup(this.filterFixtureInGroup);
+  refreshMDGrid(fixtureGroupId: string) {
+    if (+fixtureGroupId > 0) {
+      this.fixtureGroupId = fixtureGroupId;
+      this.fixturelistPageComponent.applyFilterFixtureInGroup(this.fixtureGroupId);
     }
-
-    // if (this.fixtureGroupId === 0) {
-    //   this.fixturelistPageComponent.applyFilter(this.filterFixture);
-    // } else {
-    //   this.filterFixtureInGroup.id_fixture_group = this.fixtureGroupId;
-    //   this.fixturelistPageComponent.applyFilterFixtureInGroup(this.filterFixtureInGroup);
-    // }
-    // this.refreshChildGrid(0);
   }
 
   selected(event: any): void {
@@ -174,7 +143,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   // Send array fixtures for the command switchOn/Off
-  getFixtures(event: Fixture[]){
+  getFixtures(event: Fixture[]) {
     this.onGetFixtures.emit(event);
   }
 

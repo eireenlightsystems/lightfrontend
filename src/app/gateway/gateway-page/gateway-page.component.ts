@@ -6,17 +6,17 @@ import {
   GatewayType,
   Geograph,
   NodeType,
-  Owner_gateway,
-  Owner_node
+  OwnerGateway,
+  OwnerNode
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
-import {Owner_nodeService} from '../../shared/services/node/owner_node';
+import {OwnerNodeService} from '../../shared/services/node/ownerNode';
 import {NodeTypeService} from '../../shared/services/node/nodeType.service';
-import {Contract_nodeService} from '../../shared/services/node/contract_node.service';
+import {ContractNodeService} from '../../shared/services/node/contractNode.service';
 import {GatewayMasterdetailsPageComponent} from './gateway-masterdetails-page/gateway-masterdetails-page.component';
 import {GatewaymapPageComponent} from './gatewaymap-page/gatewaymap-page.component';
-import {Contract_gatewayService} from '../../shared/services/gateway/contract_gateway.service';
-import {Owner_gatewayService} from '../../shared/services/gateway/owner_gateway';
+import {ContractGatewayService} from '../../shared/services/gateway/contractGateway.service';
+import {OwnerGatewayService} from '../../shared/services/gateway/ownerGateway';
 import {GatewayTypeService} from '../../shared/services/gateway/gatewayType.service';
 
 @Component({
@@ -35,79 +35,69 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
 
   // gateway subscription
   geographSub: Subscription;
-  owner_gatewaySub: Subscription;
+  ownerGatewaySub: Subscription;
   gatewayTypeSub: Subscription;
-  contract_gatewaySub: Subscription;
+  contractGatewaySub: Subscription;
 
   // node subscription
-  owner_nodeSub: Subscription;
+  ownerNodeSub: Subscription;
   nodeTypeSub: Subscription;
-  contract_nodeSub: Subscription;
+  contractNodeSub: Subscription;
 
   // gateway source
   geographs: Geograph[];
-  owner_gateways: Owner_gateway[];
+  ownerGateways: OwnerGateway[];
   gatewayTypes: GatewayType[];
-  contract_gateways: Contract[];
+  contractGateways: Contract[];
 
   // node source
-  owner_nodes: Owner_node[];
+  ownerNodes: OwnerNode[];
   nodeTypes: NodeType[];
-  contract_nodes: Contract[];
+  contractNodes: Contract[];
 
   // define columns for table Node
-  nodeSortcolumn: string[] = ['num_node'];
+  nodeSortcolumn: string[] = ['nodeId'];
   nodeColumns: any[] =
     [
-      {text: 'id_node', datafield: 'id_node', width: 150},
-
-      {text: 'Номер узла в группе', datafield: 'num_node', width: 150},
-
-      {text: 'Договор', datafield: 'code_contract', width: 150},
-      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-      {text: 'Тип узла', datafield: 'code_node_type', width: 150},
-      {text: 'Владелец', datafield: 'code_owner', width: 150},
+      {text: 'nodeId', datafield: 'nodeId', width: 150},
+      {text: 'Договор', datafield: 'contractCode', width: 150},
+      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+      {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
       {text: 'Широта', datafield: 'n_coordinate', width: 150},
       {text: 'Долгота', datafield: 'e_coordinate', width: 150},
 
-      {text: 'Цена', datafield: 'price', width: 150},
-      {text: 'Коментарий', datafield: 'comments', width: 150},
-      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
+      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+      {text: 'Коментарий', datafield: 'comment', width: 150},
     ];
 
   // define a data source for filtering table columns Node
   nodeListBoxSource: any[] =
     [
-      {label: 'id_node', value: 'id_node', checked: true},
-
-      {label: 'Номер узла в группе', value: 'num_node', checked: true},
-
-      {label: 'Договор', value: 'code_contract', checked: true},
-      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-      {label: 'Тип узла', value: 'code_node_type', checked: true},
-      {label: 'Владелец', value: 'code_owner', checked: true},
+      {label: 'nodeId', value: 'nodeId', checked: true},
+      {label: 'Договор', value: 'contractCode', checked: true},
+      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
+      {label: 'Владелец', value: 'ownerCode', checked: true},
 
       {label: 'Широта', value: 'n_coordinate', checked: true},
       {label: 'Долгота', value: 'e_coordinate', checked: true},
 
-      {label: 'Цена', value: 'price', checked: false},
-      {label: 'Коментарий', value: 'comments', checked: false},
-      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
+      {label: 'Серийный номер', value: 'serialNumber', checked: true},
+      {label: 'Коментарий', value: 'comment', checked: false},
     ];
 
   constructor(
     // gateway service
     private geographService: GeographService,
-    private owner_gatewayService: Owner_gatewayService,
+    private ownerGatewayService: OwnerGatewayService,
     private gatewayTypeService: GatewayTypeService,
-    private contract_gatewayService: Contract_gatewayService,
+    private contract_gatewayService: ContractGatewayService,
     // node service
-    private owner_nodeService: Owner_nodeService,
+    private ownerNodeService: OwnerNodeService,
     private nodeTypeService: NodeTypeService,
-    private contract_nodeService: Contract_nodeService
+    private contractNodeService: ContractNodeService
   ) {
   }
 
@@ -120,14 +110,14 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     // gateway subscription
     this.geographSub.unsubscribe();
-    this.owner_gatewaySub.unsubscribe();
+    this.ownerGatewaySub.unsubscribe();
     this.gatewayTypeSub.unsubscribe();
-    this.contract_gatewaySub.unsubscribe();
+    this.contractGatewaySub.unsubscribe();
 
     // node subscription
-    this.owner_nodeSub.unsubscribe();
+    this.ownerNodeSub.unsubscribe();
     this.nodeTypeSub.unsubscribe();
-    this.contract_nodeSub.unsubscribe();
+    this.contractNodeSub.unsubscribe();
 
   }
 
@@ -161,14 +151,14 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
   fetch_refbook() {
     // gateway refbook
     this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
-    this.owner_gatewaySub = this.owner_gatewayService.fetch().subscribe(owners => this.owner_gateways = owners);
+    this.ownerGatewaySub = this.ownerGatewayService.fetch().subscribe(owners => this.ownerGateways = owners);
     this.gatewayTypeSub = this.gatewayTypeService.fetch().subscribe(gatewayTypes => this.gatewayTypes = gatewayTypes);
-    this.contract_gatewaySub = this.contract_gatewayService.fetch().subscribe(contracts => this.contract_gateways = contracts);
+    this.contractGatewaySub = this.contract_gatewayService.fetch().subscribe(contracts => this.contractGateways = contracts);
 
     // node refbook
-    this.owner_nodeSub = this.owner_nodeService.fetch().subscribe(owners => this.owner_nodes = owners);
+    this.ownerNodeSub = this.ownerNodeService.fetch().subscribe(owners => this.ownerNodes = owners);
     this.nodeTypeSub = this.nodeTypeService.fetch().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
-    this.contract_nodeSub = this.contract_nodeService.fetch().subscribe(contracts => this.contract_nodes = contracts);
+    this.contractNodeSub = this.contractNodeService.fetch().subscribe(contracts => this.contractNodes = contracts);
   }
 
 }

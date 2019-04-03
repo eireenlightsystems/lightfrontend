@@ -23,8 +23,8 @@
                            [width]="280"
                            [height]="20"
                            [source]="dataAdapter_contract"
-                           [displayMember]="'code_contract'"
-                           [valueMember]="'id_contract'"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
                            [selectedIndex]="contractIdIndex"
                            [filterable]="true"
 
@@ -41,8 +41,8 @@
                            [width]="280"
                            [height]="20"
                            [source]="dataAdapter_sensorType"
-                           [displayMember]="'code_sensor_type'"
-                           [valueMember]="'id_sensor_type'"
+                           [displayMember]="'code'"
+                           [valueMember]="'id'"
                            [selectedIndex]="sensorTypeIdIndex"
                            [filterable]="true"
 
@@ -57,7 +57,7 @@
           <jqxTextArea
             [theme]="'material'"
             [width]="280" [height]="20"
-            [(ngModel)]="saveSensor.serial_number"
+            [(ngModel)]="saveSensor.serialNumber"
           >
           </jqxTextArea>
         </td>
@@ -69,7 +69,7 @@
           <jqxTextArea
             [theme]="'material'"
             [width]="280" [height]="50"
-            [(ngModel)]="saveSensor.comments"
+            [(ngModel)]="saveSensor.comment"
           >
           </jqxTextArea>
         </td>

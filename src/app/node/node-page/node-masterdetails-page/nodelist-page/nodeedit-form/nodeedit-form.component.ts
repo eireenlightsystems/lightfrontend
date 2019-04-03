@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, Output, OnInit, ViewChild, OnDestroy} from '@angular/core';
-import {jqxWindowComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow";
-import {Subscription} from "rxjs";
-import {MaterialService} from "../../../../../shared/classes/material.service";
-import {jqxDropDownListComponent} from "jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist";
+import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
+import {Subscription} from 'rxjs';
+import {MaterialService} from '../../../../../shared/classes/material.service';
+import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
-import {Node} from "../../../../../shared/models/node";
-import {Contract, Geograph, NodeType} from "../../../../../shared/interfaces";
-import {NodeService} from "../../../../../shared/services/node/node.service";
+import {Node} from '../../../../../shared/models/node';
+import {Contract, Geograph, NodeType} from '../../../../../shared/interfaces';
+import {NodeService} from '../../../../../shared/services/node/node.service';
 
 @Component({
   selector: 'app-nodeedit-form',
@@ -16,38 +16,39 @@ import {NodeService} from "../../../../../shared/services/node/node.service";
 
 export class NodeeditFormComponent implements OnInit, OnDestroy {
 
-  //variables from master component
-  @Input() geographs: Geograph[]
-  @Input() nodeTypes: NodeType[]
-  @Input() contract_nodes: Contract[]
+  // variables from master component
+  @Input() geographs: Geograph[];
+  @Input() nodeTypes: NodeType[];
+  @Input() contractNodes: Contract[];
 
-  //determine the functions that need to be performed in the parent component
-  @Output() onSaveEditwinBtn = new EventEmitter()
+  // determine the functions that need to be performed in the parent component
+  @Output() onSaveEditwinBtn = new EventEmitter();
 
-  //define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent
-  @ViewChild('id_contract') id_contract: jqxDropDownListComponent
-  @ViewChild('id_geograph') id_geograph: jqxDropDownListComponent
-  @ViewChild('id_node_type') id_nodeType: jqxDropDownListComponent
+  // define variables - link to view objects
+  @ViewChild('editWindow') editWindow: jqxWindowComponent;
+  @ViewChild('contractId') contractId: jqxDropDownListComponent;
+  @ViewChild('geographId') geographId: jqxDropDownListComponent;
+  @ViewChild('nodeTypeId') nodeTypeId: jqxDropDownListComponent;
 
-  //define variables for drop-down lists in the edit form
-  source_geogr: any
-  dataAdapter_geogr: any
-  source_nodeType: any
-  dataAdapter_nodeType: any
-  source_contract: any
-  dataAdapter_contract: any
+  // define variables for drop-down lists in the edit form
+  source_geogr: any;
+  dataAdapter_geogr: any;
+  source_nodeType: any;
+  dataAdapter_nodeType: any;
+  source_contract: any;
+  dataAdapter_contract: any;
 
-  id_contract_index = 0
-  id_geograph_index = 0
-  id_node_type_index = 0
+  contractId_index = 0;
+  geographId_index = 0;
+  nodeTypeId_index = 0;
 
-  //other variables
-  saveNode: Node = new Node()
-  oSub: Subscription
-  typeEditWindow: string = ""
+  // other variables
+  saveNode: Node = new Node();
+  oSub: Subscription;
+  typeEditWindow = '';
 
-  constructor(private nodeService: NodeService) { }
+  constructor(private nodeService: NodeService) {
+  }
 
   ngOnInit() {
 
@@ -55,17 +56,17 @@ export class NodeeditFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     if (this.oSub) {
-      this.oSub.unsubscribe()
+      this.oSub.unsubscribe();
     }
   }
 
-  //updating data sources for drop-down lists in the form
+  // updating data sources for drop-down lists in the form
   refresh_refbook() {
     this.source_contract =
       {
         datatype: 'array',
-        localdata: this.contract_nodes,
-        id: 'id_contract',
+        localdata: this.contractNodes,
+        id: 'contractId',
       };
     this.dataAdapter_contract = new jqx.dataAdapter(this.source_contract);
 
@@ -73,7 +74,7 @@ export class NodeeditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.geographs,
-        id: 'id_geograph',
+        id: 'id',
       };
     this.dataAdapter_geogr = new jqx.dataAdapter(this.source_geogr);
 
@@ -81,98 +82,98 @@ export class NodeeditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.nodeTypes,
-        id: 'id_node_type',
+        id: 'id',
       };
     this.dataAdapter_nodeType = new jqx.dataAdapter(this.source_nodeType);
   }
 
-  //define default values for the form
+  // define default values for the form
   define_defaultvalues(saveNode: Node) {
-    if (this.typeEditWindow === "upd") {
-      this.saveNode = saveNode
-      //determine the desired positions in the drop-down lists
-      for (let i = 0; i < this.contract_nodes.length; i++) {
-        if (this.contract_nodes[i].id_contract === this.saveNode.id_contract) {
-          this.id_contract_index = i;
+    if (this.typeEditWindow === 'upd') {
+      this.saveNode = saveNode;
+      // determine the desired positions in the drop-down lists
+      for (let i = 0; i < this.contractNodes.length; i++) {
+        if (this.contractNodes[i].id === this.saveNode.contractId) {
+          this.contractId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.nodeTypes.length; i++) {
-        if (this.nodeTypes[i].id_node_type === this.saveNode.id_node_type) {
-          this.id_node_type_index = i;
+        if (this.nodeTypes[i].id === this.saveNode.nodeTypeId) {
+          this.nodeTypeId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.geographs.length; i++) {
-        if (this.geographs[i].id_geograph === this.saveNode.id_geograph) {
-          this.id_geograph_index = i;
+        if (this.geographs[i].id === this.saveNode.geographId) {
+          this.geographId_index = i;
           break;
         }
       }
     }
-    if (this.typeEditWindow === "ins") {
-      this.id_contract_index = 0
-      this.id_node_type_index = 0
-      this.id_geograph_index = 0
+    if (this.typeEditWindow === 'ins') {
+      this.contractId_index = 0;
+      this.nodeTypeId_index = 0;
+      this.geographId_index = 0;
 
-      this.saveNode.id_node = 0
-      this.saveNode.n_coordinate = 0
-      this.saveNode.e_coordinate = 0
-      this.saveNode.price = 0
-      this.saveNode.comments = "пусто"
+      this.saveNode.nodeId = 0;
+      this.saveNode.n_coordinate = 0;
+      this.saveNode.e_coordinate = 0;
+      this.saveNode.serialNumber = 'пусто';
+      this.saveNode.comment = 'пусто';
     }
   }
 
-  //perform insert/update fixture
+  // perform insert/update fixture
   saveBtn() {
-    this.saveNode.id_contract = this.id_contract.val();
-    this.saveNode.id_node_type = this.id_nodeType.val();
-    this.saveNode.id_geograph = this.id_geograph.val();
-    if (this.typeEditWindow === "ins") {
+    this.saveNode.contractId = this.contractId.val();
+    this.saveNode.nodeTypeId = this.nodeTypeId.val();
+    this.saveNode.geographId = this.geographId.val();
+    if (this.typeEditWindow === 'ins') {
       this.oSub = this.nodeService.ins(this.saveNode).subscribe(
         response => {
-          this.saveNode.id_node = response.id_node
-          MaterialService.toast(`Узел/столб c id = ${response.id_node} был добавлен.`)
+          this.saveNode.nodeId = +response;
+          MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был добавлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
-          //close edit window
+          // close edit window
           this.hideWindow();
-          //update data source
-          this.onSaveEditwinBtn.emit()
+          // update data source
+          this.onSaveEditwinBtn.emit();
         }
-      )
+      );
     }
-    if (this.typeEditWindow === "upd") {
+    if (this.typeEditWindow === 'upd') {
       this.oSub = this.nodeService.upd(this.saveNode).subscribe(
         response => {
-          MaterialService.toast(`Узел/столб c id = ${response.id_node} был обновлен.`)
+          MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был обновлен.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
-          //close edit window
+          // close edit window
           this.hideWindow();
-          //update data source
-          this.onSaveEditwinBtn.emit()
+          // update data source
+          this.onSaveEditwinBtn.emit();
         }
-      )
+      );
     }
   }
 
   cancelBtn() {
     // this.onCancelEditwinBtn.emit()
-    this.hideWindow()
+    this.hideWindow();
   }
 
   openWindow(saveNode: Node, typeEditWindow: string) {
-    this.typeEditWindow = typeEditWindow
-    this.refresh_refbook()
-    this.define_defaultvalues(saveNode)
-    this.editWindow.open()
+    this.typeEditWindow = typeEditWindow;
+    this.refresh_refbook();
+    this.define_defaultvalues(saveNode);
+    this.editWindow.open();
   }
 
   destroyWindow() {
-    this.editWindow.destroy()
+    this.editWindow.destroy();
   }
 
   hideWindow() {
@@ -180,6 +181,6 @@ export class NodeeditFormComponent implements OnInit, OnDestroy {
   }
 
   positionWindow(coord: any) {
-    this.editWindow.position({x: coord.x, y: coord.y})
+    this.editWindow.position({x: coord.x, y: coord.y});
   }
 }

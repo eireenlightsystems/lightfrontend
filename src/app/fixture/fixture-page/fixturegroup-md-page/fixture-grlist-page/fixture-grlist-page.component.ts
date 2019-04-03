@@ -1,11 +1,11 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output, AfterViewInit} from '@angular/core';
 import {Subscription} from 'rxjs/index';
+import {isUndefined} from 'util';
 import {MaterialService} from '../../../../shared/classes/material.service';
 
 import {FilterFixtureGroup, Fixture, FixtureGroup, FixtureGroupOwner, FixtureGroupType} from '../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../shared/services/fixture/fixtureGroup.service';
 import {FixtureGrlistJqxgridComponent} from './fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
-import {isUndefined} from 'util';
 import {FixturecomeditFormComponent} from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixturecomeditSwitchoffFormComponent} from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 
@@ -83,7 +83,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit() {
-    // this.getAll();
     this.reloading = true;
   }
 
@@ -101,7 +100,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     this.fixtureGroups = [];
     this.getAll();
     this.reloading = true;
-    this.fixtureGroupId = -2;
+    this.fixtureGroupId = 0;
     if (!isUndefined(this.fixtureGrlistJqxgridComponent)) {
       this.fixtureGrlistJqxgridComponent.refresh_jqxgGrid();
     }
@@ -173,7 +172,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   switchOn() {
     const fixtureIds: number[] = [];
     for (let i = 0; i < this.fixtures.length; i++) {
-      fixtureIds[i] = +this.fixtures[i].id_fixture;
+      fixtureIds[i] = +this.fixtures[i].fixtureId;
     }
     this.editSwitchOnWindow.positionWindow({x: 600, y: 90});
     this.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
@@ -182,7 +181,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   switchOff() {
     const fixtureIds: number[] = [];
     for (let i = 0; i < this.fixtures.length; i++) {
-      fixtureIds[i] = +this.fixtures[i].id_fixture;
+      fixtureIds[i] = +this.fixtures[i].fixtureId;
     }
     this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
     this.editSwitchOffWindow.openWindow(fixtureIds, 'ins');

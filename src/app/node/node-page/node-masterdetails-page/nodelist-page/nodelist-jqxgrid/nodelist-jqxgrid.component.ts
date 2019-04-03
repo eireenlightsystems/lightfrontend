@@ -9,14 +9,13 @@ import {Node} from '../../../../../shared/models/node';
 import {
   Geograph,
   Contract,
-  Owner_node,
+  OwnerNode,
   NodeType
 } from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {NodeeditFormComponent} from '../nodeedit-form/nodeedit-form.component';
 import {NodelinkFormComponent} from '../nodelink-form/nodelink-form.component';
-import {GatewayNode} from '../../../../../shared/models/gatewayNode';
 
 
 @Component({
@@ -30,9 +29,9 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   // variables from master component
   @Input() nodes: Node[];
   @Input() geographs: Geograph[];
-  @Input() owner_nodes: Owner_node[];
+  @Input() ownerNodes: OwnerNode[];
   @Input() nodeTypes: NodeType[];
-  @Input() contract_nodes: Contract[];
+  @Input() contractNodes: Contract[];
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];
   @Input() nodeListBoxSource: any[];
@@ -40,7 +39,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() heightGrid: number;
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
-  @Input() id_gateway_select: number;
+  @Input() selectGatewayId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -57,7 +56,6 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
 
   // other variables
   selectNode: Node = new Node();
-  saveGatewayNode: GatewayNode = new GatewayNode();
   oSub: Subscription;
   rowcount = 0;
   islistBoxVisible = false;
@@ -76,7 +74,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
       {
         datatype: 'array',
         localdata: this.nodes,
-        id: 'id_node',
+        id: 'nodeId',
         sortcolumn: this.nodeSortcolumn,
         sortdirection: 'asc'
       };
@@ -84,7 +82,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     this.refresh_jqxgGrid();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.refreshListBox();
   }
 
@@ -118,7 +116,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   refresh_del() {
-    this.myGrid.deleterow(this.selectNode.id_node);
+    this.myGrid.deleterow(this.selectNode.nodeId);
   }
 
   // define width of table
@@ -181,7 +179,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
 
   refreshListBox() {
     this.myGrid.beginupdate();
-    for (var i = 0; i < this.myListBox.attrSource.length; i++) {
+    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
       if (this.myListBox.attrSource[i].checked) {
         this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
       } else {
@@ -191,38 +189,16 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     this.myGrid.endupdate();
   };
 
-  // functions-events when allocating a string
-  onRowclick(event: any) {
-  };
-
   onRowSelect(event: any) {
-    // console.log("onRowSelect")
     if (event.args.row) {
       this.selectNode = event.args.row;
 
       // refresh child grid
       if (this.isMasterGrid) {
-        this.onRefreshChildGrid.emit(this.selectNode.id_node);
+        this.onRefreshChildGrid.emit(this.selectNode.nodeId);
       }
     }
-    // this.updateButtons('Select');
   };
-
-  onRowUnselect(event: any) {
-    // console.log("onRowUnselect")
-    // this.updateButtons('Unselect');
-  };
-
-  onRowBeginEdit(event: any) {
-    // console.log("onRowBeginEdit")
-    // this.updateButtons('Edit');
-  };
-
-  onRowEndEdit(event: any) {
-    // console.log("onRowEndEdit")
-    // this.updateButtons('End Edit');
-  };
-
 
 // INSERT, UPDATE, DELETE
 
@@ -250,10 +226,10 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
 
   // delete node
   del() {
-    if (this.selectNode.id_node) {
+    if (this.selectNode.nodeId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить узел/столб id = "${this.selectNode.id_node}"?`;
+      this.warningEventWindow = `Удалить узел/столб id = "${this.selectNode.nodeId}"?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = `Вам следует выбрать узел/столб для удаления`;
@@ -269,14 +245,10 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
       if (+id >= 0) {
         this.nodeService.del(+id).subscribe(
           response => {
-            MaterialService.toast(response.message);
+            MaterialService.toast('Узел был удален!');
           },
-          error => MaterialService.toast(error.message),
+          error => MaterialService.toast(error.error.message),
           () => {
-            // update the table without contacting the database
-            // this.nodes.splice(selectedrowindex, 1)
-            // this.refreshGrid();
-            // this.onRefreshGrid.emit();
             this.refresh_del();
           }
         );
@@ -284,26 +256,27 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     }
 
     if (this.actionEventWindow === 'pin_drop') {
-      for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        this.saveGatewayNode.gatewayId = this.id_gateway_select;
-        this.saveGatewayNode.nodeId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_node;
-
-        this.oSub = this.nodeService.del_gateway_node(this.saveGatewayNode).subscribe(
-          response => {
-            // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
-          },
-          error => MaterialService.toast(error.message),
-          () => {
-            // refresh table
-            this.onRefreshGrid.emit();
-          }
-        );
+      const nodeIds = [];
+      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        nodeIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].nodeId;
       }
+      this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
+        response => {
+          MaterialService.toast('Узлы удалены из группы!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
     }
   }
 
   place() {
-    if (this.id_gateway_select > 1) {
+    if (this.selectGatewayId > 1) {
       this.linkWindow.openWindow();
     } else {
       this.eventWindow.okButtonDisabled(true);
@@ -313,7 +286,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   pin_drop() {
-    if (this.selectNode.id_node) {
+    if (this.selectNode.nodeId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
       this.warningEventWindow = `Отвязать узлы от шлюза?`;

@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {MaterialService} from "../../../classes/material.service";
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {Router} from '@angular/router';
+import {MaterialService} from '../../../classes/material.service';
 
-import {AuthService} from "../../../services/auth.service";
+import {AuthService} from '../../../services/auth.service';
 
 
 @Component({
@@ -11,30 +11,24 @@ import {AuthService} from "../../../services/auth.service";
   templateUrl: './operator-layout.component.html',
   styleUrls: ['./operator-layout.component.css']
 })
-export class OperatorLayoutComponent implements AfterViewInit {
+export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('floating') floatingRef: ElementRef
-  // @ViewChild('sidenav') sidenavRef: ElementRef
-
-  // links = [
-  //   {url: 'node', name: 'Узлы/столбы'},
-  //   {url: 'gateway', name: 'Интернет шлюзы'},
-  //   {url: 'fixture', name: 'Светильники'},
-  //   {url: 'fixturegroup', name: 'Светильники (группы)'}
-  //
-  // ]
+  @ViewChild('floating') floatingRef: ElementRef;
 
   constructor(private auth: AuthService,
               private router: Router) {
   }
 
-  ngOnDestroy() {
+  ngOnInit() {
 
   }
 
   ngAfterViewInit() {
-    MaterialService.initializeFloatingButton(this.floatingRef)
-    //MaterialService.initSidenav(this.sidenavRef)
+    MaterialService.initializeFloatingButton(this.floatingRef);
+  }
+
+  ngOnDestroy() {
+
   }
 
 }

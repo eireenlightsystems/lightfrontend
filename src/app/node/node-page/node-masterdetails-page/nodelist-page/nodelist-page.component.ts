@@ -5,9 +5,10 @@ import {NodeService} from '../../../../shared/services/node/node.service';
 import {
   Node,
   Geograph,
-  Contract, FilterNode, NodeType, Owner_node
+  Contract, FilterNode, NodeType, OwnerNode
 } from '../../../../shared/interfaces';
 import {NodelistJqxgridComponent} from './nodelist-jqxgrid/nodelist-jqxgrid.component';
+import {isUndefined} from 'util';
 
 
 const STEP = 1000000000000;
@@ -23,12 +24,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() owner_nodes: Owner_node[];
+  @Input() ownerNodes: OwnerNode[];
   @Input() nodeTypes: NodeType[];
-  @Input() contract_nodes: Contract[];
+  @Input() contractNodes: Contract[];
 
   @Input() heightGrid: number;
-  @Input() id_gateway_select: number;
+  @Input() selectGatewayId: number;
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
 
@@ -55,11 +56,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   // other variables
   nodes: Node[] = [];
   filter: FilterNode = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_node_type: -1,
-    id_contract: -1,
-    id_gateway: -1
+    geographId: '',
+    ownerId: '',
+    nodeTypeId: '',
+    contractId: '',
+    gatewayId: ''
   };
   oSub: Subscription;
   isFilterVisible = false;
@@ -71,7 +72,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   reloading = false;
   noMoreNodes = false;
   //
-  id_node_select: number = 0;
+  selectNodeId = 0;
   //
   isAddBtnDisabled: boolean;
   isEditBtnDisabled: boolean;
@@ -86,13 +87,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // if this.node is child grid, then we need update this.filter.id_gateway
-    if (!this.isMasterGrid) {
-      this.filter.id_gateway = this.id_gateway_select;
+    // if this.node is child grid, then we need update this.filter.gatewayId
+    if (!this.isMasterGrid && !isUndefined(this.selectGatewayId)) {
+      this.filter.gatewayId = this.selectGatewayId.toString();
     }
-
-    this.getAll();
     this.reloading = true;
+    this.getAll();
   }
 
   ngOnDestroy() {
@@ -103,27 +103,27 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.nodes = [];
     this.getAll();
     this.reloading = true;
-    this.id_node_select = 0;
+    this.selectNodeId = 0;
 
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid) {
-      this.refreshChildGrid(this.id_node_select);
+      this.refreshChildGrid(this.selectNodeId);
     }
 
     // refresh map
     this.onRefreshMap.emit();
   }
 
-  refreshChildGrid(id_node: number) {
-    this.id_node_select = id_node;
+  refreshChildGrid(nodeId: number) {
+    this.selectNodeId = nodeId;
     // refresh child grid
-    this.onRefreshChildGrid.emit(id_node);
+    this.onRefreshChildGrid.emit(nodeId);
   }
 
   getAll() {
 
     // Disabled/available buttons
-    if (!this.isMasterGrid && this.filter.id_gateway <= 0) {
+    if (!this.isMasterGrid && +this.filter.gatewayId <= 0) {
       this.isAddBtnDisabled = true;
       this.isEditBtnDisabled = true;
       this.isDeleteBtnDisabled = true;
@@ -188,6 +188,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   pin_drop() {
-    this.nodelistJqxgridComponent.pin_drop()
+    this.nodelistJqxgridComponent.pin_drop();
   }
 }

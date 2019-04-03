@@ -9,20 +9,21 @@ import {
   Geograph,
   HeightType,
   Installer,
-  Owner_fixture, SpeedDirection,
+  OwnerFixture, SpeedDirection,
   Substation
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
-import {Owner_fixtureService} from '../../shared/services/fixture/owner_fixture.service';
+import {OwnerFixtureService} from '../../shared/services/fixture/ownerFixture.service';
 import {FixtureTypeService} from '../../shared/services/fixture/fixtureType.service';
-import {Contract_fixtureService} from '../../shared/services/fixture/contract_fixture.service';
-import {Installer_fixtureService} from '../../shared/services/fixture/installer_fixture.service';
+import {ContractFixtureService} from '../../shared/services/fixture/contractFixture.service';
+import {InstallerFixtureService} from '../../shared/services/fixture/installerFixture.service';
 import {HeightTypeService} from '../../shared/services/fixture/heightType.service';
 import {SubstationService} from '../../shared/services/fixture/substation.service';
-import {CommandTypeService} from '../../shared/services/command/commandType.service';
+import {CommandSwitchTypeService} from '../../shared/services/command/commandSwitchType.service';
 import {CommandStatusService} from '../../shared/services/command/commandStatus.service';
 import {SpeedDirectionService} from '../../shared/services/command/speedDirection';
 import {FixtureGroupService} from '../../shared/services/fixture/fixtureGroup.service';
+import {CommandSpeedTypeService} from '../../shared/services/command/commandSpeedType.service';
 
 @Component({
   selector: 'app-fixture-page',
@@ -40,10 +41,10 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   geographSub: Subscription;
 
   // fixture subscription
-  owner_fixtureSub: Subscription;
+  ownerFixtureSub: Subscription;
   fixtureTypeSub: Subscription;
   substationSub: Subscription;
-  contract_fixtureSub: Subscription;
+  contractFixtureSub: Subscription;
   installerSub: Subscription;
   heightTypeSub: Subscription;
 
@@ -60,10 +61,10 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   geographs: Geograph[];
 
   // fixture source
-  owner_fixtures: Owner_fixture[];
+  ownerFixtures: OwnerFixture[];
   fixtureTypes: FixtureType[];
   substations: Substation[];
-  contract_fixtures: Contract[];
+  contractFixtures: Contract[];
   installers: Installer[];
   heightTypes: HeightType[];
 
@@ -73,17 +74,18 @@ export class FixturePageComponent implements OnInit, OnDestroy {
 
   constructor(
     // fixturecom service
-    private commandTypeService: CommandTypeService,
+    private commandTypeService: CommandSwitchTypeService,
+    private commandSpeedTypeService: CommandSpeedTypeService,
     private commandStatusService: CommandStatusService,
     private speedDirectionService: SpeedDirectionService,
     // node service
     private geographService: GeographService,
     // fixture service
-    private owner_fixtureService: Owner_fixtureService,
+    private ownerFixtureService: OwnerFixtureService,
     private fixtureTypeService: FixtureTypeService,
     private substationService: SubstationService,
-    private contract_fixtureService: Contract_fixtureService,
-    private installerService: Installer_fixtureService,
+    private contractFixtureService: ContractFixtureService,
+    private installerService: InstallerFixtureService,
     private heightTypeService: HeightTypeService,
     // fixture group service
     private fixtureGroupService: FixtureGroupService) {
@@ -103,10 +105,10 @@ export class FixturePageComponent implements OnInit, OnDestroy {
     this.geographSub.unsubscribe();
 
     // fixture subscription
-    this.owner_fixtureSub.unsubscribe();
+    this.ownerFixtureSub.unsubscribe();
     this.fixtureTypeSub.unsubscribe();
     this.substationSub.unsubscribe();
-    this.contract_fixtureSub.unsubscribe();
+    this.contractFixtureSub.unsubscribe();
     this.installerSub.unsubscribe();
     this.heightTypeSub.unsubscribe();
 
@@ -125,10 +127,10 @@ export class FixturePageComponent implements OnInit, OnDestroy {
     this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
 
     // fixture refbook
-    this.owner_fixtureSub = this.owner_fixtureService.fetch().subscribe(owners => this.owner_fixtures = owners);
+    this.ownerFixtureSub = this.ownerFixtureService.fetch().subscribe(owners => this.ownerFixtures = owners);
     this.fixtureTypeSub = this.fixtureTypeService.fetch().subscribe(fixtureTypes => this.fixtureTypes = fixtureTypes);
     this.substationSub = this.substationService.fetch().subscribe(substations => this.substations = substations);
-    this.contract_fixtureSub = this.contract_fixtureService.fetch().subscribe(contracts => this.contract_fixtures = contracts);
+    this.contractFixtureSub = this.contractFixtureService.fetch().subscribe(contracts => this.contractFixtures = contracts);
     this.installerSub = this.installerService.fetch().subscribe(installers => this.installers = installers);
     this.heightTypeSub = this.heightTypeService.fetch().subscribe(heightTypes => this.heightTypes = heightTypes);
 

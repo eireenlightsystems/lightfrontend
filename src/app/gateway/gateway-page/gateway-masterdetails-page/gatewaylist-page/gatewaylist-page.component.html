@@ -105,7 +105,7 @@
   *ngIf="isFilterVisible"
   (onFilter)="applyFilter($event)"
   [geographs]="geographs"
-  [owner_gateways]="owner_gateways"
+  [ownerGateways]="ownerGateways"
   [gatewayTypes]="gatewayTypes"
 ></app-gatewaylist-filter>
 
@@ -115,13 +115,13 @@
     <app-gatewaylist-jqxgrid #gatewaylistJqxgridComponent
                              [gateways]="gateways"
                              [geographs]="geographs"
-                             [owner_gateways]="owner_gateways"
+                             [ownerGateways]="ownerGateways"
                              [gatewayTypes]="gatewayTypes"
-                             [contract_gateways]="contract_gateways"
+                             [contractGateways]="contractGateways"
 
                              [heightGrid]="heightGrid"
                              [selectionmode]="selectionmode"
-                             [id_node_select]="id_node_select"
+                             [selectNodeId]="selectNodeId"
                              [isMasterGrid]="isMasterGrid"
 
                              (onRefreshGrid)="refreshGrid()"

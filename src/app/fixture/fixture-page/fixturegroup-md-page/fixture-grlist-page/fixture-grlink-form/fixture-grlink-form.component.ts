@@ -41,9 +41,9 @@ export class FixtureGrlinkFormComponent implements OnInit, OnDestroy {
     {
       datatype: 'array',
       localdata: this.fixtures,
-      id: 'id_fixture',
+      id: 'fixtureId',
 
-      sortcolumn: ['id_fixture'],
+      sortcolumn: ['fixtureId'],
       sortdirection: 'desc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
@@ -53,7 +53,7 @@ export class FixtureGrlinkFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.getAll(this.fixtureGroupId);
+
   }
 
   ngOnDestroy(): void {
@@ -80,16 +80,21 @@ export class FixtureGrlinkFormComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    this.oSub = this.fixtureService.getFixtureNotInThisGroup({fixtureGroupId: this.fixtureGroupId}).subscribe(fixtures => {
+    this.oSub = this.fixtureService.getFixtureInGroup('1').subscribe(fixtures => {
       this.fixtures = fixtures;
       this.refreshGrid();
     });
+
+    // this.oSub = this.fixtureService.getFixtureNotInThisGroup({fixtureGroupId: this.fixtureGroupId}).subscribe(fixtures => {
+    //   this.fixtures = fixtures;
+    //   this.refreshGrid();
+    // });
   }
 
   saveBtn() {
     const fixtureIds = [];
     for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-      fixtureIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_fixture;
+      fixtureIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
     }
     this.oSub = this.fixtureService.setFixtureInGroup(this.fixtureGroupId, fixtureIds).subscribe(
       response => {

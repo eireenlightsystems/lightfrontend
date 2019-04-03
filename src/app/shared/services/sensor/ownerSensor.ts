@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {OwnerSensor} from '../../interfaces';
 import {Observable} from 'rxjs/index';
+
+import {OwnerSensor} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class OwnerSensorService {
   }
 
   fetch(): Observable<OwnerSensor[]> {
-    return this.http.get<OwnerSensor[]>('/api/owner-sensor');
+    return this.http.get<OwnerSensor[]>('/api2/sensors-owners');
   }
 
 }

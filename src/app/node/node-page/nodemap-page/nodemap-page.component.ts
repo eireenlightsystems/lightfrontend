@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../shared/classes/material.service';
@@ -6,7 +6,7 @@ import {MaterialService} from '../../../shared/classes/material.service';
 import {Node} from '../../../shared/models/node';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {Contract, Geograph, NodeType, Owner_node} from '../../../shared/interfaces';
+import {Contract, Geograph, NodeType, OwnerNode} from '../../../shared/interfaces';
 import {NodeeditFormComponent} from '../node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
 import {Fixture} from '../../../shared/models/fixture';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
@@ -21,13 +21,13 @@ declare var ymaps: any;
   styleUrls: ['./nodemap-page.component.css']
 })
 
-export class NodemapPageComponent implements OnInit, OnDestroy {
+export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() owner_nodes: Owner_node[];
+  @Input() ownerNodes: OwnerNode[];
   @Input() nodeTypes: NodeType[];
-  @Input() contract_nodes: Contract[];
+  @Input() contractNodes: Contract[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -39,19 +39,16 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
 
   // other variables
   nodes: Node[];
-  node: Node = new Node();
-  id_node_del: number;
-  id_node_move: number;
-  n_coord: number;
-  e_coord: number;
+  // node: Node = new Node();
   saveNode: Node = new Node();
   saveFixture: Fixture = new Fixture();
+  delNodeId: number;
+  moveNodeId: number;
+  n_coord: number;
+  e_coord: number;
   map: any;
   actionEventWindow = '';
-  //
   oSub: Subscription;
-  //
-  private errorText: string;
   offset = 0;
   limit = 1000000000000;
   draggableIcon = false;
@@ -67,6 +64,10 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
     this.mapInit();
   }
 
+  ngAfterViewInit() {
+
+  }
+
   ngOnDestroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
@@ -76,6 +77,9 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
     }
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
+    }
+    if (this.editWindow) {
+      this.editWindow.destroyWindow();
     }
   }
 
@@ -88,8 +92,18 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
         controls: ['zoomControl']
       });
 
-      let ButtonLayout = ymaps.templateLayoutFactory.createClass([
-          `<div class="fr">
+      // Refresh map
+      // this.getAll();
+
+      // buttons on the map init
+      this.buttonsInit();
+    });
+  }
+
+  // buttons on the map init
+  buttonsInit() {
+    const ButtonLayout = ymaps.templateLayoutFactory.createClass([
+        `<div class="fr">
                   <Button id="insItem"
                     class="btn btn-small waves-effect waves-orange white blue-text"
                     style="margin: 2px 2px 2px 2px;"
@@ -113,84 +127,68 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
                   </Button>
         
               </div>`
-        ].join(''),
-        {
-          build: function () {
-            ButtonLayout.superclass.build.call(this);
-            $('#insItem').bind('click', this.insItem(this.getData().properties));
-            $('#refreshMap').bind('click', this.refreshMap(this.getData().properties));
-            $('#moveIcons').bind('click', this.moveIcons(this.getData().properties));
-          },
-
-          insItem: (function () {
-            const mapComponent: NodemapPageComponent = this;
-            return function (properties: any) {
-              return function () {
-                mapComponent.insItem();
-              };
-            };
-          }).call(this),
-
-          refreshMap: (function () {
-            const mapComponent: NodemapPageComponent = this;
-            return function (properties: any) {
-              return function () {
-                mapComponent.refreshMap();
-              };
-            };
-          }).call(this),
-
-          moveIcons: (function () {
-            const mapComponent: NodemapPageComponent = this;
-            return function (properties: any) {
-              return function () {
-                // change options - move icon
-                mapComponent.draggableIcon = !mapComponent.draggableIcon;
-                // refresh map
-                mapComponent.refreshMap();
-              };
-            };
-          }).call(this)
+      ].join(''),
+      {
+        build: function () {
+          ButtonLayout.superclass.build.call(this);
+          $('#insItem').bind('click', this.insItem(this.getData().properties));
+          $('#refreshMap').bind('click', this.refreshMap(this.getData().properties));
+          $('#moveIcons').bind('click', this.moveIcons(this.getData().properties));
         },
-        ),
 
-        buttonIns = new ymaps.control.Button({
-          data: {
-            content: 'Жмак-жмак-жмак',
-            image: 'images/pen.png',
-            title: 'Жмак-жмак-жмак'
-          },
-          options: {
-            layout: ButtonLayout,
-            maxWidth: [170, 190, 220]
-          }
-        });
+        insItem: (function () {
+          const mapComponent: NodemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              mapComponent.insItem();
+            };
+          };
+        }).call(this),
 
-      this.map.controls.add(buttonIns, {
-        right: 5,
-        top: 5
+        refreshMap: (function () {
+          const mapComponent: NodemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              mapComponent.refreshMap();
+            };
+          };
+        }).call(this),
+
+        moveIcons: (function () {
+          const mapComponent: NodemapPageComponent = this;
+          return function (properties: any) {
+            return function () {
+              // change options - move icon
+              mapComponent.draggableIcon = !mapComponent.draggableIcon;
+              // refresh map
+              mapComponent.refreshMap();
+            };
+          };
+        }).call(this)
+      },
+      ),
+
+      buttonIns = new ymaps.control.Button({
+        data: {
+          content: 'Жмак-жмак-жмак',
+          image: 'images/pen.png',
+          title: 'Жмак-жмак-жмак'
+        },
+        options: {
+          layout: ButtonLayout,
+          maxWidth: [170, 190, 220]
+        }
       });
 
-      // Refresh map
-      this.getAll();
+    this.map.controls.add(buttonIns, {
+      right: 5,
+      top: 5
     });
   }
 
   // get a set of objects
   getAll() {
-    const params = Object.assign({}, {
-        offset: this.offset,
-        limit: this.limit
-      },
-      {
-        id_geograph: -1,
-        id_owner: -1,
-        id_node_type: -1,
-        id_contract: -1,
-        id_gateway: -1
-      });
-
-    this.oSub = this.nodeService.getAll(params).subscribe(nodes => {
+    this.oSub = this.nodeService.getAll({}).subscribe(nodes => {
       this.nodes = nodes;
       this.addItemsToMap();
     });
@@ -199,8 +197,6 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
   // refresh Map
   refreshMap() {
     this.getAll();
-    // refresh grid
-    // this.onRefreshGrid.emit()
   }
 
   // place the object from the set "getAll()" on the map
@@ -238,20 +234,18 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
             <i class="material-icons">pin_drop</i>
           </Button>
         </jqxTooltip>
-        
-        
       </div>
             
       <table class="table table-sm">
       <tbody>
-      <tr><th>Договор</th><td>{{properties.code_contract}}</td></tr>
-      <tr><th>Географическое понятие</th><td>{{properties.code_geograph}}</td></tr>
-      <tr><th>Тип узла</th><td>{{properties.code_node_type}}</td></tr>
-      <tr><th>Владелец</th><td>{{properties.code_owner}}</td></tr>
-      <tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>
-      <tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>
-      <tr><th>Цена</th><td>{{properties.price}}</td></tr>
-      <tr><th>Коментарий</th><td>{{properties.comments}}</td></tr>
+      <tr><th>Договор</th><td>{{properties.node.contractCode}}</td></tr>
+      <tr><th>Географическое понятие</th><td>{{properties.node.geographCode}}</td></tr>
+      <tr><th>Тип узла</th><td>{{properties.node.nodeTypeCode}}</td></tr>
+      <tr><th>Владелец</th><td>{{properties.node.ownerCode}}</td></tr>
+      <tr><th>Широта</th><td>{{properties.node.n_coordinate}}</td></tr>
+      <tr><th>Долгота</th><td>{{properties.node.e_coordinate}}</td></tr>
+      <tr><th>Серийный номер</th><td>{{properties.node.serialNumber}}</td></tr>
+      <tr><th>Коментарий</th><td>{{properties.node.comment}}</td></tr>
       </tbody>
       </table>`, {
         build: function () {
@@ -271,7 +265,7 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
           return function (properties: any) {
             return function () {
               mapComponent.editWindow.positionWindow({x: 600, y: 90});
-              mapComponent.editWindow.openWindow(properties._data, 'upd');
+              mapComponent.editWindow.openWindow(properties._data.node, 'upd');
             };
           };
         }).call(this),
@@ -283,7 +277,7 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
               mapComponent.warningEventWindow = 'Очистить координаты узла (убрать с карты)?';
               mapComponent.actionEventWindow = 'visibility';
               mapComponent.eventWindow.openEventWindow();
-              mapComponent.id_node_del = properties._data.id_node;
+              mapComponent.delNodeId = properties._data.node.nodeId;
             };
           };
         }).call(this),
@@ -295,7 +289,7 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
               mapComponent.warningEventWindow = 'Удалить узел?';
               mapComponent.actionEventWindow = 'del';
               mapComponent.eventWindow.openEventWindow();
-              mapComponent.id_node_del = properties._data.id_node;
+              mapComponent.delNodeId = properties._data.node.nodeId;
             };
           };
         }).call(this)
@@ -314,20 +308,8 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
           },
           // properties
           properties: {
-            // Content of icon
-            iconContent: node.id_node,
-            id_node: node.id_node,
-            id_geograph: node.id_geograph,
-            id_node_type: node.id_node_type,
-            id_contract: node.id_contract,
-            code_contract: node.code_contract,
-            code_geograph: node.code_geograph,
-            code_node_type: node.code_node_type,
-            code_owner: node.code_owner,
-            n_coordinate: node.n_coordinate,
-            e_coordinate: node.e_coordinate,
-            price: node.price,
-            comments: node.comments
+            iconContent: node.nodeId,
+            node: node
           }
         },
         {
@@ -343,7 +325,7 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
       const changeCoords = function (mapComponent) {
         return function (e) {
           const cord = e.get('target').geometry.getCoordinates();
-          mapComponent.id_node_move = e.get('target').properties._data.id_node;
+          mapComponent.moveNodeId = e.get('target').properties._data.node.nodeId;
           mapComponent.n_coord = cord[0];
           mapComponent.e_coord = cord[1];
 
@@ -369,24 +351,24 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
     this.map.events.remove('click', this.mapClickIns, this);
     const coords = event.get('coords');
 
-    this.saveNode.id_node = -1;
-    this.saveNode.id_contract = 1;
-    this.saveNode.id_node_type = 1;
-    this.saveNode.id_geograph = 1;
+    // this.saveNode.nodeId = 1;
+    this.saveNode.contractId = 1;
+    this.saveNode.nodeTypeId = 1;
+    this.saveNode.geographId = 1;
     this.saveNode.n_coordinate = coords[0];
     this.saveNode.e_coordinate = coords[1];
-    this.saveNode.comments = 'пусто';
-    this.saveNode.price = 0;
+    this.saveNode.comment = 'пусто';
+    this.saveNode.serialNumber = 'пусто';
 
     this.oSub = this.nodeService.ins(this.saveNode).subscribe(
       response => {
-        this.saveNode.id_node = response.id_node;
-        MaterialService.toast(`Узел/столб c id = ${response.id_node} был добавлен.`);
+        this.saveNode.nodeId = +response;
+        MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был добавлен.`);
       },
       error => MaterialService.toast(error.error.message),
       () => {
         // insert fixture
-        this.mapClickInsFixture(this.saveNode.id_node);
+        this.mapClickInsFixture(this.saveNode.nodeId);
         // refresh map
         this.refreshMap();
         // refresh grid
@@ -397,29 +379,23 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
 
   // insert fixture
   mapClickInsFixture(id_node: any) {
-    if (this.saveNode.id_node > 0) {
-      this.saveFixture.id_contract = 1;
-      this.saveFixture.id_fixture_type = 1;
-      this.saveFixture.id_geograph = 1;
-      this.saveFixture.id_installer = 1;
-      this.saveFixture.id_substation = 1;
-      this.saveFixture.id_height_type = 1;
-      this.saveFixture.numline = 1;
-      this.saveFixture.side = '1';
-
-      this.saveFixture.id_fixture = 0;
-      this.saveFixture.flg_chief = false;
-      this.saveFixture.price = 0;
-      this.saveFixture.comments = 'пусто';
-
-      this.saveFixture.id_node = this.saveNode.id_node;
+    if (this.saveNode.nodeId > 0) {
+      this.saveFixture.contractId = 1;
+      this.saveFixture.fixtureTypeId = 1;
+      this.saveFixture.geographId = 1;
+      this.saveFixture.installerId = 1;
+      this.saveFixture.substationId = 1;
+      this.saveFixture.heightTypeId = 1;
+      this.saveFixture.nodeId = this.saveNode.nodeId;
+      this.saveFixture.serialNumber = 'пусто';
+      this.saveFixture.comment = 'пусто';
 
       this.oSub = this.fixtureService.ins(this.saveFixture).subscribe(
         response => {
-          this.saveFixture.id_fixture = response.id_fixture;
-          MaterialService.toast(`Светильник c id = ${response.id_fixture} был добавлен.`);
+          this.saveFixture.fixtureId = +response;
+          MaterialService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был добавлен.`);
         },
-        error => MaterialService.toast(error.message),
+        error => MaterialService.toast(error.error.message),
         () => {
         }
       );
@@ -427,14 +403,14 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
   }
 
   // change of coordinates
-  changeCoords(id_node: number, n_coord: number, e_coord: number) {
-    this.node.id_node = id_node;
-    this.node.n_coordinate = n_coord;
-    this.node.e_coordinate = e_coord;
-
-    this.oSub = this.nodeService.set_coords(this.node).subscribe(
+  changeCoords(nodeId: number, n_coord: number, e_coord: number) {
+    const node: Node = new Node();
+    node.nodeId = nodeId;
+    node.n_coordinate = n_coord;
+    node.e_coordinate = e_coord;
+    this.oSub = this.nodeService.upd(node).subscribe(
       response => {
-        MaterialService.toast(`Место положения узла/столба c id = ${response.id_node} изменилось.`);
+        MaterialService.toast(`Место положения узла/столба c id = ${node.nodeId} изменилось.`);
       },
       error => MaterialService.toast(error.error.message),
       () => {
@@ -446,16 +422,14 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
 
   // untie the node from the map
   visibilityItem(id: number) {
-    this.clearErrorText();
-
     if (+id >= 0) {
-      this.saveNode.id_node = id;
+      this.saveNode.nodeId = id;
       this.saveNode.n_coordinate = 0;
       this.saveNode.e_coordinate = 0;
 
-      this.oSub = this.nodeService.set_coords(this.saveNode).subscribe(
+      this.oSub = this.nodeService.upd(this.saveNode).subscribe(
         response => {
-          MaterialService.toast(`Узел/столб c id = ${response.id_node} был убран с карты.`);
+          MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был убран с карты.`);
         },
         error => MaterialService.toast(error.error.message),
         () => {
@@ -472,12 +446,10 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
 
   // untie the node from the map
   delItem(id: number) {
-    this.clearErrorText();
-
     if (+id >= 0) {
       this.nodeService.del(+id).subscribe(
         response => {
-          MaterialService.toast(response.message);
+          MaterialService.toast('Узел/столб удален!');
         },
         error => MaterialService.toast(error.error.message),
         () => {
@@ -495,13 +467,13 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
   // event window
   okEvenwinBtn() {
     if (this.actionEventWindow === 'move') {
-      this.changeCoords(this.id_node_move, this.n_coord, this.e_coord);
+      this.changeCoords(this.moveNodeId, this.n_coord, this.e_coord);
     }
     if (this.actionEventWindow === 'visibility') {
-      this.visibilityItem(this.id_node_del);
+      this.visibilityItem(this.delNodeId);
     }
     if (this.actionEventWindow === 'del') {
-      this.delItem(this.id_node_del);
+      this.delItem(this.delNodeId);
     }
   }
 
@@ -511,24 +483,5 @@ export class NodemapPageComponent implements OnInit, OnDestroy {
     this.refreshMap();
     // refresh grid
     this.onRefreshGrid.emit();
-  }
-
-  // error message
-  errorHandler(response: any) {
-    this.zone.run(() => {
-      this.errorText = response.json().error;
-    });
-  }
-
-  setErrorText(errorText: string) {
-    this.zone.run(() => {
-      this.errorText = errorText;
-    });
-  }
-
-  clearErrorText() {
-    this.zone.run(() => {
-      this.errorText = '';
-    });
   }
 }

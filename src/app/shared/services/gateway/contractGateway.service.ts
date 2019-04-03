@@ -1,18 +1,17 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Contract} from '../../interfaces';
 import {Observable} from 'rxjs/index';
-
-import {GatewayType} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GatewayTypeService {
+export class ContractGatewayService {
   constructor(private http: HttpClient) {
   }
 
-  fetch(): Observable<GatewayType[]> {
-    return this.http.get<GatewayType[]>('/api2/gateways-types');
+  fetch(): Observable<Contract[]> {
+    return this.http.get<Contract[]>('/api2/gateways-contracts');
   }
 
 }

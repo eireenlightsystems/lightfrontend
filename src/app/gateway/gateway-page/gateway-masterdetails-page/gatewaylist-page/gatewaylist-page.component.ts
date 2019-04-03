@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, Owner_gateway, GatewayType, Gateway, FilterGateway} from '../../../../shared/interfaces';
+import {Geograph, Contract, OwnerGateway, GatewayType, Gateway, FilterGateway} from '../../../../shared/interfaces';
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
 import {GatewaylistJqxgridComponent} from './gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
 
@@ -18,11 +18,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() owner_gateways: Owner_gateway[];
+  @Input() ownerGateways: OwnerGateway[];
   @Input() gatewayTypes: GatewayType[];
-  @Input() contract_gateways: Contract[];
+  @Input() contractGateways: Contract[];
 
-  @Input() id_node_select: number;
+  @Input() selectNodeId: number;
 
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
@@ -47,12 +47,13 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   // other variables
   gateways: Gateway[] = [];
   filter: FilterGateway = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_gateway_type: -1,
-    id_contract: -1,
-    id_node: -1
+    geographId: '',
+    ownerId: '',
+    gatewayTypeId: '',
+    contractId: '',
+    nodeId: ''
   };
+
   oSub: Subscription;
   isFilterVisible = false;
   //
@@ -63,7 +64,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   reloading = false;
   noMoreNodes = false;
   //
-  id_gateway_select: number = 0;
+  selectGatewayId = 0;
   //
   isAddBtnDisabled: boolean;
   isEditBtnDisabled: boolean;
@@ -78,9 +79,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // if this.node is child grid, then we need update this.filter.id_node
+    // if this.node is child grid, then we need update this.filter.nodeId
     if (!this.isMasterGrid) {
-      this.filter.id_node = this.id_node_select;
+      this.filter.nodeId = this.selectNodeId.toString();
     }
 
     this.getAll();
@@ -88,33 +89,35 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.oSub.unsubscribe();
+    if(this.oSub){
+      this.oSub.unsubscribe();
+    }
   }
 
   refreshGrid() {
     this.gateways = [];
     this.getAll();
     this.reloading = true;
-    this.id_gateway_select = 0;
+    this.selectGatewayId = 0;
 
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid) {
-      this.refreshChildGrid(this.id_gateway_select);
+      this.refreshChildGrid(this.selectGatewayId);
     }
 
     // refresh map
     this.onRefreshMap.emit();
   }
 
-  refreshChildGrid(id_gateway: number) {
-    this.id_gateway_select = id_gateway;
+  refreshChildGrid(gatewayId: number) {
+    this.selectGatewayId = gatewayId;
     // refresh child grid
-    this.onRefreshChildGrid.emit(id_gateway);
+    this.onRefreshChildGrid.emit(gatewayId);
   }
 
   getAll() {
     // Disabled/available buttons
-    if (!this.isMasterGrid && this.filter.id_node <= 0) {
+    if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
       this.isAddBtnDisabled = true;
       this.isEditBtnDisabled = true;
       this.isDeleteBtnDisabled = true;

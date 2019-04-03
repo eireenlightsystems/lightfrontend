@@ -5,12 +5,7 @@ import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwind
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
 import {Node} from '../../../../../shared/models/node';
-import {GatewayNode} from '../../../../../shared/models/gatewayNode';
-import {FilterNode} from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
-
-
-const STEP = 1000000000000;
 
 
 @Component({
@@ -22,7 +17,7 @@ export class NodelinkFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() columns: any[];
-  @Input() id_gateway_select: number;
+  @Input() selectGatewayId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onSaveLinkwinBtn = new EventEmitter();
@@ -32,81 +27,68 @@ export class NodelinkFormComponent implements OnInit, OnDestroy {
   @ViewChild('myGrid') myGrid: jqxGridComponent;
 
   // other variables
-  saveGatewayNode: GatewayNode = new GatewayNode();
-  rowcount: number = 0;
   nodes: Node[] = [];
-  filter: FilterNode = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_node_type: -1,
-    id_contract: -1,
-    id_gateway: -1
-  };
   oSub: Subscription;
-  offset = 0;
-  limit = STEP;
-
-  constructor(private nodeService: NodeService) {
-  }
-
-  ngOnInit() {
-    this.getAll();
-  }
-
-  ngOnDestroy(): void {
-    this.oSub.unsubscribe();
-  }
-
-  // refresh table
-  refreshGrid() {
-    if (this.nodes && this.nodes.length > 0 && this.rowcount !== this.nodes.length) {
-      this.source_jqxgrid.localdata = this.nodes;
-      this.rowcount = this.nodes.length;
-      this.myGrid.updatebounddata('cells');// passing `cells` to the `updatebounddata` method will refresh only the cells values when the new rows count is equal to the previous rows count.
-    }
-  }
-
-  getAll() {
-    const params = Object.assign({}, {
-        offset: this.offset,
-        limit: this.limit
-      },
-      this.filter);
-
-    this.oSub = this.nodeService.getAll(params).subscribe(nodes => {
-      this.nodes = this.nodes.concat(nodes);
-      this.refreshGrid();
-    });
-  }
 
   // define the data source for the table
   source_jqxgrid: any =
     {
       datatype: 'array',
       localdata: this.nodes,
-      id: 'id_node',
+      id: 'nodeId',
 
-      sortcolumn: ['id_node'],
+      sortcolumn: ['nodeId'],
       sortdirection: 'desc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
 
-  saveBtn() {
-    for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-      this.saveGatewayNode.nodeId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_node;
-      this.saveGatewayNode.gatewayId = this.id_gateway_select;
-      this.oSub = this.nodeService.ins_gateway_node(this.saveGatewayNode).subscribe(
-        response => {
-          // MaterialService.toast(`Шлюз id = ${response.id_gateway} привязан к узлу id = ${this.id_node_select}.`)
-        },
-        error => MaterialService.toast(error.error.message),
-        () => {
-          //refresh table
-          this.onSaveLinkwinBtn.emit();
-        }
-      );
+
+  constructor(private nodeService: NodeService) {
+  }
+
+  ngOnInit() {
+    this.myGrid.selectedrowindexes([]);
+  }
+
+  ngOnDestroy(): void {
+    if (this.oSub) {
+      this.oSub.unsubscribe();
     }
-    this.hideWindow();
+  }
+
+  // refresh table
+  refreshGrid() {
+    this.source_jqxgrid.localdata = this.nodes;
+    this.myGrid.selectedrowindexes([]);
+    this.myGrid.updatebounddata('data');
+
+    this.linkWindow.open();
+  }
+
+  getAll() {
+    this.oSub = this.nodeService.getNodeInGroup(1).subscribe(nodes => {
+      this.nodes = nodes;
+      this.refreshGrid();
+    });
+  }
+
+  saveBtn() {
+    const nodeIds = [];
+    for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+      nodeIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].nodeId;
+    }
+    this.oSub = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
+      response => {
+        MaterialService.toast('Узлы добавлены в группу!');
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      },
+      () => {
+        this.onSaveLinkwinBtn.emit();
+        this.hideWindow();
+      }
+    );
   }
 
   cancelBtn() {
@@ -114,7 +96,7 @@ export class NodelinkFormComponent implements OnInit, OnDestroy {
   }
 
   openWindow() {
-    this.linkWindow.open();
+    this.getAll();
   }
 
   destroyWindow() {

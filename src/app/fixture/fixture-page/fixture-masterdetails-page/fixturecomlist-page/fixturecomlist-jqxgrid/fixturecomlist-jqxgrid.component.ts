@@ -6,7 +6,6 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
-import {CommandType, CommandStatus} from '../../../../../shared/interfaces';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
 import {FixturecomeditFormComponent} from '../fixturecomedit-form/fixturecomedit-form.component';
@@ -22,13 +21,11 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
 
   // variables from master component
   @Input() commandSwitches: CommandSwitch[];
-  // @Input() commandTypes: CommandType[]
-  // @Input() command_statuses: CommandStatus[]
 
   @Input() heightGrid: number;
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
-  @Input() id_fixture_select: number;
+  @Input() selectFixtureId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -47,9 +44,7 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
   selectCommandSwitch: CommandSwitch = new CommandSwitch();
   oSub: Subscription;
   editrow: number;
-  rowcount: number = 0;
-  islistBoxVisible: boolean = false;
-  // actionEventWindow: string = ""
+  islistBoxVisible = false;
   commandIds: number[] = [];
 
   // define the data source for the table
@@ -67,7 +62,7 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
   // define columns for table
   columns: any[] =
     [
-      {text: 'commandId', datafield: 'commandId', width: 150},
+      {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
       {text: 'Время начала', datafield: 'startDateTime', width: 150},
 
       {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
@@ -95,7 +90,7 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
   }
 
   ngAfterViewInit(): void {
-    this.refreshListBox();
+
   }
 
   ngOnDestroy() {
@@ -120,11 +115,8 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
 
   // refresh table
   refreshGrid() {
-    if (this.commandSwitches && this.commandSwitches.length > 0 && this.rowcount !== this.commandSwitches.length) {
-      this.source_jqxgrid.localdata = this.commandSwitches;
-      this.rowcount = this.commandSwitches.length;
-      this.myGrid.updatebounddata('data');
-    }
+    this.source_jqxgrid.localdata = this.commandSwitches;
+    this.myGrid.updatebounddata('data');
   }
 
   // define width of table
@@ -185,21 +177,8 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
     this.myGrid.endupdate();
   };
 
-  refreshListBox() {
-    this.myGrid.beginupdate();
-    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
-      if (this.myListBox.attrSource[i].checked) {
-        this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-      } else {
-        this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-      }
-    }
-    this.myGrid.endupdate();
-  };
-
   // functions-events when allocating a string
   onRowSelect(event: any) {
-    // console.log("onRowSelect")
     if (event.args.row
     ) {
       this.selectCommandSwitch = event.args.row;
@@ -210,7 +189,6 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
         this.onRefreshChildGrid.emit(this.selectCommandSwitch.commandId);
       }
     }
-    // this.updateButtons('Select');
   };
 
 // INSERT, UPDATE, DELETE
@@ -218,19 +196,19 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
   // insert
   ins() {
     this.editWindow.positionWindow({x: 600, y: 90});
-    this.editWindow.openWindow([this.id_fixture_select], 'ins');
+    this.editWindow.openWindow([this.selectFixtureId], 'ins');
   }
 
   // switchOff
   switchOff() {
     this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
-    this.editSwitchOffWindow.openWindow([this.id_fixture_select], 'ins');
+    this.editSwitchOffWindow.openWindow([this.selectFixtureId], 'ins');
   }
 
   // update
   upd() {
     this.editWindow.positionWindow({x: 600, y: 90});
-    this.editWindow.openWindow([this.id_fixture_select], 'upd');
+    this.editWindow.openWindow([this.selectFixtureId], 'upd');
   }
 
   saveSwitchOnEditwinBtn() {
@@ -248,7 +226,7 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
     if (this.selectCommandSwitch.commandId) {
 
       this.commandIds = [];
-      for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
         this.commandIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].commandId;
       }
 
@@ -269,13 +247,10 @@ export class FixturecomlistJqxgridComponent implements OnInit, OnDestroy, AfterV
     if (this.commandIds.length >= 0) {
       this.commandSwitchService.del(this.commandIds).subscribe(
         response => {
-          // MaterialService.toast(response.message)
+          MaterialService.toast('Комманды удалены!');
         },
-        response => MaterialService.toast(response.error.message),
+        error => MaterialService.toast(error.error.message),
         () => {
-          // update the table without contacting the database
-          // this.nodes.splice(selectedrowindex, 1)
-          // this.refreshGrid();
           this.onRefreshGrid.emit();
         }
       );

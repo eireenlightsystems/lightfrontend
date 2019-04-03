@@ -104,7 +104,7 @@
   *ngIf="isFilterVisible"
   (onFilter)="applyFilter($event)"
   [geographs]="geographs"
-  [owner_nodes]="owner_nodes"
+  [ownerNodes]="ownerNodes"
   [nodeTypes]="nodeTypes"
 ></app-nodelist-filter>
 
@@ -114,16 +114,16 @@
     <app-nodelist-jqxgrid #nodelistJqxgridComponent
                           [nodes]="nodes"
                           [geographs]="geographs"
-                          [owner_nodes]="owner_nodes"
+                          [ownerNodes]="ownerNodes"
                           [nodeTypes]="nodeTypes"
-                          [contract_nodes]="contract_nodes"
+                          [contractNodes]="contractNodes"
                           [nodeSortcolumn]="nodeSortcolumn"
                           [nodeColumns]="nodeColumns"
                           [nodeListBoxSource]="nodeListBoxSource"
 
                           [heightGrid]="heightGrid"
                           [selectionmode]="selectionmode"
-                          [id_gateway_select]="id_gateway_select"
+                          [selectGatewayId]="selectGatewayId"
                           [isMasterGrid]="isMasterGrid"
 
                           (onRefreshGrid)="refreshGrid()"

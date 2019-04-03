@@ -6,7 +6,7 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {Sensor} from '../../../../../shared/models/sensor';
-import {Geograph, Contract, OwnerSensor, SensorType, FixtureGroupType, FixtureGroupOwner} from '../../../../../shared/interfaces';
+import {Geograph, Contract, OwnerSensor, SensorType} from '../../../../../shared/interfaces';
 
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
@@ -58,9 +58,9 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
     {
       datatype: 'array',
       localdata: this.sensors,
-      id: 'id_sensor',
+      id: 'sensorId',
 
-      sortcolumn: ['id_sensor'],
+      sortcolumn: ['sensorId'],
       sortdirection: 'desc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
@@ -68,37 +68,33 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   // define columns for table
   columns: any[] =
     [
-      {text: 'id_sensor', datafield: 'id_sensor', width: 150},
-      {text: 'Договор', datafield: 'code_contract', width: 150},
-      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-      {text: 'Тип сенсора', datafield: 'code_sensor_type', width: 150},
-      {text: 'Владелец', datafield: 'code_owner', width: 150},
+      {text: 'sensorId', datafield: 'sensorId', width: 150},
+      {text: 'Договор', datafield: 'contractCode', width: 150},
+      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
+      {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
       {text: 'Широта', datafield: 'n_coordinate', width: 150},
       {text: 'Долгота', datafield: 'e_coordinate', width: 150},
 
-      {text: 'Серийный номер', datafield: 'serial_number', width: 150},
-      {text: 'Коментарий', datafield: 'comments', width: 150},
-      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150}
+      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+      {text: 'Коментарий', datafield: 'comment', width: 150},
     ];
 
   // define a data source for filtering table columns
   listBoxSource: any[] =
     [
-      {label: 'id_sensor', value: 'id_sensor', checked: true},
-      {label: 'Договор', value: 'code_contract', checked: true},
-      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-      {label: 'Тип сенсора', value: 'code_sensor_type', checked: true},
-      {label: 'Владелец', value: 'code_owner', checked: true},
+      {label: 'sensorId', value: 'sensorId', checked: true},
+      {label: 'Договор', value: 'contractCode', checked: true},
+      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
+      {label: 'Владелец', value: 'ownerCode', checked: true},
 
       {label: 'Широта', value: 'n_coordinate', checked: true},
       {label: 'Долгота', value: 'e_coordinate', checked: true},
 
-      {label: 'Серийный номер', value: 'serial_number', checked: true},
-      {label: 'Коментарий', value: 'comments', checked: true},
-      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
+      {label: 'Серийный номер', value: 'serialNumber', checked: true},
+      {label: 'Коментарий', value: 'comment', checked: true},
     ];
 
 
@@ -124,9 +120,9 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
     if (this.myGrid) {
       this.myGrid.destroy();
     }
-    // if (this.editWindow) {
-    //   this.editWindow.destroyWindow();
-    // }
+    if (this.editWindow) {
+      this.editWindow.destroyWindow();
+    }
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
     }
@@ -143,40 +139,8 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
-  // refresh_ins(event: any) {
-  //   if (event.id_sensor > 0) {
-  //     const row =
-  //       {
-  //         serial_number: event.serial_number,
-  //         comments: event.comments,
-  //
-  //         id_sensor_type: event.id_sensor_type,
-  //         code_sensor_type: this.sensorTypes.find((sensorType: SensorType) => sensorType.id_sensor_type === +event.id_sensor_type).code_sensor_type,
-  //
-  //         id_contract: this.event.id_contract
-  //         ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: FixtureGroupOwner) => fixtureGroupOwner.id === +event.ownerId).name,
-  //
-  //       };
-  //     this.myGrid.addrow(event.fixtureGroupId, row);
-  //   }
-  // }
-  //
-  // refresh_upd() {
-  //   if (this.selectFixtureGroup.fixtureGroupId > 0) {
-  //     const row =
-  //       {
-  //         fixtureGroupName: this.selectFixtureGroup.fixtureGroupName,
-  //         fixtureGroupTypeId: this.selectFixtureGroup.fixtureGroupTypeId,
-  //         fixtureGroupTypeName: this.fixtureGroupTypes.find((fixtureGroupType: FixtureGroupType) => fixtureGroupType.id === +this.selectFixtureGroup.fixtureGroupTypeId).name,
-  //         ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: FixtureGroupOwner) => fixtureGroupOwner.id === +this.selectFixtureGroup.ownerId).name,
-  //         ownerId: this.selectFixtureGroup.ownerId
-  //       };
-  //     this.myGrid.updaterow(this.selectFixtureGroup.fixtureGroupId, row);
-  //   }
-  // }
-
   refresh_del() {
-    this.myGrid.deleterow(this.selectSensor.id_sensor);
+    this.myGrid.deleterow(this.selectSensor.sensorId);
   }
 
   // define width of table
@@ -250,27 +214,25 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   };
 
   onRowSelect(event: any) {
-    // console.log("onRowSelect")
     if (event.args.row
     ) {
       this.selectSensor = event.args.row;
-      this.editrow = this.selectSensor.id_sensor;
+      this.editrow = this.selectSensor.sensorId;
 
       // refresh child grid
       if (this.isMasterGrid) {
-        this.onRefreshChildGrid.emit(this.selectSensor.id_sensor);
+        this.onRefreshChildGrid.emit(this.selectSensor.sensorId);
       }
     }
-    // this.updateButtons('Select');
   };
 
 
-// INSERT, UPDATE, DELETE
+  // INSERT, UPDATE, DELETE
 
   // insert node
   ins() {
     const selectSensor: Sensor = new Sensor();
-    selectSensor.id_node = this.nodeSelectId;
+    selectSensor.nodeId = this.nodeSelectId;
 
     this.editWindow.positionWindow({x: 600, y: 90});
     this.editWindow.openWindow(selectSensor, 'ins');
@@ -301,13 +263,13 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
 
   // delete node
   del() {
-    if (this.selectSensor.id_sensor) {
+    if (this.selectSensor.sensorId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить сенсор id = "${this.selectSensor.id_sensor}"?`;
+      this.warningEventWindow = `Удалить датчик id = "${this.selectSensor.sensorId}"?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать сенсор для удаления`;
+      this.warningEventWindow = `Вам следует выбрать датчик для удаления`;
     }
     this.eventWindow.openEventWindow();
   }
@@ -320,52 +282,29 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
       if (+id >= 0) {
         this.sensorService.del(+id).subscribe(
           response => {
-            MaterialService.toast(response.message);
+            MaterialService.toast('Датчик был удален!');
           },
-          error => MaterialService.toast(error.message),
+          error => MaterialService.toast(error.error.message),
           () => {
             this.refresh_del();
           }
         );
       }
     }
-
-    // if (this.actionEventWindow === 'pin_drop') {
-    //   for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-    //     this.saveNodesensor.sensorId = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].id_sensor;
-    //     this.saveNodesensor.nodeId = 1;
-    //     this.oSub = this.sensorService.set_id_node(this.saveNodesensor).subscribe(
-    //       response => {
-    //         // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
-    //       },
-    //       error => MaterialService.toast(error.message),
-    //       () => {
-    //         // refresh table
-    //         this.onRefreshGrid.emit();
-    //       }
-    //     );
-    //   }
-    // }
   }
 
   place() {
-    // if (this.nodeSelectId > 1) {
-    //   this.linkWindow.openWindow();
-    // } else {
-    //   this.eventWindow.okButtonDisabled(true);
-    //   this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
-    //   this.eventWindow.openEventWindow();
-    // }
+
   }
 
   pin_drop() {
-    if (this.selectSensor.id_sensor) {
+    if (this.selectSensor.sensorId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
-      this.warningEventWindow = `Отвязать шлюз от узла?`;
+      this.warningEventWindow = `Отвязать датчик от узла?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для отвязки от узла`;
+      this.warningEventWindow = `Вам следует выбрать датчик для отвязки от узла`;
     }
     this.eventWindow.openEventWindow();
   }

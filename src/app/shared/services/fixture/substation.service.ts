@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {Substation} from '../../interfaces'
-import {Observable} from 'rxjs/index'
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/index';
+
+import {Substation} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,9 @@ import {Observable} from 'rxjs/index'
 export class SubstationService {
   constructor(private http: HttpClient) {
   }
+
   fetch(): Observable<Substation[]> {
-    return this.http.get<Substation[]>('/api/substation')
+    return this.http.get<Substation[]>('/api2/substations');
   }
 
 }

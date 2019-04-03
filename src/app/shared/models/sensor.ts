@@ -1,20 +1,20 @@
 export class Sensor {
-  id_sensor: number;
-  id_contract: number;
-  id_sensor_type: number;
-  id_owner: number;
-  id_geograph: number;
-  id_node: number;
+  sensorId: number;
+  contractId: number;
+  sensorTypeId: number;
+  ownerId: number;
+  geographId: number;
+  nodeId: number;
 
-  code_contract: string;
-  code_owner: string;
-  code_sensor_type: string;
-  code_geograph: string;
+  contractCode: string;
+  ownerCode: string;
+  sensorTypeCode: string;
+  geographCode: string;
 
   n_coordinate: number;
   e_coordinate: number;
-  serial_number: string;
-  comments: string;
+  serialNumber: string;
+  comment: string;
 
   dateedit: string;
   useredit: number;

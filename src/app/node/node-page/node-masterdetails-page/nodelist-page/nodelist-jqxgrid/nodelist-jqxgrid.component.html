@@ -26,23 +26,21 @@
          [altrows]="true"
          [selectionmode]="selectionmode"
 
-         (onRowclick)="onRowclick($event)"
-         (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
-         (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
+         (onRowselect)="onRowSelect($event)"
 >
 </jqxGrid>
 
 <app-nodelink-form #linkWindow
-                      [columns]="nodeColumns"
-                      [id_gateway_select]="id_gateway_select"
+                   [columns]="nodeColumns"
+                   [selectGatewayId]="selectGatewayId"
 
-                      (onSaveLinkwinBtn)="saveLinkwinBtn()"
+                   (onSaveLinkwinBtn)="saveLinkwinBtn()"
 ></app-nodelink-form>
 
 <app-nodeedit-form #editWindow
                    [geographs]="geographs"
                    [nodeTypes]="nodeTypes"
-                   [contract_nodes]="contract_nodes"
+                   [contractNodes]="contractNodes"
                    (onSaveEditwinBtn)="saveEditwinBtn()"
 ></app-nodeedit-form>
 

@@ -9,7 +9,7 @@ import {Fixture} from '../../../../../shared/models/fixture';
 import {
   FixtureType,
   Geograph,
-  Owner_fixture,
+  OwnerFixture,
   Substation,
   Contract,
   Installer,
@@ -34,19 +34,19 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   @Input() listBoxSourceFixture: any;
 
   @Input() geographs: Geograph[];
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() ownerFixtures: OwnerFixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   @Input() heightGrid: number;
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
   // for filtering from master component
-  @Input() id_fixture_select: number;
-  @Input() id_contract_select: number;
-  @Input() id_node_select: number;
+  @Input() selectFixtureId: number;
+  @Input() selectContractId: number;
+  @Input() selectNodeId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -74,62 +74,12 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     {
       datatype: 'array',
       localdata: this.fixtures,
-      id: 'id_fixture',
+      id: 'fixtureId',
 
-      sortcolumn: ['id_fixture'],
+      sortcolumn: ['fixtureId'],
       sortdirection: 'asc'
     };
   dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
-
-  // // define columns for table
-  // columns: any[] =
-  //   [
-  //     {text: 'id_fixture', datafield: 'id_fixture', width: 150},
-  //
-  //     {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-  //     {text: 'Договор', datafield: 'code_contract', width: 150},
-  //     {text: 'Владелец', datafield: 'code_owner', width: 150},
-  //     {text: 'Тип светильника', datafield: 'code_fixture_type', width: 150},
-  //     {text: 'Подстанция', datafield: 'code_substation', width: 150},
-  //     {text: 'Установщик', datafield: 'code_installer', width: 150},
-  //     {text: 'Код высоты', datafield: 'code_height_type', width: 150},
-  //
-  //     {text: 'Номер полосы', datafield: 'numline', width: 140},
-  //     {text: 'Сторона', datafield: 'side', width: 140},
-  //     {text: 'Признак главного светильника', datafield: 'flg_chief', width: 150},
-  //     {text: 'Цена', datafield: 'price', width: 150},
-  //     {text: 'Коментарий', datafield: 'comments', width: 150},
-  //
-  //     {text: 'Режим', datafield: 'flg_light', width: 150},
-  //
-  //     {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-  //     {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150},
-  //   ];
-  //
-  // // define a data source for filtering table columns
-  // listBoxSource: any[] =
-  //   [
-  //     {label: 'id_fixture', value: 'id_fixture', checked: true},
-  //
-  //     {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-  //     {label: 'Договор', value: 'code_contract', checked: false},
-  //     {label: 'Владелец', value: 'id_owner', checked: true},
-  //     {label: 'Тип светильника', value: 'code_fixture_type', checked: true},
-  //     {label: 'Подстанция', value: 'code_substation', checked: true},
-  //     {label: 'Установщик', value: 'code_installer', checked: false},
-  //     {label: 'Код высоты', value: 'code_height_type', checked: true},
-  //
-  //     {label: 'Номер полосы', value: 'numline', checked: true},
-  //     {label: 'Сторона', value: 'side', checked: true},
-  //     {label: 'Признак главного светильника', value: 'flg_chief', checked: true},
-  //     {label: 'Цена', value: 'price', checked: true},
-  //     {label: 'Коментарий', value: 'comments', checked: true},
-  //
-  //     {label: 'Режим', value: 'flg_light', checked: false},
-  //
-  //     {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-  //     {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
-  //   ];
 
 
   constructor(private fixtureService: FixtureService) {
@@ -161,10 +111,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngAfterViewInit(): void {
-    //
-    // this.myGrid.selectrow(0);
-    //
-    this.refreshListBox();
+
   }
 
   // TABLE
@@ -174,15 +121,12 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     if (this.fixtures && this.fixtures.length > 0 && this.rowcount !== this.fixtures.length) {
       this.source_jqxgrid.localdata = this.fixtures;
       this.rowcount = this.fixtures.length;
-      // this.myGrid.refresh();
-      // this.myGrid.refreshdata();
       this.myGrid.updatebounddata('data');
-      // this.myGrid.updatebounddata('cells');// passing `cells` to the `updatebounddata` method will refresh only the cells values when the new rows count is equal to the previous rows count.
     }
   }
 
   refresh_del() {
-    this.myGrid.deleterow(this.selectFixture.id_fixture);
+    this.myGrid.deleterow(this.selectFixture.fixtureId);
   }
 
   // define width of table
@@ -243,18 +187,6 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     this.myGrid.endupdate();
   };
 
-  refreshListBox() {
-    this.myGrid.beginupdate();
-    for (var i = 0; i < this.myListBox.attrSource.length; i++) {
-      if (this.myListBox.attrSource[i].checked) {
-        this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-      } else {
-        this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-      }
-    }
-    this.myGrid.endupdate();
-  };
-
   // functions-events when allocating a string
   onRowclick(event: any) {
   };
@@ -264,11 +196,11 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     if (event.args.row
     ) {
       this.selectFixture = event.args.row;
-      this.id_fixture_select = this.selectFixture.id_fixture;
+      this.selectFixtureId = this.selectFixture.fixtureId;
 
       // refresh child grid
       if (this.isMasterGrid) {
-        this.onRefreshChildGrid.emit(this.selectFixture.id_fixture);
+        this.onRefreshChildGrid.emit(this.selectFixture.fixtureId);
       }
     }
     // this.updateButtons('Select');
@@ -293,13 +225,13 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   // insert fixture
   ins() {
     this.editWindow.positionWindow({x: 600, y: 90});
-    this.editWindow.openWindow(null, this.id_node_select, 'ins');
+    this.editWindow.openWindow(null, this.selectNodeId, 'ins');
   }
 
   // update fixture
   upd() {
     this.editWindow.positionWindow({x: 600, y: 90});
-    this.editWindow.openWindow(this.selectFixture, this.id_node_select, 'upd');
+    this.editWindow.openWindow(this.selectFixture, this.selectNodeId, 'upd');
   }
 
   saveEditwinBtn() {
@@ -314,10 +246,10 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   // delete fixture
   del() {
-    if (this.selectFixture.id_fixture) {
+    if (this.selectFixture.fixtureId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить светильник id = "${this.selectFixture.id_fixture}"?`;
+      this.warningEventWindow = `Удалить светильник id = "${this.selectFixture.fixtureId}"?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = `Вам следует выбрать светильник для удаления`;
@@ -327,23 +259,16 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   okEvenwinBtn() {
     if (this.actionEventWindow === 'del') {
-      let selectedrowindex = this.myGrid.getselectedrowindex();
-      let id = this.myGrid.getrowid(selectedrowindex);
+      const selectedrowindex = this.myGrid.getselectedrowindex();
+      const id = this.myGrid.getrowid(selectedrowindex);
 
       if (+id >= 0) {
         this.fixtureService.del(+id).subscribe(
           response => {
-            MaterialService.toast(response.message);
+            MaterialService.toast('Светильник был удален!');
           },
-          error => MaterialService.toast(error.message),
+          error => MaterialService.toast(error.error.message),
           () => {
-            // update the table without contacting the database
-            // this.fixtures.splice(selectedrowindex, 1)
-            // this.refreshGrid();
-
-            // refresh table
-            // this.onRefreshGrid.emit();
-
             this.refresh_del();
           }
         );
@@ -351,26 +276,28 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
 
     if (this.actionEventWindow === 'pin_drop') {
-      for (var i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        this.saveFixture = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]];
-        this.saveFixture.id_node = 1;
-        this.oSub = this.fixtureService.set_id_node(this.saveFixture).subscribe(
-          response => {
-            // MaterialService.toast(`Светильник c id = ${response.id_fixture} был отвязан от столба.`)
-          },
-          error => MaterialService.toast(error.message),
-          () => {
-            // refresh table
-            this.onRefreshGrid.emit();
-          }
-        );
+      const fixtureIds = [];
+      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        fixtureIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
       }
-    }
 
+      this.oSub = this.fixtureService.delNodeId(this.selectNodeId, fixtureIds).subscribe(
+        response => {
+          MaterialService.toast('Светильники отвязаны от столба!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
   }
 
   place() {
-    if (this.id_node_select > 1) {
+    if (this.selectNodeId > 1) {
       this.linkWindow.openWindow();
     } else {
       this.eventWindow.okButtonDisabled(true);
@@ -380,7 +307,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   }
 
   pin_drop() {
-    if (this.selectFixture.id_fixture) {
+    if (this.selectFixture.fixtureId) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
       this.warningEventWindow = `Отвязать светильники от узла?`;

@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {FixtureType} from '../../interfaces';
+import {OwnerNode} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FixtureTypeService {
+export class OwnerNodeService {
   constructor(private http: HttpClient) {
   }
 
-  fetch(): Observable<FixtureType[]> {
-    return this.http.get<FixtureType[]>('/api2/fixtures-types');
+  fetch(): Observable<OwnerNode[]> {
+    return this.http.get<OwnerNode[]>('/api2/nodes-owners');
   }
 
 }

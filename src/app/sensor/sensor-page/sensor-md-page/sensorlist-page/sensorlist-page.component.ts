@@ -47,11 +47,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   // other variables
   sensors: Sensor[] = [];
   filter: FilterSensor = {
-    geographId: -1,
-    ownerId: -1,
-    sensorTypeId: -1,
-    contractId: -1,
-    nodeId: -1
+    geographId: '',
+    ownerId: '',
+    sensorTypeId: '',
+    contractId: '',
+    nodeId: ''
   };
   oSub: Subscription;
   isFilterVisible = false;
@@ -78,9 +78,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // if this.node is child grid, then we need update this.filter.id_node
+    // if this.node is child grid, then we need update this.filter.nodeId
     if (!this.isMasterGrid) {
-      this.filter.nodeId = this.nodeSelectId;
+      this.filter.nodeId = this.nodeSelectId.toString();
     }
 
     this.getAll();
@@ -106,15 +106,15 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.onRefreshMap.emit();
   }
 
-  refreshChildGrid(id_sensor: number) {
-    this.sensorSelectId = id_sensor;
+  refreshChildGrid(sensorId: number) {
+    this.sensorSelectId = sensorId;
     // refresh child grid
-    this.onRefreshChildGrid.emit(id_sensor);
+    this.onRefreshChildGrid.emit(sensorId);
   }
 
   getAll() {
     // Disabled/available buttons
-    if (!this.isMasterGrid && this.filter.nodeId <= 0) {
+    if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
       this.isAddBtnDisabled = true;
       this.isEditBtnDisabled = true;
       this.isDeleteBtnDisabled = true;

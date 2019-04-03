@@ -33,11 +33,9 @@
 </jqxGrid>
 
 <app-fixtureedit-form #editWindow
-                      [geographs]="geographs"
-                      [owner_fixtures]="owner_fixtures"
                       [fixtureTypes]="fixtureTypes"
                       [substations]="substations"
-                      [contract_fixtures]="contract_fixtures"
+                      [contractFixtures]="contractFixtures"
                       [installers]="installers"
                       [heightTypes]="heightTypes"
 
@@ -46,7 +44,7 @@
 
 <app-fixturelink-form #linkWindow
                       [columns]="columnsFixture"
-                      [id_node_select]="id_node_select"
+                      [selectNodeId]="selectNodeId"
 
                       (onSaveLinkwinBtn)="saveLinkwinBtn()"
 ></app-fixturelink-form>

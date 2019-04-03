@@ -2,13 +2,13 @@ import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit
 import {ActivatedRoute, Router} from '@angular/router';
 import {Observable, Subscription, timer} from 'rxjs';
 import {MaterialService} from '../../../shared/classes/material.service';
+import {isUndefined} from 'util';
 
 import {
-  Contract, FilterFixture, FilterFixtureGroup, FilterFixtureInGroup, FixtureGroup,
+  Contract, FilterFixture, FilterFixtureGroup, FixtureGroup,
   FixtureType,
-  Geograph, HeightType,
+  HeightType,
   Installer,
-  Owner_fixture,
   Substation
 } from '../../../shared/interfaces';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
@@ -18,7 +18,6 @@ import {FixtureeditFormComponent} from '../fixture-masterdetails-page/fixturelis
 import {FixturecomeditFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup.service';
 import {FixturecomeditSwitchoffFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
-import {isUndefined} from "util";
 
 
 declare var ymaps: any;
@@ -32,11 +31,9 @@ declare var ymaps: any;
 export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // variables from master component
-  @Input() geographs: Geograph[];
-  @Input() owner_fixtures: Owner_fixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
 
@@ -56,19 +53,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   fixtures: Fixture[];
   fixture: Fixture = new Fixture;
-  id_fixture_del: number;
-  filterFixture: FilterFixture = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
-
-    id_contract: -1,
-    id_node: -1
-  };
   myMap: any;
-  actionEventWindow: string = '';
   //
   oSub: Subscription;
   oSubFixtureGroups: Subscription;
@@ -84,17 +69,6 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   filterFixtureGroups: FilterFixtureGroup = {
     ownerId: '',
     fixtureGroupTypeId: '',
-  };
-  filterFixtureInGroup: FilterFixtureInGroup = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
-
-    id_contract: -1,
-    id_node: -1,
-    id_fixture_group: -1
   };
 
   constructor(private zone: NgZone,
@@ -149,29 +123,16 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // get nodes ib gateway group
   getFixturesInGroup(fixtureGroupId: number) {
-    this.filterFixtureInGroup.id_fixture_group = fixtureGroupId;
-    const params = Object.assign({}, {
-        offset: this.offset,
-        limit: this.limit
-      },
-      this.filterFixtureInGroup);
-
-    this.oSub = this.fixtureService.getFixtureInGroupAll(params).subscribe(fixtures => {
+    this.oSub = this.fixtureService.getFixtureInGroup(fixtureGroupId.toString()).subscribe(fixtures => {
       this.fixtures = fixtures;
-      this.addItemsToMap();
-      this.selectFixtureGroupId = fixtureGroupId;
+        this.addItemsToMap();
+        this.selectFixtureGroupId = fixtureGroupId;
     });
   }
 
   // get a set of objects
   getAll() {
-    const params = Object.assign({}, {
-        offset: this.offset,
-        limit: this.limit
-      },
-      this.filterFixture);
-
-    this.oSub = this.fixtureService.getAll(params).subscribe(fixtures => {
+    this.oSub = this.fixtureService.getAll({}).subscribe(fixtures => {
       this.fixtures = fixtures;
       this.addItemsToMap();
     });
@@ -249,7 +210,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
             return function () {
               const fixtureIds: number[] = [];
               for (var i = 0; i < mapComponent.fixtures.length; i++) {
-                fixtureIds[i] = +mapComponent.fixtures[i].id_fixture;
+                fixtureIds[i] = +mapComponent.fixtures[i].fixtureId;
               }
               mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
               mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
@@ -263,7 +224,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
             return function () {
               const fixtureIds: number[] = [];
               for (var i = 0; i < mapComponent.fixtures.length; i++) {
-                fixtureIds[i] = +mapComponent.fixtures[i].id_fixture;
+                fixtureIds[i] = +mapComponent.fixtures[i].fixtureId;
               }
               mapComponent.editSwitchOffWindow.positionWindow({x: 600, y: 90});
               mapComponent.editSwitchOffWindow.openWindow(fixtureIds, 'ins');
@@ -378,7 +339,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // Получаем ссылку на объект, по которому кликнули.
           // События элементов списка пропагируются
           // и их можно слушать на родительском элементе.
-          var item = e.get('target');
+          const item = e.get('target');
           // Клик на заголовке выпадающего списка обрабатывать не надо.
           if (item != listBox) {
             mapComponent.myMap.setCenter(item.data.get('center'), item.data.get('zoom'));
@@ -396,7 +357,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // get gateway groups for listBox
   getlistBoxItemGroups(): any {
     const listBoxItemGroups: any[] = [];
-    for (var i = 0; i < this.fixtureGroups.length; i++) {
+    for (let i = 0; i < this.fixtureGroups.length; i++) {
       listBoxItemGroups[i] = new ymaps.control.ListBoxItem({
         data: {
           content: this.fixtureGroups[i].fixtureGroupName,
@@ -443,10 +404,10 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
       <!--<tr><th>Режимы рабочий/дежурный, %</th><td>{{properties.work_level}}/{{properties.standby_level}}</td></tr>-->
       <!--<tr><th>Время перехода 0-100/100-0, сек</th><td>{{properties.speed_zero_to_full}}/{{properties.speed_full_to_zero}}</td></tr>-->
       
-      <tr><th>Рабочий режим, %</th><td>{{properties.work_level}}</td></tr>
-      <tr><th>Дежурный режим, %</th><td>{{properties.standby_level}}</td></tr>
-      <tr><th>Время перехода 0-100, сек</th><td>{{properties.speed_zero_to_full}}</td></tr>
-      <tr><th>Время перехода 100-0, сек</th><td>{{properties.speed_full_to_zero}}</td></tr>
+      <tr><th>Рабочий режим, %</th><td>{{properties.fixture.work_level}}</td></tr>
+      <tr><th>Дежурный режим, %</th><td>{{properties.fixture.standby_level}}</td></tr>
+      <tr><th>Время перехода 0-100, сек</th><td>{{properties.fixture.speed_zero_to_full}}</td></tr>
+      <tr><th>Время перехода 100-0, сек</th><td>{{properties.fixture.speed_full_to_zero}}</td></tr>
       
       <!--<tr><th>Договор</th><td>{{properties.code_contract}}</td></tr>-->
       <!--<tr><th>Географическое понятие</th><td>{{properties.code_geograph}}</td></tr>-->
@@ -458,7 +419,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
       </tbody>
       </table>`, {
         build: (function () {
-          let mapComponent: FixturemapPageComponent = this;
+          const mapComponent: FixturemapPageComponent = this;
           return function () {
 
             // timer refresh map unsubscribe
@@ -471,7 +432,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
         }).call(this),
 
         clear: (function () {
-          let mapComponent: FixturemapPageComponent = this;
+          const mapComponent: FixturemapPageComponent = this;
           return function () {
 
             // timer refresh map subscribe
@@ -486,7 +447,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           return function (properties: any) {
             return function () {
               const fixtureIds: number[] = [];
-              fixtureIds[0] = properties._data.id_fixture;
+              fixtureIds[0] = properties._data.fixture.fixtureId;
               mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
               mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
             };
@@ -498,7 +459,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           return function (properties: any) {
             return function () {
               mapComponent.editWindow.positionWindow({x: 600, y: 90});
-              mapComponent.editWindow.openWindow(properties._data, properties._data.id_node, 'upd');
+              mapComponent.editWindow.openWindow(properties._data.fixture, properties._data.fixture.nodeId, 'upd');
             };
           };
         }).call(this),
@@ -510,7 +471,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
         //       mapComponent.warningEventWindow = 'Удалить светильник?';
         //       mapComponent.actionEventWindow = 'del';
         //       mapComponent.eventWindow.openEventWindow();
-        //       mapComponent.id_fixture_del = properties._data.id_fixture;
+        //       mapComponent.id_fixture_del = properties._data.fixtureId;
         //     };
         //   };
         // }).call(this)
@@ -530,32 +491,8 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // properties
           properties: {
             // Content of icon
-            iconContent: fixture.id_fixture,
-            id_node: fixture.id_node,
-            id_fixture: fixture.id_fixture,
-            id_geograph: fixture.id_geograph,
-            id_fixture_type: fixture.id_fixture_type,
-            id_contract: fixture.id_contract,
-            id_installer: fixture.id_installer,
-            id_substation: fixture.id_substation,
-            id_height_type: fixture.id_height_type,
-            id_owner: fixture.id_owner,
-
-            code_contract: fixture.code_contract,
-            code_geograph: fixture.code_geograph,
-            code_fixture_type: fixture.code_fixture_type,
-            code_owner: fixture.code_owner,
-            n_coordinate: fixture.n_coordinate,
-            e_coordinate: fixture.e_coordinate,
-
-            flg_chief: fixture.flg_chief,
-            price: fixture.price,
-            comments: fixture.comments,
-
-            work_level: fixture.work_level,
-            standby_level: fixture.standby_level,
-            speed_zero_to_full: fixture.speed_zero_to_full,
-            speed_full_to_zero: fixture.speed_full_to_zero
+            iconContent: fixture.fixtureId,
+            fixture: fixture
           }
         },
         {
@@ -564,7 +501,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           balloonPanelMaxMapArea: 0,
           // icon will be change width
           preset: 'islands#circleIcon',
-          iconColor: fixture.flg_light ? '#FFCF40'
+          iconColor: fixture.flgLight ? '#FFCF40'
             : '#000000'
         });
 
@@ -581,8 +518,6 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   saveEditwinBtn() {
     // refresh map
     this.refreshMap();
-    // refresh grid
-    // this.onRefreshGrid.emit()
   }
 
   // save result com window

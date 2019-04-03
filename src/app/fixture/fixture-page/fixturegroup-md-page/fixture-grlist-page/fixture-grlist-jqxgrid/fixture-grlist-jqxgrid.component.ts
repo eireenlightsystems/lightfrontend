@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, EventEmitter, Input, Output, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnInit,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
@@ -6,7 +15,7 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {FixtureGroup} from '../../../../../shared/models/fixtureGroup';
-import {FixtureGroupType, FixtureGroupOwner, CommandStatus} from '../../../../../shared/interfaces';
+import {FixtureGroupType, FixtureGroupOwner} from '../../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../../shared/services/fixture/fixtureGroup.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixtureGreditFormComponent} from '../fixture-gredit-form/fixture-gredit-form.component';
@@ -19,6 +28,7 @@ import {FixtureGreditFormComponent} from '../fixture-gredit-form/fixture-gredit-
 })
 export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  private isVisible = false;
   // variables from master component
   @Input() fixtureGroupTypes: FixtureGroupType[];
   @Input() fixtureGroupOwners: FixtureGroupOwner[];
@@ -44,11 +54,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
 
   // other variables
   selectFixtureGroup: FixtureGroup = new FixtureGroup();
-  // fixtureGroupId: number;
-  // saveFixtureGroup: FixtureGroup = new FixtureGroup();
   oSub: Subscription;
-  // editrow: number;
-  rowcount = 0;
   selectedrowindex: number;
   islistBoxVisible = false;
   actionEventWindow = '';
@@ -72,7 +78,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
       {text: 'Название', datafield: 'fixtureGroupName', width: 200},
       {text: 'Географическое понятие', datafield: 'geographCode', width: 200},
       {text: 'Тип групы', datafield: 'fixtureGroupTypeName', width: 200},
-      {text: 'Владелец', datafield: 'ownerCode', width: 200}
+      {text: 'Владелец', datafield: 'ownerCode', width: 200},
     ];
 
   // define a data source for filtering table columns
@@ -83,7 +89,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
       {label: 'Название', value: 'fixtureGroupName', checked: true},
       {label: 'Географическое понятие', value: 'geographCode', checked: true},
       {label: 'Тип групы', value: 'fixtureGroupTypeName', checked: true},
-      {label: 'Владелец', value: 'ownerCode', checked: true}
+      {label: 'Владелец', value: 'ownerCode', checked: true},
     ];
 
   constructor(private fixtureGroupService: FixtureGroupService) {
@@ -94,10 +100,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
   }
 
   ngAfterViewInit() {
-    //
-    // this.myGrid.selectrow(0);
-    //
-    this.refreshListBox();
+
   }
 
   ngOnDestroy() {
@@ -122,11 +125,8 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
 
   // refresh table
   refresh_jqxgGrid() {
-    if (this.fixtureGroups && this.fixtureGroups.length > 0 && this.rowcount !== this.fixtureGroups.length) {
-      this.source_jqxgrid.localdata = this.fixtureGroups;
-      this.rowcount = this.fixtureGroups.length;
-      this.myGrid.updatebounddata('data');
-    }
+    this.source_jqxgrid.localdata = this.fixtureGroups;
+    this.myGrid.updatebounddata('data');
   }
 
   refresh_ins(event: any) {
@@ -175,18 +175,6 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
     this.myGrid.endupdate();
   };
 
-  refreshListBox() {
-    this.myGrid.beginupdate();
-    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
-      if (this.myListBox.attrSource[i].checked) {
-        // this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-      } else {
-        // this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-      }
-    }
-    this.myGrid.endupdate();
-  };
-
   // functions-events when allocating a string
   onRowSelect(event: any) {
     if (event.args.row) {
@@ -200,7 +188,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
     }
   };
 
-// INSERT, UPDATE, DELETE
+  // INSERT, UPDATE, DELETE
 
   // insert fixture
   ins() {
@@ -215,21 +203,12 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
   }
 
   insEditwinBtn(event: any) {
-    // refresh table
-    // this.onRefreshGrid.emit();
-    // this.onRefreshChildGrid.emit(-2);
     this.refresh_ins(event);
-
   }
 
   updEditwinBtn() {
     this.refresh_upd();
   }
-
-  // saveLinkwinBtn() {
-  //   // refresh table
-  //   this.onRefreshGrid.emit();
-  // }
 
   // delete fixture
   del() {
@@ -256,12 +235,6 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
           },
           error => MaterialService.toast(error.message),
           () => {
-            // update the table without contacting the database
-            // this.fixtures.splice(selectedrowindex, 1)
-            // this.refreshGrid();
-
-            // refresh table
-            // this.onRefreshGrid.emit();
             this.refresh_del();
           }
         );

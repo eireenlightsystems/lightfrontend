@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpParams} from '@angular/common/http'
-import {Observable} from 'rxjs/index'
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/index';
 
-import {Gateway, GatewayGroup, Message, NodeGateway, NodeInGroup} from '../../interfaces'
+import {Gateway, Message} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -15,35 +15,43 @@ export class GatewayService {
   }
 
   getAll(params: any = {}): Observable<Gateway[]> {
-    return this.http.get<Gateway[]>('/api/gateway', {
+    return this.http.get<Gateway[]>('/api2/gateways', {
       params: new HttpParams({
         fromObject: params
       })
-    })
+    });
   }
 
-  getGatewayGroups(id_gateway: number): Observable<GatewayGroup[]> {
-    return this.http.get<GatewayGroup[]>(`/api/gateway/gatewayGr/${id_gateway}`)
+  getAllWithoutParam(): Observable<Gateway[]> {
+    return this.http.get<Gateway[]>('/api2/gateways');
   }
 
-  getNodesInGroup(id_gateway: number): Observable<NodeInGroup[]> {
-    return this.http.get<NodeInGroup[]>(`/api/gateway/get_node_in_group/${id_gateway}`)
+  getGatewayNotInGroup(): Observable<Gateway[]> {
+    return this.http.get<Gateway[]>('/api2/nodes/1/gateways');
   }
 
   ins(gateway: Gateway): Observable<Gateway> {
-    return this.http.post<Gateway>('/api/gateway', gateway)
-  }
-
-  upd(gateway: Gateway): Observable<Gateway> {
-    return this.http.patch<Gateway>('/api/gateway', gateway)
-  }
-
-  set_id_node(nodeGateway: NodeGateway): Observable<NodeGateway> {
-    return this.http.patch<NodeGateway>('/api/gateway/set_id_node', nodeGateway)
+    return this.http.post<Gateway>('/api2/gateways', gateway);
   }
 
   del(id_gateway: number): Observable<Message> {
-    return this.http.delete<Message>(`/api/gateway/${id_gateway}`)
+    return this.http.delete<Message>(`/api2/gateways/${id_gateway}`);
   }
 
+  upd(gateway: Gateway): Observable<Gateway> {
+    return this.http.patch<Gateway>('/api2/gateways', gateway);
+  }
+
+  setNodeId(nodeId: number, gatewayIds: number[]): Observable<any> {
+    const options = JSON.stringify(gatewayIds);
+    return this.http.post<any>(`/api2/nodes/${nodeId}/gateways`, options);
+  }
+
+  delNodeId(nodeId: number, gatewayIds: number[]): Observable<any> {
+    const options = {
+      headers: new HttpHeaders({}),
+      body: JSON.stringify(gatewayIds)
+    };
+    return this.http.delete<any>(`/api2/nodes/${nodeId}/gateways`, options);
+  }
 }

@@ -2,33 +2,33 @@
   <div class="fr">
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="id_geograph" #select>
-        <option value="-1" selected>Геогр. понятие</option>
-        <option *ngFor="let geograph of geographs" value="{{geograph.id_geograph}}">
-          {{geograph.code_geograph}}
+      <select id="gateway-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId" #select>
+        <option value="{{nullVar}}" selected>Геогр. понятие</option>
+        <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
+          {{geograph.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_geograph">Геогр. понятие</label>
+      <label for="gateway-geograph-input" *ngIf="!geographId">Геогр. понятие</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="id_owner" #select>
-        <option value="-1" selected>Владелец</option>
-        <option *ngFor="let owner of owner_gateways" value="{{owner.id_owner}}">
-          {{owner.name_owner}}
+      <select id="gateway-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId" #select>
+        <option value="{{nullVar}}" selected>Владелец</option>
+        <option *ngFor="let owner of ownerGateways" value="{{owner.id}}">
+          {{owner.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_owner">Владелец</label>
+      <label for="gateway-owner-input" *ngIf="!ownerId">Владелец</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-fixture_type-input" class="browser-default" name="gateway_type" [(ngModel)]="id_gateway_type" #select>
-        <option value="-1" selected>Тип</option>
-        <option *ngFor="let gatewayType of gatewayTypes" value="{{gatewayType.id_gateway_type}}">
-          {{gatewayType.code_gateway_type}}
+      <select id="gateway_type-input" class="browser-default" name="gateway_type" [(ngModel)]="gatewayTypeId" #select>
+        <option value="{{nullVar}}" selected>Тип</option>
+        <option *ngFor="let gatewayType of gatewayTypes" value="{{gatewayType.id}}">
+          {{gatewayType.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_gateway_type">Тип</label>
+      <label for="gateway_type-input" *ngIf="!gatewayTypeId">Тип</label>
     </div>
 
     <div class="input-field inline order-position-input">

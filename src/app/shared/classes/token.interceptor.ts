@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core'
-import {AuthService} from '../services/auth.service'
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http'
-import {Observable} from 'rxjs'
+import {Injectable} from '@angular/core';
+import {AuthService} from '../services/auth.service';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -14,8 +14,8 @@ export class TokenInterceptor implements HttpInterceptor {
         setHeaders: {
           Authorization: this.auth.getToken()
         }
-      })
+      });
     }
-    return next.handle(req)
+    return next.handle(req);
   }
 }

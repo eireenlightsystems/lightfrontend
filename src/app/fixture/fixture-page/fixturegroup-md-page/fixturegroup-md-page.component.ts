@@ -1,19 +1,15 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
-  CommandSpeedSwitchDflt,
-  CommandStatus, CommandSwitchDflt,
+  CommandStatus,
   CommandType,
-  Contract, FilterCommandSpeedSwitch, FilterCommandSwitch, FilterFixture, FilterFixtureGroup, Fixture, FixtureGroupOwner, FixtureGroupType,
+  Contract, Fixture, FixtureGroupOwner, FixtureGroupType,
   FixtureType,
   Geograph,
   HeightType,
   Installer,
-  Owner_fixture, SpeedDirection,
+  OwnerFixture, SpeedDirection,
   Substation
 } from '../../../shared/interfaces';
-import {FixturelistPageComponent} from '../fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
-import {FixturecomlistPageComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-page.component';
-import {FixturecomspeedlistPageComponent} from '../fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-page.component';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
 
@@ -32,10 +28,10 @@ export class FixturegroupMdPageComponent implements OnInit {
   @Input() geographs: Geograph[];
 
   // fixture source
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() ownerFixtures: OwnerFixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
 
@@ -53,12 +49,9 @@ export class FixturegroupMdPageComponent implements OnInit {
 
   // other variables
   fixtures: Fixture[] = [];
-  // filterFixtureGroup: FilterFixtureGroup = {
-  //   ownerId: 0,
-  //   typeId: 0,
-  // };
 
-  constructor() {}
+  constructor() {
+  }
 
   ngOnInit() {
 
@@ -72,12 +65,12 @@ export class FixturegroupMdPageComponent implements OnInit {
   refreshChildGrid(fixtureGroupId: number) {
     // refresh child grid
     this.fixtureGroupId = fixtureGroupId;
-    this.fixtureMasterdetailsPageComponentFgr.refreshMDGrid(fixtureGroupId);
+    this.fixtureMasterdetailsPageComponentFgr.refreshMDGrid(fixtureGroupId.toString());
   }
 
   refreshChild_ChildGrid() {
-    if(this.fixtureMasterdetailsPageComponentFgr.id_fixture_select > 0) {
-      this.fixtureMasterdetailsPageComponentFgr.refreshChildGrid(this.fixtureMasterdetailsPageComponentFgr.id_fixture_select);
+    if (this.fixtureMasterdetailsPageComponentFgr.selectFixtureId > 0) {
+      this.fixtureMasterdetailsPageComponentFgr.refreshChildGrid(this.fixtureMasterdetailsPageComponentFgr.selectFixtureId);
     }
   }
 

@@ -3,19 +3,20 @@
 
     <div class="input-field inline order-position-input">
       <select id="commandStatusInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId" #select>
-        <option value="0" selected>Статус</option>
-        <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id_command_status}}">
-          {{commandStatus.name_command_status}}
+        <option value="{{nullVar}}" selected>Статус</option>
+        <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id}}">
+          {{commandStatus.name}}
         </option>
       </select>
       <label for="commandStatusInput" *ngIf="!statusId">Статус команды</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="speedDirectionesInput" class="browser-default" name="speedDirection" [(ngModel)]="speedDirectionId" #select>
-        <option value="0" selected>Режим скорости</option>
-        <option *ngFor="let speedDirection of speedDirectiones" value="{{speedDirection.id_speed_direction}}">
-          {{speedDirection.name_speed_direction}}
+      <select id="speedDirectionesInput" class="browser-default" name="speedDirection" [(ngModel)]="speedDirectionId"
+              #select>
+        <option value="{{nullVar}}" selected>Режим скорости</option>
+        <option *ngFor="let speedDirection of speedDirectiones" value="{{speedDirection.id}}">
+          {{speedDirection.name}}
         </option>
       </select>
       <label for="speedDirectionesInput" *ngIf="!speedDirectionId">Режим скорости</label>

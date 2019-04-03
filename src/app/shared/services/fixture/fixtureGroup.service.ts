@@ -14,51 +14,40 @@ export class FixtureGroupService {
   constructor(private http: HttpClient) {
   }
 
-  // getAll(params: any = {}): Observable<FixtureGroup[]> {
-  //   const httpParams = new HttpParams();
-  //
-  //   // httpParams.set('ownerId', params.ownwerId === null ? null : params.ownwerId);
-  //   httpParams.set('fixtureGroupTypeId', params.fixtureGroupTypeId.toString()).toString();
-  //
-  //   // params.ownwerId === null ? null : params.ownwerId
-  //   // params.fixtureGroupTypeId === null ? null : params.fixtureGroupTypeId
-  //
-  //   console.log(httpParams);
-  //
-  //   return this.http.get<FixtureGroup[]>('/api2/fixture-group', {
-  //     params: httpParams
-  //   });
-  // }
+
+  // get
 
   getAll(params: any = {}): Observable<FixtureGroup[]> {
-     return this.http.get<FixtureGroup[]>('/api2/fixture-group', {
+    return this.http.get<FixtureGroup[]>('/api2/fixtures-groups', {
       params: new HttpParams({
         fromObject: params
       })
     });
   }
 
-  // getAll(params: any = {}): Observable<FixtureGroup[]> {
-  //   return this.http.get<FixtureGroup[]>('/api2/fixture-group?ownerId=0&fixtureGroupTypeId=0');
-  // }
-
   getFixtureGroupTypeAll(): Observable<FixtureGroupType[]> {
-    return this.http.get<FixtureGroupType[]>('/api2/fixture-group-type');
+    return this.http.get<FixtureGroupType[]>('/api2/fixtures-groups-types');
   }
 
   getFixtureGroupOwnerAll(): Observable<FixtureGroupOwner[]> {
-    return this.http.get<FixtureGroupOwner[]>('/api2/fixture-group-owner');
+    return this.http.get<FixtureGroupOwner[]>('/api2/fixtures-groups-owners');
   }
+
+  // post
 
   ins(fixtureGroup: FixtureGroup): Observable<FixtureGroup> {
-    return this.http.post<FixtureGroup>('/api2/fixture-group', fixtureGroup);
+    return this.http.post<FixtureGroup>('/api2/fixtures-groups', fixtureGroup);
   }
+
+  // patch
 
   upd(fixtureGroup: FixtureGroup): Observable<FixtureGroup> {
-    return this.http.patch<FixtureGroup>('/api2/fixture-group', fixtureGroup);
+    return this.http.patch<FixtureGroup>('/api2/fixtures-groups', fixtureGroup);
   }
 
+  // delete
+
   del(fixtureGroupId: number): Observable<Message> {
-    return this.http.delete<Message>(`/api2/fixture-group/${fixtureGroupId}`);
+    return this.http.delete<Message>(`/api2/fixtures-groups/${fixtureGroupId}`);
   }
 }

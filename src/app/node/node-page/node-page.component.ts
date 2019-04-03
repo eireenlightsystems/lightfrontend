@@ -6,24 +6,24 @@ import {
   FixtureType, GatewayType,
   Geograph, HeightType, Installer,
   NodeType,
-  Owner_fixture, Owner_gateway,
-  Owner_node, OwnerSensor, SensorType, Substation
+  OwnerFixture,
+  OwnerNode, OwnerGateway, OwnerSensor, SensorType, Substation
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
-import {Owner_nodeService} from '../../shared/services/node/owner_node';
+import {OwnerNodeService} from '../../shared/services/node/ownerNode';
 import {NodeTypeService} from '../../shared/services/node/nodeType.service';
-import {Contract_nodeService} from '../../shared/services/node/contract_node.service';
-import {Owner_fixtureService} from '../../shared/services/fixture/owner_fixture.service';
+import {ContractNodeService} from '../../shared/services/node/contractNode.service';
+import {OwnerFixtureService} from '../../shared/services/fixture/ownerFixture.service';
 import {FixtureTypeService} from '../../shared/services/fixture/fixtureType.service';
 import {SubstationService} from '../../shared/services/fixture/substation.service';
 import {NodeMasterdetailsPageComponent} from './node-masterdetails-page/node-masterdetails-page.component';
 import {NodemapPageComponent} from './nodemap-page/nodemap-page.component';
-import {Contract_fixtureService} from '../../shared/services/fixture/contract_fixture.service';
-import {Installer_fixtureService} from '../../shared/services/fixture/installer_fixture.service';
+import {ContractFixtureService} from '../../shared/services/fixture/contractFixture.service';
+import {InstallerFixtureService} from '../../shared/services/fixture/installerFixture.service';
 import {HeightTypeService} from '../../shared/services/fixture/heightType.service';
-import {Owner_gatewayService} from '../../shared/services/gateway/owner_gateway';
+import {OwnerGatewayService} from '../../shared/services/gateway/ownerGateway';
 import {GatewayTypeService} from '../../shared/services/gateway/gatewayType.service';
-import {Contract_gatewayService} from '../../shared/services/gateway/contract_gateway.service';
+import {ContractGatewayService} from '../../shared/services/gateway/contractGateway.service';
 import {OwnerSensorService} from '../../shared/services/sensor/ownerSensor';
 import {SensorTypeService} from '../../shared/services/sensor/sensorType.service';
 import {ContractSensorService} from '../../shared/services/sensor/contractSensor.service';
@@ -58,9 +58,9 @@ export class NodePageComponent implements OnInit, OnDestroy {
   heightTypeSub: Subscription;
 
   // gateway subscription
-  owner_gatewaySub: Subscription;
+  ownerGatewaySub: Subscription;
   gatewayTypeSub: Subscription;
-  contract_gatewaySub: Subscription;
+  contractGatewaySub: Subscription;
 
   // sensor subscription
   ownerSensorSub: Subscription;
@@ -69,12 +69,12 @@ export class NodePageComponent implements OnInit, OnDestroy {
 
   // node source
   geographs: Geograph[];
-  owner_nodes: Owner_node[];
+  ownerNodes: OwnerNode[];
   nodeTypes: NodeType[];
-  contract_nodes: Contract[];
+  contractNodes: Contract[];
 
   // fixture source
-  owner_fixtures: Owner_fixture[];
+  owner_fixtures: OwnerFixture[];
   fixtureTypes: FixtureType[];
   substations: Substation[];
   contract_fixtures: Contract[];
@@ -82,9 +82,9 @@ export class NodePageComponent implements OnInit, OnDestroy {
   heightTypes: HeightType[];
 
   // gateway source
-  owner_gateways: Owner_gateway[];
+  ownerGateways: OwnerGateway[];
   gatewayTypes: GatewayType[];
-  contract_gateways: Contract[];
+  contractGateways: Contract[];
 
   // sensor source
   ownerSensors: OwnerSensor[];
@@ -94,20 +94,20 @@ export class NodePageComponent implements OnInit, OnDestroy {
   constructor(
     // node service
     private geographService: GeographService,
-    private owner_nodeService: Owner_nodeService,
+    private ownerNodeService: OwnerNodeService,
     private nodeTypeService: NodeTypeService,
-    private contract_nodeService: Contract_nodeService,
+    private contractNodeService: ContractNodeService,
     // fixture service
-    private owner_fixtureService: Owner_fixtureService,
+    private owner_fixtureService: OwnerFixtureService,
     private fixtureTypeService: FixtureTypeService,
     private substationService: SubstationService,
-    private contract_fixtureService: Contract_fixtureService,
-    private installerService: Installer_fixtureService,
+    private contract_fixtureService: ContractFixtureService,
+    private installerService: InstallerFixtureService,
     private heightTypeService: HeightTypeService,
     // gateway service
-    private owner_gatewayService: Owner_gatewayService,
+    private ownerGatewayService: OwnerGatewayService,
     private gatewayTypeService: GatewayTypeService,
-    private contract_gatewayService: Contract_gatewayService,
+    private contractGatewayService: ContractGatewayService,
     // sensor service
     private ownerSensorService: OwnerSensorService,
     private sensorTypeService: SensorTypeService,
@@ -116,7 +116,7 @@ export class NodePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isSourceChangeTab0 = false;
+    this.isSourceChangeTab0 = true;
     this.isSourceChangeTab1 = false;
     this.fetch_refbook();
   }
@@ -137,9 +137,9 @@ export class NodePageComponent implements OnInit, OnDestroy {
     this.heightTypeSub.unsubscribe();
 
     // gateway subscription
-    this.owner_gatewaySub.unsubscribe();
+    this.ownerGatewaySub.unsubscribe();
     this.gatewayTypeSub.unsubscribe();
-    this.contract_gatewaySub.unsubscribe();
+    this.contractGatewaySub.unsubscribe();
 
     // sensor subscription
     this.ownerSensorSub.unsubscribe();
@@ -177,9 +177,9 @@ export class NodePageComponent implements OnInit, OnDestroy {
   fetch_refbook() {
     // node refbook
     this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
-    this.ownerSub = this.owner_nodeService.fetch().subscribe(owners => this.owner_nodes = owners);
+    this.ownerSub = this.ownerNodeService.fetch().subscribe(owners => this.ownerNodes = owners);
     this.nodeTypeSub = this.nodeTypeService.fetch().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
-    this.contractSub = this.contract_nodeService.fetch().subscribe(contracts => this.contract_nodes = contracts);
+    this.contractSub = this.contractNodeService.fetch().subscribe(contracts => this.contractNodes = contracts);
 
     // fixture refbook
     this.owner_fixtureSub = this.owner_fixtureService.fetch().subscribe(owners => this.owner_fixtures = owners);
@@ -190,9 +190,9 @@ export class NodePageComponent implements OnInit, OnDestroy {
     this.heightTypeSub = this.heightTypeService.fetch().subscribe(heightTypes => this.heightTypes = heightTypes);
 
     // gateway refbook
-    this.owner_gatewaySub = this.owner_gatewayService.fetch().subscribe(owners => this.owner_gateways = owners);
+    this.ownerGatewaySub = this.ownerGatewayService.fetch().subscribe(owners => this.ownerGateways = owners);
     this.gatewayTypeSub = this.gatewayTypeService.fetch().subscribe(gatewayTypes => this.gatewayTypes = gatewayTypes);
-    this.contract_gatewaySub = this.contract_gatewayService.fetch().subscribe(contracts => this.contract_gateways = contracts);
+    this.contractGatewaySub = this.contractGatewayService.fetch().subscribe(contracts => this.contractGateways = contracts);
 
     // sensor refbook
     this.ownerSensorSub = this.ownerSensorService.fetch().subscribe(owners => this.ownerSensors = owners);

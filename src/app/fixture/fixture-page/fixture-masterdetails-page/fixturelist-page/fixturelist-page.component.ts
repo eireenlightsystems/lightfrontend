@@ -8,11 +8,11 @@ import {
   Fixture,
   FixtureType,
   Geograph,
-  Owner_fixture,
+  OwnerFixture,
   Substation,
   Contract,
   Installer,
-  HeightType, FilterFixtureInGroup
+  HeightType
 } from '../../../../shared/interfaces';
 import {FixturelistJqxgridComponent} from './fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
@@ -34,10 +34,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() ownerFixtures: OwnerFixture[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
+  @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
 
@@ -45,9 +45,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
 
-  @Input() id_contract_select: number;
-  @Input() id_node_select: number;
-  @Input() fixtureGroupId: number;
+  @Input() selectContractId: string;
+  @Input() selectNodeId: string;
+  @Input() fixtureGroupId: string;
 
   @Input() isAdd: boolean;
   @Input() isUpdate: boolean;
@@ -76,26 +76,16 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   // other variables
   fixtures: Fixture[] = [];
   filter: FilterFixture = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
+    geographId: '',
+    ownerId: '',
+    fixtureTypeId: '',
+    substationId: '',
+    modeId: '',
 
-    id_contract: -1,
-    id_node: -1
+    contractId: '',
+    nodeId: ''
   };
-  filterFixtureInGroup: FilterFixtureInGroup = {
-    id_geograph: -1,
-    id_owner: -1,
-    id_fixture_type: -1,
-    id_substation: -1,
-    id_mode: -1,
 
-    id_contract: -1,
-    id_node: -1,
-    id_fixture_group: -2
-  };
   oSub: Subscription;
   isFilterVisible = false;
   //
@@ -105,7 +95,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   loading = false;
   reloading = false;
   noMoreFixtures = false;
-  id_fixture_select: number;
+  selectFixtureId: number;
   // tooltip_refresh: MaterialInstance
   // tooltip_filter: MaterialInstance
   //
@@ -120,16 +110,53 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   isGroup_outBtnDisabled = false;
   isGroup_inBtnDisabled = false;
 
+  // define columns for table
+  columnsFixture: any[] =
+    [
+      {text: 'fixtureId', datafield: 'fixtureId', width: 150},
+
+      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
+      {text: 'Владелец', datafield: 'ownerCode', width: 150},
+      {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
+      {text: 'Подстанция', datafield: 'substationCode', width: 150},
+      {text: 'Установщик', datafield: 'installerCode', width: 150, hidden: true},
+      {text: 'Код высоты', datafield: 'heightTypeCode', width: 150},
+
+      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+      {text: 'Коментарий', datafield: 'comment', width: 150},
+
+      {text: 'Режим', datafield: 'flgLight', width: 150, hidden: true},
+    ];
+
+  // define a data source for filtering table columns
+  listBoxSourceFixture: any[] =
+    [
+      {label: 'fixtureId', value: 'fixtureId', checked: true},
+
+      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Договор', value: 'contractCode', checked: false},
+      {label: 'Владелец', value: 'ownerCode', checked: true},
+      {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
+      {label: 'Подстанция', value: 'substationCode', checked: true},
+      {label: 'Установщик', value: 'installerCode', checked: false},
+      {label: 'Код высоты', value: 'heightTypeCode', checked: true},
+
+      {label: 'Серийный номер', value: 'serialNumber', checked: true},
+      {label: 'Коментарий', value: 'comment', checked: true},
+
+      {label: 'Режим', value: 'flgLight', checked: false},
+    ];
+
+
   constructor(private fixtureService: FixtureService) {
   }
 
   ngOnInit() {
-    this.filter.id_node = this.id_node_select;
-    this.filter.id_contract = this.id_contract_select;
-
-    // this.getAll();
-
+    this.filter.nodeId = this.selectNodeId;
+    this.filter.contractId = this.selectContractId.toString();
     this.reloading = true;
+    this.refreshGrid();
   }
 
   ngOnDestroy(): void {
@@ -141,87 +168,32 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-
-    this.refreshGrid();
-
+    // this.refreshGrid();
     // this.tooltip_refresh = MaterialService.initTooltip(this.tooltipRef_refresh)
     // this.tooltip_filter = MaterialService.initTooltip(this.tooltipRef_filter)
   }
-
-  // define columns for table
-  columnsFixture: any[] =
-    [
-      {text: 'id_fixture', datafield: 'id_fixture', width: 150},
-
-      {text: 'Географическое понятие', datafield: 'code_geograph', width: 150},
-      {text: 'Договор', datafield: 'code_contract', width: 150},
-      {text: 'Владелец', datafield: 'code_owner', width: 150},
-      {text: 'Тип светильника', datafield: 'code_fixture_type', width: 150},
-      {text: 'Подстанция', datafield: 'code_substation', width: 150},
-      {text: 'Установщик', datafield: 'code_installer', width: 150},
-      {text: 'Код высоты', datafield: 'code_height_type', width: 150},
-
-      {text: 'Номер полосы', datafield: 'numline', width: 140},
-      {text: 'Сторона', datafield: 'side', width: 140},
-      {text: 'Признак главного светильника', datafield: 'flg_chief', width: 150},
-      {text: 'Цена', datafield: 'price', width: 150},
-      {text: 'Коментарий', datafield: 'comments', width: 150},
-
-      {text: 'Режим', datafield: 'flg_light', width: 150},
-
-      {text: 'Дата (редак.)', datafield: 'dateedit', width: 150},
-      {text: 'Польз-ль (редак.)', datafield: 'useredit', width: 150},
-    ];
-
-  // define a data source for filtering table columns
-  listBoxSourceFixture: any[] =
-    [
-      {label: 'id_fixture', value: 'id_fixture', checked: true},
-
-      {label: 'Географическое понятие', value: 'code_geograph', checked: true},
-      {label: 'Договор', value: 'code_contract', checked: false},
-      {label: 'Владелец', value: 'id_owner', checked: true},
-      {label: 'Тип светильника', value: 'code_fixture_type', checked: true},
-      {label: 'Подстанция', value: 'code_substation', checked: true},
-      {label: 'Установщик', value: 'code_installer', checked: false},
-      {label: 'Код высоты', value: 'code_height_type', checked: true},
-
-      {label: 'Номер полосы', value: 'numline', checked: true},
-      {label: 'Сторона', value: 'side', checked: true},
-      {label: 'Признак главного светильника', value: 'flg_chief', checked: true},
-      {label: 'Цена', value: 'price', checked: true},
-      {label: 'Коментарий', value: 'comments', checked: true},
-
-      {label: 'Режим', value: 'flg_light', checked: false},
-
-      {label: 'Дата (редак.)', value: 'dateedit', checked: false},
-      {label: 'Польз-ль (редак.)', value: 'useredit', checked: false}
-    ];
 
   refreshGrid() {
     this.fixtures = [];
     this.getAll();
     this.reloading = true;
-    if (!isUndefined(this.fixturelistJqxgridComponent)) {
-      this.fixturelistJqxgridComponent.refresh_jqxgGrid();
-    }
 
-    this.id_fixture_select = 0;
+    this.selectFixtureId = 0;
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid) {
-      this.refreshChildGrid(this.id_fixture_select);
+      this.refreshChildGrid(this.selectFixtureId);
     }
   }
 
   refreshChildGrid(id_fixture: number) {
-    this.id_fixture_select = id_fixture;
+    this.selectFixtureId = id_fixture;
     // refresh child grid
     this.onRefreshChildGrid.emit(id_fixture);
   }
 
   getAll() {
     // Disabled/available buttons
-    if (!this.isMasterGrid && this.filter.id_node <= 0) {
+    if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
       this.isAddBtnDisabled = true;
       this.isEditBtnDisabled = true;
       this.isDeleteBtnDisabled = true;
@@ -245,7 +217,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
       this.isGroup_outBtnDisabled = false;
     }
 
-    if (isUndefined(this.fixtureGroupId) || this.fixtureGroupId === 0) {
+    if (isUndefined(this.fixtureGroupId) || +this.fixtureGroupId === 0) {
       const params = Object.assign({}, {
           offset: this.offset,
           limit: this.limit
@@ -259,15 +231,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
         this.reloading = false;
       });
     } else {
-      const params = Object.assign({}, {
-          offset: this.offset,
-          limit: this.limit
-        },
-        this.filterFixtureInGroup);
-
-      this.oSub = this.fixtureService.getFixtureInGroupAll(params).subscribe(fixtures => {
-        this.fixtures = this.fixtures.concat(fixtures);
-        this.noMoreFixtures = fixtures.length < STEP;
+      this.oSub = this.fixtureService.getFixtureInGroup(this.fixtureGroupId).subscribe(fixtures => {
+        this.fixtures = fixtures;
         this.loading = false;
         this.reloading = false;
         // Send array fixtures for the command switchOn/Off
@@ -295,14 +260,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
     this.refreshGrid();
   }
 
-  applyFilterFixtureInGroup(filterFixtureInGroup: FilterFixtureInGroup) {
+  applyFilterFixtureInGroup(fixtureGroupId: string) {
     this.fixtures = [];
-    this.offset = 0;
-    this.filterFixtureInGroup = filterFixtureInGroup;
-    this.fixtureGroupId = this.filterFixtureInGroup.id_fixture_group;
+    this.fixtureGroupId = fixtureGroupId;
     this.reloading = true;
-
-    // this.getAll();
     this.refreshGrid();
   }
 
@@ -327,7 +288,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   group_in() {
-    if (this.fixtureGroupId > 1) {
+    if (+this.fixtureGroupId > 1) {
       this.linkWindow.getAll();
       // this.linkWindow.openWindow();
     } else {
@@ -338,7 +299,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   group_out() {
-    if (this.fixturelistJqxgridComponent.selectFixture.id_fixture) {
+    if (this.fixturelistJqxgridComponent.selectFixture.fixtureId) {
       this.eventWindow.okButtonDisabled(false);
       this.warningEventWindow = `Исключить светильники из группы?`;
     } else {
@@ -351,9 +312,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   okEvenwinBtn() {
     const fixtureIds = [];
     for (let i = 0; i < this.fixturelistJqxgridComponent.myGrid.widgetObject.selectedrowindexes.length; i++) {
-      fixtureIds[i] = this.fixturelistJqxgridComponent.source_jqxgrid.localdata[this.fixturelistJqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].id_fixture;
+      fixtureIds[i] = this.fixturelistJqxgridComponent.source_jqxgrid.localdata[this.fixturelistJqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
     }
-    this.oSub = this.fixtureService.delFixtureInGroup(this.fixtureGroupId, fixtureIds).subscribe(
+    this.oSub = this.fixtureService.delFixtureInGroup(+this.fixtureGroupId, fixtureIds).subscribe(
       response => {
         MaterialService.toast('Светильники удалены из группы!');
       },

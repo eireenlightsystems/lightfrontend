@@ -26,7 +26,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   @Input() commandStatuses: CommandStatus[];
 
   @Input() heightGrid: number;
-  @Input() id_fixture_select: number;
+  @Input() selectFixtureId: number;
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
   @Input() filterCommandSwitch: FilterCommandSwitch;
@@ -58,7 +58,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   reloading = false;
   noMoreCommand_switches = false;
   //
-  id_command_switch_select: number = 0;
+  // selectCommandSpeedId: number = 0;
   //
   isAddBtnDisabled: boolean;
   isRemoveBtnDisabled: boolean;
@@ -72,9 +72,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // if this.commandSwitch is child grid, then we need update this.filter.id_fixture
+    // if this.commandSwitch is child grid, then we need update this.filter.fixtureId
     if (!this.isMasterGrid) {
-      this.filterCommandSwitch.fixtureId = this.id_fixture_select;
+      this.filterCommandSwitch.fixtureId = this.selectFixtureId.toString();
     }
     this.getAll();
     this.reloading = true;
@@ -88,17 +88,17 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.commandSwitches = [];
     this.getAll();
     this.reloading = true;
-    // this.id_command_switch_select = 0
+    // this.selectCommandSpeedId = 0
 
     // if this.nodes id master grid, then we need refresh child grid
-    // if (this.isMasterGrid) this.refreshChildGrid(this.id_command_switch_select)
+    // if (this.isMasterGrid) this.refreshChildGrid(this.selectCommandSpeedId)
 
     // refresh map
     // this.onRefreshMap.emit()
   }
 
   refreshChildGrid(id_command_switch: number) {
-    // this.id_command_switch_select = id_command_switch
+    // this.selectCommandSpeedId = id_command_switch
     // refresh child grid
     // this.onRefreshChildGrid.emit(id_command_switch)
   }
@@ -106,7 +106,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   getAll() {
 
     // Disabled/available buttons
-    if (!this.isMasterGrid && this.filterCommandSwitch.fixtureId <= 0) {
+    if (!this.isMasterGrid && +this.filterCommandSwitch.fixtureId <= 0) {
       this.isAddBtnDisabled = true;
       this.isRemoveBtnDisabled = true;
       this.isEditBtnDisabled = true;
@@ -131,11 +131,10 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       this.filterCommandSwitch
     );
     this.oSub = this.fixturecommandService.getAll(params).subscribe(commandSwitches => {
-
       // Link statusName
-      let commandSwitchesStatusName = commandSwitches;
+      const commandSwitchesStatusName = commandSwitches;
       commandSwitchesStatusName.forEach(currentCommand => {
-        currentCommand.statusName = this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id_command_status === currentCommand.statusId).name_command_status;
+        currentCommand.statusName = this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
       });
 
       this.commandSwitches = this.commandSwitches.concat(commandSwitchesStatusName);

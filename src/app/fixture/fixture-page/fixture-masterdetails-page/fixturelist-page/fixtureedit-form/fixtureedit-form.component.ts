@@ -8,10 +8,8 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {
   Contract,
   FixtureType,
-  Geograph,
   HeightType,
   Installer,
-  Owner_fixture,
   Substation
 } from '../../../../../shared/interfaces';
 import {Fixture} from '../../../../../shared/models/fixture';
@@ -25,11 +23,9 @@ import {FixtureService} from '../../../../../shared/services/fixture/fixture.ser
 export class FixtureeditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
-  @Input() owner_fixtures: Owner_fixture[];
+  @Input() contractFixtures: Contract[];
   @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
-  @Input() contract_fixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
 
@@ -38,51 +34,35 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
 
   // define variables - link to view objects
   @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('id_contract') id_contract: jqxInputComponent;
-  @ViewChild('id_geograph') id_geograph: jqxInputComponent;
-  @ViewChild('id_fixture_type') id_fixtureType: jqxInputComponent;
-  @ViewChild('id_owner') id_owner: jqxInputComponent;
-  @ViewChild('id_installer') id_installer: jqxInputComponent;
-  @ViewChild('id_substation') id_substation: jqxInputComponent;
-  @ViewChild('id_height_type') id_heightType: jqxDropDownListComponent;
-  @ViewChild('numline') numline: any;
-  @ViewChild('side') side: any;
+  @ViewChild('contractId') contractId: jqxInputComponent;
+  @ViewChild('fixtureTypeId') fixtureTypeId: jqxInputComponent;
+  @ViewChild('installerId') installerId: jqxInputComponent;
+  @ViewChild('substationId') substationId: jqxInputComponent;
+  @ViewChild('heightTypeId') heightTypeId: jqxDropDownListComponent;
 
   // define variables for drop-down lists in the edit form
-  source_geogr: any;
-  dataAdapter_geogr: any;
-  source_owner: any;
-  dataAdapter_owner: any;
+  source_contract: any;
+  dataAdapter_contract: any;
   source_fixtureType: any;
   dataAdapter_fixtureType: any;
   source_substation: any;
   dataAdapter_substation: any;
-  source_contract: any;
-  dataAdapter_contract: any;
   source_installer: any;
   dataAdapter_installer: any;
   source_heightType: any;
   dataAdapter_heightType: any;
-  source_numline: any;
-  dataAdapter_numline: any;
-  source_side: any;
-  dataAdapter_side: any;
 
-  id_contract_index = 0;
-  id_geograph_index = 0;
-  id_fixture_type_index = 0;
-  id_owner_index = 0;
-  id_installer_index = 0;
-  id_substation_index = 0;
-  id_height_type_index = 0;
-  id_numline_index = 0;
-  id_side_index = 0;
+  contractId_index = 0;
+  fixtureTypeId_index = 0;
+  installerId_index = 0;
+  substationId_index = 0;
+  heightTypeId_index = 0;
 
   // other variables
   saveFixture: Fixture = new Fixture();
   oSub: Subscription;
   typeEditWindow = '';
-  id_node_select: number;
+  selectNodeId: number;
 
 
   constructor(private fixtureService: FixtureService) {
@@ -102,40 +82,24 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
     this.source_contract =
       {
         datatype: 'array',
-        localdata: this.contract_fixtures,
-        id: 'id_contract',
+        localdata: this.contractFixtures,
+        id: 'id',
       };
     this.dataAdapter_contract = new jqx.dataAdapter(this.source_contract);
-
-    this.source_geogr =
-      {
-        datatype: 'array',
-        localdata: this.geographs,
-        id: 'id_geograph',
-      };
-    this.dataAdapter_geogr = new jqx.dataAdapter(this.source_geogr);
 
     this.source_fixtureType =
       {
         datatype: 'array',
         localdata: this.fixtureTypes,
-        id: 'id_fixture_type',
+        id: 'id',
       };
     this.dataAdapter_fixtureType = new jqx.dataAdapter(this.source_fixtureType);
-
-    this.source_owner =
-      {
-        datatype: 'array',
-        localdata: this.owner_fixtures,
-        id: 'id_owner',
-      };
-    this.dataAdapter_owner = new jqx.dataAdapter(this.source_owner);
 
     this.source_installer =
       {
         datatype: 'array',
         localdata: this.installers,
-        id: 'id_installer',
+        id: 'id',
       };
     this.dataAdapter_installer = new jqx.dataAdapter(this.source_installer);
 
@@ -143,7 +107,7 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.substations,
-        id: 'id_substation',
+        id: 'id',
       };
     this.dataAdapter_substation = new jqx.dataAdapter(this.source_substation);
 
@@ -151,40 +115,9 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
       {
         datatype: 'array',
         localdata: this.heightTypes,
-        id: 'id_height_type',
+        id: 'id',
       };
     this.dataAdapter_heightType = new jqx.dataAdapter(this.source_heightType);
-
-    this.source_numline =
-      {
-        datatype: 'array',
-        localdata: [
-          {
-            numline: 1
-          },
-          {
-            numline: 2
-          }
-        ],
-        id: 'numline',
-      };
-    this.dataAdapter_numline = new jqx.dataAdapter(this.source_numline);
-
-    this.source_side =
-      {
-        datatype: 'array',
-        localdata: [
-          {
-            side: 'r'
-          },
-          {
-            side: 'l'
-          }
-        ],
-        id: 'side',
-      };
-    this.dataAdapter_side = new jqx.dataAdapter(this.source_side);
-
   }
 
   // define default values for the form
@@ -192,95 +125,67 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       this.saveFixture = saveFixture;
       // determine the desired positions in the drop-down lists
-      for (let i = 0; i < this.contract_fixtures.length; i++) {
-        if (this.contract_fixtures[i].id_contract === this.saveFixture.id_contract) {
-          this.id_contract_index = i;
+      for (let i = 0; i < this.contractFixtures.length; i++) {
+        if (this.contractFixtures[i].id === this.saveFixture.contractId) {
+          this.contractId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.fixtureTypes.length; i++) {
-        if (this.fixtureTypes[i].id_fixture_type === this.saveFixture.id_fixture_type) {
-          this.id_fixture_type_index = i;
-          break;
-        }
-      }
-      for (let i = 0; i < this.geographs.length; i++) {
-        if (this.geographs[i].id_geograph === this.saveFixture.id_geograph) {
-          this.id_geograph_index = i;
+        if (this.fixtureTypes[i].id === this.saveFixture.fixtureTypeId) {
+          this.fixtureTypeId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.installers.length; i++) {
-        if (this.installers[i].id_installer === this.saveFixture.id_installer) {
-          this.id_installer_index = i;
+        if (this.installers[i].id === this.saveFixture.installerId) {
+          this.installerId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.substations.length; i++) {
-        if (this.substations[i].id_substation === this.saveFixture.id_substation) {
-          this.id_substation_index = i;
+        if (this.substations[i].id === this.saveFixture.substationId) {
+          this.substationId_index = i;
           break;
         }
       }
       for (let i = 0; i < this.heightTypes.length; i++) {
-        if (this.heightTypes[i].id_height_type === this.saveFixture.id_height_type) {
-          this.id_height_type_index = i;
-          break;
-        }
-      }
-      for (let i = 0; i < this.numline.length; i++) {
-        if (this.numline[i].numline === this.saveFixture.numline) {
-          this.id_numline_index = i;
-          break;
-        }
-      }
-      for (let i = 0; i < this.side.length; i++) {
-        if (this.side[i].side === this.saveFixture.side) {
-          this.id_side_index = i;
+        if (this.heightTypes[i].id === this.saveFixture.heightTypeId) {
+          this.heightTypeId_index = i;
           break;
         }
       }
     }
     if (this.typeEditWindow === 'ins') {
-      this.id_contract_index = 0;
-      this.id_geograph_index = 0;
-      this.id_fixture_type_index = 0;
-      this.id_owner_index = 0;
-      this.id_installer_index = 0;
-      this.id_substation_index = 0;
-      this.id_height_type_index = 0;
-      this.id_numline_index = 0;
-      this.id_side_index = 0;
-
-      this.saveFixture.id_fixture = 0;
-      this.saveFixture.flg_chief = false;
-      this.saveFixture.price = 0;
-      this.saveFixture.comments = 'пусто';
+      this.contractId_index = 0;
+      this.fixtureTypeId_index = 0;
+      this.installerId_index = 0;
+      this.substationId_index = 0;
+      this.heightTypeId_index = 0;
+      this.saveFixture.fixtureId = 0;
+      this.saveFixture.serialNumber = 'пусто';
+      this.saveFixture.comment = 'пусто';
     }
   }
 
   // perform insert/update fixture
   saveBtn() {
-    this.saveFixture.id_contract = this.id_contract.val();
-    this.saveFixture.id_fixture_type = this.id_fixtureType.val();
-    this.saveFixture.id_geograph = this.id_geograph.val();
-    this.saveFixture.id_installer = this.id_installer.val();
-    this.saveFixture.id_substation = this.id_substation.val();
-    this.saveFixture.id_height_type = this.id_heightType.val();
-    this.saveFixture.numline = this.numline.val();
-    this.saveFixture.side = this.side.val();
+    this.saveFixture.contractId = this.contractId.val();
+    this.saveFixture.fixtureTypeId = this.fixtureTypeId.val();
+    this.saveFixture.installerId = this.installerId.val();
+    this.saveFixture.substationId = this.substationId.val();
+    this.saveFixture.heightTypeId = this.heightTypeId.val();
 
     if (this.typeEditWindow === 'ins') {
 
-      this.saveFixture.id_node = this.id_node_select <= 0 ? 1 : this.id_node_select;
-      // if (!this.saveFixture.flg_chief) this.saveFixture.flg_chief = false;
+      this.saveFixture.nodeId = this.selectNodeId <= 0 ? 1 : this.selectNodeId;
 
       this.oSub = this.fixtureService.ins(this.saveFixture).subscribe(
         response => {
-          this.saveFixture.id_fixture = response.id_fixture;
-          MaterialService.toast(`Светильник c id = ${response.id_fixture} был добавлен.`);
+          this.saveFixture.fixtureId = +response;
+          MaterialService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был добавлен.`);
         },
-        error => MaterialService.toast(error.message),
+        error => MaterialService.toast(error.error.message),
         () => {
           // close edit window
           this.hideWindow();
@@ -292,9 +197,9 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       this.oSub = this.fixtureService.upd(this.saveFixture).subscribe(
         response => {
-          MaterialService.toast(`Светильник c id = ${response.id_fixture} был обновлен.`);
+          MaterialService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был обновлен.`);
         },
-        response => MaterialService.toast(response.error.message),
+        error => MaterialService.toast(error.error.message),
         () => {
           // close edit window
           this.hideWindow();
@@ -309,9 +214,9 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
     this.hideWindow();
   }
 
-  openWindow(saveFixture: Fixture, id_node_select: number, typeEditWindow: string) {
+  openWindow(saveFixture: Fixture, selectNodeId: number, typeEditWindow: string) {
     this.typeEditWindow = typeEditWindow;
-    this.id_node_select = id_node_select;
+    this.selectNodeId = selectNodeId;
     this.refresh_refbook();
     this.define_defaultvalues(saveFixture);
     this.editWindow.open();

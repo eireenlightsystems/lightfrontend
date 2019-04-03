@@ -2,53 +2,53 @@
   <div class="fr">
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="id_geograph" #select>
-        <option value="-1" selected>Геогр. понятие</option>
-        <option *ngFor="let geograph of geographs" value="{{geograph.id_geograph}}">
-          {{geograph.code_geograph}}
+      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId" #select>
+        <option value="{{nullVar}}" selected>Геогр. понятие</option>
+        <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
+          {{geograph.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_geograph">Геогр. понятие</label>
+      <label for="fixture-geograph-input" *ngIf="!geographId">Геогр. понятие</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="id_owner" #select>
-        <option value="-1" selected>Владелец</option>
-        <option *ngFor="let owner of owner_fixtures" value="{{owner.id_owner}}">
-          {{owner.name_owner}}
+      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId" #select>
+        <option value="{{nullVar}}" selected>Владелец</option>
+        <option *ngFor="let owner of ownerFixtures" value="{{owner.id}}">
+          {{owner.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_owner">Владелец</label>
+      <label for="fixture-owner-input" *ngIf="!ownerId">Владелец</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-fixture_type-input" class="browser-default" name="fixture_type" [(ngModel)]="id_fixture_type" #select>
-        <option value="-1" selected>Тип</option>
-        <option *ngFor="let fixtureType of fixtureTypes" value="{{fixtureType.id_fixture_type}}">
-          {{fixtureType.code_fixture_type}}
+      <select id="fixture-type-input" class="browser-default" name="fixture_type" [(ngModel)]="fixtureTypeId" #select>
+        <option value="{{nullVar}}" selected>Тип</option>
+        <option *ngFor="let fixtureType of fixtureTypes" value="{{fixtureType.id}}">
+          {{fixtureType.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_fixture_type">Тип</label>
+      <label for="fixture-type-input" *ngIf="!fixtureTypeId">Тип</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-substation-input" class="browser-default" name="substation" [(ngModel)]="id_substation" #select>
-        <option value="-1" selected>Подстанция</option>
-        <option *ngFor="let substation of substations" value="{{substation.id_substation}}">
+      <select id="fixture-substation-input" class="browser-default" name="substation" [(ngModel)]="substationId" #select>
+        <option value="{{nullVar}}" selected>Подстанция</option>
+        <option *ngFor="let substation of substations" value="{{substation.id}}">
           {{substation.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_substation">Подстанция</label>
+      <label for="fixture-substation-input" *ngIf="!substationId">Подстанция</label>
     </div>
 
     <div class="input-field inline order-position-input">
-      <select id="fixture-mode-input" class="browser-default" name="mode" [(ngModel)]="id_mode" #select>
-        <option value="-1" selected>Режим</option>
-        <option *ngFor="let mode of modes" value="{{mode.id_mode}}">
-          {{mode.name_mode}}
+      <select id="fixture-mode-input" class="browser-default" name="mode" [(ngModel)]="modeId" #select>
+        <option value="{{nullVar}}" selected>Режим</option>
+        <option *ngFor="let mode of modes" value="{{mode.id}}">
+          {{mode.code}}
         </option>
       </select>
-      <label for="number" *ngIf="!id_mode">Режим</label>
+      <label for="fixture-mode-input" *ngIf="!modeId">Режим</label>
     </div>
 
     <div class="input-field inline order-position-input">

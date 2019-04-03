@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {SensorType} from '../../interfaces';
 import {Observable} from 'rxjs/index';
+
+import {SensorType} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SensorTypeService {
   }
 
   fetch(): Observable<SensorType[]> {
-    return this.http.get<SensorType[]>('/api/sensor-type');
+    return this.http.get<SensorType[]>('/api2/sensors-types');
   }
 
 }

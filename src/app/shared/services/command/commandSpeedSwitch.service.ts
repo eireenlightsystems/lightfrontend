@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core'
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http'
-import {Observable} from 'rxjs/index'
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs/index';
 
-import {CommandSpeedSwitch} from '../../interfaces'
-import {CommandSpeedSwitchDflt} from "../../models/command/commandSpeedSwitchDflt";
+import {CommandSpeedSwitch} from '../../interfaces';
+import {CommandSpeedSwitchDflt} from '../../models/command/commandSpeedSwitchDflt';
 
 
 @Injectable({
@@ -16,30 +16,30 @@ export class CommandSpeedSwitchService {
   constructor(private http: HttpClient) {
   }
 
-  send(commandSpeedSwitch: CommandSpeedSwitch[]): Observable<CommandSpeedSwitch[]> {
-    return this.http.post<CommandSpeedSwitch[]>('/api2/fixture/command/lightspeed', commandSpeedSwitch)
-  }
-
   getAll(params: any = {}): Observable<CommandSpeedSwitch[]> {
-    return this.http.get<CommandSpeedSwitch[]>(`/api2/fixture/command/lightspeed`, {
+    return this.http.get<CommandSpeedSwitch[]>(`/api2/fixtures-lightspeed-commands`, {
         params: new HttpParams({
           fromObject: params
         })
       }
-    )
+    );
+  }
+
+  send(commandSpeedSwitch: CommandSpeedSwitch[]): Observable<CommandSpeedSwitch[]> {
+    return this.http.post<CommandSpeedSwitch[]>('/api2/fixtures-lightspeed-commands', commandSpeedSwitch);
   }
 
   del(params: any []): any {
-    let options = {
+    const options = {
       headers: new HttpHeaders({}),
       body: JSON.stringify(params)
-    }
-    return this.http.delete(`/api2/fixture/command`, options)
+    };
+    return this.http.delete(`/api2/fixtures-lightspeed-commands`, options);
   }
 
   dfltParams(): CommandSpeedSwitchDflt {
-    let commandSpeedSwitchDflt: CommandSpeedSwitchDflt = new CommandSpeedSwitchDflt()
-    commandSpeedSwitchDflt.statusId = 3
-    return commandSpeedSwitchDflt
+    const commandSpeedSwitchDflt: CommandSpeedSwitchDflt = new CommandSpeedSwitchDflt();
+    commandSpeedSwitchDflt.statusId = 3;
+    return commandSpeedSwitchDflt;
   }
 }

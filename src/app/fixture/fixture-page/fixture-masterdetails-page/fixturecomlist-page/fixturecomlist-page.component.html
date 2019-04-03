@@ -93,7 +93,7 @@
   [filterCommandSwitch]="filterCommandSwitch"
   (onFilter)="applyFilter($event)"
   [commandStatuses]="commandStatuses"
-  [id_fixture_select]="id_fixture_select"
+  [id_fixture_select]="selectFixtureId"
 ></app-fixturecomlist-filter>
 
 <div *ngIf="!reloading; else reloadingBlock">
@@ -105,7 +105,7 @@
                                 [heightGrid]="heightGrid"
                                 [selectionmode]="selectionmode"
                                 [isMasterGrid]="isMasterGrid"
-                                [id_fixture_select]="id_fixture_select"
+                                [selectFixtureId]="selectFixtureId"
 
                                 (onRefreshGrid)="refreshGrid()"
                                 (onRefreshChildGrid)="refreshChildGrid($event)"

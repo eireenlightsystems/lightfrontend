@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Contract} from '../../interfaces';
 import {Observable} from 'rxjs/index';
+
+import {Contract} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class ContractSensorService {
   }
 
   fetch(): Observable<Contract[]> {
-    return this.http.get<Contract[]>('/api/contract-sensor');
+    return this.http.get<Contract[]>('/api2/sensors-contracts');
   }
 
 }
