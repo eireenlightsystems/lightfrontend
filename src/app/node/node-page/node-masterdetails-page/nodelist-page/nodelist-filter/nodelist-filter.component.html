@@ -1,7 +1,7 @@
 <div class="filter">
   <div class="fr">
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="node-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId" #select>
         <option value="{{nullVar}}" selected>Геогр. понятие</option>
         <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
@@ -11,7 +11,7 @@
       <label for="node-geograph-input" *ngIf="!geographId">Геогр. понятие</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="node-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId" #select>
         <option value="{{nullVar}}" selected>Владелец</option>
         <option *ngFor="let owner of ownerNodes" value="{{owner.id}}">
@@ -21,7 +21,7 @@
       <label for="node-owner-input" *ngIf="!ownerId">Владелец</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="node-type-input" class="browser-default" name="nodeType" [(ngModel)]="nodeTypeId" #select>
         <option value="{{nullVar}}" selected>Тип</option>
         <option *ngFor="let nodeType of nodeTypes" value="{{nodeType.id}}">
@@ -31,9 +31,10 @@
       <label for="node-type-input" *ngIf="!nodeTypeId">Тип</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div>
       <button
-        class="btn btn-small waves-effect waves-orange white blue-text"
+        appButtonSimpleStyle
+        style="height: 42px"
         (click)="submitFilter()"
         [disabled]="!isValid"
       >Применить

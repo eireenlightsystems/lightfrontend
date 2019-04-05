@@ -4,7 +4,7 @@
                 [content]="'Добавить узел/столб'">
       <Button [disabled]="isAddBtnDisabled"
               (click)="ins()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">add</i>
       </Button>
@@ -16,7 +16,7 @@
                 [content]="'Редактировать узел/столб'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">edit</i>
       </Button>
@@ -28,7 +28,7 @@
                 [content]="'Удалить узел/столб'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">delete</i>
       </Button>
@@ -40,7 +40,7 @@
                 [content]="'Обновить таблицу'">
       <button [disabled]="isRefreshBtnDisabled"
               (click)="refreshGrid()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">refresh</i>
       </button>
@@ -52,7 +52,7 @@
                 [content]="'Открыть фильтр по полям таблицы'">
       <button [disabled]="isFilter_noneBtnDisabled"
               (click)="nodelistJqxgridComponent.islistBoxVisible = !nodelistJqxgridComponent.islistBoxVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">filter_none</i>
       </button>
@@ -64,7 +64,7 @@
                 [content]="'Открыть фильтр'">
       <button [disabled]="isFilter_listBtnDisabled"
               (click)="isFilterVisible = !isFilterVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
               [ngClass]="{
       'active':isFilterVisible
     }"
@@ -78,8 +78,8 @@
     <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
                 [content]="'Привязать узел/столб к шлюзу'">
       <button [disabled]="isPlaceBtnDisabled"
-        (click)="place()"
-        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="place()"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">place</i>
       </button>
@@ -90,8 +90,8 @@
     <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
                 [content]="'Отвязать узел/столб от шлюза'">
       <button [disabled]="isPin_dropBtnDisabled"
-        (click)="pin_drop()"
-        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="pin_drop()"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">pin_drop</i>
       </button>

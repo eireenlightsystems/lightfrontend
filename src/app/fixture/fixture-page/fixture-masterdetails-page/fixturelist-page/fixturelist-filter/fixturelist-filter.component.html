@@ -1,7 +1,7 @@
 <div class="filter">
   <div class="fr">
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId" #select>
         <option value="{{nullVar}}" selected>Геогр. понятие</option>
         <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
@@ -11,7 +11,7 @@
       <label for="fixture-geograph-input" *ngIf="!geographId">Геогр. понятие</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId" #select>
         <option value="{{nullVar}}" selected>Владелец</option>
         <option *ngFor="let owner of ownerFixtures" value="{{owner.id}}">
@@ -21,7 +21,7 @@
       <label for="fixture-owner-input" *ngIf="!ownerId">Владелец</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="fixture-type-input" class="browser-default" name="fixture_type" [(ngModel)]="fixtureTypeId" #select>
         <option value="{{nullVar}}" selected>Тип</option>
         <option *ngFor="let fixtureType of fixtureTypes" value="{{fixtureType.id}}">
@@ -31,7 +31,7 @@
       <label for="fixture-type-input" *ngIf="!fixtureTypeId">Тип</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="fixture-substation-input" class="browser-default" name="substation" [(ngModel)]="substationId" #select>
         <option value="{{nullVar}}" selected>Подстанция</option>
         <option *ngFor="let substation of substations" value="{{substation.id}}">
@@ -41,7 +41,7 @@
       <label for="fixture-substation-input" *ngIf="!substationId">Подстанция</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="fixture-mode-input" class="browser-default" name="mode" [(ngModel)]="modeId" #select>
         <option value="{{nullVar}}" selected>Режим</option>
         <option *ngFor="let mode of modes" value="{{mode.id}}">
@@ -51,9 +51,10 @@
       <label for="fixture-mode-input" *ngIf="!modeId">Режим</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div>
       <button
-        class="btn btn-small waves-effect waves-orange white blue-text"
+        appButtonSimpleStyle
+        style="height: 42px"
         (click)="submitFilter()"
         [disabled]="!isValid"
       >Применить

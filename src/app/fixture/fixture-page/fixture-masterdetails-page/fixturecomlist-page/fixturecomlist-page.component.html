@@ -3,8 +3,8 @@
     <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
                 [content]="'Добавить команду ВКЛ. светильника'">
       <Button [disabled]="isAddBtnDisabled"
-        (click)="ins()"
-        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="ins()"
+              appButtonSimpleStyle
       >
         <i class="material-icons" style="color: orange">highlight</i>
       </Button>
@@ -15,10 +15,10 @@
     <jqxTooltip [position]="'bottom'" [name]="'switchOffTooltip'"
                 [content]="'Добавить команду ВЫКЛ. светильника'">
       <Button [disabled]="isRemoveBtnDisabled"
-        (click)="switchOff()"
-        class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              (click)="switchOff()"
+              appButtonSimpleStyle
       >
-        <i class="material-icons" >highlight</i>
+        <i class="material-icons">highlight</i>
       </Button>
     </jqxTooltip>
   </div>
@@ -28,7 +28,7 @@
                 [content]="'Редактировать команду'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">edit</i>
       </Button>
@@ -40,7 +40,7 @@
                 [content]="'Удалить команду'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">delete</i>
       </Button>
@@ -52,7 +52,7 @@
                 [content]="'Обновить таблицу'">
       <button [disabled]="isRefreshBtnDisabled"
               (click)="refreshGrid()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">refresh</i>
       </button>
@@ -64,7 +64,7 @@
                 [content]="'Открыть фильтр по полям таблицы'">
       <button [disabled]="isFilter_noneBtnDisabled"
               (click)="fixturecomlistJqxgridComponent.islistBoxVisible = !fixturecomlistJqxgridComponent.islistBoxVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">filter_none</i>
       </button>
@@ -76,7 +76,7 @@
                 [content]="'Открыть фильтр'">
       <button [disabled]="isFilter_listBtnDisabled"
               (click)="isFilterVisible = !isFilterVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
               [ngClass]="{
       'active':isFilterVisible
     }"

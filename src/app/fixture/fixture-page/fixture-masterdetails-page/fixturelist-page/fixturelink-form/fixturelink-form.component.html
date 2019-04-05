@@ -2,8 +2,8 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="'0.3'"
-           [width]="1200" [height]="500"
-           [maxHeight]="800" [minHeight]="600" [maxWidth]="1200" [minWidth]="500"
+           [width]="1200" [maxWidth]="1200" [minWidth]="500"
+           [height]="600" [maxHeight]="600" [minHeight]="600"
 
 >
   <div #windowHeader>
@@ -28,19 +28,34 @@
     >
     </jqxGrid>
 
-    <div class="fr" style="padding-top: 12px;" align="center">
-      <jqxButton #okButton class="ok waves-effect waves-orange white blue-text"
-                 [width]="60"
-                 (onClick)="saveBtn()"
+<!--    <div class="fr" style="padding-top: 12px;" align="center">-->
+<!--      <jqxButton #okButton class="ok waves-effect waves-orange white blue-text"-->
+<!--                 [width]="60"-->
+<!--                 (onClick)="saveBtn()"-->
+<!--      >-->
+<!--        Save-->
+<!--      </jqxButton>-->
+<!--      <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-left: 5px;"-->
+<!--                 [width]="60"-->
+<!--                 (onClick)="cancelBtn()"-->
+<!--      >-->
+<!--        Cancel-->
+<!--      </jqxButton>-->
+<!--    </div>-->
+
+    <div class="fr">
+      <button #okButton appButtonSimpleStyle
+              style="width: 80px"
+              (click)="saveBtn()"
       >
         Save
-      </jqxButton>
-      <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-left: 5px;"
-                 [width]="60"
-                 (onClick)="cancelBtn()"
+      </button>
+      <button #cancelButton appButtonSimpleStyle
+              style="width: 80px"
+              (click)="cancelBtn()"
       >
         Cancel
-      </jqxButton>
+      </button>
     </div>
   </div>
 

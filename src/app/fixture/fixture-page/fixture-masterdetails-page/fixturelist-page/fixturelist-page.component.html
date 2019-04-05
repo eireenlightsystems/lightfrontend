@@ -5,7 +5,7 @@
                 [content]="'Добавить светильник'">
       <Button [disabled]="isAddBtnDisabled"
               (click)="ins()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">add</i>
       </Button>
@@ -17,7 +17,7 @@
                 [content]="'Редактировать светильник'">
       <Button [disabled]="isEditBtnDisabled"
               (click)="upd()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">edit</i>
       </Button>
@@ -29,7 +29,7 @@
                 [content]="'Удалить светильник'">
       <Button [disabled]="isDeleteBtnDisabled"
               (click)="del()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">delete</i>
       </Button>
@@ -41,7 +41,7 @@
                 [content]="'Обновить таблицу'">
       <button [disabled]="isRefreshBtnDisabled"
               (click)="refreshGrid()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">refresh</i>
       </button>
@@ -53,7 +53,7 @@
                 [content]="'Открыть фильтр по полям таблицы'">
       <button [disabled]="isFilter_noneBtnDisabled"
               (click)="fixturelistJqxgridComponent.islistBoxVisible = !fixturelistJqxgridComponent.islistBoxVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="material-icons">filter_none</i>
       </button>
@@ -65,7 +65,7 @@
                 [content]="'Открыть фильтр'">
       <button [disabled]="isFilter_listBtnDisabled"
               (click)="isFilterVisible = !isFilterVisible"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
               [ngClass]="{
       'active':isFilterVisible
     }"
@@ -80,7 +80,7 @@
                 [content]="'Привязать светильник к узлу/столбу'">
       <button [disabled]="isPlaceBtnDisabled"
               (click)="place()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">place</i>
       </button>
@@ -92,7 +92,7 @@
                 [content]="'Отвязать светильник от узла/столба'">
       <button [disabled]="isPin_dropBtnDisabled"
               (click)="pin_drop()"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
       >
         <i class="small material-icons">pin_drop</i>
       </button>
@@ -103,7 +103,7 @@
     <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
                 [content]="'Добавить светильники в группу'">
       <button [disabled]="isGroup_inBtnDisabled"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
               (click)="group_in()"
       >
         <i class="material-icons">file_download</i>
@@ -115,7 +115,7 @@
     <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
                 [content]="'Удалить светильники из группы'">
       <button [disabled]="isGroup_outBtnDisabled"
-              class="button_margin btn btn-small waves-effect waves-orange white blue-text"
+              appButtonSimpleStyle
               (click)="group_out()"
       >
         <i class="material-icons">file_upload</i>

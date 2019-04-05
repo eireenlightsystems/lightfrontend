@@ -1,7 +1,7 @@
 <div class="filter">
   <div class="fr">
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="commandStatusInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId" #select>
         <option value="{{nullVar}}" selected>Статус</option>
         <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id}}">
@@ -11,7 +11,7 @@
       <label for="commandStatusInput" *ngIf="!statusId">Статус команды</label>
     </div>
 
-    <div class="input-field inline order-position-input">
+    <div appInputFilterStyle>
       <select id="speedDirectionesInput" class="browser-default" name="speedDirection" [(ngModel)]="speedDirectionId"
               #select>
         <option value="{{nullVar}}" selected>Режим скорости</option>
@@ -22,7 +22,7 @@
       <label for="speedDirectionesInput" *ngIf="!speedDirectionId">Режим скорости</label>
     </div>
 
-    <div class="button_margin">
+    <div appInputFilterStyle>
       <jqxDateTimeInput #startDateTime
                         [theme]="'material'"
                         [width]="200" [height]="43"
@@ -32,7 +32,7 @@
       </jqxDateTimeInput>
     </div>
 
-    <div class="button_margin">
+    <div appInputFilterStyle>
       <jqxDateTimeInput #endDateTime
                         [theme]="'material'"
                         [width]="200" [height]="43"
@@ -42,9 +42,10 @@
       </jqxDateTimeInput>
     </div>
 
-    <div class="button_margin input-field inline order-position-input">
+    <div>
       <button
-        class="button_height btn btn-small waves-effect waves-orange white blue-text"
+        appButtonSimpleStyle
+        style="height: 42px"
         (click)="submitFilter()"
         [disabled]="!isValid"
       >Применить

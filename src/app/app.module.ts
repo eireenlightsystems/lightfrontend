@@ -79,6 +79,8 @@ import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-
 import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
 import {SensorlistJqxgridComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 import {SensoreditFormComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensoredit-form/sensoredit-form.component';
+import {ButtonSimpleStyleDirective} from './shared/directives/button-simple-style.directive';
+import {InputFilterStyleDirective} from './shared/directives/input-filter-style.directive';
 
 @NgModule({
   declarations: [
@@ -158,7 +160,10 @@ import {SensoreditFormComponent} from './sensor/sensor-page/sensor-md-page/senso
     SensorMdPageComponent,
     SensorlistPageComponent,
     SensorlistJqxgridComponent,
-    SensoreditFormComponent
+    SensoreditFormComponent,
+
+    ButtonSimpleStyleDirective,
+    InputFilterStyleDirective
 
   ],
   imports: [
