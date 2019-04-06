@@ -2,13 +2,13 @@
   <div class="fr">
 
     <div appInputFilterStyle>
-      <select id="commandStatuseInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId" #select>
-        <option value="{{nullVar}}" selected>Статус команды</option>
+      <select id="commandStatuseInput" class="browser-default" name="commandStatus" [(ngModel)]="statusId">
+        <option value="{{nullVar}}" selected>все (статусы команды)</option>
         <option *ngFor="let commandStatus of commandStatuses" value="{{commandStatus.id}}">
           {{commandStatus.name}}
         </option>
       </select>
-      <label for="commandStatuseInput" *ngIf="!statusId">Статус команды</label>
+      <label for="commandStatuseInput" *ngIf="!(statusId !== nullVar ? statusId : true)">Статус команды</label>
     </div>
 
     <div appInputFilterStyle>

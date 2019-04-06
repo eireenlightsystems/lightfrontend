@@ -27,7 +27,7 @@ export class FixturecomlistFilterComponent implements OnInit {
 
   // other variables
   isValid = true;
-  statusId: number;
+  statusId: string;
   nullVar = '';
   todayEndStart: any = {
     dataPicker: {
@@ -44,7 +44,7 @@ export class FixturecomlistFilterComponent implements OnInit {
     setTimeout(_ => this.startDateTime.setDate(this.todayEndStart.dataPicker.start()));
     setTimeout(_ => this.endDateTime.setDate(this.todayEndStart.dataPicker.end()));
     this.commandSwitchDflt = this.commandSwitchService.dfltParams();
-    this.statusId = this.commandSwitchDflt.statusId; // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
+    this.statusId = this.commandSwitchDflt.statusId.toString(); // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
   }
 
   validate() {
@@ -61,7 +61,7 @@ export class FixturecomlistFilterComponent implements OnInit {
     if (this.endDateTime) {
       this.filterCommandSwitch.endDateTime = new DateTimeFormat().fromDataPickerString(this.endDateTime.ngValue);
     }
-    this.filterCommandSwitch.statusId = this.statusId.toString();
+    this.filterCommandSwitch.statusId = this.statusId;
 
     this.onFilter.emit(this.filterCommandSwitch);
   }

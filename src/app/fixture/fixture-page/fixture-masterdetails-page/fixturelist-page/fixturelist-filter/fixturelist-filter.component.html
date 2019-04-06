@@ -2,53 +2,53 @@
   <div class="fr">
 
     <div appInputFilterStyle>
-      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId" #select>
-        <option value="{{nullVar}}" selected>Геогр. понятие</option>
+      <select id="fixture-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId">
+        <option value="{{nullVar}}" selected>все (геогр. понятия)</option>
         <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
           {{geograph.code}}
         </option>
       </select>
-      <label for="fixture-geograph-input" *ngIf="!geographId">Геогр. понятие</label>
+      <label for="fixture-geograph-input" *ngIf="!(geographId !== nullVar ? geographId : true)">Геогр. понятие</label>
     </div>
 
     <div appInputFilterStyle>
-      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId" #select>
-        <option value="{{nullVar}}" selected>Владелец</option>
+      <select id="fixture-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId">
+        <option value="{{nullVar}}" selected>все (владельцы)</option>
         <option *ngFor="let owner of ownerFixtures" value="{{owner.id}}">
           {{owner.code}}
         </option>
       </select>
-      <label for="fixture-owner-input" *ngIf="!ownerId">Владелец</label>
+      <label for="fixture-owner-input" *ngIf="!(ownerId !== nullVar ? ownerId : true)">Владелец</label>
     </div>
 
     <div appInputFilterStyle>
-      <select id="fixture-type-input" class="browser-default" name="fixture_type" [(ngModel)]="fixtureTypeId" #select>
-        <option value="{{nullVar}}" selected>Тип</option>
+      <select id="fixture-type-input" class="browser-default" name="fixture_type" [(ngModel)]="fixtureTypeId">
+        <option value="{{nullVar}}" selected>все (типы светильников)</option>
         <option *ngFor="let fixtureType of fixtureTypes" value="{{fixtureType.id}}">
           {{fixtureType.code}}
         </option>
       </select>
-      <label for="fixture-type-input" *ngIf="!fixtureTypeId">Тип</label>
+      <label for="fixture-type-input" *ngIf="!(fixtureTypeId !== nullVar ? fixtureTypeId : true)">Тип</label>
     </div>
 
     <div appInputFilterStyle>
-      <select id="fixture-substation-input" class="browser-default" name="substation" [(ngModel)]="substationId" #select>
-        <option value="{{nullVar}}" selected>Подстанция</option>
+      <select id="fixture-substation-input" class="browser-default" name="substation" [(ngModel)]="substationId">
+        <option value="{{nullVar}}" selected>все (подстанции)</option>
         <option *ngFor="let substation of substations" value="{{substation.id}}">
           {{substation.code}}
         </option>
       </select>
-      <label for="fixture-substation-input" *ngIf="!substationId">Подстанция</label>
+      <label for="fixture-substation-input" *ngIf="!(substationId !== nullVar ? substationId : true)">Подстанция</label>
     </div>
 
     <div appInputFilterStyle>
-      <select id="fixture-mode-input" class="browser-default" name="mode" [(ngModel)]="modeId" #select>
-        <option value="{{nullVar}}" selected>Режим</option>
+      <select id="fixture-mode-input" class="browser-default" name="mode" [(ngModel)]="modeId">
+        <option value="{{nullVar}}" selected>все (режимы вкл./выкл.)</option>
         <option *ngFor="let mode of modes" value="{{mode.id}}">
           {{mode.code}}
         </option>
       </select>
-      <label for="fixture-mode-input" *ngIf="!modeId">Режим</label>
+      <label for="fixture-mode-input" *ngIf="!(modeId !== nullVar ? modeId : true)">Режим</label>
     </div>
 
     <div>

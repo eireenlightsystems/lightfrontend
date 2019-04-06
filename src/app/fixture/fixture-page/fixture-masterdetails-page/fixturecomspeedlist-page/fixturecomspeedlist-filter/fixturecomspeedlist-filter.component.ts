@@ -33,8 +33,8 @@ export class FixturecomspeedlistFilterComponent implements OnInit {
 
   // other variables
   isValid = true;
-  statusId: number;
-  speedDirectionId: number;
+  statusId: string;
+  speedDirectionId: string;
   nullVar = '';
   todayEndStart: any = {
     dataPicker: {
@@ -51,7 +51,7 @@ export class FixturecomspeedlistFilterComponent implements OnInit {
     setTimeout(_ => this.startDateTime.setDate(this.todayEndStart.dataPicker.start()));
     setTimeout(_ => this.endDateTime.setDate(this.todayEndStart.dataPicker.end()));
     this.commandSpeedSwitchDflt = this.commandSpeedSwitchService.dfltParams();
-    this.statusId = this.commandSpeedSwitchDflt.statusId; // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
+    this.statusId = this.commandSpeedSwitchDflt.statusId.toString(); // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
   }
 
   validate() {
@@ -68,8 +68,8 @@ export class FixturecomspeedlistFilterComponent implements OnInit {
     if (this.endDateTime) {
       this.filterCommandSpeedSwitch.endDateTime = new DateTimeFormat().fromDataPickerString(this.endDateTime.ngValue);
     }
-    this.filterCommandSpeedSwitch.statusId = this.statusId.toString();
-    this.filterCommandSpeedSwitch.speedDirectionId = this.speedDirectionId.toString();
+    this.filterCommandSpeedSwitch.statusId = this.statusId;
+    this.filterCommandSpeedSwitch.speedDirectionId = this.speedDirectionId;
 
     this.onFilter.emit(this.filterCommandSpeedSwitch);
   }

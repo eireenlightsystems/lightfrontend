@@ -30,9 +30,9 @@ export class NodelistFilterComponent {
 
   // other variables
   isValid = true;
-  geographId: number;
-  ownerId: number;
-  nodeTypeId: number;
+  geographId: string;
+  ownerId: string;
+  nodeTypeId: string;
   nullVar = '';
 
   constructor() {
@@ -55,13 +55,13 @@ export class NodelistFilterComponent {
     };
 
     if (this.geographId) {
-      filter.geographId = this.geographId.toString();
+      filter.geographId = this.geographId;
     }
     if (this.ownerId) {
-      filter.ownerId = this.ownerId.toString();
+      filter.ownerId = this.ownerId;
     }
     if (this.nodeTypeId) {
-      filter.nodeTypeId = this.nodeTypeId.toString();
+      filter.nodeTypeId = this.nodeTypeId;
     }
 
     this.onFilter.emit(filter);

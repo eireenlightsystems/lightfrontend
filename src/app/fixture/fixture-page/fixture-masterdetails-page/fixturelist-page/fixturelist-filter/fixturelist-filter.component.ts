@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {FilterFixture, FixtureType, Geograph, OwnerFixture, Substation} from '../../../../../shared/interfaces';
+import {FixturelistJqxgridComponent} from '../fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 
 
 @Component({
@@ -8,7 +9,7 @@ import {FilterFixture, FixtureType, Geograph, OwnerFixture, Substation} from '..
   templateUrl: './fixturelist-filter.component.html',
   styleUrls: ['./fixturelist-filter.component.css']
 })
-export class FixturelistFilterComponent {
+export class FixturelistFilterComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
@@ -22,13 +23,15 @@ export class FixturelistFilterComponent {
   // determine the functions that need to be performed in the parent component
   @Output() onFilter = new EventEmitter<FilterFixture>();
 
+  // define variables - link to view objects
+
   // other variables
   isValid = true;
-  geographId: number;
-  ownerId: number;
-  fixtureTypeId: number;
-  substationId: number;
-  modeId: number;
+  geographId: string;
+  ownerId: string;
+  fixtureTypeId: string;
+  substationId: string;
+  modeId: string;
   nullVar = '';
   modes = [
     {
@@ -42,6 +45,14 @@ export class FixturelistFilterComponent {
   ];
 
   constructor() {
+  }
+
+  ngOnInit() {
+
+  }
+
+  ngOnDestroy() {
+
   }
 
   validate() {
@@ -63,19 +74,19 @@ export class FixturelistFilterComponent {
     };
 
     if (this.geographId) {
-      filter.geographId = this.geographId.toString();
+      filter.geographId = this.geographId;
     }
     if (this.ownerId) {
-      filter.ownerId = this.ownerId.toString();
+      filter.ownerId = this.ownerId;
     }
     if (this.fixtureTypeId) {
-      filter.fixtureTypeId = this.fixtureTypeId.toString();
+      filter.fixtureTypeId = this.fixtureTypeId;
     }
     if (this.substationId) {
-      filter.substationId = this.substationId.toString();
+      filter.substationId = this.substationId;
     }
     if (this.modeId) {
-      filter.modeId = this.modeId.toString();
+      filter.modeId = this.modeId;
     }
 
     this.onFilter.emit(filter);

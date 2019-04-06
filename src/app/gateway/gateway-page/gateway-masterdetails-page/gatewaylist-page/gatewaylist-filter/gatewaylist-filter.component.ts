@@ -19,9 +19,9 @@ export class GatewaylistFilterComponent {
 
   // other variables
   isValid = true;
-  geographId: number;
-  ownerId: number;
-  gatewayTypeId: number;
+  geographId: string;
+  ownerId: string;
+  gatewayTypeId: string;
   nullVar = '';
 
   constructor() {
@@ -44,13 +44,13 @@ export class GatewaylistFilterComponent {
     };
 
     if (this.geographId) {
-      filter.geographId = this.geographId.toString();
+      filter.geographId = this.geographId;
     }
     if (this.ownerId) {
-      filter.ownerId = this.ownerId.toString();
+      filter.ownerId = this.ownerId;
     }
     if (this.gatewayTypeId) {
-      filter.gatewayTypeId = this.gatewayTypeId.toString();
+      filter.gatewayTypeId = this.gatewayTypeId;
     }
 
     this.onFilter.emit(filter);
