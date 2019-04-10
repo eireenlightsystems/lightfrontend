@@ -96,6 +96,13 @@
   [id_fixture_select]="selectFixtureId"
 ></app-fixturecomlist-filter>
 
+<app-filter-table
+  *ngIf="isFilterVisible"
+  [sourceForFilter]="sourceForFilter"
+  (onFilter)="applyFilterNew($event)"
+  (onInitSourceFilter)="initSourceFilter()"
+></app-filter-table>
+
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->
   <div>

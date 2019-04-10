@@ -1,45 +1,55 @@
 <div class="filter">
   <div class="fr">
 
-    <div appInputFilterStyle>
-      <select id="node-geograph-input" class="browser-default" name="geograph" [(ngModel)]="geographId">
-        <option value="{{nullVar}}" selected>все (геогр. понятия)</option>
-        <option *ngFor="let geograph of geographs" value="{{geograph.id}}">
-          {{geograph.code}}
-        </option>
-      </select>
-      <label for="node-geograph-input" *ngIf="!(geographId !== nullVar ? geographId : true)">Геогр. понятие</label>
+    <div appComboboxFilter>
+      <jqxComboBox
+        [theme]="'material'"
+        [source]="dataAdapterGeograph_jqx"
+        [width]="300" [height]="43"
+        [placeHolder]="'Геогр. понятие:'"
+        [displayMember]="'code'"
+        [valueMember]="'id'"
+        (onSelect)="geographOnSelect($event)"
+      >
+      </jqxComboBox>
     </div>
 
-    <div appInputFilterStyle>
-      <select id="node-owner-input" class="browser-default" name="owner" [(ngModel)]="ownerId">
-        <option value="{{nullVar}}" selected>все (владельцы)</option>
-        <option *ngFor="let owner of ownerNodes" value="{{owner.id}}">
-          {{owner.code}}
-        </option>
-      </select>
-      <label for="node-owner-input" *ngIf="!(ownerId !== nullVar ? ownerId : true)">Владелец</label>
+    <div appComboboxFilter>
+      <jqxComboBox
+        [theme]="'material'"
+        [source]="dataAdapterOwner_jqx"
+        [width]="300" [height]="43"
+        [placeHolder]="'Владелец:'"
+        [displayMember]="'code'"
+        [valueMember]="'id'"
+        (onSelect)="ownerOnSelect($event)"
+      >
+      </jqxComboBox>
     </div>
 
-    <div appInputFilterStyle>
-      <select id="node-type-input" class="browser-default" name="nodeType" [(ngModel)]="nodeTypeId">
-        <option value="{{nullVar}}" selected>все (типы столбов)</option>
-        <option *ngFor="let nodeType of nodeTypes" value="{{nodeType.id}}">
-          {{nodeType.code}}
-        </option>
-      </select>
-      <label for="node-type-input" *ngIf="!(nodeTypeId !== nullVar ? nodeTypeId : true)">Тип</label>
+    <div appComboboxFilter>
+      <jqxComboBox
+        [theme]="'material'"
+        [source]="dataAdapterType_jqx"
+        [width]="300" [height]="43"
+        [placeHolder]="'Тип узла/столба:'"
+        [displayMember]="'code'"
+        [valueMember]="'id'"
+        (onSelect)="typeOnSelect($event)"
+      >
+      </jqxComboBox>
     </div>
 
-    <div>
-      <button
-        appButtonSimpleStyle
-        style="height: 42px"
+    <div appButtonFilter>
+      <jqxButton
+        [theme]="'material'"
+        [width]="100" [height]="43"
         (click)="submitFilter()"
         [disabled]="!isValid"
       >Применить
-      </button>
+      </jqxButton>
     </div>
+
   </div>
 
 </div>

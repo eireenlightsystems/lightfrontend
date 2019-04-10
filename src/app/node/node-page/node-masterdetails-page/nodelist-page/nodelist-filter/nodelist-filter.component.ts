@@ -1,7 +1,7 @@
 import {
   Component,
   EventEmitter,
-  Input,
+  Input, OnInit,
   Output
 } from '@angular/core';
 
@@ -10,6 +10,7 @@ import {
   Geograph, NodeType,
   OwnerNode
 } from '../../../../../shared/interfaces';
+import {isUndefined} from 'util';
 
 
 @Component({
@@ -18,7 +19,7 @@ import {
   styleUrls: ['./nodelist-filter.component.css']
 })
 
-export class NodelistFilterComponent {
+export class NodelistFilterComponent implements OnInit {
 
   // variables from master component
   @Input() geographs: Geograph[];
@@ -33,9 +34,48 @@ export class NodelistFilterComponent {
   geographId: string;
   ownerId: string;
   nodeTypeId: string;
-  nullVar = '';
+
+  sourceGeograph_jqx: any;
+  dataAdapterGeograph_jqx: any;
+  sourceOwner_jqx: any;
+  dataAdapterOwner_jqx: any;
+  sourceType_jqx: any;
+  dataAdapterType_jqx: any;
+
 
   constructor() {
+  }
+
+  ngOnInit() {
+    this.sourceGeograph_jqx =
+      {
+        datatype: 'array',
+        localdata: this.geographs,
+        id: 'id',
+        sortcolumn: 'code',
+        sortdirection: 'asc'
+      };
+    this.dataAdapterGeograph_jqx = new jqx.dataAdapter(this.sourceGeograph_jqx);
+
+    this.sourceOwner_jqx =
+      {
+        datatype: 'array',
+        localdata: this.ownerNodes,
+        id: 'id',
+        sortcolumn: 'code',
+        sortdirection: 'asc'
+      };
+    this.dataAdapterOwner_jqx = new jqx.dataAdapter(this.sourceOwner_jqx);
+
+    this.sourceType_jqx =
+      {
+        datatype: 'array',
+        localdata: this.nodeTypes,
+        id: 'id',
+        sortcolumn: 'code',
+        sortdirection: 'asc'
+      };
+    this.dataAdapterType_jqx = new jqx.dataAdapter(this.sourceType_jqx);
   }
 
   validate() {
@@ -67,4 +107,27 @@ export class NodelistFilterComponent {
     this.onFilter.emit(filter);
   }
 
+  geographOnSelect(event: any) {
+    if (!isUndefined(event.args)) {
+      this.geographId = event.args.item.value;
+    } else {
+      this.geographId = '';
+    }
+  }
+
+  ownerOnSelect(event: any) {
+    if (!isUndefined(event.args)) {
+      this.ownerId = event.args.item.value;
+    } else {
+      this.ownerId = '';
+    }
+  }
+
+  typeOnSelect(event: any) {
+    if (!isUndefined(event.args)) {
+      this.nodeTypeId = event.args.item.value;
+    } else {
+      this.nodeTypeId = '';
+    }
+  }
 }

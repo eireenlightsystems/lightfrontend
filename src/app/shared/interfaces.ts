@@ -19,6 +19,20 @@ export interface Contract {
   name: string;
 }
 
+export interface SourceForFilter {
+  name: string;
+  type: string;
+  source: any[];
+  theme: string;
+  width: string;
+  height: string;
+  placeHolder: string;
+  displayMember: string;
+  valueMember: string;
+  defaultValue: any;
+  selectId: string;
+}
+
 // Fixture
 
 export interface Fixture {

@@ -5,7 +5,7 @@ import {NodeService} from '../../../../shared/services/node/node.service';
 import {
   Node,
   Geograph,
-  Contract, FilterNode, NodeType, OwnerNode
+  Contract, FilterNode, NodeType, OwnerNode, SourceForFilter
 } from '../../../../shared/interfaces';
 import {NodelistJqxgridComponent} from './nodelist-jqxgrid/nodelist-jqxgrid.component';
 import {isUndefined} from 'util';
@@ -64,6 +64,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   };
   oSub: Subscription;
   isFilterVisible = false;
+  sourceForFilter: SourceForFilter[];
   //
   offset = 0;
   limit = STEP;
@@ -91,6 +92,50 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (!this.isMasterGrid && !isUndefined(this.selectGatewayId)) {
       this.filter.gatewayId = this.selectGatewayId.toString();
     }
+
+    // Definde filter
+    this.sourceForFilter = [
+      {
+        name: 'geographs',
+        type: 'jqxComboBox',
+        source: this.geographs,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Геогр. понятие:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerNodes',
+        type: 'jqxComboBox',
+        source: this.ownerNodes,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Владелец:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'nodeTypes',
+        type: 'jqxComboBox',
+        source: this.nodeTypes,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Тип узла/столба:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
+
     this.reloading = true;
     this.getAll();
   }
@@ -171,6 +216,46 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
+  applyFilterNew(event: any) {
+    this.nodes = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'geographs':
+          this.filter.geographId = event[i].id;
+          break;
+        case 'ownerNodes':
+          this.filter.ownerId = event[i].id;
+          break;
+        case 'nodeTypes':
+          this.filter.nodeTypeId = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+    this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'geographs':
+          this.sourceForFilter[i].source = this.geographs;
+          break;
+        case 'ownerNodes':
+          this.sourceForFilter[i].source = this.ownerNodes;
+          break;
+        case 'nodeTypes':
+          this.sourceForFilter[i].source = this.nodeTypes;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   ins() {
     this.nodelistJqxgridComponent.ins();
   }
@@ -190,4 +275,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   pin_drop() {
     this.nodelistJqxgridComponent.pin_drop();
   }
+
+
 }

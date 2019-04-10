@@ -100,13 +100,20 @@
 
 </div>
 
-<app-nodelist-filter
+<!--<app-nodelist-filter-->
+<!--  *ngIf="isFilterVisible"-->
+<!--  [geographs]="geographs"-->
+<!--  [ownerNodes]="ownerNodes"-->
+<!--  [nodeTypes]="nodeTypes"-->
+<!--  (onFilter)="applyFilter($event)"-->
+<!--&gt;</app-nodelist-filter>-->
+
+<app-filter-table
   *ngIf="isFilterVisible"
-  (onFilter)="applyFilter($event)"
-  [geographs]="geographs"
-  [ownerNodes]="ownerNodes"
-  [nodeTypes]="nodeTypes"
-></app-nodelist-filter>
+  [sourceForFilter]="sourceForFilter"
+  (onFilter)="applyFilterNew($event)"
+  (onInitSourceFilter)="initSourceFilter()"
+></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->

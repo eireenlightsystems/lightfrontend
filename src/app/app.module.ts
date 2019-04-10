@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
 import {jqxPivotDesignerComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotdesigner';
@@ -21,6 +22,7 @@ import {jqxTooltipComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxtoo
 import {jqxResponsivePanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxresponsivepanel';
 import {jqxPanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpanel';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
+import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxcombobox';
 
 import {AppComponent} from './app.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
@@ -81,6 +83,11 @@ import {SensorlistJqxgridComponent} from './sensor/sensor-page/sensor-md-page/se
 import {SensoreditFormComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensoredit-form/sensoredit-form.component';
 import {ButtonSimpleStyleDirective} from './shared/directives/button-simple-style.directive';
 import {InputFilterStyleDirective} from './shared/directives/input-filter-style.directive';
+import {ComboboxFilterDirective} from './shared/directives/combobox-filter.directive';
+import {ButtonFilterDirective} from './shared/directives/button-filter.directive';
+import { FilterTableComponent } from './shared/components/filter-table/filter-table.component';
+import { FilterItemComponent } from './shared/components/filter-table/filter-item/filter-item.component';
+
 
 @NgModule({
   declarations: [
@@ -95,6 +102,7 @@ import {InputFilterStyleDirective} from './shared/directives/input-filter-style.
     FixturemapPageComponent,
     FixturelistPageComponent,
     FixturelistFilterComponent,
+    FixturelistJqxgridComponent,
     HandbookLayoutComponent,
 
     jqxGridComponent,
@@ -102,17 +110,15 @@ import {InputFilterStyleDirective} from './shared/directives/input-filter-style.
     jqxPivotDesignerComponent,
     jqxDataTableComponent,
     jqxListBoxComponent,
-    FixturelistJqxgridComponent,
     jqxInputComponent,
     jqxNumberInputComponent,
     jqxButtonComponent,
     jqxSliderComponent,
     jqxDropDownListComponent,
+    jqxComboBoxComponent,
     jqxWindowComponent,
     jqxFormComponent,
     jqxTabsComponent,
-    FixturePageComponent,
-    EventWindowComponent,
     jqxCheckBoxComponent,
     jqxCheckBoxComponent,
     jqxTextAreaComponent,
@@ -121,6 +127,8 @@ import {InputFilterStyleDirective} from './shared/directives/input-filter-style.
     jqxPanelComponent,
     jqxDateTimeInputComponent,
 
+    FixturePageComponent,
+    EventWindowComponent,
     NodePageComponent,
     NodelistPageComponent,
     NodemapPageComponent,
@@ -163,7 +171,11 @@ import {InputFilterStyleDirective} from './shared/directives/input-filter-style.
     SensoreditFormComponent,
 
     ButtonSimpleStyleDirective,
-    InputFilterStyleDirective
+    InputFilterStyleDirective,
+    ComboboxFilterDirective,
+    ButtonFilterDirective,
+    FilterTableComponent,
+    FilterItemComponent
 
   ],
   imports: [

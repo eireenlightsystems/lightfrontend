@@ -33,6 +33,7 @@
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxslider.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist.ts",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxcombobox.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxform.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtabs.ts",

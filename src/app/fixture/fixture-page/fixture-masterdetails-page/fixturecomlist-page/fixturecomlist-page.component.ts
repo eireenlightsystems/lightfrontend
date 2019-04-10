@@ -5,10 +5,11 @@ import {
   CommandSwitch,
   CommandType,
   CommandStatus,
-  FilterCommandSwitch
+  FilterCommandSwitch, CommandSwitchDflt, SourceForFilter
 } from '../../../../shared/interfaces';
 import {FixturecomlistJqxgridComponent} from './fixturecomlist-jqxgrid/fixturecomlist-jqxgrid.component';
 import {CommandSwitchService} from '../../../../shared/services/command/commandSwitch.service';
+import {DateTimeFormat} from '../../../../shared/classes/DateTimeFormat';
 
 
 const STEP = 1000000000000;
@@ -50,6 +51,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   commandSwitches: CommandSwitch[] = [];
   oSub: Subscription;
   isFilterVisible = false;
+  sourceForFilter: SourceForFilter[];
   //
   offset = 0;
   limit = STEP;
@@ -58,7 +60,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   reloading = false;
   noMoreCommand_switches = false;
   //
-  // selectCommandSpeedId: number = 0;
+  commandSwitchDflt: CommandSwitchDflt;
   //
   isAddBtnDisabled: boolean;
   isRemoveBtnDisabled: boolean;
@@ -68,7 +70,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   isFilter_noneBtnDisabled: boolean;
   isFilter_listBtnDisabled: boolean;
 
-  constructor(private fixturecommandService: CommandSwitchService) {
+  constructor(private commandSwitchService: CommandSwitchService) {
   }
 
   ngOnInit() {
@@ -76,6 +78,51 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     if (!this.isMasterGrid) {
       this.filterCommandSwitch.fixtureId = this.selectFixtureId.toString();
     }
+
+    // Definde filter
+    this.commandSwitchDflt = this.commandSwitchService.dfltParams();
+    this.sourceForFilter = [
+      {
+        name: 'commandStatuses',
+        type: 'jqxComboBox',
+        source: this.commandStatuses,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Статус комманды:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'startDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Дата нач. интер.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
+      },
+      {
+        name: 'endDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Дата заве. интерв.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+      }
+    ];
+
     this.getAll();
     this.reloading = true;
   }
@@ -130,7 +177,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       },
       this.filterCommandSwitch
     );
-    this.oSub = this.fixturecommandService.getAll(params).subscribe(commandSwitches => {
+    this.oSub = this.commandSwitchService.getAll(params).subscribe(commandSwitches => {
       // Link statusName
       const commandSwitchesStatusName = commandSwitches;
       commandSwitchesStatusName.forEach(currentCommand => {
@@ -156,6 +203,42 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.filterCommandSwitch = filter;
     this.reloading = true;
     this.getAll();
+  }
+
+  applyFilterNew(event: any) {
+    this.commandSwitches = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'commandStatuses':
+          this.filterCommandSwitch.statusId = event[i].id;
+          break;
+        case 'startDateTime':
+          this.filterCommandSwitch.startDateTime = event[i].id;
+          break;
+        case 'endDateTime':
+          this.filterCommandSwitch.endDateTime = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+    this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'commandStatuses':
+          this.sourceForFilter[i].source = this.commandStatuses;
+          this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
+          this.sourceForFilter[i].selectId = this.commandSwitchDflt.statusId.toString();
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   ins() {

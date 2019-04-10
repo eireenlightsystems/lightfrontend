@@ -1,0 +1,33 @@
+<div [ngSwitch]="itemFilter.type">
+  <div appComboboxFilter *ngSwitchCase="'jqxComboBox'">
+    <jqxComboBox #jqxComboBox
+      [theme]="itemFilter.theme"
+      [source]="itemFilter.source"
+      [width]="itemFilter.width"
+      [height]="itemFilter.height"
+      [placeHolder]="itemFilter.placeHolder"
+      [displayMember]="itemFilter.displayMember"
+      [valueMember]="itemFilter.valueMember"
+      [selectedIndex]="itemFilter.defaultValue"
+
+      (onSelect)="OnSelect($event)"
+    >
+    </jqxComboBox>
+  </div>
+
+  <div appComboboxFilter *ngSwitchCase="'jqxDateTimeInput'">
+    <jqxDateTimeInput #jqxDateTimeInput
+                      [theme]="itemFilter.theme"
+                      [width]="itemFilter.width"
+                      [height]="itemFilter.height"
+                      [showTimeButton]="true"
+                      [formatString]="'yyyy-MM-dd HH:mm'"
+
+                      (onValueChanged)="onValueChanged($event)"
+    >
+    </jqxDateTimeInput>
+  </div>
+</div>
+
+
+
