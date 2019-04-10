@@ -88,18 +88,10 @@
 
 </div>
 
-<app-fixturecomlist-filter
-  *ngIf="isFilterVisible"
-  [filterCommandSwitch]="filterCommandSwitch"
-  (onFilter)="applyFilter($event)"
-  [commandStatuses]="commandStatuses"
-  [id_fixture_select]="selectFixtureId"
-></app-fixturecomlist-filter>
-
 <app-filter-table
   *ngIf="isFilterVisible"
   [sourceForFilter]="sourceForFilter"
-  (onFilter)="applyFilterNew($event)"
+  (onFilter)="applyFilter($event)"
   (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
 

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, OwnerSensor, FilterSensor, SensorType, Sensor} from '../../../../shared/interfaces';
+import {Geograph, Contract, OwnerSensor, FilterSensor, SensorType, Sensor, SourceForFilter} from '../../../../shared/interfaces';
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
 import {SensorlistJqxgridComponent} from './sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 
@@ -53,6 +53,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     nodeId: ''
   };
+  sourceForFilter: SourceForFilter[];
   oSub: Subscription;
   isFilterVisible = false;
   //
@@ -82,6 +83,49 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (!this.isMasterGrid) {
       this.filter.nodeId = this.nodeSelectId.toString();
     }
+
+    // Definde filter
+    this.sourceForFilter = [
+      {
+        name: 'geographs',
+        type: 'jqxComboBox',
+        source: this.geographs,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Геогр. понятие:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerSensors',
+        type: 'jqxComboBox',
+        source: this.ownerSensors,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Владелец:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'sensorTypes',
+        type: 'jqxComboBox',
+        source: this.sensorTypes,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Тип датчика:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
     this.getAll();
     this.reloading = true;
@@ -160,6 +204,46 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.filter = filter;
     this.reloading = true;
     this.getAll();
+  }
+
+  applyFilterFromFilter(event: any) {
+    this.sensors = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'geographs':
+          this.filter.geographId = event[i].id;
+          break;
+        case 'ownerSensors':
+          this.filter.ownerId = event[i].id;
+          break;
+        case 'sensorTypes':
+          this.filter.sensorTypeId = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+    this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'geographs':
+          this.sourceForFilter[i].source = this.geographs;
+          break;
+        case 'ownerSensors':
+          this.sourceForFilter[i].source = this.ownerSensors;
+          break;
+        case 'sensorTypes':
+          this.sourceForFilter[i].source = this.sensorTypes;
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   ins() {

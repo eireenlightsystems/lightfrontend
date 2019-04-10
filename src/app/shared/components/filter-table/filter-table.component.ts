@@ -1,8 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {FilterNode, Geograph, NodeType, OwnerNode} from '../../interfaces';
-import {isUndefined} from 'util';
-import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
-import {FilterItemComponent} from './filter-item/filter-item.component';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-filter-table',

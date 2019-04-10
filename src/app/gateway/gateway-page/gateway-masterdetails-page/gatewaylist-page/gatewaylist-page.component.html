@@ -101,13 +101,12 @@
 
 </div>
 
-<app-gatewaylist-filter
+<app-filter-table
   *ngIf="isFilterVisible"
-  (onFilter)="applyFilter($event)"
-  [geographs]="geographs"
-  [ownerGateways]="ownerGateways"
-  [gatewayTypes]="gatewayTypes"
-></app-gatewaylist-filter>
+  [sourceForFilter]="sourceForFilter"
+  (onFilter)="applyFilterFromFilter($event)"
+  (onInitSourceFilter)="initSourceFilter()"
+></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->

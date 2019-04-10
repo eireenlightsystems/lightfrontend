@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, OwnerGateway, GatewayType, Gateway, FilterGateway} from '../../../../shared/interfaces';
+import {Geograph, Contract, OwnerGateway, GatewayType, Gateway, FilterGateway, SourceForFilter} from '../../../../shared/interfaces';
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
 import {GatewaylistJqxgridComponent} from './gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
 
@@ -53,7 +53,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     nodeId: ''
   };
-
+  sourceForFilter: SourceForFilter[];
   oSub: Subscription;
   isFilterVisible = false;
   //
@@ -83,6 +83,49 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (!this.isMasterGrid) {
       this.filter.nodeId = this.selectNodeId.toString();
     }
+
+    // Definde filter
+    this.sourceForFilter = [
+      {
+        name: 'geographs',
+        type: 'jqxComboBox',
+        source: this.geographs,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Геогр. понятие:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerGateways',
+        type: 'jqxComboBox',
+        source: this.ownerGateways,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Владелец:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'gatewayTypes',
+        type: 'jqxComboBox',
+        source: this.gatewayTypes,
+        theme: 'material',
+        width: '300',
+        height: '43',
+        placeHolder: 'Тип шлюза:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
     this.getAll();
     this.reloading = true;
@@ -163,6 +206,46 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.filter = filter;
     this.reloading = true;
     this.getAll();
+  }
+
+  applyFilterFromFilter(event: any) {
+    this.gateways = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'geographs':
+          this.filter.geographId = event[i].id;
+          break;
+        case 'ownerGateways':
+          this.filter.ownerId = event[i].id;
+          break;
+        case 'gatewayTypes':
+          this.filter.gatewayTypeId = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+    this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'geographs':
+          this.sourceForFilter[i].source = this.geographs;
+          break;
+        case 'ownerGateways':
+          this.sourceForFilter[i].source = this.ownerGateways;
+          break;
+        case 'gatewayTypes':
+          this.sourceForFilter[i].source = this.gatewayTypes;
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   ins() {

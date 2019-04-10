@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
 import {
@@ -41,8 +41,6 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   @Input() isFilter_list: boolean;
 
   // determine the functions that need to be performed in the parent component
-  // @Output() onRefreshChildGrid = new EventEmitter<number>()
-  // @Output() onRefreshMap = new EventEmitter()
 
   // define variables - link to view objects
   @ViewChild('fixturecomlistJqxgridComponent') fixturecomlistJqxgridComponent: FixturecomlistJqxgridComponent;
@@ -135,23 +133,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.commandSwitches = [];
     this.getAll();
     this.reloading = true;
-    // this.selectCommandSpeedId = 0
-
-    // if this.nodes id master grid, then we need refresh child grid
-    // if (this.isMasterGrid) this.refreshChildGrid(this.selectCommandSpeedId)
-
-    // refresh map
-    // this.onRefreshMap.emit()
-  }
-
-  refreshChildGrid(id_command_switch: number) {
-    // this.selectCommandSpeedId = id_command_switch
-    // refresh child grid
-    // this.onRefreshChildGrid.emit(id_command_switch)
   }
 
   getAll() {
-
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filterCommandSwitch.fixtureId <= 0) {
       this.isAddBtnDisabled = true;
@@ -197,15 +181,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
-  applyFilter(filter: FilterCommandSwitch) {
-    this.commandSwitches = [];
-    this.offset = 0;
-    this.filterCommandSwitch = filter;
-    this.reloading = true;
-    this.getAll();
-  }
-
-  applyFilterNew(event: any) {
+  applyFilter(event: any) {
     this.commandSwitches = [];
     this.offset = 0;
     this.reloading = true;

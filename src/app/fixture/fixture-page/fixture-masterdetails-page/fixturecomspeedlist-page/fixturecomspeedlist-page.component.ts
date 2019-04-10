@@ -4,10 +4,11 @@ import {Subscription} from 'rxjs/index';
 import {
   CommandType,
   CommandStatus,
-  SpeedDirection, CommandSpeedSwitch, FilterCommandSpeedSwitch
+  SpeedDirection, CommandSpeedSwitch, FilterCommandSpeedSwitch, SourceForFilter, CommandSpeedSwitchDflt
 } from '../../../../shared/interfaces';
 import {FixturecomspeedlistJqxgridComponent} from './fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {CommandSpeedSwitchService} from '../../../../shared/services/command/commandSpeedSwitch.service';
+import {DateTimeFormat} from '../../../../shared/classes/DateTimeFormat';
 
 
 const STEP = 1000000000000;
@@ -49,6 +50,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   commandSpeedSwitches: CommandSpeedSwitch[] = [];
   oSub: Subscription;
   isFilterVisible = false;
+  sourceForFilter: SourceForFilter[];
   //
   offset = 0;
   limit = STEP;
@@ -58,6 +60,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   noMoreCommand_switches = false;
   //
   selectCommandSpeedId = 0;
+  commandSpeedSwitchDflt: CommandSpeedSwitchDflt;
   //
   isAddBtnDisabled: boolean;
   isEditBtnDisabled: boolean;
@@ -75,6 +78,64 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       // this.filter.fixtureId = this.selectFixtureId
       this.filterCommandSpeedSwitch.fixtureId = this.selectFixtureId.toString();
     }
+
+    // Definde filter
+    this.commandSpeedSwitchDflt = this.commandSpeedSwitchService.dfltParams();
+    this.sourceForFilter = [
+      {
+        name: 'commandStatuses',
+        type: 'jqxComboBox',
+        source: this.commandStatuses,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Статус комманды:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'speedDirectiones',
+        type: 'jqxComboBox',
+        source: this.speedDirectiones,
+        theme: 'material',
+        width: '400',
+        height: '43',
+        placeHolder: 'Режим скорости:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'startDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Дата нач. интер.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
+      },
+      {
+        name: 'endDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Дата заве. интерв.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+      }
+    ];
+
     this.getAll();
     this.reloading = true;
   }
@@ -88,24 +149,9 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectCommandSpeedId = 0;
-
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid) {
-      this.refreshChildGrid(this.selectCommandSpeedId);
-    }
-
-    // refresh map
-    // this.onRefreshMap.emit()
-  }
-
-  refreshChildGrid(id_command_switch: number) {
-    // this.selectCommandSpeedId = id_command_switch
-    // refresh child grid
-    // this.onRefreshChildGrid.emit(id_command_switch)
   }
 
   getAll() {
-
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filterCommandSpeedSwitch.fixtureId <= 0) {
       this.isAddBtnDisabled = true;
@@ -152,12 +198,43 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
-  applyFilter(filter: FilterCommandSpeedSwitch) {
+  applyFilter(event: any) {
     this.commandSpeedSwitches = [];
     this.offset = 0;
-    this.filterCommandSpeedSwitch = filter;
     this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'commandStatuses':
+          this.filterCommandSpeedSwitch.statusId = event[i].id;
+          break;
+        case 'speedDirectiones':
+          this.filterCommandSpeedSwitch.speedDirectionId = event[i].id;
+          break;
+        case 'startDateTime':
+          this.filterCommandSpeedSwitch.startDateTime = event[i].id;
+          break;
+        case 'endDateTime':
+          this.filterCommandSpeedSwitch.endDateTime = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
     this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'commandStatuses':
+          this.sourceForFilter[i].source = this.commandStatuses;
+          this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
+          this.sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   ins() {

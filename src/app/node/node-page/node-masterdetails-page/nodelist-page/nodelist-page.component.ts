@@ -208,15 +208,15 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
-  applyFilter(filter: FilterNode) {
+  applyFilter(event: any) {
     this.nodes = [];
     this.offset = 0;
-    this.filter = filter;
     this.reloading = true;
+    this.filter = event;
     this.getAll();
   }
 
-  applyFilterNew(event: any) {
+  applyFilterFromFilter(event: any) {
     this.nodes = [];
     this.offset = 0;
     this.reloading = true;

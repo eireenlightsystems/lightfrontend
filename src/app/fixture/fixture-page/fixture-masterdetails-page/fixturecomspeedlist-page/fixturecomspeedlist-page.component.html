@@ -76,14 +76,12 @@
 
 </div>
 
-<app-fixturecomspeedlist-filter
+<app-filter-table
   *ngIf="isFilterVisible"
+  [sourceForFilter]="sourceForFilter"
   (onFilter)="applyFilter($event)"
-  [commandStatuses]="commandStatuses"
-  [speedDirectiones]="speedDirectiones"
-  [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
-  [selectFixtureId]="selectFixtureId"
-></app-fixturecomspeedlist-filter>
+  (onInitSourceFilter)="initSourceFilter()"
+></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->

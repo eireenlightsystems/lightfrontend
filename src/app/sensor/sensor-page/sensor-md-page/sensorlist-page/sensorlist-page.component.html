@@ -99,17 +99,12 @@
 
 </div>
 
-<!--<app-fixturelist-filter-->
-<!--*ngIf="isFilterVisible"-->
-<!--(onFilter)="applyFilter($event)"-->
-<!--[geographs]="geographs"-->
-<!--[ownerFixtures]="ownerFixtures"-->
-<!--[fixtureTypes]="fixtureTypes"-->
-<!--[substations]="substations"-->
-
-<!--[selectContractId]="selectContractId"-->
-<!--[selectNodeId]="selectNodeId"-->
-<!--&gt;</app-fixturelist-filter>-->
+<app-filter-table
+  *ngIf="isFilterVisible"
+  [sourceForFilter]="sourceForFilter"
+  (onFilter)="applyFilterFromFilter($event)"
+  (onInitSourceFilter)="initSourceFilter()"
+></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->

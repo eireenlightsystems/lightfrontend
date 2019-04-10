@@ -3,7 +3,14 @@ import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {MaterialService} from '../../../../shared/classes/material.service';
 
-import {FilterFixtureGroup, Fixture, FixtureGroup, FixtureGroupOwner, FixtureGroupType} from '../../../../shared/interfaces';
+import {
+  FilterFixtureGroup,
+  Fixture,
+  FixtureGroup,
+  FixtureGroupOwner,
+  FixtureGroupType,
+  SourceForFilter
+} from '../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../shared/services/fixture/fixtureGroup.service';
 import {FixtureGrlistJqxgridComponent} from './fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
 import {FixturecomeditFormComponent} from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
@@ -56,6 +63,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     ownerId: '',
     fixtureGroupTypeId: '',
   };
+  sourceForFilter: SourceForFilter[];
   fixtureGroupId: number;
   oSub: Subscription;
   isFilterVisible = false;
@@ -83,6 +91,36 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit() {
+    // Definde filter
+    this.sourceForFilter = [
+      {
+        name: 'fixtureGroupOwners',
+        type: 'jqxComboBox',
+        source: this.fixtureGroupOwners,
+        theme: 'material',
+        width: '250',
+        height: '43',
+        placeHolder: 'Владелец:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'fixtureGroupTypes',
+        type: 'jqxComboBox',
+        source: this.fixtureGroupTypes,
+        theme: 'material',
+        width: '250',
+        height: '43',
+        placeHolder: 'Тип группы:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
+
     this.reloading = true;
   }
 
@@ -141,12 +179,38 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     this.getAll();
   }
 
-  applyFilter(filter: FilterFixtureGroup) {
+  applyFilter(event: any) {
     this.fixtureGroups = [];
     this.offset = 0;
-    this.filter = filter;
     this.reloading = true;
-    this.getAll();
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'fixtureGroupOwners':
+          this.filter.ownerId = event[i].id;
+          break;
+        case 'fixtureGroupTypes':
+          this.filter.fixtureGroupTypeId = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+      this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'fixtureGroupOwners':
+          this.sourceForFilter[i].source = this.fixtureGroupOwners;
+          break;
+        case 'fixtureGroupTypes':
+          this.sourceForFilter[i].source = this.fixtureGroupTypes;
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   ins() {

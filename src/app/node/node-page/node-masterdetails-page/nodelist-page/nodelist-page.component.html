@@ -100,18 +100,10 @@
 
 </div>
 
-<!--<app-nodelist-filter-->
-<!--  *ngIf="isFilterVisible"-->
-<!--  [geographs]="geographs"-->
-<!--  [ownerNodes]="ownerNodes"-->
-<!--  [nodeTypes]="nodeTypes"-->
-<!--  (onFilter)="applyFilter($event)"-->
-<!--&gt;</app-nodelist-filter>-->
-
 <app-filter-table
   *ngIf="isFilterVisible"
   [sourceForFilter]="sourceForFilter"
-  (onFilter)="applyFilterNew($event)"
+  (onFilter)="applyFilterFromFilter($event)"
   (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
 

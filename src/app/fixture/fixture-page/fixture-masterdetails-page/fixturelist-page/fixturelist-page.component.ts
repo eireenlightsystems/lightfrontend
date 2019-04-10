@@ -12,7 +12,7 @@ import {
   Substation,
   Contract,
   Installer,
-  HeightType
+  HeightType, SourceForFilter
 } from '../../../../shared/interfaces';
 import {FixturelistJqxgridComponent} from './fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
@@ -85,7 +85,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
     contractId: '',
     nodeId: ''
   };
-
+  sourceForFilter: SourceForFilter[];
   oSub: Subscription;
   isFilterVisible = false;
   //
@@ -148,6 +148,17 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
       {label: 'Режим', value: 'flgLight', checked: false},
     ];
 
+  modes = [
+    {
+      id: 0,
+      code: 'Выкл.'
+    },
+    {
+      id: 1,
+      code: 'Вкл.'
+    }
+  ];
+
 
   constructor(private fixtureService: FixtureService) {
   }
@@ -155,6 +166,76 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   ngOnInit() {
     this.filter.nodeId = this.selectNodeId;
     this.filter.contractId = this.selectContractId.toString();
+
+    // Definde filter
+    this.sourceForFilter = [
+      {
+        name: 'geographs',
+        type: 'jqxComboBox',
+        source: this.geographs,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Геогр. понятие:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerFixtures',
+        type: 'jqxComboBox',
+        source: this.ownerFixtures,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Владелец:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'fixtureTypes',
+        type: 'jqxComboBox',
+        source: this.fixtureTypes,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Тип светильника:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'substations',
+        type: 'jqxComboBox',
+        source: this.substations,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Подстанция:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'modes',
+        type: 'jqxComboBox',
+        source: this.modes,
+        theme: 'material',
+        width: '200',
+        height: '43',
+        placeHolder: 'Вкл./выкл.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
+
     this.reloading = true;
     this.refreshGrid();
   }
@@ -250,14 +331,62 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
     this.getAll();
   }
 
-  applyFilter(filter: FilterFixture) {
+  applyFilter(event: any) {
     this.fixtures = [];
     this.offset = 0;
-    this.filter = filter;
     this.reloading = true;
-
-    // this.getAll();
+    this.filter = event;
     this.refreshGrid();
+  }
+
+  applyFilterFromFilter(event: any) {
+    this.fixtures = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'geographs':
+          this.filter.geographId = event[i].id;
+          break;
+        case 'ownerFixtures':
+          this.filter.ownerId = event[i].id;
+          break;
+        case 'fixtureTypes':
+          this.filter.fixtureTypeId = event[i].id;
+          break;
+        case 'substations':
+          this.filter.substationId = event[i].id;
+          break;
+        case 'modes':
+          this.filter.modeId = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+
+    this.refreshGrid();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'geographs':
+          this.sourceForFilter[i].source = this.geographs;
+          break;
+        case 'ownerFixtures':
+          this.sourceForFilter[i].source = this.ownerFixtures;
+          break;
+        case 'fixtureTypes':
+          this.sourceForFilter[i].source = this.fixtureTypes;
+          break;
+        case 'substations':
+          this.sourceForFilter[i].source = this.substations;
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   applyFilterFixtureInGroup(fixtureGroupId: string) {
