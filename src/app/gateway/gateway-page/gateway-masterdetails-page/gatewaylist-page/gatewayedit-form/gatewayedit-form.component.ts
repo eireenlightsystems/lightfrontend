@@ -5,7 +5,7 @@ import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwind
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 import {Gateway} from '../../../../../shared/models/gateway';
-import {Contract, GatewayType, Geograph} from '../../../../../shared/interfaces';
+import {Contract, EquipmentType, Geograph} from '../../../../../shared/interfaces';
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {isUndefined} from 'util';
 
@@ -18,7 +18,7 @@ export class GatewayeditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() gatewayTypes: GatewayType[];
+  @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
 
   // determine the functions that need to be performed in the parent component

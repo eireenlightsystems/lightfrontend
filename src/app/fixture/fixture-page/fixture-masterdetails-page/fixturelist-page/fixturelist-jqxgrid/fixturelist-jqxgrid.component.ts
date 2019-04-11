@@ -7,9 +7,9 @@ import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbutt
 
 import {Fixture} from '../../../../../shared/models/fixture';
 import {
-  FixtureType,
+  EquipmentType,
   Geograph,
-  OwnerFixture,
+  Owner,
   Substation,
   Contract,
   Installer,
@@ -34,8 +34,8 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   @Input() listBoxSourceFixture: any;
 
   @Input() geographs: Geograph[];
-  @Input() ownerFixtures: OwnerFixture[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() ownerFixtures: Owner[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];

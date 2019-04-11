@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, OwnerSensor, FilterSensor, SensorType, Sensor, SourceForFilter} from '../../../../shared/interfaces';
+import {Geograph, Contract, Owner, FilterSensor, EquipmentType, Sensor, SourceForFilter} from '../../../../shared/interfaces';
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
 import {SensorlistJqxgridComponent} from './sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 
@@ -18,8 +18,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() ownerSensors: OwnerSensor[];
-  @Input() sensorTypes: SensorType[];
+  @Input() ownerSensors: Owner[];
+  @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
   @Input() nodeSelectId: number;

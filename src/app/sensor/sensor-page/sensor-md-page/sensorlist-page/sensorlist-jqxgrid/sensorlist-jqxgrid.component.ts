@@ -6,7 +6,7 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {Sensor} from '../../../../../shared/models/sensor';
-import {Geograph, Contract, OwnerSensor, SensorType} from '../../../../../shared/interfaces';
+import {Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
 
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
@@ -22,8 +22,8 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
 // variables from master component
   @Input() sensors: Sensor[];
   @Input() geographs: Geograph[];
-  @Input() ownerSensors: OwnerSensor[];
-  @Input() sensorTypes: SensorType[];
+  @Input() ownerSensors: Owner[];
+  @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
   @Input() nodeSelectId: number;

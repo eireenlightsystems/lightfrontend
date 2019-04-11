@@ -4,12 +4,11 @@ import {Subscription} from 'rxjs';
 import {
   CommandStatus,
   CommandType,
-  Contract, FixtureGroupOwner, FixtureGroupType,
-  FixtureType,
+  Contract, Owner, FixtureGroupType,
+  EquipmentType,
   Geograph,
   HeightType,
   Installer,
-  OwnerFixture, SpeedDirection,
   Substation
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
@@ -55,14 +54,14 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   // fixturecom source
   commandTypes: CommandType[];
   commandStatuses: CommandStatus[];
-  speedDirectiones: SpeedDirection[];
+  speedDirectiones: CommandType[];
 
   // node source
   geographs: Geograph[];
 
   // fixture source
-  ownerFixtures: OwnerFixture[];
-  fixtureTypes: FixtureType[];
+  ownerFixtures: Owner[];
+  fixtureTypes: EquipmentType[];
   substations: Substation[];
   contractFixtures: Contract[];
   installers: Installer[];
@@ -70,7 +69,7 @@ export class FixturePageComponent implements OnInit, OnDestroy {
 
   // fixture group source
   fixtureGroupTypes: FixtureGroupType[];
-  fixtureGroupOwners: FixtureGroupOwner[];
+  fixtureGroupOwners: Owner[];
 
   constructor(
     // fixturecom service

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {OwnerGateway} from '../../interfaces';
+import {Owner} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,8 @@ export class OwnerGatewayService {
   constructor(private http: HttpClient) {
   }
 
-  fetch(): Observable<OwnerGateway[]> {
-    return this.http.get<OwnerGateway[]>('/api2/gateways-owners');
+  fetch(): Observable<Owner[]> {
+    return this.http.get<Owner[]>('/api2/gateways-owners');
   }
 
 }

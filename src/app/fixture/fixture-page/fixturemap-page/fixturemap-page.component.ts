@@ -6,7 +6,7 @@ import {isUndefined} from 'util';
 
 import {
   Contract, FilterFixture, FilterFixtureGroup, FixtureGroup,
-  FixtureType,
+  EquipmentType,
   HeightType,
   Installer,
   Substation
@@ -31,7 +31,7 @@ declare var ymaps: any;
 export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // variables from master component
-  @Input() fixtureTypes: FixtureType[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];

@@ -19,6 +19,18 @@ export interface Contract {
   name: string;
 }
 
+export interface Owner {
+  id: number;
+  code: string;
+  name: string;
+}
+
+export interface EquipmentType {
+  id: number;
+  code: string;
+  model: string;
+}
+
 export interface SourceForFilter {
   name: string;
   type: string;
@@ -71,6 +83,17 @@ export interface Fixture {
   useredit: number;
 }
 
+export interface FilterFixture {
+  geographId: string;
+  ownerId: string;
+  fixtureTypeId: string;
+  substationId: string;
+  modeId: string;
+
+  contractId: string;
+  nodeId: string;
+}
+
 export interface FixtureGroup {
   fixtureGroupId: number;
   fixtureGroupTypeId: number;
@@ -84,32 +107,9 @@ export interface FixtureGroup {
   e_coordinate: string;
 }
 
-export interface FilterFixture {
-  geographId: string;
-  ownerId: string;
-  fixtureTypeId: string;
-  substationId: string;
-  modeId: string;
-
-  contractId: string;
-  nodeId: string;
-}
-
 export interface FilterFixtureGroup {
   ownerId: any;
   fixtureGroupTypeId: any;
-}
-
-export interface OwnerFixture {
-  id: number;
-  code: string;
-  name: string;
-}
-
-export interface FixtureType {
-  id: number;
-  code: string;
-  model: string;
 }
 
 export interface Substation {
@@ -128,11 +128,6 @@ export interface Installer {
 export interface HeightType {
   id: number;
   code: string;
-  name: string;
-}
-
-export interface FixtureGroupOwner {
-  id: number;
   name: string;
 }
 
@@ -176,17 +171,6 @@ export interface FilterNode {
   gatewayId: string;
 }
 
-export interface OwnerNode {
-  id: number;
-  code: string;
-  name: string;
-}
-
-export interface NodeType {
-  id: number;
-  code: string;
-}
-
 // Gateway
 
 export interface Gateway {
@@ -219,17 +203,6 @@ export interface FilterGateway {
   gatewayTypeId: string;
   contractId: string;
   nodeId: string;
-}
-
-export interface OwnerGateway {
-  id: number;
-  code: string;
-  name: string;
-}
-
-export interface GatewayType {
-  id: number;
-  code: string;
 }
 
 // Command
@@ -278,12 +251,6 @@ export interface CommandSpeedSwitchDflt {
   statusId: number;
 }
 
-export interface SpeedDirection {
-  id: number;
-  code: string;
-  name: string;
-}
-
 export interface CommandType {
   id: number;
   code: string;
@@ -326,17 +293,6 @@ export interface FilterSensor {
   sensorTypeId: string;
   contractId: string;
   nodeId: string;
-}
-
-export interface OwnerSensor {
-  id: number;
-  code: string;
-  name: string;
-}
-
-export interface SensorType {
-  id: number;
-  code: string;
 }
 
 export interface NodeSensor {

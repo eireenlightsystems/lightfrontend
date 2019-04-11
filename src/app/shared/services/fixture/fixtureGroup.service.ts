@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {FixtureGroup, FixtureGroupOwner, FixtureGroupType, Message} from '../../interfaces';
+import {FixtureGroup, Owner, FixtureGroupType, Message} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +29,8 @@ export class FixtureGroupService {
     return this.http.get<FixtureGroupType[]>('/api2/fixtures-groups-types');
   }
 
-  getFixtureGroupOwnerAll(): Observable<FixtureGroupOwner[]> {
-    return this.http.get<FixtureGroupOwner[]>('/api2/fixtures-groups-owners');
+  getFixtureGroupOwnerAll(): Observable<Owner[]> {
+    return this.http.get<Owner[]>('/api2/fixtures-groups-owners');
   }
 
   // post

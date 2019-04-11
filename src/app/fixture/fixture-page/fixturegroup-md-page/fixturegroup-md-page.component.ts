@@ -1,14 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
+  Fixture,
+  Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   CommandStatus,
   CommandType,
-  Contract, Fixture, FixtureGroupOwner, FixtureGroupType,
-  FixtureType,
-  Geograph,
-  HeightType,
-  Installer,
-  OwnerFixture, SpeedDirection,
-  Substation
+  FixtureGroupType
 } from '../../../shared/interfaces';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
@@ -22,14 +18,14 @@ export class FixturegroupMdPageComponent implements OnInit {
 
   // variables from master component
   @Input() fixtureGroupTypes: FixtureGroupType[];
-  @Input() fixtureGroupOwners: FixtureGroupOwner[];
+  @Input() fixtureGroupOwners: Owner[];
 
   // node source
   @Input() geographs: Geograph[];
 
   // fixture source
-  @Input() ownerFixtures: OwnerFixture[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() ownerFixtures: Owner[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
@@ -38,7 +34,7 @@ export class FixturegroupMdPageComponent implements OnInit {
   // command source
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
-  @Input() speedDirectiones: SpeedDirection[];
+  @Input() speedDirectiones: CommandType[];
 
   // determine the functions that need to be performed in the parent component
 

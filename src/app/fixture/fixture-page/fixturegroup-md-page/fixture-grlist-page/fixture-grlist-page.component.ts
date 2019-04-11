@@ -7,7 +7,7 @@ import {
   FilterFixtureGroup,
   Fixture,
   FixtureGroup,
-  FixtureGroupOwner,
+  Owner,
   FixtureGroupType,
   SourceForFilter
 } from '../../../../shared/interfaces';
@@ -30,7 +30,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   // variables from master component
   @Input() fixtures: Fixture[];
   @Input() fixtureGroupTypes: FixtureGroupType[];
-  @Input() fixtureGroupOwners: FixtureGroupOwner[];
+  @Input() fixtureGroupOwners: Owner[];
 
   @Input() widthGrid: number;
   @Input() heightGrid: number;

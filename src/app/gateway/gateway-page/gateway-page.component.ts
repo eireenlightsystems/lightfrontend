@@ -1,14 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {
-  Contract,
-  GatewayType,
-  Geograph,
-  NodeType,
-  OwnerGateway,
-  OwnerNode
-} from '../../shared/interfaces';
+import {Contract, Geograph, EquipmentType, Owner} from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
 import {OwnerNodeService} from '../../shared/services/node/ownerNode';
 import {NodeTypeService} from '../../shared/services/node/nodeType.service';
@@ -46,13 +39,13 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
 
   // gateway source
   geographs: Geograph[];
-  ownerGateways: OwnerGateway[];
-  gatewayTypes: GatewayType[];
+  ownerGateways: Owner[];
+  gatewayTypes: EquipmentType[];
   contractGateways: Contract[];
 
   // node source
-  ownerNodes: OwnerNode[];
-  nodeTypes: NodeType[];
+  ownerNodes: Owner[];
+  nodeTypes: EquipmentType[];
   contractNodes: Contract[];
 
   // define columns for table Node

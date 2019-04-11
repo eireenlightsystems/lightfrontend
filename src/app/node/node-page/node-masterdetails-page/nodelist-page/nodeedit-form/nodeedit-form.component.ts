@@ -5,7 +5,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 import {Node} from '../../../../../shared/models/node';
-import {Contract, Geograph, NodeType} from '../../../../../shared/interfaces';
+import {Contract, Geograph, EquipmentType} from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 
 @Component({
@@ -18,7 +18,7 @@ export class NodeeditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() nodeTypes: NodeType[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
 
   // determine the functions that need to be performed in the parent component

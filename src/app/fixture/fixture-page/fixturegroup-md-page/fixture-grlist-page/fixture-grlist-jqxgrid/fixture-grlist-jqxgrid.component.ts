@@ -15,7 +15,7 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {FixtureGroup} from '../../../../../shared/models/fixtureGroup';
-import {FixtureGroupType, FixtureGroupOwner} from '../../../../../shared/interfaces';
+import {FixtureGroupType, Owner} from '../../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../../shared/services/fixture/fixtureGroup.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixtureGreditFormComponent} from '../fixture-gredit-form/fixture-gredit-form.component';
@@ -31,7 +31,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
   private isVisible = false;
   // variables from master component
   @Input() fixtureGroupTypes: FixtureGroupType[];
-  @Input() fixtureGroupOwners: FixtureGroupOwner[];
+  @Input() fixtureGroupOwners: Owner[];
   @Input() fixtureGroups: FixtureGroup[];
 
   @Input() widthGrid: number;
@@ -136,7 +136,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
           fixtureGroupName: event.fixtureGroupName,
           fixtureGroupTypeId: event.fixtureGroupTypeId,
           fixtureGroupTypeName: this.fixtureGroupTypes.find((fixtureGroupType: FixtureGroupType) => fixtureGroupType.id === +event.fixtureGroupTypeId).name,
-          ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: FixtureGroupOwner) => fixtureGroupOwner.id === +event.ownerId).name,
+          ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: Owner) => fixtureGroupOwner.id === +event.ownerId).name,
           ownerId: this.selectFixtureGroup.ownerId
         };
       this.myGrid.addrow(event.fixtureGroupId, row);
@@ -150,7 +150,7 @@ export class FixtureGrlistJqxgridComponent implements OnInit, OnDestroy, AfterVi
           fixtureGroupName: this.selectFixtureGroup.fixtureGroupName,
           fixtureGroupTypeId: this.selectFixtureGroup.fixtureGroupTypeId,
           fixtureGroupTypeName: this.fixtureGroupTypes.find((fixtureGroupType: FixtureGroupType) => fixtureGroupType.id === +this.selectFixtureGroup.fixtureGroupTypeId).name,
-          ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: FixtureGroupOwner) => fixtureGroupOwner.id === +this.selectFixtureGroup.ownerId).name,
+          ownerCode: this.fixtureGroupOwners.find((fixtureGroupOwner: Owner) => fixtureGroupOwner.id === +this.selectFixtureGroup.ownerId).name,
           ownerId: this.selectFixtureGroup.ownerId
         };
       this.myGrid.updaterow(this.selectFixtureGroup.fixtureGroupId, row);

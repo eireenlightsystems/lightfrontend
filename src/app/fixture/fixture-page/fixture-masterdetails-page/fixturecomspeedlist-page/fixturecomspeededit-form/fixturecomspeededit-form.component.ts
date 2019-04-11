@@ -15,7 +15,7 @@ import {jqxSliderComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxslid
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 
 import {DateTimeFormat} from '../../../../../shared/classes/DateTimeFormat';
-import {SpeedDirection} from '../../../../../shared/interfaces';
+import {CommandType} from '../../../../../shared/interfaces';
 import {CommandSpeedSwitch} from 'src/app/shared/models/command/commandSpeedSwitch';
 import {CommandSpeedSwitchService} from '../../../../../shared/services/command/commandSpeedSwitch.service';
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
@@ -28,7 +28,7 @@ import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_j
 export class FixturecomspeededitFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() speedDirectiones: SpeedDirection[];
+  @Input() speedDirectiones: CommandType[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onSaveEditwinBtn = new EventEmitter();

@@ -4,7 +4,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxinput';
 
-import {FixtureGroupOwner, FixtureGroupType} from '../../../../../shared/interfaces';
+import {Owner, FixtureGroupType} from '../../../../../shared/interfaces';
 import {FixtureGroup} from '../../../../../shared/models/fixtureGroup';
 import {FixtureGroupService} from '../../../../../shared/services/fixture/fixtureGroup.service';
 
@@ -17,7 +17,7 @@ export class FixtureGreditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() fixtureGroupTypes: FixtureGroupType[];
-  @Input() fixtureGroupOwners: FixtureGroupOwner[];
+  @Input() fixtureGroupOwners: Owner[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onInsEditwinBtn = new EventEmitter();

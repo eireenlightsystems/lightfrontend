@@ -2,13 +2,9 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angula
 
 import {FixturelistPageComponent} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {
-  Contract,
+  Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation,
   FilterFixture, FilterGateway,
-  FilterNode, FilterSensor, FixtureType, GatewayType,
-  Geograph, HeightType, Installer,
-  NodeType,
-  OwnerFixture, OwnerGateway,
-  OwnerNode, OwnerSensor, SensorType, Substation
+  FilterNode, FilterSensor
 } from '../../../shared/interfaces';
 import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
 import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
@@ -35,23 +31,23 @@ export class NodeMasterdetailsPageComponent implements OnInit {
 
   // node source
   @Input() geographs: Geograph[];
-  @Input() ownerNodes: OwnerNode[];
-  @Input() nodeTypes: NodeType[];
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
   // fixture source
-  @Input() ownerFixtures: OwnerFixture[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() ownerFixtures: Owner[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   // gateway source
-  @Input() ownerGateways: OwnerGateway[];
-  @Input() gatewayTypes: GatewayType[];
+  @Input() ownerGateways: Owner[];
+  @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
   // sensor source
-  @Input() ownerSensors: OwnerSensor[];
-  @Input() sensorTypes: SensorType[];
+  @Input() ownerSensors: Owner[];
+  @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component

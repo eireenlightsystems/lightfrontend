@@ -5,7 +5,7 @@ import {NodeService} from '../../../../shared/services/node/node.service';
 import {
   Node,
   Geograph,
-  Contract, FilterNode, NodeType, OwnerNode, SourceForFilter
+  Contract, FilterNode, EquipmentType, Owner, SourceForFilter
 } from '../../../../shared/interfaces';
 import {NodelistJqxgridComponent} from './nodelist-jqxgrid/nodelist-jqxgrid.component';
 import {isUndefined} from 'util';
@@ -24,8 +24,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() ownerNodes: OwnerNode[];
-  @Input() nodeTypes: NodeType[];
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
 
   @Input() heightGrid: number;

@@ -5,7 +5,7 @@ import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwind
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 import {Sensor} from '../../../../../shared/models/sensor';
-import {Contract, SensorType} from '../../../../../shared/interfaces';
+import {Contract, EquipmentType} from '../../../../../shared/interfaces';
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {isUndefined} from 'util';
 
@@ -17,7 +17,7 @@ import {isUndefined} from 'util';
 export class SensoreditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() sensorTypes: SensorType[];
+  @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component

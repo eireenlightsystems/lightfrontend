@@ -6,7 +6,7 @@ import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlis
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
 import {Gateway} from '../../../../../shared/models/gateway';
-import {Geograph, Contract, OwnerGateway, GatewayType} from '../../../../../shared/interfaces';
+import {Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
 
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
@@ -24,8 +24,8 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   // variables from master component
   @Input() gateways: Gateway[];
   @Input() geographs: Geograph[];
-  @Input() ownerGateways: OwnerGateway[];
-  @Input() gatewayTypes: GatewayType[];
+  @Input() ownerGateways: Owner[];
+  @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
 
   @Input() heightGrid: number;

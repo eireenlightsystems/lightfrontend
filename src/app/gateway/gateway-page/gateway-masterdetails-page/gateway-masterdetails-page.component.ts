@@ -1,14 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
-import {
-  Contract,
-  FilterGateway,
-  FilterNode,
-  Geograph,
-  NodeType,
-  OwnerGateway,
-  OwnerNode
-} from '../../../shared/interfaces';
+import {Contract, Geograph, Owner, EquipmentType, FilterGateway, FilterNode} from '../../../shared/interfaces';
 import {GatewaylistPageComponent} from './gatewaylist-page/gatewaylist-page.component';
 import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
 
@@ -22,13 +14,13 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   // variables from master component
   // gateway source
   @Input() geographs: Geograph[];
-  @Input() ownerGateways: OwnerGateway[];
-  @Input() gatewayTypes: NodeType[];
+  @Input() ownerGateways: Owner[];
+  @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
 
   // node source
-  @Input() ownerNodes: OwnerNode[];
-  @Input() nodeTypes: NodeType[];
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];

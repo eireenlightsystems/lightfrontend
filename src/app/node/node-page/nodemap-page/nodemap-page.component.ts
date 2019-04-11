@@ -6,7 +6,7 @@ import {MaterialService} from '../../../shared/classes/material.service';
 import {Node} from '../../../shared/models/node';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {Contract, Geograph, NodeType, OwnerNode} from '../../../shared/interfaces';
+import {Contract, Geograph, EquipmentType, Owner} from '../../../shared/interfaces';
 import {NodeeditFormComponent} from '../node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
 import {Fixture} from '../../../shared/models/fixture';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
@@ -25,8 +25,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() ownerNodes: OwnerNode[];
-  @Input() nodeTypes: NodeType[];
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
 
   // determine the functions that need to be performed in the parent component

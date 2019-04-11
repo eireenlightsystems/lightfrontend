@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {Contract, Geograph, OwnerSensor, SensorType} from '../../shared/interfaces';
+import {Contract, Geograph, Owner, EquipmentType} from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
 import {ContractSensorService} from '../../shared/services/sensor/contractSensor.service';
 import {OwnerSensorService} from '../../shared/services/sensor/ownerSensor';
@@ -27,8 +27,8 @@ export class SensorPageComponent implements OnInit, OnDestroy {
 
   // sensor source
   geographs: Geograph[];
-  ownerSensors: OwnerSensor[];
-  sensorTypes: SensorType[];
+  ownerSensors: Owner[];
+  sensorTypes: EquipmentType[];
   contractSensors: Contract[];
 
   constructor(

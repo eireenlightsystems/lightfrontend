@@ -7,7 +7,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 
 import {
   Contract,
-  FixtureType,
+  EquipmentType,
   HeightType,
   Installer,
   Substation
@@ -24,7 +24,7 @@ export class FixtureeditFormComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() contractFixtures: Contract[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];

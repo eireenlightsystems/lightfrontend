@@ -15,9 +15,9 @@ import {Subscription} from 'rxjs';
 import {
   FilterGateway, FilterNode, Gateway, Node,
   Contract,
-  GatewayType,
+  EquipmentType,
   Geograph,
-  OwnerGateway,
+  Owner,
 } from '../../../shared/interfaces';
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
 import {MaterialService} from '../../../shared/classes/material.service';
@@ -40,8 +40,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() ownerGateways: OwnerGateway[];
-  @Input() gatewayTypes: GatewayType[];
+  @Input() ownerGateways: Owner[];
+  @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
 
   @Input() nodeColumns: any[];

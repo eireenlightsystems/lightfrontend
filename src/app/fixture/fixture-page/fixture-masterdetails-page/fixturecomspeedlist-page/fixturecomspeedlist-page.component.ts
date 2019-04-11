@@ -2,9 +2,12 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {Subscription} from 'rxjs/index';
 
 import {
-  CommandType,
   CommandStatus,
-  SpeedDirection, CommandSpeedSwitch, FilterCommandSpeedSwitch, SourceForFilter, CommandSpeedSwitchDflt
+  CommandType,
+  CommandSpeedSwitch,
+  FilterCommandSpeedSwitch,
+  SourceForFilter,
+  CommandSpeedSwitchDflt
 } from '../../../../shared/interfaces';
 import {FixturecomspeedlistJqxgridComponent} from './fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {CommandSpeedSwitchService} from '../../../../shared/services/command/commandSpeedSwitch.service';
@@ -24,7 +27,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   // variables from master component
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
-  @Input() speedDirectiones: SpeedDirection[];
+  @Input() speedDirectiones: CommandType[];
 
   @Input() heightGrid: number;
   @Input() selectFixtureId: number;
@@ -183,7 +186,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       });
       // Link speedDirectionsName
       commandSpeedName.forEach(currentCommand => {
-        currentCommand.speedDirectionName = this.speedDirectiones.find((currentSpeedDirection: SpeedDirection) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
+        currentCommand.speedDirectionName = this.speedDirectiones.find((currentSpeedDirection: CommandType) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
       });
       this.commandSpeedSwitches = this.commandSpeedSwitches.concat(commandSpeedName);
       this.noMoreCommand_switches = commandSpeed.length < STEP;

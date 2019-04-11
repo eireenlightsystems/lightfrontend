@@ -6,9 +6,9 @@ import {FixtureService} from '../../../../shared/services/fixture/fixture.servic
 import {
   FilterFixture,
   Fixture,
-  FixtureType,
+  EquipmentType,
   Geograph,
-  OwnerFixture,
+  Owner,
   Substation,
   Contract,
   Installer,
@@ -34,8 +34,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
 
   // variables from master component
   @Input() geographs: Geograph[];
-  @Input() ownerFixtures: OwnerFixture[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() ownerFixtures: Owner[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];

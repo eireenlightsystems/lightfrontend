@@ -9,8 +9,8 @@ import {Node} from '../../../../../shared/models/node';
 import {
   Geograph,
   Contract,
-  OwnerNode,
-  NodeType
+  Owner,
+  EquipmentType
 } from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
@@ -29,8 +29,8 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   // variables from master component
   @Input() nodes: Node[];
   @Input() geographs: Geograph[];
-  @Input() ownerNodes: OwnerNode[];
-  @Input() nodeTypes: NodeType[];
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];

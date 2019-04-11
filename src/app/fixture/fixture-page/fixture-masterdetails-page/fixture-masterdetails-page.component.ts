@@ -1,14 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {
-  CommandStatus, FilterCommandSwitch, CommandType,
-  Contract, FilterFixture,
-  FixtureType,
+  Fixture,
+  Contract,
+  EquipmentType,
   Geograph,
   HeightType,
   Installer,
-  OwnerFixture,
-  Substation, SpeedDirection, FilterCommandSpeedSwitch, CommandSpeedSwitchDflt, CommandSwitchDflt, Fixture
+  Owner,
+  Substation,
+  CommandType, FilterCommandSpeedSwitch, CommandSpeedSwitchDflt, CommandSwitchDflt, CommandStatus, FilterCommandSwitch
 } from '../../../shared/interfaces';
 import {FixturecomlistPageComponent} from './fixturecomlist-page/fixturecomlist-page.component';
 import {FixturelistPageComponent} from './fixturelist-page/fixturelist-page.component';
@@ -16,7 +17,7 @@ import {DateTimeFormat} from '../../../shared/classes/DateTimeFormat';
 import {FixturecomspeedlistPageComponent} from './fixturecomspeedlist-page/fixturecomspeedlist-page.component';
 import {CommandSwitchService} from '../../../shared/services/command/commandSwitch.service';
 import {CommandSpeedSwitchService} from '../../../shared/services/command/commandSpeedSwitch.service';
-import {isUndefined} from 'util';
+
 
 @Component({
   selector: 'app-fixture-masterdetails-page',
@@ -45,8 +46,8 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() geographs: Geograph[];
 
   // fixture source
-  @Input() ownerFixtures: OwnerFixture[];
-  @Input() fixtureTypes: FixtureType[];
+  @Input() ownerFixtures: Owner[];
+  @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
@@ -55,7 +56,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   // command source
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
-  @Input() speedDirectiones: SpeedDirection[];
+  @Input() speedDirectiones: CommandType[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetFixtures = new EventEmitter<Fixture[]>();

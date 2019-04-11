@@ -9,7 +9,7 @@ import {CommandSpeedSwitch} from '../../../../../shared/models/command/commandSp
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixturecomspeededitFormComponent} from '../fixturecomspeededit-form/fixturecomspeededit-form.component';
 import {CommandSpeedSwitchService} from '../../../../../shared/services/command/commandSpeedSwitch.service';
-import {SpeedDirection} from '../../../../../shared/interfaces';
+import {CommandType} from '../../../../../shared/interfaces';
 
 @Component({
   selector: 'app-fixturecomspeedlist-jqxgrid',
@@ -20,7 +20,7 @@ export class FixturecomspeedlistJqxgridComponent implements OnInit, OnDestroy, A
 
   // variables from master component
   @Input() commandSpeedSwitches: CommandSpeedSwitch[];
-  @Input() speedDirectiones: SpeedDirection[];
+  @Input() speedDirectiones: CommandType[];
 
   @Input() heightGrid: number;
   @Input() selectionmode: string;

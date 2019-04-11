@@ -1,14 +1,7 @@
 import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 
-import {
-  Contract,
-  FixtureType, GatewayType,
-  Geograph, HeightType, Installer,
-  NodeType,
-  OwnerFixture,
-  OwnerNode, OwnerGateway, OwnerSensor, SensorType, Substation
-} from '../../shared/interfaces';
+import {Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation} from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
 import {OwnerNodeService} from '../../shared/services/node/ownerNode';
 import {NodeTypeService} from '../../shared/services/node/nodeType.service';
@@ -69,26 +62,26 @@ export class NodePageComponent implements OnInit, OnDestroy {
 
   // node source
   geographs: Geograph[];
-  ownerNodes: OwnerNode[];
-  nodeTypes: NodeType[];
+  ownerNodes: Owner[];
+  nodeTypes: EquipmentType[];
   contractNodes: Contract[];
 
   // fixture source
-  owner_fixtures: OwnerFixture[];
-  fixtureTypes: FixtureType[];
+  owner_fixtures: Owner[];
+  fixtureTypes: EquipmentType[];
   substations: Substation[];
   contract_fixtures: Contract[];
   installers: Installer[];
   heightTypes: HeightType[];
 
   // gateway source
-  ownerGateways: OwnerGateway[];
-  gatewayTypes: GatewayType[];
+  ownerGateways: Owner[];
+  gatewayTypes: EquipmentType[];
   contractGateways: Contract[];
 
   // sensor source
-  ownerSensors: OwnerSensor[];
-  sensorTypes: SensorType[];
+  ownerSensors: Owner[];
+  sensorTypes: EquipmentType[];
   contractSensors: Contract[];
 
   constructor(
