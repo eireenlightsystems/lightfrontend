@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {CommandSpeedSwitch} from '../../interfaces';
-import {CommandSpeedSwitchDflt} from '../../models/command/commandSpeedSwitchDflt';
+import {CommandSpeedSwitchDflt, CommandSpeedSwitch} from '../../interfaces';
 
 
 @Injectable({

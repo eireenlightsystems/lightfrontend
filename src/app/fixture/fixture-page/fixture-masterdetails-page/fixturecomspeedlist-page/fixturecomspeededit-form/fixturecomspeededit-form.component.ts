@@ -10,15 +10,15 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
+
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
-import {jqxSliderComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxslider';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
+import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
 import {DateTimeFormat} from '../../../../../shared/classes/DateTimeFormat';
-import {CommandType} from '../../../../../shared/interfaces';
-import {CommandSpeedSwitch} from 'src/app/shared/models/command/commandSpeedSwitch';
+import {CommandSpeedSwitch, CommandType} from '../../../../../shared/interfaces';
 import {CommandSpeedSwitchService} from '../../../../../shared/services/command/commandSpeedSwitch.service';
-import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
+
 
 @Component({
   selector: 'app-fixturecomspeededit-form',

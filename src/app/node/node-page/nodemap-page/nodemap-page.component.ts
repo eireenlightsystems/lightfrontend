@@ -3,12 +3,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../shared/classes/material.service';
 
-import {Node} from '../../../shared/models/node';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {Contract, Geograph, EquipmentType, Owner} from '../../../shared/interfaces';
+import {Node, Fixture, Contract, Geograph, Owner, EquipmentType} from '../../../shared/interfaces';
 import {NodeeditFormComponent} from '../node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
-import {Fixture} from '../../../shared/models/fixture';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
 
 
@@ -39,7 +37,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // other variables
   nodes: Node[];
-  // node: Node = new Node();
   saveNode: Node = new Node();
   saveFixture: Fixture = new Fixture();
   delNodeId: number;

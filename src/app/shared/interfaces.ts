@@ -47,7 +47,7 @@ export interface SourceForFilter {
 
 // Fixture
 
-export interface Fixture {
+export class Fixture {
   fixtureId: number;
   contractId: number;
   fixtureTypeId: number;
@@ -94,7 +94,7 @@ export interface FilterFixture {
   nodeId: string;
 }
 
-export interface FixtureGroup {
+export class FixtureGroup {
   fixtureGroupId: number;
   fixtureGroupTypeId: number;
   ownerId: number;
@@ -138,7 +138,7 @@ export interface FixtureGroupType {
 
 // Node
 
-export interface Node {
+export class Node {
   nodeId: number;
   contractId: number;
   nodeTypeId: number;
@@ -171,9 +171,14 @@ export interface FilterNode {
   gatewayId: string;
 }
 
+export class NodeGateway {
+  nodeId: number;
+  gatewayId: number;
+}
+
 // Gateway
 
-export interface Gateway {
+export class Gateway {
   gatewayId: number;
   contractId: number;
   gatewayTypeId: number;
@@ -207,7 +212,7 @@ export interface FilterGateway {
 
 // Command
 
-export interface CommandSwitch {
+export class CommandSwitch {
   commandId: number;
   fixtureId: number;
   startDateTime: string;
@@ -224,11 +229,11 @@ export interface FilterCommandSwitch {
   endDateTime: string;
 }
 
-export interface CommandSwitchDflt {
+export class CommandSwitchDflt {
   statusId: number;
 }
 
-export interface CommandSpeedSwitch {
+export class CommandSpeedSwitch {
   commandId: number;
   fixtureId: number;
   statusId: number;
@@ -247,7 +252,7 @@ export interface FilterCommandSpeedSwitch {
   endDateTime: string;
 }
 
-export interface CommandSpeedSwitchDflt {
+export class CommandSpeedSwitchDflt {
   statusId: number;
 }
 
@@ -265,7 +270,7 @@ export interface CommandStatus {
 
 // Sensor
 
-export interface Sensor {
+export class Sensor {
   sensorId: number;
   contractId: number;
   sensorTypeId: number;

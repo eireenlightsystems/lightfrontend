@@ -5,8 +5,7 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Sensor} from '../../../../../shared/models/sensor';
-import {Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
+import {Sensor, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
 
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';

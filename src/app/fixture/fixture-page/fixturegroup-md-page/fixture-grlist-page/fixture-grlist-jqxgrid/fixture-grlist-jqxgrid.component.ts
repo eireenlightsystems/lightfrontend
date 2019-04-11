@@ -14,8 +14,7 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {FixtureGroup} from '../../../../../shared/models/fixtureGroup';
-import {FixtureGroupType, Owner} from '../../../../../shared/interfaces';
+import {FixtureGroupType, Owner, FixtureGroup} from '../../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../../shared/services/fixture/fixtureGroup.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixtureGreditFormComponent} from '../fixture-gredit-form/fixture-gredit-form.component';

@@ -1,19 +1,13 @@
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription, timer} from 'rxjs';
-import {MaterialService} from '../../../shared/classes/material.service';
-import {isUndefined} from 'util';
+import {Subscription, timer} from 'rxjs';
 
 import {
-  Contract, FilterFixture, FilterFixtureGroup, FixtureGroup,
-  EquipmentType,
-  HeightType,
-  Installer,
-  Substation
+  Fixture, Contract, EquipmentType, HeightType, Installer, Substation,
+  FilterFixtureGroup, FixtureGroup
 } from '../../../shared/interfaces';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {Fixture} from 'src/app/shared/models/fixture';
 import {FixtureeditFormComponent} from '../fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component';
 import {FixturecomeditFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup.service';
@@ -125,8 +119,8 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   getFixturesInGroup(fixtureGroupId: number) {
     this.oSub = this.fixtureService.getFixtureInGroup(fixtureGroupId.toString()).subscribe(fixtures => {
       this.fixtures = fixtures;
-        this.addItemsToMap();
-        this.selectFixtureGroupId = fixtureGroupId;
+      this.addItemsToMap();
+      this.selectFixtureGroupId = fixtureGroupId;
     });
   }
 

@@ -4,8 +4,7 @@ import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
-import {Node} from '../../../../../shared/models/node';
-import {Contract, Geograph, EquipmentType} from '../../../../../shared/interfaces';
+import {Node, Contract, Geograph, EquipmentType} from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 
 @Component({

@@ -4,8 +4,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
-import {Gateway} from '../../../../../shared/models/gateway';
-import {Contract, EquipmentType, Geograph} from '../../../../../shared/interfaces';
+import {Gateway, Contract, EquipmentType, Geograph} from '../../../../../shared/interfaces';
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {isUndefined} from 'util';
 

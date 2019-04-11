@@ -5,13 +5,7 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Node} from '../../../../../shared/models/node';
-import {
-  Geograph,
-  Contract,
-  Owner,
-  EquipmentType
-} from '../../../../../shared/interfaces';
+import {Node, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {NodeeditFormComponent} from '../nodeedit-form/nodeedit-form.component';

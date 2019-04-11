@@ -5,7 +5,7 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
+import {CommandSwitch} from '../../../../../shared/interfaces';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
 import {FixturecomeditFormComponent} from '../fixturecomedit-form/fixturecomedit-form.component';

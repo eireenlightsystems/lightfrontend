@@ -12,13 +12,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
-import {
-  FilterGateway, FilterNode, Gateway, Node,
-  Contract,
-  EquipmentType,
-  Geograph,
-  Owner,
-} from '../../../shared/interfaces';
+import {Gateway, Node, Contract, EquipmentType, Geograph, Owner,} from '../../../shared/interfaces';
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
 import {MaterialService} from '../../../shared/classes/material.service';
 import {NodeService} from '../../../shared/services/node/node.service';

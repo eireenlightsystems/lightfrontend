@@ -4,8 +4,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdropdownlist';
 
-import {Sensor} from '../../../../../shared/models/sensor';
-import {Contract, EquipmentType} from '../../../../../shared/interfaces';
+import {Sensor, Contract, EquipmentType} from '../../../../../shared/interfaces';
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {isUndefined} from 'util';
 

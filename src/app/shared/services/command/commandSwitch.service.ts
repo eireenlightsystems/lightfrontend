@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {CommandSwitch} from '../../interfaces';
-import {CommandSwitchDflt} from '../../models/command/commandSwitchDflt';
+import {CommandSwitchDflt, CommandSwitch} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'

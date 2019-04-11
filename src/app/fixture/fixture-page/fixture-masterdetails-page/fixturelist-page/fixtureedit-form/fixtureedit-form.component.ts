@@ -5,14 +5,7 @@ import {jqxDropDownListComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_j
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
 
-import {
-  Contract,
-  EquipmentType,
-  HeightType,
-  Installer,
-  Substation
-} from '../../../../../shared/interfaces';
-import {Fixture} from '../../../../../shared/models/fixture';
+import {Fixture, Contract, EquipmentType, HeightType, Installer, Substation} from '../../../../../shared/interfaces';
 import {FixtureService} from '../../../../../shared/services/fixture/fixture.service';
 
 @Component({

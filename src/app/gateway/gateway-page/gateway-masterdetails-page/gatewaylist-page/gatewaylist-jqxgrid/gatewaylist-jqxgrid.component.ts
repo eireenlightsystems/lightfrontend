@@ -5,14 +5,13 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Gateway} from '../../../../../shared/models/gateway';
-import {Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
+import {Gateway, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
 
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {GatewayeditFormComponent} from '../gatewayedit-form/gatewayedit-form.component';
 import {FixturelinkFormComponent} from '../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component';
-import {NodeGateway} from '../../../../../shared/models/nodeGateway';
+
 
 @Component({
   selector: 'app-gatewaylist-jqxgrid',

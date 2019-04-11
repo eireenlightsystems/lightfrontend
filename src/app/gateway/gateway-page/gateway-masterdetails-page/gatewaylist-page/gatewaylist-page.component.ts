@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, Owner, EquipmentType, Gateway, FilterGateway, SourceForFilter} from '../../../../shared/interfaces';
+import {Gateway, Geograph, Contract, Owner, EquipmentType, FilterGateway, SourceForFilter} from '../../../../shared/interfaces';
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
 import {GatewaylistJqxgridComponent} from './gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
 

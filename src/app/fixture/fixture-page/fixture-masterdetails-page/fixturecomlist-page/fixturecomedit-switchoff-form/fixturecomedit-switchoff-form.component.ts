@@ -1,20 +1,20 @@
 import {
   Component,
   EventEmitter,
-  Input,
   OnInit,
   OnDestroy,
   Output,
   ViewChild,
-  AfterViewInit, ElementRef
+  AfterViewInit
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
+
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 
 import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
-import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
+import {CommandSwitch} from '../../../../../shared/interfaces';
 import {DateTimeFormat} from '../../../../../shared/classes/DateTimeFormat';
 
 @Component({
@@ -61,7 +61,7 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   saveBtn() {
     // command switch off
     for (var i = 0; i < this.fixtureIds.length; i++) {
-      let commandSwitchOff: CommandSwitch = new CommandSwitch;
+      let commandSwitchOff: CommandSwitch = new CommandSwitch();
       commandSwitchOff.fixtureId = this.fixtureIds[i];
       commandSwitchOff.startDateTime = new DateTimeFormat().fromDataPickerString(this.dateend.ngValue);
       commandSwitchOff.workLevel = 0;

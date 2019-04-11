@@ -5,16 +5,7 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Fixture} from '../../../../../shared/models/fixture';
-import {
-  EquipmentType,
-  Geograph,
-  Owner,
-  Substation,
-  Contract,
-  Installer,
-  HeightType
-} from '../../../../../shared/interfaces';
+import {Fixture, Geograph, Owner, EquipmentType, Substation, Contract, Installer, HeightType} from '../../../../../shared/interfaces';
 import {FixtureService} from '../../../../../shared/services/fixture/fixture.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixtureeditFormComponent} from '../fixtureedit-form/fixtureedit-form.component';

@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  Input,
   OnInit,
   OnDestroy,
   Output,
@@ -10,12 +9,12 @@ import {
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
+
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
-import {jqxSliderComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxslider';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 
 import {CommandSwitchService} from '../../../../../shared/services/command/commandSwitch.service';
-import {CommandSwitch} from '../../../../../shared/models/command/commandSwitch';
+import {CommandSwitch} from '../../../../../shared/interfaces';
 import {DateTimeFormat} from '../../../../../shared/classes/DateTimeFormat';
 
 
@@ -44,10 +43,9 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
 
   // other variables
   fixtureIds: number[];
-  // commandSwitchs: CommandSwitch[] = [];
   oSub: Subscription;
-  typeWindow: string = '';
-  flg_dateend: boolean = false;
+  typeWindow = '';
+  flg_dateend = false;
 
   constructor(private fixturecommandService: CommandSwitchService) {
   }
@@ -61,8 +59,6 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
     this.dateend.disabled(!this.flg_dateend);
     this.datebeg.value(new Date());
     this.dateend.value(new Date());
-    // this.datebeg.culture('ru-RU')
-    // this.dateend.culture('ru-RU')
   }
 
   ngOnDestroy() {
@@ -96,8 +92,8 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
     const commandSwitchs = [];
 
     // command switch on
-    for (var i = 0; i < this.fixtureIds.length; i++) {
-      const commandSwitch: CommandSwitch = new CommandSwitch;
+    for (let i = 0; i < this.fixtureIds.length; i++) {
+      let commandSwitch: CommandSwitch = new CommandSwitch();
       commandSwitch.fixtureId = this.fixtureIds[i];
       commandSwitch.startDateTime = new DateTimeFormat().fromDataPickerString(this.datebeg.ngValue);
       commandSwitch.workLevel = +this.workLevel.nativeElement.value;
@@ -107,8 +103,8 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
 
     // command switch off
     if (this.flg_dateend) {
-      for (var i = 0; i < this.fixtureIds.length; i++) {
-        const commandSwitchOff: CommandSwitch = new CommandSwitch;
+      for (let i = 0; i < this.fixtureIds.length; i++) {
+        let commandSwitchOff: CommandSwitch = new CommandSwitch();
         commandSwitchOff.fixtureId = this.fixtureIds[i];
         commandSwitchOff.startDateTime = new DateTimeFormat().fromDataPickerString(this.dateend.ngValue);
         commandSwitchOff.workLevel = 0;

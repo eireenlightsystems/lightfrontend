@@ -4,7 +4,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
-import {Gateway} from '../../../../../shared/models/gateway';
+import {Gateway} from '../../../../../shared/interfaces';
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 
 

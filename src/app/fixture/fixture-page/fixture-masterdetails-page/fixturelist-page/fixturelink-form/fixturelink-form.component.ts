@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
+
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 
-import {Fixture} from '../../../../../shared/models/fixture';
 import {FixtureService} from '../../../../../shared/services/fixture/fixture.service';
+import {Fixture} from '../../../../../shared/interfaces';
 
 
 const STEP = 1000000000000;

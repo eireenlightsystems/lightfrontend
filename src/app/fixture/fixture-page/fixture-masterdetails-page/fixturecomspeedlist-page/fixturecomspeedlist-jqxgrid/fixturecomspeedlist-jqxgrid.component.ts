@@ -1,15 +1,15 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MaterialService} from '../../../../../shared/classes/material.service';
+
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {CommandSpeedSwitch} from '../../../../../shared/models/command/commandSpeedSwitch';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixturecomspeededitFormComponent} from '../fixturecomspeededit-form/fixturecomspeededit-form.component';
 import {CommandSpeedSwitchService} from '../../../../../shared/services/command/commandSpeedSwitch.service';
-import {CommandType} from '../../../../../shared/interfaces';
+import {CommandSpeedSwitch, CommandType} from '../../../../../shared/interfaces';
 
 @Component({
   selector: 'app-fixturecomspeedlist-jqxgrid',

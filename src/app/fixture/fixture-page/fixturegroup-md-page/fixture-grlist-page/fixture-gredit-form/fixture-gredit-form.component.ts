@@ -4,8 +4,7 @@ import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxinput';
 
-import {Owner, FixtureGroupType} from '../../../../../shared/interfaces';
-import {FixtureGroup} from '../../../../../shared/models/fixtureGroup';
+import {Owner, FixtureGroupType, FixtureGroup} from '../../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../../shared/services/fixture/fixtureGroup.service';
 
 @Component({
@@ -40,7 +39,7 @@ export class FixtureGreditFormComponent implements OnInit, OnDestroy {
   // other variables
   saveFixtureGroup: FixtureGroup = new FixtureGroup();
   oSub: Subscription;
-  typeEditWindow: string = '';
+  typeEditWindow = '';
 
 
   constructor(private fixtureGroupService: FixtureGroupService) {
