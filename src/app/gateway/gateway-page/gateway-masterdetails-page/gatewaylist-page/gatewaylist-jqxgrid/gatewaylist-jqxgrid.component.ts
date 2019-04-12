@@ -360,7 +360,7 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
       }
     }
 
-    if (this.actionEventWindow === 'pin_drop') {
+    if (this.actionEventWindow === 'pinDrop') {
       const gatewayIds = [];
       for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
         gatewayIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].gatewayId;
@@ -390,10 +390,10 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  pin_drop() {
+  pinDrop() {
     if (this.selectGateway.gatewayId) {
       this.eventWindow.okButtonDisabled(false);
-      this.actionEventWindow = 'pin_drop';
+      this.actionEventWindow = 'pinDrop';
       this.warningEventWindow = `Отвязать шлюз от узла?`;
     } else {
       this.eventWindow.okButtonDisabled(true);

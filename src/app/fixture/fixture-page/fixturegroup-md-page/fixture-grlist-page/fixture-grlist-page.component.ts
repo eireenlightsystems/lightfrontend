@@ -9,7 +9,7 @@ import {
   FixtureGroup,
   Owner,
   FixtureGroupType,
-  SourceForFilter
+  SourceForFilter, SettingButtonPanel
 } from '../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../shared/services/fixture/fixtureGroup.service';
 import {FixtureGrlistJqxgridComponent} from './fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
@@ -37,16 +37,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
 
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
-  @Input() isPlace: boolean;
-  @Input() isPin_drop: boolean;
-  @Input() isSwitchOn: boolean;
-  @Input() isSwitchOff: boolean;
+  @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -74,17 +65,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
   loading = false;
   reloading = false;
   noMoreFixtures = false;
-  //
-  isAddBtnDisabled = false;
-  isEditBtnDisabled = false;
-  isDeleteBtnDisabled = false;
-  isRefreshBtnDisabled = false;
-  isFilter_noneBtnDisabled = false;
-  isFilter_listBtnDisabled = false;
-  isPlaceBtnDisabled = false;
-  isPin_dropBtnDisabled = false;
-  isSwitchOnBtnDisabled = false;
-  isSwitchOffBtnDisabled = false;
 
 
   constructor(private fixtureGroupService: FixtureGroupService) {
@@ -195,7 +175,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
           break;
       }
     }
-      this.getAll();
+    this.getAll();
   }
 
   initSourceFilter() {
@@ -213,6 +193,14 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     }
   }
 
+  saveSwitchOnEditwinBtn() {
+    this.onRefreshChild_ChildGrid.emit();
+  }
+
+  saveEditSwitchOffwinBtn() {
+    this.onRefreshChild_ChildGrid.emit();
+  }
+
   ins() {
     this.fixtureGrlistJqxgridComponent.ins();
   }
@@ -225,12 +213,32 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     this.fixtureGrlistJqxgridComponent.del();
   }
 
+  refresh() {
+    this.refreshGrid();
+  }
+
+  filterNone() {
+    this.fixtureGrlistJqxgridComponent.islistBoxVisible = !this.fixtureGrlistJqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
   place() {
     this.fixtureGrlistJqxgridComponent.place();
   }
 
-  pin_drop() {
+  pinDrop() {
     this.fixtureGrlistJqxgridComponent.pin_drop();
+  }
+
+  groupIn() {
+
+  }
+
+  groupOut() {
+
   }
 
   switchOn() {
@@ -249,17 +257,5 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     }
     this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
     this.editSwitchOffWindow.openWindow(fixtureIds, 'ins');
-  }
-
-  saveSwitchOnEditwinBtn() {
-    // this.refreshGrid();
-    // this.refreshChildGrid(this.fixtureGroupId);
-    this.onRefreshChild_ChildGrid.emit();
-  }
-
-  saveEditSwitchOffwinBtn() {
-    // this.refreshGrid();
-    // this.refreshChildGrid(this.fixtureGroupId);
-    this.onRefreshChild_ChildGrid.emit();
   }
 }

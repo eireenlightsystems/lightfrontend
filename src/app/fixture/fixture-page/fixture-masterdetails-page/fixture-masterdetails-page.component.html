@@ -1,92 +1,71 @@
-<!--<div [ngStyle]="{'width': widthGrid}">-->
-  <app-fixturelist-page #fixturelistPageComponent
+<app-fixturelist-page #fixturelistPageComponent
 
-                        [geographs]="geographs"
+                      [geographs]="geographs"
 
-                        [ownerFixtures]="ownerFixtures"
-                        [fixtureTypes]="fixtureTypes"
-                        [substations]="substations"
-                        [contractFixtures]="contractFixtures"
-                        [installers]="installers"
-                        [heightTypes]="heightTypes"
+                      [ownerFixtures]="ownerFixtures"
+                      [fixtureTypes]="fixtureTypes"
+                      [substations]="substations"
+                      [contractFixtures]="contractFixtures"
+                      [installers]="installers"
+                      [heightTypes]="heightTypes"
 
-                        [heightGrid]="320"
-                        [isMasterGrid]="true"
+                      [heightGrid]="320"
+                      [isMasterGrid]="true"
 
-                        [selectContractId]="''"
-                        [selectNodeId]="''"
-                        [fixtureGroupId]="fixtureGroupId"
-                        [selectionmode]="selectionmode"
+                      [selectContractId]="''"
+                      [selectNodeId]="''"
+                      [fixtureGroupId]="fixtureGroupId"
+                      [selectionmode]="selectionmode"
 
-                        [isAdd]="isAdd"
-                        [isUpdate]="isUpdate"
-                        [isDelete]="isDelete"
-                        [isRefresh]="isRefresh"
-                        [isFilter_none]="isFilter_none"
-                        [isFilter_list]="isFilter_list"
-                        [isPlace]="isPlace"
-                        [isPin_drop]="isPin_drop"
-                        [isGroup_in]="isGroup_in"
-                        [isGroup_out]="isGroup_out"
+                      [settingButtonPanel]="settingFixtureButtonPanel"
 
-                        (onRefreshChildGrid)="refreshChildGrid($event)"
-                        (onGetFixtures)="getFixtures($event)"
-  ></app-fixturelist-page>
+                      (onRefreshChildGrid)="refreshChildGrid($event)"
+                      (onGetFixtures)="getFixtures($event)"
+></app-fixturelist-page>
 
-  <jqxTabs
-    [theme]="'material'"
-    (onSelected)="selected($event)"
-  >
-    <ul>
-      <li style="margin-left: 30px">Команды режимов освещения</li>
-      <li>Команды скорости возгорания/затухания</li>
-    </ul>
-    <div style="overflow: hidden">
-      <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
+<jqxTabs
+  [theme]="'material'"
+  (onSelected)="selected($event)"
+>
+  <ul>
+    <li style="margin-left: 30px">Команды режимов освещения</li>
+    <li>Команды скорости возгорания/затухания</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
 
-                               [commandTypes]="commandTypes"
-                               [commandStatuses]="commandStatuses"
+                             [commandTypes]="commandTypes"
+                             [commandStatuses]="commandStatuses"
 
-                               [heightGrid]="300"
-                               [isMasterGrid]="false"
-                               [selectionmode]="'checkbox'"
-                               [selectFixtureId]="selectFixtureId"
-                               [filterCommandSwitch]="filterCommandSwitch"
+                             [heightGrid]="300"
+                             [isMasterGrid]="false"
+                             [selectionmode]="'checkbox'"
+                             [selectFixtureId]="selectFixtureId"
+                             [filterCommandSwitch]="filterCommandSwitch"
 
-                               [isAdd]=true
-                               [isSwitchOff]=true
-                               [isUpdate]=false
-                               [isDelete]=true
-                               [isRefresh]=true
-                               [isFilter_none]=true
-                               [isFilter_list]=true
+                             [settingButtonPanel]="settingFixtureComButtonPanel"
 
-                               (onRefreshChildGrid)="refreshChildGrid($event)"
-      ></app-fixturecomlist-page>
-    </div>
-    <div style="overflow: hidden">
-      <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
+                             (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-fixturecomlist-page>
+  </div>
+  <div style="overflow: hidden">
+    <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
 
-                                    [speedDirectiones]="speedDirectiones"
-                                    [commandStatuses]="commandStatuses"
+                                  [speedDirectiones]="speedDirectiones"
+                                  [commandStatuses]="commandStatuses"
 
-                                    [heightGrid]="300"
-                                    [isMasterGrid]="false"
-                                    [selectionmode]="'checkbox'"
-                                    [selectFixtureId]="selectFixtureId"
-                                    [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
+                                  [heightGrid]="300"
+                                  [isMasterGrid]="false"
+                                  [selectionmode]="'checkbox'"
+                                  [selectFixtureId]="selectFixtureId"
+                                  [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
 
-                                    [isAdd]=true
-                                    [isUpdate]=false
-                                    [isDelete]=true
-                                    [isRefresh]=true
-                                    [isFilter_none]=true
-                                    [isFilter_list]=true
+                                  [settingButtonPanel]="settingFixtureSpeedButtonPanel"
 
-                                    (onRefreshChildGrid)="refreshChildGrid($event)"
-      ></app-fixturecomspeedlist-page>
-    </div>
+                                  (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-fixturecomspeedlist-page>
+  </div>
 
-  </jqxTabs>
-<!--</div>-->
+</jqxTabs>
+
 

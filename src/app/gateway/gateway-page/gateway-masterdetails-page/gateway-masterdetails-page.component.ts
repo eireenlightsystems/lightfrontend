@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
-import {Contract, Geograph, Owner, EquipmentType, FilterGateway, FilterNode} from '../../../shared/interfaces';
+import {Contract, Geograph, Owner, EquipmentType, FilterGateway, FilterNode, SettingButtonPanel} from '../../../shared/interfaces';
 import {GatewaylistPageComponent} from './gatewaylist-page/gatewaylist-page.component';
 import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
 
@@ -25,6 +25,9 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];
   @Input() nodeListBoxSource: any[];
+
+  settingNodeButtonPanel: SettingButtonPanel;
+  settingGatewayButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshMap = new EventEmitter();
@@ -54,7 +57,110 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.selectGatewayId = 0;
+    // init gateway button panel
+    this.settingGatewayButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: true,
+        disabled: false,
+      },
+      filterNone: {
+        visible: true,
+        disabled: false,
+      },
+      filterList: {
+        visible: true,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
+
+    // init fixture button panel
+    this.settingNodeButtonPanel = {
+      add: {
+        visible: false,
+        disabled: false,
+      },
+      upd: {
+        visible: false,
+        disabled: false,
+      },
+      del: {
+        visible: false,
+        disabled: false,
+      },
+      refresh: {
+        visible: false,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: true,
+        disabled: false,
+      },
+      groupOut: {
+        visible: true,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
+
   }
 
   refreshGrid() {

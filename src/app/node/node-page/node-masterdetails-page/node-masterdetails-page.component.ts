@@ -4,7 +4,7 @@ import {FixturelistPageComponent} from '../../../fixture/fixture-page/fixture-ma
 import {
   Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation,
   FilterFixture, FilterGateway,
-  FilterNode, FilterSensor
+  FilterNode, FilterSensor, SettingButtonPanel
 } from '../../../shared/interfaces';
 import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
 import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
@@ -20,14 +20,6 @@ import {SensorlistPageComponent} from '../../../sensor/sensor-page/sensor-md-pag
 export class NodeMasterdetailsPageComponent implements OnInit {
 
   // variables from master component
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
-  @Input() isPlace: boolean;
-  @Input() isPin_drop: boolean;
 
   // node source
   @Input() geographs: Geograph[];
@@ -64,6 +56,12 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   isTabFixture = false;
   isTabGateway = false;
   isTabSensor = false;
+
+  settingNodeButtonPanel: SettingButtonPanel;
+  settingFixtureButtonPanel: SettingButtonPanel;
+  settingGatewayButtonPanel: SettingButtonPanel;
+  settingSensorButtonPanel: SettingButtonPanel;
+
   filterNode: FilterNode = {
     geographId: '',
     ownerId: '',
@@ -137,6 +135,214 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     this.isTabFixture = true;
     this.isTabGateway = false;
     this.isTabSensor = false;
+
+    // init node button panel
+    this.settingNodeButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: true,
+        disabled: false,
+      },
+      filterNone: {
+        visible: true,
+        disabled: false,
+      },
+      filterList: {
+        visible: true,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
+
+    // init fixture button panel
+    this.settingFixtureButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: false,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: true,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: true,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
+
+    // init gateway button panel
+    this.settingGatewayButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: false,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: true,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: true,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
+
+    // init sensor button panel
+    this.settingSensorButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: false,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: true,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: true,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
   }
 
   refreshGrid() {

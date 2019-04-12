@@ -398,7 +398,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
       }
     }
 
-    if (this.actionEventWindow === 'pin_drop') {
+    if (this.actionEventWindow === 'pinDrop') {
       this.oSub = this.fixtureService.delNodeId(this.selectNodeId, fixtureIds).subscribe(
         response => {
           MaterialService.toast('Светильники отвязаны от столба!');
@@ -413,7 +413,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
       );
     }
 
-    if (this.actionEventWindow === 'group_out') {
+    if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.fixtureService.delFixtureInGroup(+this.fixtureGroupId, fixtureIds).subscribe(
         response => {
           MaterialService.toast('Светильники удалены из группы!');
@@ -439,10 +439,10 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  pin_drop() {
+  pinDrop() {
     if (this.selectFixture.fixtureId) {
       this.eventWindow.okButtonDisabled(false);
-      this.actionEventWindow = 'pin_drop';
+      this.actionEventWindow = 'pinDrop';
       this.warningEventWindow = `Отвязать светильники от узла?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
@@ -451,7 +451,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     this.eventWindow.openEventWindow();
   }
 
-  group_in() {
+  groupIn() {
     if (+this.fixtureGroupId > 1) {
       this.linkGrFixWindow.openWindow();
     } else {
@@ -461,10 +461,10 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  group_out() {
+  groupOut() {
     if (this.selectFixture.fixtureId) {
       this.eventWindow.okButtonDisabled(false);
-      this.actionEventWindow = 'group_out';
+      this.actionEventWindow = 'groupOut';
       this.warningEventWindow = `Исключить светильники из группы?`;
     } else {
       this.eventWindow.okButtonDisabled(true);

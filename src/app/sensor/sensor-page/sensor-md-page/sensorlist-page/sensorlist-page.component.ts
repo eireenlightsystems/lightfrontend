@@ -1,7 +1,16 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
-import {Geograph, Contract, Owner, FilterSensor, EquipmentType, Sensor, SourceForFilter} from '../../../../shared/interfaces';
+import {
+  Geograph,
+  Contract,
+  Owner,
+  FilterSensor,
+  EquipmentType,
+  Sensor,
+  SourceForFilter,
+  SettingButtonPanel
+} from '../../../../shared/interfaces';
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
 import {SensorlistJqxgridComponent} from './sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 
@@ -28,14 +37,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
 
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
-  @Input() isPlace: boolean;
-  @Input() isPin_drop: boolean;
+  @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -65,15 +67,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   noMoreNodes = false;
   //
   sensorSelectId = 0;
-  //
-  isAddBtnDisabled: boolean;
-  isEditBtnDisabled: boolean;
-  isDeleteBtnDisabled: boolean;
-  isRefreshBtnDisabled: boolean;
-  isFilter_noneBtnDisabled: boolean;
-  isFilter_listBtnDisabled: boolean;
-  isPlaceBtnDisabled: boolean;
-  isPin_dropBtnDisabled: boolean;
+
 
   constructor(private sensorService: SensorService) {
   }
@@ -159,23 +153,31 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   getAll() {
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
-      this.isAddBtnDisabled = true;
-      this.isEditBtnDisabled = true;
-      this.isDeleteBtnDisabled = true;
-      this.isRefreshBtnDisabled = true;
-      this.isFilter_noneBtnDisabled = true;
-      this.isFilter_listBtnDisabled = true;
-      this.isPlaceBtnDisabled = true;
-      this.isPin_dropBtnDisabled = true;
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
     } else {
-      this.isAddBtnDisabled = false;
-      this.isEditBtnDisabled = false;
-      this.isDeleteBtnDisabled = false;
-      this.isRefreshBtnDisabled = false;
-      this.isFilter_noneBtnDisabled = false;
-      this.isFilter_listBtnDisabled = false;
-      this.isPlaceBtnDisabled = false;
-      this.isPin_dropBtnDisabled = false;
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
     }
 
     const params = Object.assign({}, {
@@ -258,11 +260,39 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.sensorlistJqxgridComponent.del();
   }
 
+  refresh() {
+    this.refreshGrid();
+  }
+
+  filterNone() {
+    this.sensorlistJqxgridComponent.islistBoxVisible = !this.sensorlistJqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
   place() {
     this.sensorlistJqxgridComponent.place();
   }
 
-  pin_drop() {
+  pinDrop() {
     this.sensorlistJqxgridComponent.pin_drop();
+  }
+
+  groupIn() {
+
+  }
+
+  groupOut() {
+
+  }
+
+  switchOn() {
+
+  }
+
+  switchOff() {
+
   }
 }

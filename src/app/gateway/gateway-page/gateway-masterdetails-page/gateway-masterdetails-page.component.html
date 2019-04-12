@@ -8,14 +8,7 @@
                       [heightGrid]="300"
                       [isMasterGrid]="true"
 
-                      [isAdd]="true"
-                      [isUpdate]="true"
-                      [isDelete]="true"
-                      [isRefresh]="true"
-                      [isFilter_none]="true"
-                      [isFilter_list]="true"
-                      [isPlace]="false"
-                      [isPin_drop]="false"
+                      [settingButtonPanel]="settingGatewayButtonPanel"
 
                       (onRefreshChildGrid)="refreshChildGrid($event)"
                       (onRefreshMap)="refreshMap()"
@@ -43,20 +36,9 @@
                        [selectionmode]="'checkbox'"
                        [isMasterGrid]="false"
 
-                       [isAdd]=false
-                       [isUpdate]=false
-                       [isDelete]=false
-                       [isRefresh]=false
-                       [isFilter_none]=false
-                       [isFilter_list]=false
-                       [isPlace]=false
-                       [isPin_drop]=false
-                       [isGroup_in]="true"
-                       [isGroup_out]="true"
+                       [settingButtonPanel]="settingNodeButtonPanel"
 
     ></app-nodelist-page>
   </div>
 </jqxTabs>
 
-<!--(onRefreshChildGrid)="refreshChildGrid($event)"-->
-<!--(onRefreshMap)="refreshMap()"-->

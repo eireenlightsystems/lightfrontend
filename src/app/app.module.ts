@@ -80,6 +80,7 @@ import {FilterTableComponent} from './shared/components/filter-table/filter-tabl
 import {FilterItemComponent} from './shared/components/filter-table/filter-item/filter-item.component';
 import {LinkFormComponent} from './shared/components/link-form/link-form.component';
 import { ButtonLinkDirective } from './shared/directives/button-link.directive';
+import { ButtonPanelComponent } from './shared/components/button-panel/button-panel.component';
 
 
 @NgModule({
@@ -161,7 +162,8 @@ import { ButtonLinkDirective } from './shared/directives/button-link.directive';
     FilterTableComponent,
     FilterItemComponent,
     LinkFormComponent,
-    ButtonLinkDirective
+    ButtonLinkDirective,
+    ButtonPanelComponent
 
   ],
   imports: [

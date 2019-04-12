@@ -310,7 +310,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
       }
     }
 
-    if (this.actionEventWindow === 'group_out') {
+    if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
         response => {
           MaterialService.toast('Узлы удалены из группы!');
@@ -330,11 +330,11 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
 
   }
 
-  pin_drop() {
+  pinDrop() {
 
   }
 
-  group_in() {
+  groupIn() {
     if (this.selectGatewayId > 1) {
       this.linkWindow.openWindow();
     } else {
@@ -344,10 +344,10 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  group_out() {
+  groupOut() {
     if (this.selectNode.nodeId) {
       this.eventWindow.okButtonDisabled(false);
-      this.actionEventWindow = 'group_out';
+      this.actionEventWindow = 'groupOut';
       this.warningEventWindow = `Отвязать узлы от шлюза?`;
     } else {
       this.eventWindow.okButtonDisabled(true);

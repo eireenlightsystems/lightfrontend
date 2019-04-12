@@ -84,6 +84,57 @@ export class ItemsLinkForm {
   Ids: number[];
 }
 
+export class SettingButtonPanel {
+  add: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  upd: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  del: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  refresh: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  filterNone: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  filterList: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  place: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  pinDrop: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  groupIn: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  groupOut: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  switchOn: {
+    visible: boolean;
+    disabled: boolean;
+  };
+  switchOff: {
+    visible: boolean;
+    disabled: boolean;
+  };
+}
+
 // Fixture
 
 export class Fixture {

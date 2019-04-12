@@ -4,7 +4,7 @@ import {
   Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   CommandStatus,
   CommandType,
-  FixtureGroupType
+  FixtureGroupType, SettingButtonPanel
 } from '../../../shared/interfaces';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
@@ -45,12 +45,64 @@ export class FixturegroupMdPageComponent implements OnInit {
 
   // other variables
   fixtures: Fixture[] = [];
+  settingFixtureGrButtonPanel: SettingButtonPanel;
 
   constructor() {
   }
 
   ngOnInit() {
 
+    // init fixture group button panel
+    this.settingFixtureGrButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: true,
+        disabled: false,
+      },
+      filterNone: {
+        visible: true,
+        disabled: false,
+      },
+      filterList: {
+        visible: true,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: true,
+        disabled: false,
+      },
+      switchOff: {
+        visible: true,
+        disabled: false,
+      }
+    };
   }
 
   // refreshGrid() {

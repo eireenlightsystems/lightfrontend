@@ -7,7 +7,7 @@ import {
   CommandSpeedSwitch,
   FilterCommandSpeedSwitch,
   SourceForFilter,
-  CommandSpeedSwitchDflt
+  CommandSpeedSwitchDflt, SettingButtonPanel
 } from '../../../../shared/interfaces';
 import {FixturecomspeedlistJqxgridComponent} from './fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {CommandSpeedSwitchService} from '../../../../shared/services/command/commandSpeedSwitch.service';
@@ -35,16 +35,10 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: any;
   @Input() filterCommandSpeedSwitch: FilterCommandSpeedSwitch;
 
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
+  @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
-  // @Output() onRefreshChildGrid = new EventEmitter<number>()
-  // @Output() onRefreshMap = new EventEmitter()
+
 
   // define variables - link to view objects
   @ViewChild('fixturecomspeedlistJqxgridComponent') fixturecomspeedlistJqxgridComponent: FixturecomspeedlistJqxgridComponent;
@@ -64,13 +58,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   //
   selectCommandSpeedId = 0;
   commandSpeedSwitchDflt: CommandSpeedSwitchDflt;
-  //
-  isAddBtnDisabled: boolean;
-  isEditBtnDisabled: boolean;
-  isDeleteBtnDisabled: boolean;
-  isRefreshBtnDisabled: boolean;
-  isFilter_noneBtnDisabled: boolean;
-  isFilter_listBtnDisabled: boolean;
+
 
   constructor(private commandSpeedSwitchService: CommandSpeedSwitchService) {
   }
@@ -157,19 +145,31 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   getAll() {
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filterCommandSpeedSwitch.fixtureId <= 0) {
-      this.isAddBtnDisabled = true;
-      this.isEditBtnDisabled = true;
-      this.isDeleteBtnDisabled = true;
-      this.isRefreshBtnDisabled = true;
-      this.isFilter_noneBtnDisabled = true;
-      this.isFilter_listBtnDisabled = true;
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
     } else {
-      this.isAddBtnDisabled = false;
-      this.isEditBtnDisabled = false;
-      this.isDeleteBtnDisabled = false;
-      this.isRefreshBtnDisabled = false;
-      this.isFilter_noneBtnDisabled = false;
-      this.isFilter_listBtnDisabled = false;
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
     }
 
     const params = Object.assign({}, {
@@ -252,5 +252,39 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.fixturecomspeedlistJqxgridComponent.del();
   }
 
+  refresh() {
+    this.refreshGrid();
+  }
 
+  filterNone() {
+    this.fixturecomspeedlistJqxgridComponent.islistBoxVisible = !this.fixturecomspeedlistJqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
+  place() {
+
+  }
+
+  pinDrop() {
+
+  }
+
+  groupIn() {
+
+  }
+
+  groupOut() {
+
+  }
+
+  switchOn() {
+
+  }
+
+  switchOff() {
+
+  }
 }

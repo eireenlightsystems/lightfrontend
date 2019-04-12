@@ -9,7 +9,7 @@ import {
   Geograph,
   HeightType,
   Installer,
-  Substation
+  Substation, SettingButtonPanel
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
 import {OwnerFixtureService} from '../../shared/services/fixture/ownerFixture.service';
@@ -47,7 +47,7 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   installerSub: Subscription;
   heightTypeSub: Subscription;
 
-  // fixture group
+  // fixture group subscription
   fixtureGroupTypeSub: Subscription;
   fixtureGroupOwnerSub: Subscription;
 
@@ -70,6 +70,7 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   // fixture group source
   fixtureGroupTypes: FixtureGroupType[];
   fixtureGroupOwners: Owner[];
+
 
   constructor(
     // fixturecom service

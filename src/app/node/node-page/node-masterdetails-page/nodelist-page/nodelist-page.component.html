@@ -1,127 +1,18 @@
-<div class="fr">
-  <div *ngIf="isAdd">
-    <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
-                [content]="'Добавить узел/столб'">
-      <Button [disabled]="isAddBtnDisabled"
-              (click)="ins()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">add</i>
-      </Button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isUpdate">
-    <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать узел/столб'">
-      <Button [disabled]="isEditBtnDisabled"
-              (click)="upd()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">edit</i>
-      </Button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isDelete">
-    <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить узел/столб'">
-      <Button [disabled]="isDeleteBtnDisabled"
-              (click)="del()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">delete</i>
-      </Button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isRefresh">
-    <jqxTooltip [position]="'bottom'" [name]="'refreshTooltip'"
-                [content]="'Обновить таблицу'">
-      <button [disabled]="isRefreshBtnDisabled"
-              (click)="refreshGrid()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">refresh</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isFilter_none">
-    <jqxTooltip [position]="'bottom'" [name]="'fieldTooltip'"
-                [content]="'Открыть фильтр по полям таблицы'">
-      <button [disabled]="isFilter_noneBtnDisabled"
-              (click)="nodelistJqxgridComponent.islistBoxVisible = !nodelistJqxgridComponent.islistBoxVisible"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">filter_none</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isFilter_list">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Открыть фильтр'">
-      <button [disabled]="isFilter_listBtnDisabled"
-              (click)="isFilterVisible = !isFilterVisible"
-              appButtonSimpleStyle
-              [ngClass]="{
-      'active':isFilterVisible
-    }"
-      >
-        <i class="material-icons">filter_list</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isPlace">
-    <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
-                [content]="'Привязать узел/столб к шлюзу'">
-      <button [disabled]="isPlaceBtnDisabled"
-              (click)="place()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">place</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isPin_drop">
-    <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
-                [content]="'Отвязать узел/столб от шлюза'">
-      <button [disabled]="isPin_dropBtnDisabled"
-              (click)="pin_drop()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">pin_drop</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isGroup_in">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Добавить узел/столб в группу'">
-      <button [disabled]="isGroup_inBtnDisabled"
-              appButtonSimpleStyle
-              (click)="group_in()"
-      >
-        <i class="material-icons">file_download</i>
-      </button>
-    </jqxTooltip>
-  </div>
-
-  <div *ngIf="isGroup_out">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Удалить узел/столб из группы'">
-      <button [disabled]="isGroup_outBtnDisabled"
-              appButtonSimpleStyle
-              (click)="group_out()"
-      >
-        <i class="material-icons">file_upload</i>
-      </button>
-    </jqxTooltip>
-  </div>
-</div>
+<app-button-panel
+  [settingButtonPanel]="settingButtonPanel"
+  (onIns)="ins()"
+  (onUpd)="upd()"
+  (onDel)="del()"
+  (onRefresh)="refresh()"
+  (onFilterNone)="filterNone()"
+  (onFilterList)="filterList()"
+  (onPlace)="place()"
+  (onPinDrop)="pinDrop()"
+  (onGroupIn)="groupIn()"
+  (onGroupOut)="groupOut()"
+  (onSwitchOn)="switchOn()"
+  (onSwitchOff)="switchOff()"
+></app-button-panel>
 
 <app-filter-table
   *ngIf="isFilterVisible"

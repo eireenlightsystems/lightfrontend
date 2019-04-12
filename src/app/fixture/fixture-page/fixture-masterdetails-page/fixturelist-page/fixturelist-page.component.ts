@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output} from '@angular/core';
 import {Subscription} from 'rxjs/index';
+import {isUndefined} from 'util';
 
 import {MaterialService} from '../../../../shared/classes/material.service';
 import jqxTooltip = jqwidgets.jqxTooltip;
@@ -14,14 +15,9 @@ import {
   Substation,
   Contract,
   Installer,
-  HeightType, SourceForFilter
+  HeightType, SourceForFilter, SettingButtonPanel
 } from '../../../../shared/interfaces';
 import {FixturelistJqxgridComponent} from './fixturelist-jqxgrid/fixturelist-jqxgrid.component';
-import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
-
-import {isUndefined} from 'util';
-import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 
 
 const STEP = 1000000000000;
@@ -51,16 +47,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() selectNodeId: string;
   @Input() fixtureGroupId: string;
 
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
-  @Input() isPlace: boolean;
-  @Input() isPin_drop: boolean;
-  @Input() isGroup_in: boolean;
-  @Input() isGroup_out: boolean;
+  @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -96,17 +83,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   selectFixtureId: number;
   // tooltip_refresh: MaterialInstance
   // tooltip_filter: MaterialInstance
-  //
-  isAddBtnDisabled = false;
-  isEditBtnDisabled = false;
-  isDeleteBtnDisabled = false;
-  isRefreshBtnDisabled = false;
-  isFilter_noneBtnDisabled = false;
-  isFilter_listBtnDisabled = false;
-  isPlaceBtnDisabled = false;
-  isPin_dropBtnDisabled = false;
-  isGroup_outBtnDisabled = false;
-  isGroup_inBtnDisabled = false;
 
   // define columns for table
   columnsFixture: any[] =
@@ -273,27 +249,31 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   getAll() {
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
-      this.isAddBtnDisabled = true;
-      this.isEditBtnDisabled = true;
-      this.isDeleteBtnDisabled = true;
-      this.isRefreshBtnDisabled = true;
-      this.isFilter_noneBtnDisabled = true;
-      this.isFilter_listBtnDisabled = true;
-      this.isPlaceBtnDisabled = true;
-      this.isPin_dropBtnDisabled = true;
-      this.isGroup_outBtnDisabled = true;
-      this.isGroup_outBtnDisabled = true;
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
     } else {
-      this.isAddBtnDisabled = false;
-      this.isEditBtnDisabled = false;
-      this.isDeleteBtnDisabled = false;
-      this.isRefreshBtnDisabled = false;
-      this.isFilter_noneBtnDisabled = false;
-      this.isFilter_listBtnDisabled = false;
-      this.isPlaceBtnDisabled = false;
-      this.isPin_dropBtnDisabled = false;
-      this.isGroup_outBtnDisabled = false;
-      this.isGroup_outBtnDisabled = false;
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
     }
 
     if (isUndefined(this.fixtureGroupId) || +this.fixtureGroupId === 0) {
@@ -362,7 +342,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
           break;
       }
     }
-
     this.refreshGrid();
   }
 
@@ -406,19 +385,40 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
     this.fixturelistJqxgridComponent.del();
   }
 
+  refresh() {
+    this.refreshGrid();
+  }
+
+  filterNone() {
+    this.fixturelistJqxgridComponent.islistBoxVisible = !this.fixturelistJqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
   place() {
     this.fixturelistJqxgridComponent.place();
   }
 
-  pin_drop() {
-    this.fixturelistJqxgridComponent.pin_drop();
+  pinDrop() {
+    this.fixturelistJqxgridComponent.pinDrop();
   }
 
-  group_in() {
-    this.fixturelistJqxgridComponent.group_in();
+  groupIn() {
+    this.fixturelistJqxgridComponent.groupIn();
   }
 
-  group_out() {
-    this.fixturelistJqxgridComponent.group_out();
+  groupOut() {
+    this.fixturelistJqxgridComponent.groupOut();
   }
+
+  switchOn() {
+
+  }
+
+  switchOff() {
+
+  }
+
 }

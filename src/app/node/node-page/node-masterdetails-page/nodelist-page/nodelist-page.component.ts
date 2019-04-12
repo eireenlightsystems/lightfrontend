@@ -5,7 +5,7 @@ import {NodeService} from '../../../../shared/services/node/node.service';
 import {
   Node,
   Geograph,
-  Contract, FilterNode, EquipmentType, Owner, SourceForFilter
+  Contract, FilterNode, EquipmentType, Owner, SourceForFilter, SettingButtonPanel
 } from '../../../../shared/interfaces';
 import {NodelistJqxgridComponent} from './nodelist-jqxgrid/nodelist-jqxgrid.component';
 import {isUndefined} from 'util';
@@ -33,16 +33,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
 
-  @Input() isAdd: boolean;
-  @Input() isUpdate: boolean;
-  @Input() isDelete: boolean;
-  @Input() isRefresh: boolean;
-  @Input() isFilter_none: boolean;
-  @Input() isFilter_list: boolean;
-  @Input() isPlace: boolean;
-  @Input() isPin_drop: boolean;
-  @Input() isGroup_in: boolean;
-  @Input() isGroup_out: boolean;
+  @Input() settingButtonPanel: SettingButtonPanel;
 
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];
@@ -76,17 +67,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   noMoreNodes = false;
   //
   selectNodeId = 0;
-  //
-  isAddBtnDisabled: boolean;
-  isEditBtnDisabled: boolean;
-  isDeleteBtnDisabled: boolean;
-  isRefreshBtnDisabled: boolean;
-  isFilter_noneBtnDisabled: boolean;
-  isFilter_listBtnDisabled: boolean;
-  isPlaceBtnDisabled: boolean;
-  isPin_dropBtnDisabled: boolean;
-  isGroup_outBtnDisabled = false;
-  isGroup_inBtnDisabled = false;
+
 
   constructor(private nodeService: NodeService) {
   }
@@ -173,27 +154,31 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
     // Disabled/available buttons
     if (!this.isMasterGrid && +this.filter.gatewayId <= 0) {
-      this.isAddBtnDisabled = true;
-      this.isEditBtnDisabled = true;
-      this.isDeleteBtnDisabled = true;
-      this.isRefreshBtnDisabled = true;
-      this.isFilter_noneBtnDisabled = true;
-      this.isFilter_listBtnDisabled = true;
-      this.isPlaceBtnDisabled = true;
-      this.isPin_dropBtnDisabled = true;
-      this.isGroup_inBtnDisabled = true;
-      this.isGroup_outBtnDisabled = true;
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
     } else {
-      this.isAddBtnDisabled = false;
-      this.isEditBtnDisabled = false;
-      this.isDeleteBtnDisabled = false;
-      this.isRefreshBtnDisabled = false;
-      this.isFilter_noneBtnDisabled = false;
-      this.isFilter_listBtnDisabled = false;
-      this.isPlaceBtnDisabled = false;
-      this.isPin_dropBtnDisabled = false;
-      this.isGroup_inBtnDisabled = false;
-      this.isGroup_outBtnDisabled = false;
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
     }
 
     const params = Object.assign({}, {
@@ -276,19 +261,39 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.nodelistJqxgridComponent.del();
   }
 
+  refresh() {
+    this.refreshGrid();
+  }
+
+  filterNone() {
+    this.nodelistJqxgridComponent.islistBoxVisible = !this.nodelistJqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
   place() {
     this.nodelistJqxgridComponent.place();
   }
 
-  pin_drop() {
-    this.nodelistJqxgridComponent.pin_drop();
+  pinDrop() {
+    this.nodelistJqxgridComponent.pinDrop();
   }
 
-  group_in() {
-    this.nodelistJqxgridComponent.group_in();
+  groupIn() {
+    this.nodelistJqxgridComponent.groupIn();
   }
 
-  group_out() {
-    this.nodelistJqxgridComponent.group_out();
+  groupOut() {
+    this.nodelistJqxgridComponent.groupOut();
+  }
+
+  switchOn() {
+
+  }
+
+  switchOff() {
+
   }
 }

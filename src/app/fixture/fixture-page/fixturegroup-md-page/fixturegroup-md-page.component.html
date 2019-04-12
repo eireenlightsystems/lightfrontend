@@ -11,16 +11,7 @@
                              [heightGrid]="720"
                              [isMasterGrid]="true"
 
-                             [isAdd]=true
-                             [isUpdate]=true
-                             [isDelete]=true
-                             [isRefresh]=true
-                             [isFilter_none]=true
-                             [isFilter_list]=true
-                             [isPlace]=false
-                             [isPin_drop]=false
-                             [isSwitchOn]=true
-                             [isSwitchOff]=true
+                             [settingButtonPanel]="settingFixtureGrButtonPanel"
 
                              (onRefreshChildGrid)="refreshChildGrid($event)"
                              (onRefreshChild_ChildGrid)="refreshChild_ChildGrid()"
@@ -44,18 +35,8 @@
 
                                     [fixtureGroupId]="0"
 
-                                    [isAdd]=false
-                                    [isUpdate]=false
-                                    [isDelete]=false
-                                    [isRefresh]=false
-                                    [isFilter_none]=false
-                                    [isFilter_list]=false
-                                    [isPlace]=false
-                                    [isPin_drop]=false
-                                    [isGroup_out]=true
-                                    [isGroup_in]=true
-
                                     (onGetFixtures)="getFixtures($event)"
    ></app-fixture-masterdetails-page>
   </div>
 </div>
+
