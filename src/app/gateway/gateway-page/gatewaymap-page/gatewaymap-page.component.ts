@@ -12,17 +12,15 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
-import {Gateway, Node, Contract, EquipmentType, Geograph, Owner,} from '../../../shared/interfaces';
+import {Gateway, Node, Contract, EquipmentType, Geograph, Owner, SourceForLinkForm, ItemsLinkForm,} from '../../../shared/interfaces';
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
 import {MaterialService} from '../../../shared/classes/material.service';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {NodelinkFormComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
+import {LinkFormComponent} from '../../../shared/components/link-form/link-form.component';
 
 
 declare var ymaps: any;
-
-// const STEP = 1000000000000;
 
 
 @Component({
@@ -45,8 +43,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // define variables - link to view objects
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
-  @ViewChild('linkWindow') linkWindow: NodelinkFormComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
 
   // other variables
   gatewayGroups: Gateway[];
@@ -56,9 +53,15 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   selectGatewayNodeId: number;
   myMap: any;
   actionEventWindow = '';
+  warningEventWindow = '';
+  sourceForLinkForm: SourceForLinkForm;
+
   oSub: Subscription;
   oSubGatewayGroups: Subscription;
   oSubNodesInGroup: Subscription;
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
+
   draggableIcon = false;
 
 
@@ -71,6 +74,42 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnInit() {
     this.getGatewayGroups();
+
+    // Definde filter
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkGatewayNodes',
+        name: 'Выбрать узлы',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.nodeColumns,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'nodeId',
+        sortcolumn: ['nodeId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
   }
 
   ngAfterViewInit() {
@@ -86,6 +125,12 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     }
     if (this.oSubNodesInGroup) {
       this.oSubNodesInGroup.unsubscribe();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
     }
     if (this.myMap) {
       this.myMap.destroy();
@@ -131,25 +176,25 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   buttonsInit() {
     const ButtonLayout = ymaps.templateLayoutFactory.createClass([
         `<div class="fr">
-                  <Button id="placeNodesInGroup"
+                  <Button id="linkNodesInGroup"
                     class="btn btn-small waves-effect waves-orange white blue-text"
 
                   >
-                    <i class="material-icons">place</i>
+                    <i class="material-icons">file_download</i>
                   </Button>
               </div>`
       ].join(''),
       {
         build: function () {
           ButtonLayout.superclass.build.call(this);
-          $('#placeNodesInGroup').bind('click', this.placeNodesInGroup(this.getData().properties));
+          $('#linkNodesInGroup').bind('click', this.linkNodesInGroup(this.getData().properties));
         },
 
-        placeNodesInGroup: (function () {
+        linkNodesInGroup: (function () {
           const mapComponent: GatewaymapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.placeNodesInGroup();
+              mapComponent.linkNodesInGroup();
             };
           };
         }).call(this),
@@ -397,7 +442,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     );
   }
 
-  placeNodesInGroup() {
+  linkNodesInGroup() {
     if (this.selectGatewayId > 1) {
       this.eventWindow.okButtonDisabled(false);
       this.linkWindow.openWindow();
@@ -408,7 +453,32 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     }
   }
 
-  saveLinkwinBtn() {
-    this.refreshMap();
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if (event.code === this.sourceForLinkForm.window.code) {
+      this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Узлы добавлены в группу!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          this.refreshMap();
+        }
+      );
+    }
+  }
+
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 }

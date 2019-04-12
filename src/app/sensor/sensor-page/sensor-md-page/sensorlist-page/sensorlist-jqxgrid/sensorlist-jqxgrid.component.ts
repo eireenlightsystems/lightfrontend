@@ -5,11 +5,12 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Sensor, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
+import {Sensor, Geograph, Contract, Owner, EquipmentType, SourceForLinkForm, ItemsLinkForm} from '../../../../../shared/interfaces';
 
 import {SensorService} from '../../../../../shared/services/sensor/sensor.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {SensoreditFormComponent} from '../sensoredit-form/sensoredit-form.component';
+import {LinkFormComponent} from '../../../../../shared/components/link-form/link-form.component';
 
 @Component({
   selector: 'app-sensorlist-jqxgrid',
@@ -25,7 +26,7 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
-  @Input() nodeSelectId: number;
+  @Input() selectNodeId: number;
 
   @Input() heightGrid: number;
   @Input() isMasterGrid: number;
@@ -42,15 +43,18 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
   @ViewChild('warningEventWindow') warningEventWindow: string;
   @ViewChild('okButton') okButton: jqxButtonComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
 
   // other variables
   selectSensor: Sensor = new Sensor();
-  // saveNodeSensor: NodeSensor = new NodeSensor();
   oSub: Subscription;
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
   editrow: number;
   rowcount = 0;
   islistBoxVisible = false;
   actionEventWindow = '';
+  sourceForLinkForm: SourceForLinkForm;
 
   // define the data source for the table
   source_jqxgrid: any =
@@ -103,6 +107,41 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   ngOnInit() {
     this.refresh_jqxgGrid();
 
+    // Definde filter
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkSensor',
+        name: 'Выбрать датчик',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.columns,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'sensorId',
+        sortcolumn: ['sensorId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
   }
 
   ngAfterViewInit() {
@@ -112,6 +151,12 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   ngOnDestroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -231,7 +276,7 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   // insert node
   ins() {
     const selectSensor: Sensor = new Sensor();
-    selectSensor.nodeId = this.nodeSelectId;
+    selectSensor.nodeId = this.selectNodeId;
 
     this.editWindow.positionWindow({x: 600, y: 90});
     this.editWindow.openWindow(selectSensor, 'ins');
@@ -246,6 +291,36 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   saveEditwinBtn() {
     // refresh table
     this.onRefreshGrid.emit();
+  }
+
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if(event.code === this.sourceForLinkForm.window.code){
+      this.oSubLink = this.sensorService.setNodeId(this.selectNodeId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Выбранные елементы привязаны!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+  }
+
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.sensorService.getSensorNotInGroup().subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 
   // insEditwinBtn(event: any) {
@@ -290,10 +365,34 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
         );
       }
     }
+    if (this.actionEventWindow === 'pin_drop') {
+      const sensorIds = [];
+      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        sensorIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].sensorId;
+      }
+      this.oSub = this.sensorService.delNodeId(this.selectNodeId, sensorIds).subscribe(
+        response => {
+          MaterialService.toast('Датчики отвязаны от узла!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
   }
 
   place() {
-
+    if (this.selectNodeId > 1) {
+      this.linkWindow.openWindow();
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
+      this.eventWindow.openEventWindow();
+    }
   }
 
   pin_drop() {

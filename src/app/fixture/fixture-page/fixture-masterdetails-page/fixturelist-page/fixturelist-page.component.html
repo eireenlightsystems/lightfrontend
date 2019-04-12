@@ -155,6 +155,7 @@
                              [selectFixtureId]="selectFixtureId"
                              [selectContractId]="selectContractId"
                              [selectNodeId]="selectNodeId"
+                             [fixtureGroupId]="fixtureGroupId"
 
                              (onRefreshGrid)="refreshGrid()"
                              (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -184,15 +185,3 @@
   <app-loader></app-loader>
 </ng-template>
 
-
-<app-fixture-grlink-form #linkWindow
-                   [columns]="columnsFixture"
-                   [fixtureGroupId]="fixtureGroupId"
-
-                   (onSaveLinkwinBtn)="saveLinkwinBtn()"
-></app-fixture-grlink-form>
-
-<app-event-window #eventWindow
-                  [warning]="warningEventWindow"
-                  (onOkEvenwinBtn)="okEvenwinBtn()"
-></app-event-window>

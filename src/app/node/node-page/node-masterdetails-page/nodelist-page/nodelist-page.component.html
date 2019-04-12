@@ -98,6 +98,29 @@
     </jqxTooltip>
   </div>
 
+  <div *ngIf="isGroup_in">
+    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
+                [content]="'Добавить узел/столб в группу'">
+      <button [disabled]="isGroup_inBtnDisabled"
+              appButtonSimpleStyle
+              (click)="group_in()"
+      >
+        <i class="material-icons">file_download</i>
+      </button>
+    </jqxTooltip>
+  </div>
+
+  <div *ngIf="isGroup_out">
+    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
+                [content]="'Удалить узел/столб из группы'">
+      <button [disabled]="isGroup_outBtnDisabled"
+              appButtonSimpleStyle
+              (click)="group_out()"
+      >
+        <i class="material-icons">file_upload</i>
+      </button>
+    </jqxTooltip>
+  </div>
 </div>
 
 <app-filter-table

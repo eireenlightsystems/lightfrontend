@@ -5,12 +5,12 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Gateway, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
+import {Gateway, Geograph, Contract, Owner, EquipmentType, SourceForLinkForm, ItemsLinkForm} from '../../../../../shared/interfaces';
 
 import {GatewayService} from '../../../../../shared/services/gateway/gateway.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {GatewayeditFormComponent} from '../gatewayedit-form/gatewayedit-form.component';
-import {FixturelinkFormComponent} from '../../../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component';
+import {LinkFormComponent} from '../../../../../shared/components/link-form/link-form.component';
 
 
 @Component({
@@ -43,15 +43,18 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
   @ViewChild('warningEventWindow') warningEventWindow: string;
   @ViewChild('okButton') okButton: jqxButtonComponent;
-  @ViewChild('linkWindow') linkWindow: FixturelinkFormComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
 
   // other variables
   selectGateway: Gateway = new Gateway();
   oSub: Subscription;
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
   editrow: number;
   rowcount = 0;
   islistBoxVisible = false;
   actionEventWindow = '';
+  sourceForLinkForm: SourceForLinkForm;
 
   // define the data source for the table
   source_jqxgrid: any =
@@ -106,6 +109,41 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   ngOnInit() {
     this.refresh_jqxgGrid();
 
+    // Definde filter
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkGateway',
+        name: 'Выбрать шлюз',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.columns,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'gatewayId',
+        sortcolumn: ['gatewayId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
   }
 
   ngAfterViewInit() {
@@ -115,6 +153,12 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
   ngOnDestroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -127,6 +171,9 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
+    }
+    if (this.linkWindow) {
+      this.linkWindow.destroyWindow();
     }
   }
 
@@ -252,9 +299,34 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     this.onRefreshGrid.emit();
   }
 
-  saveLinkwinBtn() {
-    // refresh table
-    this.onRefreshGrid.emit();
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if (event.code === this.sourceForLinkForm.window.code) {
+      this.oSubLink = this.gatewayService.setNodeId(this.selectNodeId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Выбранные елементы привязаны!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+  }
+
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.gatewayService.getGatewayNotInGroup().subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 
   // delete node
@@ -329,4 +401,5 @@ export class GatewaylistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
     this.eventWindow.openEventWindow();
   }
+
 }

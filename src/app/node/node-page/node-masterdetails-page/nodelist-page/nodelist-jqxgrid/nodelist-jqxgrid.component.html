@@ -30,19 +30,18 @@
 >
 </jqxGrid>
 
-<app-nodelink-form #linkWindow
-                   [columns]="nodeColumns"
-                   [selectGatewayId]="selectGatewayId"
-
-                   (onSaveLinkwinBtn)="saveLinkwinBtn()"
-></app-nodelink-form>
-
 <app-nodeedit-form #editWindow
                    [geographs]="geographs"
                    [nodeTypes]="nodeTypes"
                    [contractNodes]="contractNodes"
                    (onSaveEditwinBtn)="saveEditwinBtn()"
 ></app-nodeedit-form>
+
+<app-link-form #linkWindow
+               [sourceForLinkForm]="sourceForLinkForm"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
 
 <app-event-window #eventWindow
                   [warning]="warningEventWindow"

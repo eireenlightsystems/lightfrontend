@@ -5,11 +5,21 @@ import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Fixture, Geograph, Owner, EquipmentType, Substation, Contract, Installer, HeightType} from '../../../../../shared/interfaces';
+import {
+  Fixture,
+  Geograph,
+  Owner,
+  EquipmentType,
+  Substation,
+  Contract,
+  Installer,
+  HeightType,
+  SourceForLinkForm, ItemsLinkForm
+} from '../../../../../shared/interfaces';
 import {FixtureService} from '../../../../../shared/services/fixture/fixture.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {FixtureeditFormComponent} from '../fixtureedit-form/fixtureedit-form.component';
-import {FixturelinkFormComponent} from '../fixturelink-form/fixturelink-form.component';
+import {LinkFormComponent} from '../../../../../shared/components/link-form/link-form.component';
 
 
 @Component({
@@ -38,6 +48,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   @Input() selectFixtureId: number;
   @Input() selectContractId: number;
   @Input() selectNodeId: number;
+  @Input() fixtureGroupId: number;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -48,17 +59,23 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   @ViewChild('myGrid') myGrid: jqxGridComponent;
   @ViewChild('editWindow') editWindow: FixtureeditFormComponent;
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
-  @ViewChild('okButton') okButton: jqxButtonComponent;
-  @ViewChild('linkWindow') linkWindow: FixturelinkFormComponent;
+  // @ViewChild('warningEventWindow') warningEventWindow: string;
+  // @ViewChild('okButton') okButton: jqxButtonComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
+  @ViewChild('linkGrFixWindow') linkGrFixWindow: LinkFormComponent;
 
   // other variables
   selectFixture: Fixture = new Fixture();
-  saveFixture: Fixture = new Fixture();
+  // saveFixture: Fixture = new Fixture();
   oSub: Subscription;
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
   rowcount = 0;
   islistBoxVisible = false;
   actionEventWindow = '';
+  warningEventWindow = '';
+  sourceForLinkForm: SourceForLinkForm;
+  sourceGrFixForLinkForm: SourceForLinkForm;
 
   // define the data source for the table
   source_jqxgrid: any =
@@ -78,11 +95,87 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
 
   ngOnInit() {
     this.refresh_jqxgGrid();
+
+    // Definde filter
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkNodeFixtures',
+        name: 'Выбрать светильники',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.columnsFixture,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'fixtureId',
+        sortcolumn: ['fixtureId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
+    this.sourceGrFixForLinkForm = {
+      window: {
+        code: 'linkGrFixFixtures',
+        name: 'Выбрать светильники',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.columnsFixture,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'fixtureId',
+        sortcolumn: ['fixtureId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
   }
 
   ngOnDestroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -179,11 +272,7 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   };
 
   // functions-events when allocating a string
-  onRowclick(event: any) {
-  };
-
   onRowSelect(event: any) {
-    // console.log("onRowSelect")
     if (event.args.row
     ) {
       this.selectFixture = event.args.row;
@@ -194,24 +283,10 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
         this.onRefreshChildGrid.emit(this.selectFixture.fixtureId);
       }
     }
-    // this.updateButtons('Select');
-  };
-
-  onRowUnselect(event: any) {
-    // console.log("onRowUnselect")
-    // this.updateButtons('Unselect');
-  };
-
-  onRowBeginEdit(event: any) {
-    // this.updateButtons('Edit');
-  };
-
-  onRowEndEdit(event: any) {
-    // this.updateButtons('End Edit');
   };
 
 
-// INSERT, UPDATE, DELETE
+  // INSERT, UPDATE, DELETE
 
   // insert fixture
   ins() {
@@ -230,9 +305,61 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     this.onRefreshGrid.emit();
   }
 
-  saveLinkwinBtn() {
-    // refresh table
-    this.onRefreshGrid.emit();
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if (event.code === this.sourceForLinkForm.window.code) {
+      this.oSubLink = this.fixtureService.setNodeId(this.selectNodeId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Выбранные елементы привязаны!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+    if (event.code === this.sourceGrFixForLinkForm.window.code) {
+      this.oSubLink = this.fixtureService.setFixtureInGroup(this.fixtureGroupId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Светильники добавлены в группу!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkGrFixWindow.hideWindow();
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+  }
+
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.fixtureService.getAll({nodeId: 1}).subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
+  }
+
+  getSourceGrFixForLinkForm() {
+    this.oSubForLinkWin = this.fixtureService.getFixtureInGroup('1').subscribe(
+      response => {
+        this.sourceGrFixForLinkForm.grid.source = response;
+        this.linkGrFixWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 
   // delete fixture
@@ -249,6 +376,11 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
   }
 
   okEvenwinBtn() {
+    const fixtureIds = [];
+    for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+      fixtureIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
+    }
+
     if (this.actionEventWindow === 'del') {
       const selectedrowindex = this.myGrid.getselectedrowindex();
       const id = this.myGrid.getrowid(selectedrowindex);
@@ -267,14 +399,24 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
 
     if (this.actionEventWindow === 'pin_drop') {
-      const fixtureIds = [];
-      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        fixtureIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
-      }
-
       this.oSub = this.fixtureService.delNodeId(this.selectNodeId, fixtureIds).subscribe(
         response => {
           MaterialService.toast('Светильники отвязаны от столба!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+
+    if (this.actionEventWindow === 'group_out') {
+      this.oSub = this.fixtureService.delFixtureInGroup(+this.fixtureGroupId, fixtureIds).subscribe(
+        response => {
+          MaterialService.toast('Светильники удалены из группы!');
         },
         error => {
           MaterialService.toast(error.error.message);
@@ -308,4 +450,27 @@ export class FixturelistJqxgridComponent implements OnInit, OnDestroy, AfterView
     }
     this.eventWindow.openEventWindow();
   }
+
+  group_in() {
+    if (+this.fixtureGroupId > 1) {
+      this.linkGrFixWindow.openWindow();
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать ГРУППУ для привязки светильников`;
+      this.eventWindow.openEventWindow();
+    }
+  }
+
+  group_out() {
+    if (this.selectFixture.fixtureId) {
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'group_out';
+      this.warningEventWindow = `Исключить светильники из группы?`;
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать светильники для исключения из группы`;
+    }
+    this.eventWindow.openEventWindow();
+  }
+
 }

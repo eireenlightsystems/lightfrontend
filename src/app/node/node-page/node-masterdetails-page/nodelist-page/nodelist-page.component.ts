@@ -41,6 +41,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @Input() isFilter_list: boolean;
   @Input() isPlace: boolean;
   @Input() isPin_drop: boolean;
+  @Input() isGroup_in: boolean;
+  @Input() isGroup_out: boolean;
 
   @Input() nodeSortcolumn: any[];
   @Input() nodeColumns: any[];
@@ -83,6 +85,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   isFilter_listBtnDisabled: boolean;
   isPlaceBtnDisabled: boolean;
   isPin_dropBtnDisabled: boolean;
+  isGroup_outBtnDisabled = false;
+  isGroup_inBtnDisabled = false;
 
   constructor(private nodeService: NodeService) {
   }
@@ -177,6 +181,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       this.isFilter_listBtnDisabled = true;
       this.isPlaceBtnDisabled = true;
       this.isPin_dropBtnDisabled = true;
+      this.isGroup_inBtnDisabled = true;
+      this.isGroup_outBtnDisabled = true;
     } else {
       this.isAddBtnDisabled = false;
       this.isEditBtnDisabled = false;
@@ -186,6 +192,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       this.isFilter_listBtnDisabled = false;
       this.isPlaceBtnDisabled = false;
       this.isPin_dropBtnDisabled = false;
+      this.isGroup_inBtnDisabled = false;
+      this.isGroup_outBtnDisabled = false;
     }
 
     const params = Object.assign({}, {
@@ -276,5 +284,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.nodelistJqxgridComponent.pin_drop();
   }
 
+  group_in() {
+    this.nodelistJqxgridComponent.group_in();
+  }
 
+  group_out() {
+    this.nodelistJqxgridComponent.group_out();
+  }
 }

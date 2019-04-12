@@ -22,7 +22,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
-  @Input() nodeSelectId: number;
+  @Input() selectNodeId: number;
 
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
@@ -81,7 +81,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // if this.node is child grid, then we need update this.filter.nodeId
     if (!this.isMasterGrid) {
-      this.filter.nodeId = this.nodeSelectId.toString();
+      this.filter.nodeId = this.selectNodeId.toString();
     }
 
     // Definde filter

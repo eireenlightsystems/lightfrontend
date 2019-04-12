@@ -1,15 +1,16 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
+
 import {MaterialService} from '../../../../../shared/classes/material.service';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
-import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
 
-import {Node, Geograph, Contract, Owner, EquipmentType} from '../../../../../shared/interfaces';
+import {Node, Geograph, Contract, Owner, EquipmentType, SourceForLinkForm, ItemsLinkForm} from '../../../../../shared/interfaces';
 import {NodeService} from '../../../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 import {NodeeditFormComponent} from '../nodeedit-form/nodeedit-form.component';
-import {NodelinkFormComponent} from '../nodelink-form/nodelink-form.component';
+import {LinkFormComponent} from '../../../../../shared/components/link-form/link-form.component';
+
 
 
 @Component({
@@ -44,19 +45,28 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild('myGrid') myGrid: jqxGridComponent;
   @ViewChild('editWindow') editWindow: NodeeditFormComponent;
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
-  @ViewChild('okButton') okButton: jqxButtonComponent;
-  @ViewChild('linkWindow') linkWindow: NodelinkFormComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
 
   // other variables
   selectNode: Node = new Node();
   oSub: Subscription;
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
   rowcount = 0;
   islistBoxVisible = false;
   actionEventWindow = '';
+  warningEventWindow = '';
+  sourceForLinkForm: SourceForLinkForm;
 
-  source_jqxgrid: any;
-  dataAdapter_jqxgrid: any;
+  source_jqxgrid: any =
+    {
+      datatype: 'array',
+      localdata: this.nodes,
+      id: 'nodeId',
+      sortcolumn: this.nodeSortcolumn,
+      sortdirection: 'asc'
+    };
+  dataAdapter_jqxgrid: any = new jqx.dataAdapter(this.source_jqxgrid);
   columns: any[];
   listBoxSource: any[];
 
@@ -64,25 +74,58 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit() {
-    this.source_jqxgrid =
-      {
-        datatype: 'array',
-        localdata: this.nodes,
-        id: 'nodeId',
-        sortcolumn: this.nodeSortcolumn,
-        sortdirection: 'asc'
-      };
-    this.dataAdapter_jqxgrid = new jqx.dataAdapter(this.source_jqxgrid);
     this.refresh_jqxgGrid();
+
+    // Definde filter
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkGatewayNodes',
+        name: 'Выбрать узлы',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.nodeColumns,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'nodeId',
+        sortcolumn: ['nodeId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
   }
 
   ngAfterViewInit() {
-    this.refreshListBox();
+
   }
 
   ngOnDestroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
     }
     if (this.myListBox) {
       this.myListBox.destroy();
@@ -171,18 +214,6 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     this.myGrid.endupdate();
   };
 
-  refreshListBox() {
-    this.myGrid.beginupdate();
-    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
-      if (this.myListBox.attrSource[i].checked) {
-        this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-      } else {
-        this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-      }
-    }
-    this.myGrid.endupdate();
-  };
-
   onRowSelect(event: any) {
     if (event.args.row) {
       this.selectNode = event.args.row;
@@ -213,9 +244,34 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     this.onRefreshGrid.emit();
   }
 
-  saveLinkwinBtn() {
-    // refresh table
-    this.onRefreshGrid.emit();
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if (event.code === this.sourceForLinkForm.window.code) {
+      this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Узлы добавлены в группу!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          // refresh table
+          this.onRefreshGrid.emit();
+        }
+      );
+    }
+  }
+
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 
   // delete node
@@ -232,6 +288,11 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   okEvenwinBtn() {
+    const nodeIds = [];
+    for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
+      nodeIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].nodeId;
+    }
+
     if (this.actionEventWindow === 'del') {
       const selectedrowindex = this.myGrid.getselectedrowindex();
       const id = this.myGrid.getrowid(selectedrowindex);
@@ -249,11 +310,7 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
       }
     }
 
-    if (this.actionEventWindow === 'pin_drop') {
-      const nodeIds = [];
-      for (let i = 0; i < this.myGrid.widgetObject.selectedrowindexes.length; i++) {
-        nodeIds[i] = this.source_jqxgrid.localdata[this.myGrid.widgetObject.selectedrowindexes[i]].nodeId;
-      }
+    if (this.actionEventWindow === 'group_out') {
       this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
         response => {
           MaterialService.toast('Узлы удалены из группы!');
@@ -270,6 +327,14 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   place() {
+
+  }
+
+  pin_drop() {
+
+  }
+
+  group_in() {
     if (this.selectGatewayId > 1) {
       this.linkWindow.openWindow();
     } else {
@@ -279,10 +344,10 @@ export class NodelistJqxgridComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  pin_drop() {
+  group_out() {
     if (this.selectNode.nodeId) {
       this.eventWindow.okButtonDisabled(false);
-      this.actionEventWindow = 'pin_drop';
+      this.actionEventWindow = 'group_out';
       this.warningEventWindow = `Отвязать узлы от шлюза?`;
     } else {
       this.eventWindow.okButtonDisabled(true);

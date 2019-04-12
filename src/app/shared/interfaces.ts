@@ -45,6 +45,45 @@ export interface SourceForFilter {
   selectId: string;
 }
 
+export interface SourceForLinkForm {
+  window: {
+    code: string;
+    name: string;
+    theme: string;
+    autoOpen: boolean;
+    isModal: boolean;
+    modalOpacity: number;
+    width: number;
+    maxWidth: number;
+    minWidth: number;
+    height: number;
+    maxHeight: number;
+    minHeight: number;
+  };
+  grid: {
+    source: any[];
+    columns: any[];
+    theme: string;
+    width: number;
+    height: number;
+    columnsresize: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    altrows: boolean;
+    selectionmode: string;
+
+    valueMember: string;
+    sortcolumn: any[];
+    sortdirection: string;
+    selectId: any[];
+  };
+}
+
+export class ItemsLinkForm {
+  code: string;
+  Ids: number[];
+}
+
 // Fixture
 
 export class Fixture {

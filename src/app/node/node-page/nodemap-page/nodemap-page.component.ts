@@ -33,7 +33,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('editWindow') editWindow: NodeeditFormComponent;
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
 
   // other variables
   nodes: Node[];
@@ -45,6 +44,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   e_coord: number;
   map: any;
   actionEventWindow = '';
+  warningEventWindow = '';
   oSub: Subscription;
   offset = 0;
   limit = 1000000000000;

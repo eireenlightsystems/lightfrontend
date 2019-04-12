@@ -1,0 +1,55 @@
+<jqxWindow #linkWindow
+           [theme]="sourceForLinkForm.window.theme"
+           [autoOpen]="sourceForLinkForm.window.autoOpen"
+           [isModal]="sourceForLinkForm.window.isModal"
+           [modalOpacity]="sourceForLinkForm.window.modalOpacity"
+           [width]="sourceForLinkForm.window.width"
+           [maxWidth]="sourceForLinkForm.window.maxWidth"
+           [minWidth]="sourceForLinkForm.window.minWidth"
+           [height]="sourceForLinkForm.window.height"
+           [maxHeight]="sourceForLinkForm.window.maxHeight"
+           [minHeight]="sourceForLinkForm.window.minHeight"
+>
+  <div>
+    <b #windowHeader>Выберите элементы {{sourceForLinkForm.window.name}}</b>
+  </div>
+
+  <div>
+    <jqxGrid #myGrid
+             [theme]="sourceForLinkForm.grid.theme"
+             [width]="sourceForLinkForm.grid.width"
+             [height]="sourceForLinkForm.grid.height"
+             [source]="dataAdapter_jqxgrid"
+             [columns]="sourceForLinkForm.grid.columns"
+
+             [columnsresize]="sourceForLinkForm.grid.columnsresize"
+             [sortable]="sourceForLinkForm.grid.sortable"
+             [filterable]="sourceForLinkForm.grid.filterable"
+             [altrows]="sourceForLinkForm.grid.altrows"
+             [selectionmode]="sourceForLinkForm.grid.selectionmode"
+    >
+    </jqxGrid>
+
+    <div class="fr">
+      <div appButtonLink>
+        <jqxButton #okButton
+                   [theme]="sourceForLinkForm.window.theme"
+                   [width]="100"
+                   (onClick)="saveBtn()"
+        >
+          Сохранить
+        </jqxButton>
+      </div>
+      <div appButtonLink>
+        <jqxButton #cancelButton
+                   [theme]="sourceForLinkForm.window.theme"
+                   [width]="100"
+                   (onClick)="cancelBtn()"
+        >
+          Отмена
+        </jqxButton>
+      </div>
+    </div>
+  </div>
+
+</jqxWindow>

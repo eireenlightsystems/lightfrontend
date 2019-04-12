@@ -47,14 +47,12 @@ import {NodelistJqxgridComponent} from './node/node-page/node-masterdetails-page
 import {NodeMasterdetailsPageComponent} from './node/node-page/node-masterdetails-page/node-masterdetails-page.component';
 import {NodeeditFormComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
 import {FixtureeditFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component';
-import {FixturelinkFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelink-form/fixturelink-form.component';
 import {GatewayPageComponent} from './gateway/gateway-page/gateway-page.component';
 import {GatewayMasterdetailsPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gateway-masterdetails-page.component';
 import {GatewaylistPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
 import {GatewayeditFormComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewayedit-form/gatewayedit-form.component';
 import {GatewaylistJqxgridComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
 import {GatewaymapPageComponent} from './gateway/gateway-page/gatewaymap-page/gatewaymap-page.component';
-import {GatewaylinkFormComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylink-form/gatewaylink-form.component';
 import {FixturecomeditFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixturecomlistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-page.component';
 import {FixturecomlistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-jqxgrid/fixturecomlist-jqxgrid.component';
@@ -65,11 +63,9 @@ import {FixturecomspeededitFormComponent} from './fixture/fixture-page/fixture-m
 import {FixturecomspeedlistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {LimitedSliderComponent} from './shared/components/limited-slider/limited-slider.component';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
-import {NodelinkFormComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
 import {FixturegroupMdPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixturegroup-md-page.component';
 import {FixtureGrlistPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureGrlistJqxgridComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
-import {FixtureGrlinkFormComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlink-form/fixture-grlink-form.component';
 import {FixtureGreditFormComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-gredit-form/fixture-gredit-form.component';
 import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
 import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-md-page.component';
@@ -80,8 +76,10 @@ import {ButtonSimpleStyleDirective} from './shared/directives/button-simple-styl
 import {InputFilterStyleDirective} from './shared/directives/input-filter-style.directive';
 import {ComboboxFilterDirective} from './shared/directives/combobox-filter.directive';
 import {ButtonFilterDirective} from './shared/directives/button-filter.directive';
-import { FilterTableComponent } from './shared/components/filter-table/filter-table.component';
-import { FilterItemComponent } from './shared/components/filter-table/filter-item/filter-item.component';
+import {FilterTableComponent} from './shared/components/filter-table/filter-table.component';
+import {FilterItemComponent} from './shared/components/filter-table/filter-item/filter-item.component';
+import {LinkFormComponent} from './shared/components/link-form/link-form.component';
+import { ButtonLinkDirective } from './shared/directives/button-link.directive';
 
 
 @NgModule({
@@ -130,14 +128,12 @@ import { FilterItemComponent } from './shared/components/filter-table/filter-ite
     NodeMasterdetailsPageComponent,
     NodeeditFormComponent,
     FixtureeditFormComponent,
-    FixturelinkFormComponent,
     GatewayPageComponent,
     GatewayMasterdetailsPageComponent,
     GatewaylistPageComponent,
     GatewayeditFormComponent,
     GatewaylistJqxgridComponent,
     GatewaymapPageComponent,
-    GatewaylinkFormComponent,
     FixturecomeditFormComponent,
     FixturecomlistPageComponent,
     FixturecomlistJqxgridComponent,
@@ -148,11 +144,9 @@ import { FilterItemComponent } from './shared/components/filter-table/filter-ite
     FixturecomspeedlistJqxgridComponent,
     LimitedSliderComponent,
     NotFoundComponent,
-    NodelinkFormComponent,
     FixturegroupMdPageComponent,
     FixtureGrlistPageComponent,
     FixtureGrlistJqxgridComponent,
-    FixtureGrlinkFormComponent,
     FixtureGreditFormComponent,
     SensorPageComponent,
     SensorMdPageComponent,
@@ -165,7 +159,9 @@ import { FilterItemComponent } from './shared/components/filter-table/filter-ite
     ComboboxFilterDirective,
     ButtonFilterDirective,
     FilterTableComponent,
-    FilterItemComponent
+    FilterItemComponent,
+    LinkFormComponent,
+    ButtonLinkDirective
 
   ],
   imports: [

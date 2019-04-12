@@ -37,12 +37,11 @@
                    (onSaveEditwinBtn)="saveEditwinBtn()"
 ></app-gatewayedit-form>
 
-<app-gatewaylink-form #linkWindow
-                      [columns]="columns"
-                      [selectNodeId]="selectNodeId"
-
-                      (onSaveLinkwinBtn)="saveLinkwinBtn()"
-></app-gatewaylink-form>
+<app-link-form #linkWindow
+  [sourceForLinkForm]="sourceForLinkForm"
+  (onGetSourceForLinkForm)="getSourceForLinkForm()"
+  (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
 
 <app-event-window #eventWindow
                   [warning]="warningEventWindow"

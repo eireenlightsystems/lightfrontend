@@ -93,10 +93,11 @@
                          [sensorTypes]="sensorTypes"
                          [contractSensors]="contractSensors"
 
-                         [nodeSelectId]="selectNodeId"
+                         [selectNodeId]="selectNodeId"
 
                          [heightGrid]="310"
                          [isMasterGrid]="false"
+                         [selectionmode]="'checkbox'"
 
                          [isAdd]="true"
                          [isUpdate]="true"
@@ -104,8 +105,8 @@
                          [isRefresh]="false"
                          [isFilter_none]="false"
                          [isFilter_list]="false"
-                         [isPlace]="false"
-                         [isPin_drop]="false"
+                         [isPlace]="true"
+                         [isPin_drop]="true"
     ></app-sensorlist-page>
   </div>
 </jqxTabs>

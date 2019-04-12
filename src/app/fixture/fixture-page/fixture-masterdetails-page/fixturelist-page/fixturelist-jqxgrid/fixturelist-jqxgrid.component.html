@@ -26,9 +26,7 @@
          [altrows]="true"
          [selectionmode]="selectionmode"
 
-         (onRowclick)="onRowclick($event)"
-         (onRowselect)="onRowSelect($event)" (onRowunselect)="onRowUnselect($event)"
-         (onCellbeginedit)="onRowBeginEdit($event)" (onCellendedit)="onRowEndEdit($event)"
+         (onRowselect)="onRowSelect($event)"
 >
 </jqxGrid>
 
@@ -42,12 +40,17 @@
                       (onSaveEditwinBtn)="saveEditwinBtn()"
 ></app-fixtureedit-form>
 
-<app-fixturelink-form #linkWindow
-                      [columns]="columnsFixture"
-                      [selectNodeId]="selectNodeId"
+<app-link-form #linkWindow
+               [sourceForLinkForm]="sourceForLinkForm"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
 
-                      (onSaveLinkwinBtn)="saveLinkwinBtn()"
-></app-fixturelink-form>
+<app-link-form #linkGrFixWindow
+               [sourceForLinkForm]="sourceGrFixForLinkForm"
+               (onGetSourceForLinkForm)="getSourceGrFixForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
 
 <app-event-window #eventWindow
                   (onOkEvenwinBtn)="okEvenwinBtn()"

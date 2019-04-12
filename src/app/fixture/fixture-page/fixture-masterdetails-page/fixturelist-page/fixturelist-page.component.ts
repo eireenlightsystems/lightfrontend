@@ -1,5 +1,7 @@
 import {AfterViewInit, Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output} from '@angular/core';
 import {Subscription} from 'rxjs/index';
+
+import {MaterialService} from '../../../../shared/classes/material.service';
 import jqxTooltip = jqwidgets.jqxTooltip;
 
 import {FixtureService} from '../../../../shared/services/fixture/fixture.service';
@@ -17,9 +19,9 @@ import {
 import {FixturelistJqxgridComponent} from './fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
-import {NodelinkFormComponent} from '../../../../node/node-page/node-masterdetails-page/nodelist-page/nodelink-form/nodelink-form.component';
-import {MaterialService} from '../../../../shared/classes/material.service';
+
 import {isUndefined} from 'util';
+import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 
 
 const STEP = 1000000000000;
@@ -66,10 +68,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
 
   // define variables - link to view objects
   @ViewChild('fixturelistJqxgridComponent') fixturelistJqxgridComponent: FixturelistJqxgridComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
-  @ViewChild('okButton') okButton: jqxButtonComponent;
-  @ViewChild('linkWindow') linkWindow: NodelinkFormComponent;
   // @ViewChild('tooltip_refresh') tooltipRef_refresh: ElementRef
   // @ViewChild('tooltip_filter') tooltipRef_filter: ElementRef
 
@@ -417,46 +415,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   group_in() {
-    if (+this.fixtureGroupId > 1) {
-      this.linkWindow.getAll();
-      // this.linkWindow.openWindow();
-    } else {
-      this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать ГРУППУ для привязки светильников`;
-      this.eventWindow.openEventWindow();
-    }
+    this.fixturelistJqxgridComponent.group_in();
   }
 
   group_out() {
-    if (this.fixturelistJqxgridComponent.selectFixture.fixtureId) {
-      this.eventWindow.okButtonDisabled(false);
-      this.warningEventWindow = `Исключить светильники из группы?`;
-    } else {
-      this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать светильники для исключения из группы`;
-    }
-    this.eventWindow.openEventWindow();
+    this.fixturelistJqxgridComponent.group_out();
   }
-
-  okEvenwinBtn() {
-    const fixtureIds = [];
-    for (let i = 0; i < this.fixturelistJqxgridComponent.myGrid.widgetObject.selectedrowindexes.length; i++) {
-      fixtureIds[i] = this.fixturelistJqxgridComponent.source_jqxgrid.localdata[this.fixturelistJqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].fixtureId;
-    }
-    this.oSub = this.fixtureService.delFixtureInGroup(+this.fixtureGroupId, fixtureIds).subscribe(
-      response => {
-        MaterialService.toast('Светильники удалены из группы!');
-      },
-      error => MaterialService.toast(error.message),
-      () => {
-        this.refreshGrid();
-      }
-    );
-  }
-
-  saveLinkwinBtn() {
-    // refresh table
-    this.refreshGrid();
-  }
-
 }
