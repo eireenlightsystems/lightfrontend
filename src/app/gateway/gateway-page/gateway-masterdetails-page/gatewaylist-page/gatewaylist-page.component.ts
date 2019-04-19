@@ -2,17 +2,22 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {Subscription} from 'rxjs/index';
 
 import {
-  Gateway,
-  Geograph,
-  Contract,
-  Owner,
-  EquipmentType,
-  FilterGateway,
-  SourceForFilter,
-  SettingButtonPanel
+  Gateway, Geograph, Contract, Owner, EquipmentType,
+  FilterGateway, SourceForFilter,
+  SettingButtonPanel,
+  SourceForJqxGrid,
+  SettingWinForEditForm, SourceForEditForm,
+  SourceForLinkForm, ItemsLinkForm
 } from '../../../../shared/interfaces';
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
-import {GatewaylistJqxgridComponent} from './gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
+import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
+import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
+import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
+import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
+import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
+import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
+import {MaterialService} from '../../../../shared/classes/material.service';
+import {isUndefined} from 'util';
 
 
 const STEP = 1000000000000;
@@ -41,13 +46,25 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
-  @Output() onRefreshMap = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('gatewaylistJqxgridComponent') gatewaylistJqxgridComponent: GatewaylistJqxgridComponent;
+  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable') filterTable: FilterTableComponent;
+  @ViewChild('editWindow') editWindow: EditFormComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
 
   // other variables
-  gateways: Gateway[] = [];
+  offset = 0;
+  limit = STEP;
+  loading = false;
+  reloading = false;
+  noMoreItems = false;
+  columnsGrid: any[];
+  listBoxSource: any[];
+  // main
+  items: Gateway[] = [];
   filter: FilterGateway = {
     geographId: '',
     ownerId: '',
@@ -55,27 +72,83 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     nodeId: ''
   };
-  sourceForFilter: SourceForFilter[];
+  // grid
   oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
+  sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
-  //
-  offset = 0;
-  limit = STEP;
-  //
-  loading = false;
-  reloading = false;
-  noMoreNodes = false;
-  //
-  selectGatewayId = 0;
-
+  // edit form
+  settingWinForEditForm: SettingWinForEditForm;
+  sourceForEditForm: SourceForEditForm[];
+  isEditFormVisible = false;
+  typeEditWindow = '';
+  // link form
+  oSubForLinkWin: Subscription;
+  oSubLink: Subscription;
+  sourceForLinkForm: SourceForLinkForm;
+  // event form
+  warningEventWindow = '';
+  actionEventWindow = '';
 
   constructor(private gatewayService: GatewayService) {
   }
 
   ngOnInit() {
-    // if this.node is child grid, then we need update this.filter.nodeId
-    if (!this.isMasterGrid) {
-      this.filter.nodeId = this.selectNodeId.toString();
+    // define columns for table
+    if (this.isMasterGrid) {
+      this.columnsGrid =
+        [
+          {text: 'gatewayId', datafield: 'gatewayId', width: 150},
+          {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
+          {text: 'Договор', datafield: 'contractCode', width: 150},
+          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Владелец', datafield: 'ownerCode', width: 150},
+
+          {text: 'Широта', datafield: 'n_coordinate', width: 150},
+          {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+
+          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+          {text: 'Коментарий', datafield: 'comment', width: 150},
+        ];
+      // define a data source for filtering table columns
+      this.listBoxSource =
+        [
+          {label: 'gatewayId', value: 'gatewayId', checked: true},
+          {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
+          {label: 'Договор', value: 'contractCode', checked: true},
+          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
+          {label: 'Владелец', value: 'ownerCode', checked: true},
+
+          {label: 'Широта', value: 'n_coordinate', checked: true},
+          {label: 'Долгота', value: 'e_coordinate', checked: true},
+
+          {label: 'Серийный номер', value: 'serialNumber', checked: true},
+          {label: 'Коментарий', value: 'comment', checked: true},
+        ];
+    } else {
+      this.columnsGrid =
+        [
+          {text: 'gatewayId', datafield: 'gatewayId', width: 150},
+          {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
+          {text: 'Договор', datafield: 'contractCode', width: 150},
+          {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+          {text: 'Коментарий', datafield: 'comment', width: 150},
+        ];
+      // define a data source for filtering table columns
+      this.listBoxSource =
+        [
+          {label: 'gatewayId', value: 'gatewayId', checked: true},
+          {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
+          {label: 'Договор', value: 'contractCode', checked: true},
+          {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
+          {label: 'Серийный номер', value: 'serialNumber', checked: true},
+          {label: 'Коментарий', value: 'comment', checked: true},
+        ];
     }
 
     // Definde filter
@@ -121,6 +194,174 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
+    // Definde window edit form
+    this.settingWinForEditForm = {
+      code: 'editFormGateway',
+      name: 'Добавить/редактировать шлюз',
+      theme: 'material',
+      isModal: true,
+      modalOpacity: 0.3,
+      width: 450,
+      maxWidth: 500,
+      minWidth: 460,
+      height: 440,
+      maxHeight: 500,
+      minHeight: 440,
+      coordX: 500,
+      coordY: 65
+    };
+
+    // Definde edit form
+    this.sourceForEditForm = [
+      {
+        nameField: 'contractGateways',
+        type: 'jqxComboBox',
+        source: this.contractGateways,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Договор:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'gatewayTypes',
+        type: 'jqxComboBox',
+        source: this.gatewayTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Тип шлюза:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nodeGroupName',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Наим-е гр. узлов:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Серийный номер:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Комментарий:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
+
+    // Definde link form
+    this.sourceForLinkForm = {
+      window: {
+        code: 'linkGateway',
+        name: 'Выбрать шлюз',
+        theme: 'material',
+        autoOpen: false,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
+      },
+      grid: {
+        source: [],
+        columns: this.columnsGrid,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
+
+        valueMember: 'gatewayId',
+        sortcolumn: ['gatewayId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
+
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        source: this.listBoxSource,
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        columns: this.columnsGrid,
+        theme: 'material',
+        width: 0,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+
+        valueMember: 'gatewayId',
+        sortcolumn: ['gatewayId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
+
+    // if this.node is child grid, then we need update this.filter.nodeId
+    if (!this.isMasterGrid) {
+      this.filter.nodeId = this.selectNodeId.toString();
+    }
+
     this.getAll();
     this.reloading = true;
   }
@@ -131,25 +372,28 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshGrid() {
-    this.gateways = [];
-    this.getAll();
-    this.reloading = true;
-    this.selectGatewayId = 0;
+  // GRID
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid) {
-      this.refreshChildGrid(this.selectGatewayId);
-    }
-
-    // refresh map
-    this.onRefreshMap.emit();
+  getSourceForJqxGrid() {
+    this.sourceForJqxGrid.grid.source = this.items;
   }
 
-  refreshChildGrid(gatewayId: number) {
-    this.selectGatewayId = gatewayId;
+  refreshGrid() {
+    this.items = [];
+    this.getAll();
+    this.reloading = true;
+    this.selectItemId = 0;
+
+    // if this.nodes id master grid, then we need refresh child grid
+    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
+      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    }
+  }
+
+  refreshChildGrid(selectRow: any) {
+    this.selectItemId = selectRow.gatewayId;
     // refresh child grid
-    this.onRefreshChildGrid.emit(gatewayId);
+    this.onRefreshChildGrid.emit(selectRow.gatewayId);
   }
 
   getAll() {
@@ -189,8 +433,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.filter);
 
     this.oSub = this.gatewayService.getAll(params).subscribe(gateways => {
-      this.gateways = this.gateways.concat(gateways);
-      this.noMoreNodes = gateways.length < STEP;
+      this.items = this.items.concat(gateways);
+      this.noMoreItems = gateways.length < STEP;
       this.loading = false;
       this.reloading = false;
     });
@@ -202,8 +446,90 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
+  ins() {
+    this.typeEditWindow = 'ins';
+    this.getSourceForEditForm();
+    this.isEditFormVisible = !this.isEditFormVisible;
+  }
+
+  upd() {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
+      this.typeEditWindow = 'upd';
+      this.getSourceForEditForm();
+      this.isEditFormVisible = !this.isEditFormVisible;
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для редактирования`;
+      this.eventWindow.openEventWindow();
+    }
+  }
+
+  del() {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'del';
+      this.warningEventWindow = `Удалить шлюз id = "${this.jqxgridComponent.selectRow.gatewayId}"?`;
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для удаления`;
+    }
+    this.eventWindow.openEventWindow();
+  }
+
+  refresh() {
+    this.refreshGrid();
+  }
+
+  filterNone() {
+    this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
+  place() {
+    if (this.selectNodeId > 1) {
+      this.linkWindow.openWindow();
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
+      this.eventWindow.openEventWindow();
+    }
+  }
+
+  pinDrop() {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'pin_drop';
+      this.warningEventWindow = `Отвязать шлюз от узла?`;
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать шлюз для отвязки от узла`;
+    }
+    this.eventWindow.openEventWindow();
+  }
+
+  groupIn() {
+
+  }
+
+  groupOut() {
+
+  }
+
+  switchOn() {
+
+  }
+
+  switchOff() {
+
+  }
+
+  // FILTER
+
   applyFilter(filter: FilterGateway) {
-    this.gateways = [];
+    this.items = [];
     this.offset = 0;
     this.filter = filter;
     this.reloading = true;
@@ -211,11 +537,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   applyFilterFromFilter(event: any) {
-    this.gateways = [];
+    this.items = [];
     this.offset = 0;
     this.reloading = true;
     for (let i = 0; i < event.length; i++) {
-      switch (event[i].nameField) {
+      switch (event[i].name) {
         case 'geographs':
           this.filter.geographId = event[i].id;
           break;
@@ -250,51 +576,220 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  ins() {
-    this.gatewaylistJqxgridComponent.ins();
+  // EDIT FORM
+
+  saveEditwinBtn() {
+    const selectObject: Gateway = new Gateway();
+
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'contractGateways':
+          selectObject.contractId = +this.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'gatewayTypes':
+          selectObject.gatewayTypeId = +this.sourceForEditForm[i].selectId;
+          selectObject.gatewayTypeCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'nodeGroupName':
+          selectObject.nodeGroupName = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'serialNumber':
+          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'comment':
+          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (this.typeEditWindow === 'ins') {
+      // definde param befor ins
+      selectObject.nodeId = !isUndefined(this.selectNodeId) ? this.selectNodeId : 1;
+      if (selectObject.nodeId === 1) {
+        selectObject.e_coordinate = 0;
+        selectObject.n_coordinate = 0;
+        selectObject.geographCode = 'пусто';
+      }
+      // ins
+      this.oSub = this.gatewayService.ins(selectObject).subscribe(
+        response => {
+          selectObject.gatewayId = +response;
+          MaterialService.toast(`Датчик c id = ${selectObject.gatewayId} был добавлен.`);
+        },
+        error => MaterialService.toast(error.error.message),
+        () => {
+          // close edit window
+          this.editWindow.closeDestroyWindow();
+          // update data source
+          this.jqxgridComponent.refresh_ins(
+            selectObject.gatewayId, selectObject);
+        }
+      );
+    }
+    if (this.typeEditWindow === 'upd') {
+      // definde param befor upd
+      this.jqxgridComponent.selectRow.contractId = selectObject.contractId;
+      this.jqxgridComponent.selectRow.contractCode = selectObject.contractCode;
+      this.jqxgridComponent.selectRow.gatewayTypeId = selectObject.gatewayTypeId;
+      this.jqxgridComponent.selectRow.gatewayTypeCode = selectObject.gatewayTypeCode;
+      this.jqxgridComponent.selectRow.nodeGroupName = selectObject.nodeGroupName;
+      this.jqxgridComponent.selectRow.serialNumber = selectObject.serialNumber;
+      this.jqxgridComponent.selectRow.comment = selectObject.comment;
+
+      // upd
+      this.oSub = this.gatewayService.upd(this.jqxgridComponent.selectRow).subscribe(
+        response => {
+          MaterialService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.gatewayId} был обновлен.`);
+        },
+        error => MaterialService.toast(error.error.message),
+        () => {
+          // close edit window
+          this.editWindow.closeDestroyWindow();
+          // update data source
+          this.jqxgridComponent.refresh_upd(
+            this.jqxgridComponent.selectRow.gatewayId, this.jqxgridComponent.selectRow);
+        }
+      );
+    }
   }
 
-  upd() {
-    this.gatewaylistJqxgridComponent.upd();
+  getSourceForEditForm() {
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      if (this.typeEditWindow === 'ins') {
+        this.sourceForEditForm[i].selectedIndex = 0;
+        this.sourceForEditForm[i].selectId = '1';
+        this.sourceForEditForm[i].selectCode = 'пусто';
+      }
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'contractGateways':
+          this.sourceForEditForm[i].source = this.contractGateways;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
+            this.sourceForEditForm[i].selectCode = this.contractGateways.find(
+              (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).code;
+            this.sourceForEditForm[i].selectName = this.contractGateways.find(
+              (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).name;
+            for (let j = 0; j < this.contractGateways.length; j++) {
+              if (+this.contractGateways[j].id === +this.jqxgridComponent.selectRow.contractId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'gatewayTypes':
+          this.sourceForEditForm[i].source = this.gatewayTypes;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.gatewayTypeId.toString();
+            this.sourceForEditForm[i].selectCode = this.gatewayTypes.find(
+              (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).code;
+            this.sourceForEditForm[i].selectName = this.gatewayTypes.find(
+              (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).name;
+            for (let j = 0; j < this.gatewayTypes.length; j++) {
+              if (+this.gatewayTypes[j].id === +this.jqxgridComponent.selectRow.gatewayTypeId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'nodeGroupName':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.nodeGroupName;
+          }
+          break;
+        case 'serialNumber':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
+          }
+          break;
+        case 'comment':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
+          }
+          break;
+        default:
+          break;
+      }
+    }
   }
 
-  del() {
-    this.gatewaylistJqxgridComponent.del();
+  setEditFormVisible() {
+    this.isEditFormVisible = !this.isEditFormVisible;
   }
 
-  refresh() {
-    this.refreshGrid();
+  // LINK FORM
+
+  saveLinkwinBtn(event: ItemsLinkForm) {
+    if (event.code === this.sourceForLinkForm.window.code) {
+      this.oSubLink = this.gatewayService.setNodeId(this.selectNodeId, event.Ids).subscribe(
+        response => {
+          MaterialService.toast('Выбранные елементы привязаны!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          this.linkWindow.hideWindow();
+          // refresh table
+          this.refreshGrid();
+        }
+      );
+    }
   }
 
-  filterNone() {
-    this.gatewaylistJqxgridComponent.islistBoxVisible = !this.gatewaylistJqxgridComponent.islistBoxVisible;
+  getSourceForLinkForm() {
+    this.oSubForLinkWin = this.gatewayService.getGatewayNotInGroup().subscribe(
+      response => {
+        this.sourceForLinkForm.grid.source = response;
+        this.linkWindow.refreshGrid();
+      },
+      error => {
+        MaterialService.toast(error.error.message);
+      }
+    );
   }
 
-  filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
-  }
+  // EVENT FORM
 
-  place() {
-    this.gatewaylistJqxgridComponent.place();
-  }
+  okEvenwinBtn() {
+    if (this.actionEventWindow === 'del') {
+      const selectedrowindex = this.jqxgridComponent.myGrid.getselectedrowindex();
+      const id = this.jqxgridComponent.myGrid.getrowid(selectedrowindex);
 
-  pinDrop() {
-    this.gatewaylistJqxgridComponent.pinDrop();
-  }
-
-  groupIn() {
-
-  }
-
-  groupOut() {
-
-  }
-
-  switchOn() {
-
-  }
-
-  switchOff() {
-
+      if (+id >= 0) {
+        this.gatewayService.del(+id).subscribe(
+          response => {
+            MaterialService.toast('Шлюз был удален!');
+          },
+          error => MaterialService.toast(error.error.message),
+          () => {
+            this.jqxgridComponent.refresh_del(+id);
+          }
+        );
+      }
+    }
+    if (this.actionEventWindow === 'pin_drop') {
+      const gatewayIds = [];
+      for (let i = 0; i < this.jqxgridComponent.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        gatewayIds[i] = this.jqxgridComponent.source_jqxgrid.localdata[
+          this.jqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].gatewayId;
+      }
+      this.oSub = this.gatewayService.delNodeId(this.selectNodeId, gatewayIds).subscribe(
+        response => {
+          MaterialService.toast('Шлюз отвязаны от узла!');
+        },
+        error => {
+          MaterialService.toast(error.error.message);
+        },
+        () => {
+          // refresh table
+          this.refreshGrid();
+        }
+      );
+    }
   }
 }

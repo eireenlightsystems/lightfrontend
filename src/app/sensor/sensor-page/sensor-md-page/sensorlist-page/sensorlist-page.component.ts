@@ -13,7 +13,6 @@ import {
   SourceForFilter, SettingButtonPanel, SettingWinForEditForm, SourceForEditForm, SourceForLinkForm, ItemsLinkForm, SourceForJqxGrid
 } from '../../../../shared/interfaces';
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
-import {SensorlistJqxgridComponent} from './sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
@@ -67,7 +66,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   columnsGrid: any[];
   listBoxSource: any[];
   // main
-  sensors: Sensor[] = [];
+  items: Sensor[] = [];
   filter: FilterSensor = {
     geographId: '',
     ownerId: '',
@@ -77,7 +76,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   };
   // grid
   oSub: Subscription;
-  sensorSelectId = 0;
+  selectItemId = 0;
   sourceForJqxGrid: SourceForJqxGrid;
   // filter
   sourceForFilter: SourceForFilter[];
@@ -322,7 +321,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         allowDrag: true
       },
       grid: {
-        source: this.sensors,
+        source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
         width: 0,
@@ -351,8 +350,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.oSub.unsubscribe();
-
+    if (this.oSub) {
+      this.oSub.unsubscribe();
+    }
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
@@ -379,14 +379,14 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   // GRID
 
   getSourceForJqxGrid() {
-    this.sourceForJqxGrid.grid.source = this.sensors;
+    this.sourceForJqxGrid.grid.source = this.items;
   }
 
   refreshGrid() {
-    this.sensors = [];
+    this.items = [];
     this.getAll();
     this.reloading = true;
-    this.sensorSelectId = 0;
+    this.selectItemId = 0;
 
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
@@ -394,10 +394,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  refreshChildGrid(sensor: any) {
-    this.sensorSelectId = sensor.sensorId;
+  refreshChildGrid(selectRow: any) {
+    this.selectItemId = selectRow.sensorId;
     // refresh child grid
-    this.onRefreshChildGrid.emit(sensor.sensorId);
+    this.onRefreshChildGrid.emit(selectRow.sensorId);
   }
 
   getAll() {
@@ -437,7 +437,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       this.filter);
 
     this.oSub = this.sensorService.getAll(params).subscribe(sensors => {
-      this.sensors = this.sensors.concat(sensors);
+      this.items = this.items.concat(sensors);
       this.noMoreItems = sensors.length < STEP;
       this.loading = false;
       this.reloading = false;
@@ -457,7 +457,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   upd() {
-    if (!isUndefined(this.jqxgridComponent.selectRow.sensorId)) {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
       this.isEditFormVisible = !this.isEditFormVisible;
@@ -469,7 +469,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   del() {
-    if (this.jqxgridComponent.selectRow.sensorId) {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
       this.warningEventWindow = `Удалить датчик id = "${this.jqxgridComponent.selectRow.sensorId}"?`;
@@ -484,18 +484,26 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
+  filterNone() {
+    this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
+  }
+
+  filterList() {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+
   place() {
     if (this.selectNodeId > 1) {
       this.linkWindow.openWindow();
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
+      this.warningEventWindow = `Вам следует выбрать узел для привязки датчиков`;
       this.eventWindow.openEventWindow();
     }
   }
 
   pinDrop() {
-    if (this.jqxgridComponent.selectRow.sensorId) {
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
       this.warningEventWindow = `Отвязать датчик от узла?`;
@@ -525,7 +533,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(filter: FilterSensor) {
-    this.sensors = [];
+    this.items = [];
     this.offset = 0;
     this.filter = filter;
     this.reloading = true;
@@ -533,7 +541,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   applyFilterFromFilter(event: any) {
-    this.sensors = [];
+    this.items = [];
     this.offset = 0;
     this.reloading = true;
     for (let i = 0; i < event.length; i++) {
@@ -572,14 +580,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterNone() {
-    this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
-  }
-
-  filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
-  }
-
   // EDIT FORM
 
   saveEditwinBtn() {
@@ -608,7 +608,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
     if (this.typeEditWindow === 'ins') {
       // definde param befor ins
-      selectObject.nodeId = this.selectNodeId;
+      selectObject.nodeId = !isUndefined(this.selectNodeId) ? this.selectNodeId : 1;
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
@@ -669,9 +669,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.contractSensors.find(
-              (contractSensor: Contract) => contractSensor.id === +this.jqxgridComponent.selectRow.contractId).code;
+              (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).code;
             this.sourceForEditForm[i].selectName = this.contractSensors.find(
-              (contractSensor: Contract) => contractSensor.id === +this.jqxgridComponent.selectRow.contractId).name;
+              (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).name;
             for (let j = 0; j < this.contractSensors.length; j++) {
               if (+this.contractSensors[j].id === +this.jqxgridComponent.selectRow.contractId) {
                 this.sourceForEditForm[i].selectedIndex = j;

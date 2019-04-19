@@ -24,24 +24,14 @@
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->
   <div>
-    <app-gatewaylist-jqxgrid #gatewaylistJqxgridComponent
-                             [gateways]="gateways"
-                             [geographs]="geographs"
-                             [ownerGateways]="ownerGateways"
-                             [gatewayTypes]="gatewayTypes"
-                             [contractGateways]="contractGateways"
-
-                             [heightGrid]="heightGrid"
-                             [selectionmode]="selectionmode"
-                             [selectNodeId]="selectNodeId"
-                             [isMasterGrid]="isMasterGrid"
-
-                             (onRefreshGrid)="refreshGrid()"
-                             (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-gatewaylist-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
     <div
       class="center mb2"
-      *ngIf="!noMoreNodes; else "
+      *ngIf="!noMoreItems; else "
     >
       <ng-template #loader>
         <app-loader></app-loader>
@@ -56,3 +46,24 @@
 <ng-template #reloadingBlock>
   <app-loader></app-loader>
 </ng-template>
+
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
+
+<app-link-form #linkWindow
+               [sourceForLinkForm]="sourceForLinkForm"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

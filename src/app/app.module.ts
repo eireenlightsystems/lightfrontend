@@ -50,8 +50,6 @@ import {FixtureeditFormComponent} from './fixture/fixture-page/fixture-masterdet
 import {GatewayPageComponent} from './gateway/gateway-page/gateway-page.component';
 import {GatewayMasterdetailsPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gateway-masterdetails-page.component';
 import {GatewaylistPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
-import {GatewayeditFormComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewayedit-form/gatewayedit-form.component';
-import {GatewaylistJqxgridComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-jqxgrid/gatewaylist-jqxgrid.component';
 import {GatewaymapPageComponent} from './gateway/gateway-page/gatewaymap-page/gatewaymap-page.component';
 import {FixturecomeditFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixturecomlistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-page.component';
@@ -70,7 +68,6 @@ import {FixtureGreditFormComponent} from './fixture/fixture-page/fixturegroup-md
 import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
 import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-md-page.component';
 import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
-import {SensorlistJqxgridComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-jqxgrid/sensorlist-jqxgrid.component';
 import {ButtonSimpleStyleDirective} from './shared/directives/button-simple-style.directive';
 import {InputFilterStyleDirective} from './shared/directives/input-filter-style.directive';
 import {ComboboxFilterDirective} from './shared/directives/combobox-filter.directive';
@@ -134,8 +131,6 @@ import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component'
     GatewayPageComponent,
     GatewayMasterdetailsPageComponent,
     GatewaylistPageComponent,
-    GatewayeditFormComponent,
-    GatewaylistJqxgridComponent,
     GatewaymapPageComponent,
     FixturecomeditFormComponent,
     FixturecomlistPageComponent,
@@ -154,7 +149,6 @@ import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component'
     SensorPageComponent,
     SensorMdPageComponent,
     SensorlistPageComponent,
-    SensorlistJqxgridComponent,
     FilterTableComponent,
     FilterItemComponent,
     LinkFormComponent,
