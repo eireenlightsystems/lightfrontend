@@ -18,7 +18,7 @@
          [width]="getWidth()"
          [height]="heightGrid"
          [source]="dataAdapter_jqxgrid"
-         [columns]="columns"
+         [columns]="columnsGrid"
          [columnsresize]="true"
 
          [sortable]="true"
@@ -30,23 +30,6 @@
 >
 </jqxGrid>
 
-<app-sensoredit-form #editWindow
-                     [sensorTypes]="sensorTypes"
-                     [contractSensors]="contractSensors"
-
-                     (onSaveEditwinBtn)="saveEditwinBtn()"
-></app-sensoredit-form>
-
-<app-link-form #linkWindow
-               [sourceForLinkForm]="sourceForLinkForm"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
-></app-link-form>
-
-<app-event-window #eventWindow
-                  [warning]="warningEventWindow"
-                  (onOkEvenwinBtn)="okEvenwinBtn()"
-></app-event-window>
 
 
 

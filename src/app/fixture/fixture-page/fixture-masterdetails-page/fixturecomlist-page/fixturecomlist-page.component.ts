@@ -75,7 +75,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         width: '200',
         height: '43',
         placeHolder: 'Статус комманды:',
-        displayMember: 'name',
+        displayMember: 'nameField',
         valueMember: 'id',
         defaultValue: '',
         selectId: ''
@@ -183,7 +183,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.offset = 0;
     this.reloading = true;
     for (let i = 0; i < event.length; i++) {
-      switch (event[i].name) {
+      switch (event[i].nameField) {
         case 'commandStatuses':
           this.filterCommandSwitch.statusId = event[i].id;
           break;

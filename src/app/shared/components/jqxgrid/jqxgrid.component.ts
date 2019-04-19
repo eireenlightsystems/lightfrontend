@@ -3,34 +3,29 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 
-import {Sensor} from '../../../../../shared/interfaces';
+import {SourceForJqxGrid} from '../../interfaces';
 
 
 @Component({
-  selector: 'app-sensorlist-jqxgrid',
-  templateUrl: './sensorlist-jqxgrid.component.html',
-  styleUrls: ['./sensorlist-jqxgrid.component.css']
+  selector: 'app-jqxgrid',
+  templateUrl: './jqxgrid.component.html',
+  styleUrls: ['./jqxgrid.component.css']
 })
-export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
+export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // variables from master component
-  @Input() sensors: Sensor[];
-  @Input() columnsGrid: any[];
-  @Input() listBoxSource: any[];
-
-  @Input() heightGrid: number;
-  @Input() isMasterGrid: number;
-  @Input() selectionmode: string;
+  @Input() sourceForJqxGrid: SourceForJqxGrid;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<any>();
+  @Output() onGetSourceForJqxGrid = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('myListBox') myListBox: jqxListBoxComponent;
   @ViewChild('myGrid') myGrid: jqxGridComponent;
 
   // other variables
-  selectSensor: Sensor = new Sensor();
+  selectRow: any;
   islistBoxVisible = false;
 
   // define the data source for the table
@@ -41,15 +36,17 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit() {
+    this.onGetSourceForJqxGrid.emit();
+
     // define the data source for the table
     this.source_jqxgrid =
       {
         datatype: 'array',
-        localdata: this.sensors,
-        id: 'sensorId',
+        localdata: this.sourceForJqxGrid.grid.source,
+        id: this.sourceForJqxGrid.grid.valueMember,
 
-        sortcolumn: ['sensorId'],
-        sortdirection: 'desc'
+        sortcolumn: this.sourceForJqxGrid.grid.sortcolumn,
+        sortdirection: this.sourceForJqxGrid.grid.sortdirection
       };
     this.dataAdapter_jqxgrid = new jqx.dataAdapter(this.source_jqxgrid);
 
@@ -61,6 +58,10 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnDestroy() {
+    this.destroyGrid();
+  }
+
+  destroyGrid() {
     if (this.myListBox) {
       this.myListBox.destroy();
     }
@@ -118,12 +119,12 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
 
   // refresh table
   refresh_jqxgGrid() {
-    this.source_jqxgrid.localdata = this.sensors;
+    this.source_jqxgrid.localdata = this.sourceForJqxGrid.grid.source;
     this.myGrid.updatebounddata('data');
   }
 
-  refresh_del() {
-    this.myGrid.deleterow(this.selectSensor.sensorId);
+  refresh_del(id: any) {
+    this.myGrid.deleterow(id);
   }
 
   refresh_ins(id: any, row: any) {
@@ -136,11 +137,11 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
 
   onRowSelect(event: any) {
     if (event.args.row) {
-      this.selectSensor = event.args.row;
+      this.selectRow = event.args.row;
 
       // refresh child grid
-      if (this.isMasterGrid) {
-        this.onRefreshChildGrid.emit(this.selectSensor);
+      if (this.sourceForJqxGrid.grid.isMasterGrid) {
+        this.onRefreshChildGrid.emit(this.selectRow);
       }
     }
   }
@@ -154,7 +155,7 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
       this.myGrid.hidecolumn(event.args.value);
     }
     this.myGrid.endupdate();
-  };
+  }
 
   refreshListBox() {
     this.myGrid.beginupdate();
@@ -167,4 +168,5 @@ export class SensorlistJqxgridComponent implements OnInit, OnDestroy, AfterViewI
     }
     this.myGrid.endupdate();
   }
+
 }

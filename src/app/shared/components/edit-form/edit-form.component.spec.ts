@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SensoreditFormComponent } from './sensoredit-form.component';
+import { EditFormComponent } from './edit-form.component';
 
-describe('SensoreditFormComponent', () => {
-  let component: SensoreditFormComponent;
-  let fixture: ComponentFixture<SensoreditFormComponent>;
+describe('EditFormComponent', () => {
+  let component: EditFormComponent;
+  let fixture: ComponentFixture<EditFormComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SensoreditFormComponent ]
+      declarations: [ EditFormComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SensoreditFormComponent);
+    fixture = TestBed.createComponent(EditFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

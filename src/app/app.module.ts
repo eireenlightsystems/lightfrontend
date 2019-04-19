@@ -71,7 +71,6 @@ import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
 import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-md-page.component';
 import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
 import {SensorlistJqxgridComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-jqxgrid/sensorlist-jqxgrid.component';
-import {SensoreditFormComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensoredit-form/sensoredit-form.component';
 import {ButtonSimpleStyleDirective} from './shared/directives/button-simple-style.directive';
 import {InputFilterStyleDirective} from './shared/directives/input-filter-style.directive';
 import {ComboboxFilterDirective} from './shared/directives/combobox-filter.directive';
@@ -81,6 +80,9 @@ import {FilterItemComponent} from './shared/components/filter-table/filter-item/
 import {LinkFormComponent} from './shared/components/link-form/link-form.component';
 import { ButtonLinkDirective } from './shared/directives/button-link.directive';
 import { ButtonPanelComponent } from './shared/components/button-panel/button-panel.component';
+import { EditFormComponent } from './shared/components/edit-form/edit-form.component';
+import { EditFormItemComponent } from './shared/components/edit-form/edit-form-item/edit-form-item.component';
+import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component';
 
 
 @NgModule({
@@ -153,17 +155,19 @@ import { ButtonPanelComponent } from './shared/components/button-panel/button-pa
     SensorMdPageComponent,
     SensorlistPageComponent,
     SensorlistJqxgridComponent,
-    SensoreditFormComponent,
+    FilterTableComponent,
+    FilterItemComponent,
+    LinkFormComponent,
+    ButtonPanelComponent,
+    EditFormComponent,
 
     ButtonSimpleStyleDirective,
     InputFilterStyleDirective,
     ComboboxFilterDirective,
     ButtonFilterDirective,
-    FilterTableComponent,
-    FilterItemComponent,
-    LinkFormComponent,
     ButtonLinkDirective,
-    ButtonPanelComponent
+    EditFormItemComponent,
+    JqxgridComponent
 
   ],
   imports: [

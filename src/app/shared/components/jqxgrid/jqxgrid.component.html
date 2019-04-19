@@ -1,0 +1,32 @@
+<div [hidden]="!islistBoxVisible">
+  <jqxListBox #myListBox
+              style="float: left"
+              [theme]="this.sourceForJqxGrid.listbox.theme"
+              [width]="this.sourceForJqxGrid.listbox.width"
+              [height]="this.sourceForJqxGrid.listbox.height"
+              [source]="this.sourceForJqxGrid.listbox.source"
+              [checkboxes]="this.sourceForJqxGrid.listbox.checkboxes"
+              [filterable]="this.sourceForJqxGrid.listbox.filterable"
+              [allowDrag]="this.sourceForJqxGrid.listbox.allowDrag"
+
+              (onCheckChange)="myListBoxOnCheckChange($event)"
+  >
+  </jqxListBox>
+</div>
+
+<jqxGrid #myGrid
+         [theme]="this.sourceForJqxGrid.grid.theme"
+         [width]="getWidth()"
+         [height]="this.sourceForJqxGrid.grid.height"
+         [source]="dataAdapter_jqxgrid"
+         [columns]="this.sourceForJqxGrid.grid.columns"
+         [columnsresize]="this.sourceForJqxGrid.grid.columnsresize"
+
+         [sortable]="this.sourceForJqxGrid.grid.sortable"
+         [filterable]="this.sourceForJqxGrid.grid.filterable"
+         [altrows]="this.sourceForJqxGrid.grid.altrows"
+         [selectionmode]="this.sourceForJqxGrid.grid.selectionmode"
+
+         (onRowselect)="onRowSelect($event)"
+>
+</jqxGrid>

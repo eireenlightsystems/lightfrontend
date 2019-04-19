@@ -81,7 +81,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
         width: '250',
         height: '43',
         placeHolder: 'Владелец:',
-        displayMember: 'name',
+        displayMember: 'nameField',
         valueMember: 'id',
         defaultValue: '',
         selectId: ''
@@ -94,7 +94,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
         width: '250',
         height: '43',
         placeHolder: 'Тип группы:',
-        displayMember: 'name',
+        displayMember: 'nameField',
         valueMember: 'id',
         defaultValue: '',
         selectId: ''
@@ -164,7 +164,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy, AfterViewI
     this.offset = 0;
     this.reloading = true;
     for (let i = 0; i < event.length; i++) {
-      switch (event[i].name) {
+      switch (event[i].nameField) {
         case 'fixtureGroupOwners':
           this.filter.ownerId = event[i].id;
           break;

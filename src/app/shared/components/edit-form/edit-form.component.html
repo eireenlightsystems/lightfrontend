@@ -1,0 +1,44 @@
+<jqxWindow #editWindow
+           [theme]="settingWinForEditForm.theme"
+           [isModal]="settingWinForEditForm.isModal" [modalOpacity]="settingWinForEditForm.modalOpacity"
+           [height]="settingWinForEditForm.height" [maxHeight]="settingWinForEditForm.maxHeight"
+           [minHeight]="settingWinForEditForm.minHeight"
+           [width]="settingWinForEditForm.width" [maxWidth]="settingWinForEditForm.maxWidth"
+           [minWidth]="settingWinForEditForm.minWidth"
+           [position]="{ x: settingWinForEditForm.coordX, y: settingWinForEditForm.coordY }"
+           (onClose)="eventWindowClose($event)"
+>
+  <div #windowHeader>
+    <b>Добавить/Редактировать</b>
+  </div>
+
+  <div #windowContent>
+    <table>
+      <app-edit-form-item *ngFor="let itemEditForm of sourceForEditForm" [itemEditForm]="itemEditForm"
+                          #editFormItemComponent
+      ></app-edit-form-item>
+    </table>
+    <div class="fr" style="margin-left: 110px">
+      <div appButtonLink>
+        <jqxButton #okButton
+                   [theme]="settingWinForEditForm.theme"
+                   [width]="100"
+                   (onClick)="saveBtn()"
+        >
+          Сохранить
+        </jqxButton>
+      </div>
+      <div appButtonLink>
+        <jqxButton #cancelButton
+                   [theme]="settingWinForEditForm.theme"
+                   [width]="100"
+                   (onClick)="cancelBtn()"
+        >
+          Отмена
+        </jqxButton>
+      </div>
+    </div>
+  </div>
+
+
+</jqxWindow>

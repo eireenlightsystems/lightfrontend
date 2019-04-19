@@ -10,7 +10,6 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   // variables from master component
   @Input() sourceForFilter;
 
-
   // determine the functions that need to be performed in the parent component
   @Output() onFilter = new EventEmitter<any>();
   @Output() onInitSourceFilter = new EventEmitter();

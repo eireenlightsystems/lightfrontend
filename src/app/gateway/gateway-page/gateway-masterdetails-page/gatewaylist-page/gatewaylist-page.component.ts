@@ -215,7 +215,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.offset = 0;
     this.reloading = true;
     for (let i = 0; i < event.length; i++) {
-      switch (event[i].name) {
+      switch (event[i].nameField) {
         case 'geographs':
           this.filter.geographId = event[i].id;
           break;

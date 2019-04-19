@@ -1,3 +1,5 @@
+import {Input} from '@angular/core';
+
 export interface User {
   login: string;
   password: string;
@@ -28,6 +30,7 @@ export interface Owner {
 export interface EquipmentType {
   id: number;
   code: string;
+  name: string;
   model: string;
 }
 
@@ -43,6 +46,38 @@ export interface SourceForFilter {
   valueMember: string;
   defaultValue: any;
   selectId: string;
+}
+
+export interface SettingWinForEditForm {
+  code: string;
+  name: string;
+  theme: string;
+  isModal: boolean;
+  modalOpacity: number;
+  width: number;
+  maxWidth: number;
+  minWidth: number;
+  height: number;
+  maxHeight: number;
+  minHeight: number;
+  coordX: number;
+  coordY: number;
+}
+
+export interface SourceForEditForm {
+  nameField: string;
+  type: string;
+  source: any[];
+  theme: string;
+  width: string;
+  height: string;
+  placeHolder: string;
+  displayMember: string;
+  valueMember: string;
+  selectedIndex: number;
+  selectId: string;
+  selectCode: string;
+  selectName: string;
 }
 
 export interface SourceForLinkForm {
@@ -71,6 +106,37 @@ export interface SourceForLinkForm {
     filterable: boolean;
     altrows: boolean;
     selectionmode: string;
+
+    valueMember: string;
+    sortcolumn: any[];
+    sortdirection: string;
+    selectId: any[];
+  };
+}
+
+export interface SourceForJqxGrid {
+  listbox: {
+    source: any[];
+    theme: string;
+    width: number;
+    height: number;
+    checkboxes: boolean;
+    filterable: boolean;
+    allowDrag: boolean;
+  };
+  grid: {
+    source: any[];
+    columns: any[];
+    theme: string;
+    width: number;
+    height: number;
+
+    columnsresize: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    altrows: boolean;
+    selectionmode: string;
+    isMasterGrid: boolean;
 
     valueMember: string;
     sortcolumn: any[];

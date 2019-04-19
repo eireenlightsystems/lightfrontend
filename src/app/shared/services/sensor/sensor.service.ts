@@ -50,5 +50,4 @@ export class SensorService {
     };
     return this.http.delete<any>(`/api2/nodes/${nodeId}/sensors`, options);
   }
-
 }

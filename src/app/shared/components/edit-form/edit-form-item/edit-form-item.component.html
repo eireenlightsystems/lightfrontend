@@ -1,0 +1,56 @@
+<div [ngSwitch]="itemEditForm.type">
+  <div *ngSwitchCase="'jqxComboBox'">
+    <tr>
+      <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="right">
+        <jqxComboBox #jqxComboBox
+                     [theme]="itemEditForm.theme"
+                     [source]="itemEditForm.source"
+                     [width]="itemEditForm.width"
+                     [height]="itemEditForm.height"
+                     [displayMember]="itemEditForm.displayMember"
+                     [valueMember]="itemEditForm.valueMember"
+                     [selectedIndex]="itemEditForm.selectedIndex"
+
+                     (onSelect)="OnSelect($event)"
+        >
+        </jqxComboBox>
+      </td>
+    </tr>
+  </div>
+
+  <div *ngSwitchCase="'jqxTextArea'">
+    <tr>
+      <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="right">
+        <jqxTextArea
+          [theme]="itemEditForm.theme"
+          [width]="+itemEditForm.width" [height]="+itemEditForm.height"
+          [(ngModel)]="itemEditForm.selectCode"
+        >
+        </jqxTextArea>
+      </td>
+    </tr>
+  </div>
+
+  <div *ngSwitchCase="'jqxDateTimeInput'">
+    <tr>
+      <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="right">
+        <jqxDateTimeInput #jqxDateTimeInput
+                          [theme]="itemEditForm.theme"
+                          [width]="itemEditForm.width"
+                          [height]="itemEditForm.height"
+                          [showTimeButton]="true"
+                          [formatString]="'yyyy-MM-dd HH:mm'"
+
+                          (onValueChanged)="onValueChanged($event)"
+        >
+        </jqxDateTimeInput>
+      </td>
+    </tr>
+  </div>
+
+
+
+</div>

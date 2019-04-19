@@ -1,48 +1,37 @@
-<app-button-panel
-  [settingButtonPanel]="settingButtonPanel"
-  (onIns)="ins()"
-  (onUpd)="upd()"
-  (onDel)="del()"
-  (onRefresh)="refresh()"
-  (onFilterNone)="filterNone()"
-  (onFilterList)="filterList()"
-  (onPlace)="place()"
-  (onPinDrop)="pinDrop()"
-  (onGroupIn)="groupIn()"
-  (onGroupOut)="groupOut()"
-  (onSwitchOn)="switchOn()"
-  (onSwitchOff)="switchOff()"
+<app-button-panel #buttonPanel
+                  [settingButtonPanel]="settingButtonPanel"
+                  (onIns)="ins()"
+                  (onUpd)="upd()"
+                  (onDel)="del()"
+                  (onRefresh)="refresh()"
+                  (onFilterNone)="filterNone()"
+                  (onFilterList)="filterList()"
+                  (onPlace)="place()"
+                  (onPinDrop)="pinDrop()"
+                  (onGroupIn)="groupIn()"
+                  (onGroupOut)="groupOut()"
+                  (onSwitchOn)="switchOn()"
+                  (onSwitchOff)="switchOff()"
 ></app-button-panel>
 
-<app-filter-table
-  *ngIf="isFilterVisible"
-  [sourceForFilter]="sourceForFilter"
-  (onFilter)="applyFilterFromFilter($event)"
-  (onInitSourceFilter)="initSourceFilter()"
+<app-filter-table #filterTable
+                  *ngIf="isFilterVisible"
+                  [sourceForFilter]="sourceForFilter"
+                  (onFilter)="applyFilterFromFilter($event)"
+                  (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->
   <div>
-    <app-sensorlist-jqxgrid #sensorlistJqxgridComponent
-                            [sensors]="sensors"
-                            [geographs]="geographs"
-                            [ownerSensors]="ownerSensors"
-                            [sensorTypes]="sensorTypes"
-                            [contractSensors]="contractSensors"
-
-                            [selectNodeId]="selectNodeId"
-
-                            [heightGrid]="heightGrid"
-                            [selectionmode]="selectionmode"
-                            [isMasterGrid]="isMasterGrid"
-
-                            (onRefreshGrid)="refreshGrid()"
-                            (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-sensorlist-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
     <div
       class="center mb2"
-      *ngIf="!noMoreFixtures; else "
+      *ngIf="!noMoreItems; else "
     >
       <!--<button-->
       <!--class="btn waves-effect grey darken-1 btn-small"-->
@@ -65,3 +54,23 @@
   <app-loader></app-loader>
 </ng-template>
 
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
+
+<app-link-form #linkWindow
+               [sourceForLinkForm]="sourceForLinkForm"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>
