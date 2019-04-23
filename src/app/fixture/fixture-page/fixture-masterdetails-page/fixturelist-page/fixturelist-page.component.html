@@ -24,34 +24,14 @@
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->
   <div>
-    <app-fixturelist-jqxgrid #fixturelistJqxgridComponent
-                             [fixtures]="fixtures"
-                             [columnsFixture]="columnsFixture"
-                             [listBoxSourceFixture]="listBoxSourceFixture"
-
-                             [geographs]="geographs"
-                             [ownerFixtures]="ownerFixtures"
-                             [fixtureTypes]="fixtureTypes"
-                             [substations]="substations"
-                             [contractFixtures]="contractFixtures"
-                             [installers]="installers"
-                             [heightTypes]="heightTypes"
-
-                             [heightGrid]="heightGrid"
-                             [selectionmode]="selectionmode"
-                             [isMasterGrid]="isMasterGrid"
-
-                             [selectFixtureId]="selectFixtureId"
-                             [selectContractId]="selectContractId"
-                             [selectNodeId]="selectNodeId"
-                             [fixtureGroupId]="fixtureGroupId"
-
-                             (onRefreshGrid)="refreshGrid()"
-                             (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixturelist-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
     <div
       class="center mb2"
-      *ngIf="!noMoreFixtures; else "
+      *ngIf="!noMoreItems; else "
     >
       <!--<button-->
       <!--class="btn waves-effect grey darken-1 btn-small"-->
@@ -74,3 +54,29 @@
   <app-loader></app-loader>
 </ng-template>
 
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
+
+<app-link-form #linkWindow
+               [sourceForLinkForm]="sourceForLinkForm"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
+
+<app-link-form #linkGrFixWindow
+               [sourceForLinkForm]="sourceGrFixForLinkForm"
+               (onGetSourceForLinkForm)="getSourceGrFixForLinkForm()"
+               (onSaveLinkwinBtn)="saveLinkwinBtn($event)"
+></app-link-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

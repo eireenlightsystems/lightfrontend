@@ -5,9 +5,18 @@ import {MaterialService} from '../../../shared/classes/material.service';
 
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {Node, Fixture, Contract, Geograph, Owner, EquipmentType} from '../../../shared/interfaces';
-import {NodeeditFormComponent} from '../node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
+import {
+  Node,
+  Fixture,
+  Contract,
+  Geograph,
+  Owner,
+  EquipmentType,
+  SettingWinForEditForm,
+  SourceForEditForm
+} from '../../../shared/interfaces';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
+import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
 
 
 declare var ymaps: any;
@@ -31,12 +40,13 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: NodeeditFormComponent;
+  @ViewChild('editWindow') editWindow: EditFormComponent;
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
 
   // other variables
   nodes: Node[];
   saveNode: Node = new Node();
+  selectNode: Node = new Node();
   saveFixture: Fixture = new Fixture();
   delNodeId: number;
   moveNodeId: number;
@@ -49,6 +59,11 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   offset = 0;
   limit = 1000000000000;
   draggableIcon = false;
+  // edit form
+  settingWinForEditForm: SettingWinForEditForm;
+  sourceForEditForm: SourceForEditForm[];
+  isEditFormVisible = false;
+  typeEditWindow = '';
 
   constructor(private zone: NgZone,
               public router: Router,
@@ -58,6 +73,132 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Definde window edit form
+    this.settingWinForEditForm = {
+      code: 'editFormNode',
+      name: 'Добавить/редактировать узел',
+      theme: 'material',
+      isModal: true,
+      modalOpacity: 0.3,
+      width: 450,
+      maxWidth: 500,
+      minWidth: 460,
+      height: 550,
+      maxHeight: 550,
+      minHeight: 550,
+      coordX: 500,
+      coordY: 65
+    };
+
+    // Definde edit form
+    this.sourceForEditForm = [
+      {
+        nameField: 'geographs',
+        type: 'jqxComboBox',
+        source: this.geographs,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Геогр. понятие:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'contractNodes',
+        type: 'jqxComboBox',
+        source: this.contractNodes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Договор:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nodeTypes',
+        type: 'jqxComboBox',
+        source: this.nodeTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Тип датчика:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'n_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Координата север:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'e_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Координата восток:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Серийный номер:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Комментарий:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
+
     this.mapInit();
   }
 
@@ -261,8 +402,10 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.editWindow.positionWindow({x: 600, y: 90});
-              mapComponent.editWindow.openWindow(properties._data.node, 'upd');
+              mapComponent.selectNode = properties._data.node;
+              mapComponent.typeEditWindow = 'upd';
+              mapComponent.getSourceForEditForm();
+              mapComponent.isEditFormVisible = !mapComponent.isEditFormVisible;
             };
           };
         }).call(this),
@@ -474,11 +617,146 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // save result edit window
+  // EDIT FORM
+
   saveEditwinBtn() {
-    // refresh map
-    this.refreshMap();
-    // refresh grid
-    this.onRefreshGrid.emit();
+    let selectObject: Node = new Node();
+    selectObject = this.selectNode;
+
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'geographs':
+          selectObject.geographId = +this.sourceForEditForm[i].selectId;
+          selectObject.geographCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'contractNodes':
+          selectObject.contractId = +this.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'nodeTypes':
+          selectObject.nodeTypeId = +this.sourceForEditForm[i].selectId;
+          selectObject.nodeTypeCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'n_coordinate':
+          selectObject.n_coordinate = +this.sourceForEditForm[i].selectCode;
+          break;
+        case 'e_coordinate':
+          selectObject.e_coordinate = +this.sourceForEditForm[i].selectCode;
+          break;
+        case 'serialNumber':
+          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'comment':
+          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          break;
+        default:
+          break;
+      }
+    }
+    if (this.typeEditWindow === 'upd') {
+      // upd
+      this.oSub = this.nodeService.upd(selectObject).subscribe(
+        response => {
+          MaterialService.toast(`Узел/столб c id = ${selectObject.nodeId} был обновлен.`);
+        },
+        error => MaterialService.toast(error.error.message),
+        () => {
+          // close edit window
+          this.editWindow.closeDestroyWindow();
+          // refresh map
+          this.refreshMap();
+        }
+      );
+    }
+  }
+
+  getSourceForEditForm() {
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      if (this.typeEditWindow === 'ins') {
+        this.sourceForEditForm[i].selectedIndex = 0;
+        this.sourceForEditForm[i].selectId = '1';
+        this.sourceForEditForm[i].selectCode = 'пусто';
+      }
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'geographs':
+          this.sourceForEditForm[i].source = this.geographs;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectNode.contractId.toString();
+            this.sourceForEditForm[i].selectCode = this.geographs.find(
+              (geographOne: Geograph) => geographOne.id === +this.selectNode.geographId).code;
+            this.sourceForEditForm[i].selectName = this.geographs.find(
+              (geographOne: Geograph) => geographOne.id === +this.selectNode.geographId).fullName;
+            for (let j = 0; j < this.geographs.length; j++) {
+              if (+this.geographs[j].id === +this.selectNode.contractId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'contractNodes':
+          this.sourceForEditForm[i].source = this.contractNodes;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectNode.contractId.toString();
+            this.sourceForEditForm[i].selectCode = this.contractNodes.find(
+              (contractOne: Contract) => contractOne.id === +this.selectNode.contractId).code;
+            this.sourceForEditForm[i].selectName = this.contractNodes.find(
+              (contractOne: Contract) => contractOne.id === +this.selectNode.contractId).name;
+            for (let j = 0; j < this.contractNodes.length; j++) {
+              if (+this.contractNodes[j].id === +this.selectNode.contractId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'nodeTypes':
+          this.sourceForEditForm[i].source = this.nodeTypes;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectNode.nodeTypeId.toString();
+            this.sourceForEditForm[i].selectCode = this.nodeTypes.find(
+              (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).code;
+            this.sourceForEditForm[i].selectName = this.nodeTypes.find(
+              (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).name;
+            for (let j = 0; j < this.nodeTypes.length; j++) {
+              if (+this.nodeTypes[j].id === +this.selectNode.nodeTypeId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'n_coordinate':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectNode.n_coordinate.toString();
+          } else {
+            this.sourceForEditForm[i].selectCode = '0';
+          }
+          break;
+        case 'e_coordinate':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectNode.e_coordinate.toString();
+          } else {
+            this.sourceForEditForm[i].selectCode = '0';
+          }
+          break;
+        case 'serialNumber':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectNode.serialNumber;
+          }
+          break;
+        case 'comment':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectNode.comment;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  setEditFormVisible() {
+    this.isEditFormVisible = !this.isEditFormVisible;
   }
 }

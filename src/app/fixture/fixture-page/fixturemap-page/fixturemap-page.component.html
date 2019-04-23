@@ -1,14 +1,14 @@
 <div id="fixture_yamaps"></div>
 
-<app-fixtureedit-form #editWindow
-                      [fixtureTypes]="fixtureTypes"
-                      [substations]="substations"
-                      [contractFixtures]="contractFixtures"
-                      [installers]="installers"
-                      [heightTypes]="heightTypes"
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
 
-                      (onSaveEditwinBtn)="saveEditwinBtn()"
-></app-fixtureedit-form>
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
 
 <app-fixturecom-form #editSwitchOnWindow
                      (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"

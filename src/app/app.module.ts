@@ -37,34 +37,26 @@ import {AdminLayoutComponent} from './shared/layouts/site-layout/admin-layout/ad
 import {FixturemapPageComponent} from './fixture/fixture-page/fixturemap-page/fixturemap-page.component';
 import {FixturelistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {HandbookLayoutComponent} from './shared/layouts/site-layout/handbook-layout/handbook-layout.component';
-import {FixturelistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-jqxgrid/fixturelist-jqxgrid.component';
 import {FixturePageComponent} from './fixture/fixture-page/fixture-page.component';
 import {EventWindowComponent} from './shared/components/event-window/event-window.component';
 import {NodePageComponent} from './node/node-page/node-page.component';
 import {NodelistPageComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
 import {NodemapPageComponent} from './node/node-page/nodemap-page/nodemap-page.component';
-import {NodelistJqxgridComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodelist-jqxgrid/nodelist-jqxgrid.component';
 import {NodeMasterdetailsPageComponent} from './node/node-page/node-masterdetails-page/node-masterdetails-page.component';
-import {NodeeditFormComponent} from './node/node-page/node-masterdetails-page/nodelist-page/nodeedit-form/nodeedit-form.component';
-import {FixtureeditFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component';
 import {GatewayPageComponent} from './gateway/gateway-page/gateway-page.component';
 import {GatewayMasterdetailsPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gateway-masterdetails-page.component';
 import {GatewaylistPageComponent} from './gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
 import {GatewaymapPageComponent} from './gateway/gateway-page/gatewaymap-page/gatewaymap-page.component';
 import {FixturecomeditFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixturecomlistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-page.component';
-import {FixturecomlistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomlist-jqxgrid/fixturecomlist-jqxgrid.component';
 import {FixtureMasterdetailsPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixture-masterdetails-page.component';
 import {FixturecomeditSwitchoffFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 import {FixturecomspeedlistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-page.component';
 import {FixturecomspeededitFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeededit-form/fixturecomspeededit-form.component';
-import {FixturecomspeedlistJqxgridComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {LimitedSliderComponent} from './shared/components/limited-slider/limited-slider.component';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {FixturegroupMdPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixturegroup-md-page.component';
 import {FixtureGrlistPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
-import {FixtureGrlistJqxgridComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-jqxgrid/fixture-grlist-jqxgrid.component';
-import {FixtureGreditFormComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-gredit-form/fixture-gredit-form.component';
 import {SensorPageComponent} from './sensor/sensor-page/sensor-page.component';
 import {SensorMdPageComponent} from './sensor/sensor-page/sensor-md-page/sensor-md-page.component';
 import {SensorlistPageComponent} from './sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
@@ -94,7 +86,6 @@ import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component'
     AdminLayoutComponent,
     FixturemapPageComponent,
     FixturelistPageComponent,
-    FixturelistJqxgridComponent,
     HandbookLayoutComponent,
 
     jqxGridComponent,
@@ -124,28 +115,21 @@ import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component'
     NodePageComponent,
     NodelistPageComponent,
     NodemapPageComponent,
-    NodelistJqxgridComponent,
     NodeMasterdetailsPageComponent,
-    NodeeditFormComponent,
-    FixtureeditFormComponent,
     GatewayPageComponent,
     GatewayMasterdetailsPageComponent,
     GatewaylistPageComponent,
     GatewaymapPageComponent,
     FixturecomeditFormComponent,
     FixturecomlistPageComponent,
-    FixturecomlistJqxgridComponent,
     FixtureMasterdetailsPageComponent,
     FixturecomeditSwitchoffFormComponent,
     FixturecomspeedlistPageComponent,
     FixturecomspeededitFormComponent,
-    FixturecomspeedlistJqxgridComponent,
     LimitedSliderComponent,
     NotFoundComponent,
     FixturegroupMdPageComponent,
     FixtureGrlistPageComponent,
-    FixtureGrlistJqxgridComponent,
-    FixtureGreditFormComponent,
     SensorPageComponent,
     SensorMdPageComponent,
     SensorlistPageComponent,

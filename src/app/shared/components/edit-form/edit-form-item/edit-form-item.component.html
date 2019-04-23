@@ -33,6 +33,24 @@
     </tr>
   </div>
 
+  <div *ngSwitchCase="'jqxNumberInput'">
+    <tr>
+      <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="right">
+        <jqxNumberInput
+          [theme]="itemEditForm.theme"
+          [width]="+itemEditForm.width" [height]="+itemEditForm.height"
+          [min]="0" [spinButtons]="true"
+          [spinMode]="'simple'"
+          [digits]="2"
+          [decimalDigits]="6"
+          [(ngModel)]="itemEditForm.selectCode"
+        >
+        </jqxNumberInput>
+      </td>
+    </tr>
+  </div>
+
   <div *ngSwitchCase="'jqxDateTimeInput'">
     <tr>
       <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
@@ -51,6 +69,33 @@
     </tr>
   </div>
 
+  <div *ngSwitchCase="'jqxCheckBox'">
+    <tr>
+      <td align="right">
+        <jqxCheckBox
+          [theme]="itemEditForm.theme"
+          [checked]="false"
+          [(ngModel)]="itemEditForm.selectCode"
+          (click)="''"
+        >{{itemEditForm.placeHolder}}
+        </jqxCheckBox>
+      </td>
+      <td align="left">
+      </td>
+    </tr>
+  </div>
 
+  <div *ngSwitchCase="'InputSlider'">
+    <tr>
+      <td align="right"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="left">
+        <div class="fr">
+          <input #workLevel type="range" step="5" min="0" max="100"
+                 (input)="this.workLevelOutput.nativeElement.value = $event.target.value"/>
+          <output #workLevelOutput></output>
+        </div>
+      </td>
+    </tr>
+  </div>
 
 </div>

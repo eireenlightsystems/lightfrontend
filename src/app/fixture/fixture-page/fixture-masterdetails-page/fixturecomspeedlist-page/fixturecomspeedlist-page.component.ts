@@ -1,17 +1,24 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
+import {isUndefined} from 'util';
 
 import {
-  CommandStatus,
-  CommandType,
-  CommandSpeedSwitch,
-  FilterCommandSpeedSwitch,
-  SourceForFilter,
-  CommandSpeedSwitchDflt, SettingButtonPanel
+  CommandStatus, CommandType, CommandSpeedSwitch,
+  FilterCommandSpeedSwitch, SourceForFilter, CommandSpeedSwitchDflt,
+  SettingButtonPanel,
+  SourceForJqxGrid,
+  SettingWinForEditForm, SourceForEditForm
 } from '../../../../shared/interfaces';
-import {FixturecomspeedlistJqxgridComponent} from './fixturecomspeedlist-jqxgrid/fixturecomspeedlist-jqxgrid.component';
 import {CommandSpeedSwitchService} from '../../../../shared/services/command/commandSpeedSwitch.service';
 import {DateTimeFormat} from '../../../../shared/classes/DateTimeFormat';
+import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
+import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
+import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
+import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
+import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
+import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
+import {FixturecomspeededitFormComponent} from './fixturecomspeededit-form/fixturecomspeededit-form.component';
+import {MaterialService} from '../../../../shared/classes/material.service';
 
 
 const STEP = 1000000000000;
@@ -29,48 +36,95 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   @Input() commandStatuses: CommandStatus[];
   @Input() speedDirectiones: CommandType[];
 
-  @Input() heightGrid: number;
   @Input() selectFixtureId: number;
-  @Input() selectionmode: string;
+
+  @Input() heightGrid: number;
   @Input() isMasterGrid: any;
-  @Input() filterCommandSpeedSwitch: FilterCommandSpeedSwitch;
+  @Input() selectionmode: string;
 
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
-
+  @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('fixturecomspeedlistJqxgridComponent') fixturecomspeedlistJqxgridComponent: FixturecomspeedlistJqxgridComponent;
+  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable') filterTable: FilterTableComponent;
+  @ViewChild('editWindow') editWindow: EditFormComponent;
+  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+
+  @ViewChild('editSpeedComWindow') editSpeedComWindow: FixturecomspeededitFormComponent;
 
   // other variables
-  commandSpeedSwitches: CommandSpeedSwitch[] = [];
-  oSub: Subscription;
-  isFilterVisible = false;
-  sourceForFilter: SourceForFilter[];
-  //
   offset = 0;
   limit = STEP;
-  //
   loading = false;
   reloading = false;
-  noMoreCommand_switches = false;
-  //
-  selectCommandSpeedId = 0;
-  commandSpeedSwitchDflt: CommandSpeedSwitchDflt;
+  noMoreItems = false;
+  columnsGrid: any[];
+  listBoxSource: any[];
+  // main
+  items: CommandSpeedSwitch[] = [];
+  ids: number[] = [];
+  commandSpeedSwitchDflt: CommandSpeedSwitchDflt = this.commandSpeedSwitchService.dfltParams();
+  todayEndStart = {
+    iso8601TZ: {
+      start: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0))),
+      end: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+    }
+  };
+  filter: FilterCommandSpeedSwitch = {
+    startDateTime: this.todayEndStart.iso8601TZ.start(),
+    endDateTime: this.todayEndStart.iso8601TZ.end(),
+    fixtureId: '',
+    statusId: this.commandSpeedSwitchDflt.statusId.toString(),
+    // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
+    speedDirectionId: ''
+  };
+  // grid
+  oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
+  sourceForFilter: SourceForFilter[];
+  isFilterVisible = false;
+  // edit form
+  settingWinForEditFormSwitchOff: SettingWinForEditForm;
+  sourceForEditFormSwitchOff: SourceForEditForm[];
+  isEditFormVisible = false;
+  typeEditWindow = '';
+  // event form
+  warningEventWindow = '';
+  actionEventWindow = '';
 
 
   constructor(private commandSpeedSwitchService: CommandSpeedSwitchService) {
   }
 
   ngOnInit() {
-    // if this.node is child grid, then we need update this.filter.fixtureId
-    if (!this.isMasterGrid) {
-      // this.filter.fixtureId = this.selectFixtureId
-      this.filterCommandSpeedSwitch.fixtureId = this.selectFixtureId.toString();
-    }
+    // define columns for table
+    this.columnsGrid =
+      [
+        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+        {text: 'Время начала', datafield: 'startDateTime', width: 150},
 
-    // Definde filter
+        {text: 'Скорость, сек', datafield: 'speed', width: 200},
+        {text: 'Статус', datafield: 'statusName', width: 200},
+        {text: 'Тип команды', datafield: 'speedDirectionName', width: 300},
+      ];
+    this.listBoxSource =
+      [
+        {label: 'commandId', value: 'commandId', checked: false},
+        {label: 'Время начала', value: 'startDateTime', checked: true},
+
+        {label: 'Скорость, сек', value: 'speed', checked: true},
+        {label: 'Статус', value: 'statusName', checked: true},
+        {label: 'Тип команды', value: 'speedDirectionName', checked: true},
+      ];
+
+    // define filter
     this.commandSpeedSwitchDflt = this.commandSpeedSwitchService.dfltParams();
     this.sourceForFilter = [
       {
@@ -81,7 +135,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
         width: '200',
         height: '43',
         placeHolder: 'Статус комманды:',
-        displayMember: 'nameField',
+        displayMember: 'name',
         valueMember: 'id',
         defaultValue: '',
         selectId: ''
@@ -94,7 +148,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
         width: '400',
         height: '43',
         placeHolder: 'Режим скорости:',
-        displayMember: 'nameField',
+        displayMember: 'name',
         valueMember: 'id',
         defaultValue: '',
         selectId: ''
@@ -127,24 +181,101 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
+    // define window edit form
+
+    // define edit form
+
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        source: this.listBoxSource,
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        columns: this.columnsGrid,
+        theme: 'material',
+        width: 0,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+
+        valueMember: 'commandId',
+        sortcolumn: ['commandId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
+
+    // if this.node is child grid, then we need update this.filter.fixtureId
+    if (!this.isMasterGrid) {
+      this.filter.fixtureId = this.selectFixtureId.toString();
+    }
+
     this.getAll();
     this.reloading = true;
   }
 
   ngOnDestroy() {
-    this.oSub.unsubscribe();
+    if (this.oSub) {
+      this.oSub.unsubscribe();
+    }
+    if (this.jqxgridComponent) {
+      this.jqxgridComponent.destroyGrid();
+    }
+    // if (this.filterTable) {
+    //   this.filterTable.destroy();
+    // }
+    if (this.buttonPanel) {
+      this.buttonPanel.destroy();
+    }
+    if (this.editWindow) {
+      this.editWindow.destroyWindow();
+    }
+    if (this.editSpeedComWindow) {
+      this.editSpeedComWindow.destroyWindow();
+    }
+    if (this.linkWindow) {
+      this.linkWindow.destroyWindow();
+    }
+  }
+
+  // GRID
+
+  getSourceForJqxGrid() {
+    this.sourceForJqxGrid.grid.source = this.items;
   }
 
   refreshGrid() {
-    this.commandSpeedSwitches = [];
+    this.items = [];
     this.getAll();
     this.reloading = true;
-    this.selectCommandSpeedId = 0;
+    this.selectItemId = 0;
+
+    // if this.nodes id master grid, then we need refresh child grid
+    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
+      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    }
+  }
+
+  refreshChildGrid(selectRow: any) {
+    this.selectItemId = selectRow.commandId;
+    // refresh child grid
+    this.onRefreshChildGrid.emit(selectRow.commandId);
   }
 
   getAll() {
     // Disabled/available buttons
-    if (!this.isMasterGrid && +this.filterCommandSpeedSwitch.fixtureId <= 0) {
+    if (!this.isMasterGrid && +this.filter.fixtureId <= 0) {
       this.settingButtonPanel.add.disabled = true;
       this.settingButtonPanel.upd.disabled = true;
       this.settingButtonPanel.del.disabled = true;
@@ -176,20 +307,22 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
         offset: this.offset,
         limit: this.limit
       },
-      this.filterCommandSpeedSwitch
+      this.filter
     );
-    this.oSub = this.commandSpeedSwitchService.getAll(params).subscribe(commandSpeed => {
+    this.oSub = this.commandSpeedSwitchService.getAll(params).subscribe(commandSpeeds => {
       // Link statusName
-      const commandSpeedName = commandSpeed;
+      const commandSpeedName = commandSpeeds;
       commandSpeedName.forEach(currentCommand => {
-        currentCommand.statusName = this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
+        currentCommand.statusName = this.commandStatuses.find(
+          (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
       });
       // Link speedDirectionsName
       commandSpeedName.forEach(currentCommand => {
-        currentCommand.speedDirectionName = this.speedDirectiones.find((currentSpeedDirection: CommandType) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
+        currentCommand.speedDirectionName = this.speedDirectiones.find(
+          (currentSpeedDirection: CommandType) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
       });
-      this.commandSpeedSwitches = this.commandSpeedSwitches.concat(commandSpeedName);
-      this.noMoreCommand_switches = commandSpeed.length < STEP;
+      this.items = this.items.concat(commandSpeedName);
+      this.noMoreItems = commandSpeeds.length < STEP;
       this.loading = false;
       this.reloading = false;
     });
@@ -201,55 +334,36 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
   }
 
-  applyFilter(event: any) {
-    this.commandSpeedSwitches = [];
-    this.offset = 0;
-    this.reloading = true;
-    for (let i = 0; i < event.length; i++) {
-      switch (event[i].nameField) {
-        case 'commandStatuses':
-          this.filterCommandSpeedSwitch.statusId = event[i].id;
-          break;
-        case 'speedDirectiones':
-          this.filterCommandSpeedSwitch.speedDirectionId = event[i].id;
-          break;
-        case 'startDateTime':
-          this.filterCommandSpeedSwitch.startDateTime = event[i].id;
-          break;
-        case 'endDateTime':
-          this.filterCommandSpeedSwitch.endDateTime = event[i].id;
-          break;
-        default:
-          break;
-      }
-    }
-    this.getAll();
-  }
-
-  initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'commandStatuses':
-          this.sourceForFilter[i].source = this.commandStatuses;
-          this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find((currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
-          this.sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
-          break;
-        default:
-          break;
-      }
-    }
-  }
-
   ins() {
-    this.fixturecomspeedlistJqxgridComponent.ins();
+    this.editSpeedComWindow.positionWindow({x: 600, y: 90});
+    this.editSpeedComWindow.openWindow(this.selectFixtureId, 'ins');
   }
 
   upd() {
-    this.fixturecomspeedlistJqxgridComponent.upd();
+    this.editSpeedComWindow.positionWindow({x: 600, y: 90});
+    this.editSpeedComWindow.openWindow(this.selectFixtureId, 'upd');
   }
 
   del() {
-    this.fixturecomspeedlistJqxgridComponent.del();
+    if (!isUndefined(this.jqxgridComponent.selectRow)) {
+      this.ids = [];
+      for (let i = 0; i < this.jqxgridComponent.myGrid.widgetObject.selectedrowindexes.length; i++) {
+        this.ids[i] = this.jqxgridComponent.source_jqxgrid.localdata[
+          this.jqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].commandId;
+      }
+
+      this.eventWindow.okButtonDisabled(false);
+      this.actionEventWindow = 'del';
+      if (this.ids.length > 1) {
+        this.warningEventWindow = `Удалить команды?`;
+      } else {
+        this.warningEventWindow = `Удалить команду id = "${this.jqxgridComponent.selectRow.commandId}"?`;
+      }
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow = `Вам следует выбрать команду для удаления`;
+    }
+    this.eventWindow.openEventWindow();
   }
 
   refresh() {
@@ -257,7 +371,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    this.fixturecomspeedlistJqxgridComponent.islistBoxVisible = !this.fixturecomspeedlistJqxgridComponent.islistBoxVisible;
+    this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
   }
 
   filterList() {
@@ -286,5 +400,80 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
 
   switchOff() {
 
+  }
+
+  // FILTER
+
+  applyFilter(filter: FilterCommandSpeedSwitch) {
+    this.items = [];
+    this.offset = 0;
+    this.filter = filter;
+    this.reloading = true;
+    this.getAll();
+  }
+
+  applyFilterFromFilter(event: any) {
+    this.items = [];
+    this.offset = 0;
+    this.reloading = true;
+    for (let i = 0; i < event.length; i++) {
+      switch (event[i].name) {
+        case 'commandStatuses':
+          this.filter.statusId = event[i].id;
+          break;
+        case 'speedDirectiones':
+          this.filter.speedDirectionId = event[i].id;
+          break;
+        case 'startDateTime':
+          this.filter.startDateTime = event[i].id;
+          break;
+        case 'endDateTime':
+          this.filter.endDateTime = event[i].id;
+          break;
+        default:
+          break;
+      }
+    }
+    this.getAll();
+  }
+
+  initSourceFilter() {
+    for (let i = 0; i < this.sourceForFilter.length; i++) {
+      switch (this.sourceForFilter[i].name) {
+        case 'commandStatuses':
+          this.sourceForFilter[i].source = this.commandStatuses;
+          this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
+            (currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
+          this.sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  // EDIT FORM
+
+  saveSpeedEditwinBtn() {
+    // refresh table
+    this.refreshGrid();
+  }
+
+  // EVENT FORM
+
+  okEvenwinBtn() {
+    if (this.actionEventWindow === 'del') {
+      if (this.ids.length >= 0) {
+        this.commandSpeedSwitchService.del(this.ids).subscribe(
+          response => {
+            MaterialService.toast('Комманды удалены!');
+          },
+          error => MaterialService.toast(error.error.message),
+          () => {
+            this.jqxgridComponent.refresh_del(this.ids);
+          }
+        );
+      }
+    }
   }
 }

@@ -31,17 +31,6 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() fixtureGroupId: string;
   @Input() selectionmode: number;
 
-  // @Input() isAdd: boolean;
-  // @Input() isUpdate: boolean;
-  // @Input() isDelete: boolean;
-  // @Input() isRefresh: boolean;
-  // @Input() isFilter_none: boolean;
-  // @Input() isFilter_list: boolean;
-  // @Input() isPlace: boolean;
-  // @Input() isPin_drop: boolean;
-  // @Input() isGroup_in: boolean;
-  // @Input() isGroup_out: boolean;
-
   // node source
   @Input() geographs: Geograph[];
 

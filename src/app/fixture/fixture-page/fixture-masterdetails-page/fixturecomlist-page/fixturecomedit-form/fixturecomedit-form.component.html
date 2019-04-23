@@ -3,7 +3,7 @@
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="'0.3'"
            [width]="500" [maxWidth]="500" [minWidth]="500"
-           [height]="450" [maxHeight]="450" [minHeight]="450"
+           [height]="470" [maxHeight]="470" [minHeight]="470"
 >
   <div #windowHeader>
     <div class="fr">
@@ -82,25 +82,29 @@
           </div>
         </td>
       </tr>
-
-      <tr>
-        <td align="right"></td>
-        <td style="padding-top: 10px;" align="right">
-          <jqxButton #okButton class="ok waves-effect waves-orange white blue-text" style="margin-right: 5px;"
-                     [width]="80"
-                     (onClick)="saveBtn()"
-          >
-            Сохранить
-          </jqxButton>
-          <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text" style="margin-right: 5px;"
-                     [width]="80"
-                     (onClick)="cancelBtn()"
-          >
-            Отмена
-          </jqxButton>
-        </td>
-      </tr>
     </table>
+
+    <div class="fr" style="margin-left: 150px">
+      <div appButtonLink>
+        <jqxButton #okButton
+                   [theme]="'material'"
+                   [width]="100"
+                   (onClick)="saveBtn()"
+        >
+          Сохранить
+        </jqxButton>
+      </div>
+      <div appButtonLink>
+        <jqxButton #cancelButton
+                   [theme]="'material'"
+                   [width]="100"
+                   (onClick)="cancelBtn()"
+        >
+          Отмена
+        </jqxButton>
+      </div>
+    </div>
+
   </div>
 
 </jqxWindow>

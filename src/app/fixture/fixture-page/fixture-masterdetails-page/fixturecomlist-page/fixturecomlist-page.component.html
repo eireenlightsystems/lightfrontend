@@ -17,27 +17,21 @@
 <app-filter-table
   *ngIf="isFilterVisible"
   [sourceForFilter]="sourceForFilter"
-  (onFilter)="applyFilter($event)"
+  (onFilter)="applyFilterFromFilter($event)"
   (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->
   <div>
-    <app-fixturecomlist-jqxgrid #fixturecomlistJqxgridComponent
-                                [commandSwitches]="commandSwitches"
-
-                                [heightGrid]="heightGrid"
-                                [selectionmode]="selectionmode"
-                                [isMasterGrid]="isMasterGrid"
-                                [selectFixtureId]="selectFixtureId"
-
-                                (onRefreshGrid)="refreshGrid()"
-                                (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixturecomlist-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
     <div
       class="center mb2"
-      *ngIf="!noMoreCommand_switches; else "
+      *ngIf="!noMoreItems; else "
     >
       <ng-template #loader>
         <app-loader></app-loader>
@@ -53,3 +47,15 @@
   <app-loader></app-loader>
 </ng-template>
 
+<app-fixturecom-form #editSwitchOnWindow
+                     (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"
+></app-fixturecom-form>
+
+<app-fixturecomedit-switchoff-form #editSwitchOffWindow
+                                   (onSaveEditSwitchOffwinBtn)="saveEditSwitchOffwinBtn()"
+></app-fixturecomedit-switchoff-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

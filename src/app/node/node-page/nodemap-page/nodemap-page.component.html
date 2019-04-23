@@ -1,11 +1,14 @@
 <div id="node_yamaps"></div>
 
-<app-nodeedit-form #editWindow
-                   [geographs]="geographs"
-                   [nodeTypes]="nodeTypes"
-                   [contractNodes]="contractNodes"
-                   (onSaveEditwinBtn)="saveEditwinBtn()"
-></app-nodeedit-form>
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
 
 <app-event-window #eventWindow
                   [warning]="warningEventWindow"

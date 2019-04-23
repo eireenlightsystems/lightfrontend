@@ -25,7 +25,7 @@ import {CommandSpeedSwitchService} from '../../../../../shared/services/command/
   templateUrl: './fixturecomspeededit-form.component.html',
   styleUrls: ['./fixturecomspeededit-form.component.css']
 })
-export class FixturecomspeededitFormComponent implements OnInit, OnDestroy {
+export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from master component
   @Input() speedDirectiones: CommandType[];
@@ -57,6 +57,10 @@ export class FixturecomspeededitFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.speedLevel.nativeElement.value = 10;
     this.speedLevelOutput.nativeElement.value = this.speedLevel.nativeElement.value;
+  }
+
+  ngAfterViewInit() {
+    this.datebeg.value(new Date());
   }
 
   ngOnDestroy() {
@@ -112,10 +116,11 @@ export class FixturecomspeededitFormComponent implements OnInit, OnDestroy {
   }
 
   openWindow(fixtureId: number, typeWindow: string) {
+    this.typeWindow = typeWindow;
     this.refresh_refbook();
     this.define_defaultvalues();
     this.fixtureId = fixtureId;
-    this.typeWindow = typeWindow;
+
     this.editWindow.open();
   }
 

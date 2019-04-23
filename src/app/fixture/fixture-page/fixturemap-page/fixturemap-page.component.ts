@@ -4,14 +4,16 @@ import {Subscription, timer} from 'rxjs';
 
 import {
   Fixture, Contract, EquipmentType, HeightType, Installer, Substation,
-  FilterFixtureGroup, FixtureGroup
+  FilterFixtureGroup, FixtureGroup, SettingWinForEditForm, SourceForEditForm
 } from '../../../shared/interfaces';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {FixtureeditFormComponent} from '../fixture-masterdetails-page/fixturelist-page/fixtureedit-form/fixtureedit-form.component';
 import {FixturecomeditFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup.service';
 import {FixturecomeditSwitchoffFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
+import {isUndefined} from "util";
+import {MaterialService} from '../../../shared/classes/material.service';
+import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
 
 
 declare var ymaps: any;
@@ -35,7 +37,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: FixtureeditFormComponent;
+  @ViewChild('editWindow') editWindow: EditFormComponent;
   @ViewChild('editSwitchOnWindow') editSwitchOnWindow: FixturecomeditFormComponent;
   @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
@@ -46,7 +48,8 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   eCoord = 30.4269;
 
   fixtures: Fixture[];
-  fixture: Fixture = new Fixture;
+  saveFixture: Fixture = new Fixture;
+  selectFixture: Fixture = new Fixture;
   myMap: any;
   //
   oSub: Subscription;
@@ -64,6 +67,11 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
     ownerId: '',
     fixtureGroupTypeId: '',
   };
+  // edit form
+  settingWinForEditForm: SettingWinForEditForm;
+  sourceForEditForm: SourceForEditForm[];
+  isEditFormVisible = false;
+  typeEditWindow = '';
 
   constructor(private zone: NgZone,
               public router: Router,
@@ -73,6 +81,133 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
+    // Definde window edit form
+    this.settingWinForEditForm = {
+      code: 'editFormFixture',
+      name: 'Добавить/редактировать светильники',
+      theme: 'material',
+      isModal: true,
+      modalOpacity: 0.3,
+      width: 450,
+      maxWidth: 500,
+      minWidth: 460,
+      height: 600,
+      maxHeight: 600,
+      minHeight: 600,
+      coordX: 500,
+      coordY: 65
+    };
+
+    // Definde edit form
+    this.sourceForEditForm = [
+      {
+        nameField: 'contractFixtures',
+        type: 'jqxComboBox',
+        source: this.contractFixtures,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Договор:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'fixtureTypes',
+        type: 'jqxComboBox',
+        source: this.fixtureTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Тип светильника:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'substations',
+        type: 'jqxComboBox',
+        source: this.substations,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Подстанция:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'installers',
+        type: 'jqxComboBox',
+        source: this.installers,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Установщик:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'heightTypes',
+        type: 'jqxComboBox',
+        source: this.heightTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Тип высоты:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Серийный номер:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Комментарий:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
+
+
     // this.mapInit();
 
     // get all fixtures
@@ -441,7 +576,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           return function (properties: any) {
             return function () {
               const fixtureIds: number[] = [];
-              fixtureIds[0] = properties._data.fixture.fixtureId;
+              fixtureIds[0] = properties._data.saveFixture.fixtureId;
               mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
               mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
             };
@@ -452,8 +587,10 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           const mapComponent: FixturemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.editWindow.positionWindow({x: 600, y: 90});
-              mapComponent.editWindow.openWindow(properties._data.fixture, properties._data.fixture.nodeId, 'upd');
+              mapComponent.selectFixture = properties._data.fixture;
+              mapComponent.typeEditWindow = 'upd';
+              mapComponent.getSourceForEditForm();
+              mapComponent.isEditFormVisible = !mapComponent.isEditFormVisible;
             };
           };
         }).call(this),
@@ -508,10 +645,168 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   }
 
-  // save result edit window
+  // EDIT FORM
+
   saveEditwinBtn() {
-    // refresh map
-    this.refreshMap();
+    let selectObject: Fixture = new Fixture();
+    selectObject = this.selectFixture;
+
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'contractFixtures':
+          selectObject.contractId = +this.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'fixtureTypes':
+          selectObject.fixtureTypeId = +this.sourceForEditForm[i].selectId;
+          selectObject.fixtureTypeCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'substations':
+          selectObject.substationId = +this.sourceForEditForm[i].selectId;
+          selectObject.substationCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'installers':
+          selectObject.installerId = +this.sourceForEditForm[i].selectId;
+          selectObject.installerCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'heightTypes':
+          selectObject.heightTypeId = +this.sourceForEditForm[i].selectId;
+          selectObject.heightTypeCode = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'serialNumber':
+          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          break;
+        case 'comment':
+          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          break;
+        default:
+          break;
+      }
+    }
+
+    if (this.typeEditWindow === 'upd') {
+      // upd
+      this.oSub = this.fixtureService.upd(selectObject).subscribe(
+        response => {
+          MaterialService.toast(`Светильник c id = ${selectObject.fixtureId} был обновлен.`);
+        },
+        error => MaterialService.toast(error.error.message),
+        () => {
+          // close edit window
+          this.editWindow.closeDestroyWindow();
+          // update data source
+          this.refreshMap();
+        }
+      );
+    }
+  }
+
+  getSourceForEditForm() {
+    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+      if (this.typeEditWindow === 'ins') {
+        this.sourceForEditForm[i].selectedIndex = 0;
+        this.sourceForEditForm[i].selectId = '1';
+        this.sourceForEditForm[i].selectCode = 'пусто';
+      }
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'contractFixtures':
+          this.sourceForEditForm[i].source = this.contractFixtures;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectFixture.contractId.toString();
+            this.sourceForEditForm[i].selectCode = this.contractFixtures.find(
+              (contractOne: Contract) => contractOne.id === +this.selectFixture.contractId).code;
+            this.sourceForEditForm[i].selectName = this.contractFixtures.find(
+              (contractOne: Contract) => contractOne.id === +this.selectFixture.contractId).name;
+            for (let j = 0; j < this.contractFixtures.length; j++) {
+              if (+this.contractFixtures[j].id === +this.selectFixture.contractId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'fixtureTypes':
+          this.sourceForEditForm[i].source = this.fixtureTypes;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectFixture.fixtureTypeId.toString();
+            this.sourceForEditForm[i].selectCode = this.fixtureTypes.find(
+              (sensorType: EquipmentType) => sensorType.id === +this.selectFixture.fixtureTypeId).code;
+            this.sourceForEditForm[i].selectName = this.fixtureTypes.find(
+              (sensorType: EquipmentType) => sensorType.id === +this.selectFixture.fixtureTypeId).name;
+            for (let j = 0; j < this.fixtureTypes.length; j++) {
+              if (+this.fixtureTypes[j].id === +this.selectFixture.fixtureTypeId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'substations':
+          this.sourceForEditForm[i].source = this.substations;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectFixture.substationId.toString();
+            this.sourceForEditForm[i].selectCode = this.substations.find(
+              (substation: Substation) => substation.id === +this.selectFixture.substationId).code;
+            this.sourceForEditForm[i].selectName = this.substations.find(
+              (substation: Substation) => substation.id === +this.selectFixture.substationId).name;
+            for (let j = 0; j < this.substations.length; j++) {
+              if (+this.substations[j].id === +this.selectFixture.substationId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'installers':
+          this.sourceForEditForm[i].source = this.installers;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectFixture.installerId.toString();
+            this.sourceForEditForm[i].selectCode = this.installers.find(
+              (installer: Installer) => installer.id === +this.selectFixture.installerId).code;
+            this.sourceForEditForm[i].selectName = this.installers.find(
+              (installer: Installer) => installer.id === +this.selectFixture.installerId).name;
+            for (let j = 0; j < this.installers.length; j++) {
+              if (+this.installers[j].id === +this.selectFixture.installerId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'heightTypes':
+          this.sourceForEditForm[i].source = this.heightTypes;
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.selectFixture.heightTypeId.toString();
+            this.sourceForEditForm[i].selectCode = this.heightTypes.find(
+              (heightType: HeightType) => heightType.id === +this.selectFixture.heightTypeId).code;
+            this.sourceForEditForm[i].selectName = this.heightTypes.find(
+              (heightType: HeightType) => heightType.id === +this.selectFixture.heightTypeId).name;
+            for (let j = 0; j < this.heightTypes.length; j++) {
+              if (+this.heightTypes[j].id === +this.selectFixture.heightTypeId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'serialNumber':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectFixture.serialNumber;
+          }
+          break;
+        case 'comment':
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectCode = this.selectFixture.comment;
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  setEditFormVisible() {
+    this.isEditFormVisible = !this.isEditFormVisible;
   }
 
   // save result com window

@@ -12,8 +12,8 @@
                       [heightGrid]="320"
                       [isMasterGrid]="true"
 
-                      [selectContractId]="''"
-                      [selectNodeId]="''"
+                      [selectContractId]=""
+                      [selectNodeId]=""
                       [fixtureGroupId]="fixtureGroupId"
                       [selectionmode]="selectionmode"
 
@@ -41,13 +41,15 @@
                              [isMasterGrid]="false"
                              [selectionmode]="'checkbox'"
                              [selectFixtureId]="selectFixtureId"
-                             [filterCommandSwitch]="filterCommandSwitch"
 
                              [settingButtonPanel]="settingFixtureComButtonPanel"
 
                              (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-fixturecomlist-page>
   </div>
+
+<!--  [filterCommandSwitch]="filterCommandSwitch"-->
+
   <div style="overflow: hidden">
     <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
 
@@ -58,13 +60,14 @@
                                   [isMasterGrid]="false"
                                   [selectionmode]="'checkbox'"
                                   [selectFixtureId]="selectFixtureId"
-                                  [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"
 
                                   [settingButtonPanel]="settingFixtureSpeedButtonPanel"
 
                                   (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-fixturecomspeedlist-page>
   </div>
+
+<!--  [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"-->
 
 </jqxTabs>
 

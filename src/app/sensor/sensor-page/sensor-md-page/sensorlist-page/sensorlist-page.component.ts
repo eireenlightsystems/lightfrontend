@@ -50,7 +50,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   // define variables - link to view objects
   @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-
   @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable') filterTable: FilterTableComponent;
   @ViewChild('editWindow') editWindow: EditFormComponent;
@@ -150,7 +149,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         ];
     }
 
-    // Definde filter
+    // definde filter
     this.sourceForFilter = [
       {
         name: 'geographs',
@@ -193,7 +192,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // Definde window edit form
+    // definde window edit form
     this.settingWinForEditForm = {
       code: 'editFormSensor',
       name: 'Добавить/редактировать датчик',
@@ -210,7 +209,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       coordY: 65
     };
 
-    // Definde edit form
+    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'contractSensors',
@@ -274,7 +273,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // Definde link form
+    // definde link form
     this.sourceForLinkForm = {
       window: {
         code: 'linkSensor',
@@ -762,7 +761,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           },
           error => MaterialService.toast(error.error.message),
           () => {
-            this.jqxgridComponent.refresh_del(+id);
+            this.jqxgridComponent.refresh_del([+id]);
           }
         );
       }

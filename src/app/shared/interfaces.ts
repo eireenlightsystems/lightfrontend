@@ -256,7 +256,7 @@ export class FixtureGroup {
   ownerId: number;
   geographId: number;
   fixtureGroupName: string;
-  nameFixtureGroupType: string;
+  fixtureGroupTypeName: string;
   ownerCode: string;
   geographCode: string;
   n_coordinate: string;

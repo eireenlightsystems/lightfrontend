@@ -17,30 +17,21 @@
 <app-filter-table
   *ngIf="isFilterVisible"
   [sourceForFilter]="sourceForFilter"
-  (onFilter)="applyFilter($event)"
+  (onFilter)="applyFilterFromFilter($event)"
   (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->
   <div>
-    <app-fixture-grlist-jqxgrid #fixtureGrlistJqxgridComponent
-
-                                [fixtureGroups]="fixtureGroups"
-                                [fixtureGroupTypes]="fixtureGroupTypes"
-                                [fixtureGroupOwners]="fixtureGroupOwners"
-
-                                [widthGrid]="widthGrid"
-                                [heightGrid]="heightGrid"
-                                [selectionmode]="selectionmode"
-                                [isMasterGrid]="isMasterGrid"
-
-                                (onRefreshGrid)="refreshGrid()"
-                                (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixture-grlist-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
     <div
       class="center mb2"
-      *ngIf="!noMoreFixtures; else "
+      *ngIf="!noMoreItems; else "
     >
       <!--<button-->
       <!--class="btn waves-effect grey darken-1 btn-small"-->
@@ -63,6 +54,16 @@
   <app-loader></app-loader>
 </ng-template>
 
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
+
 <app-fixturecom-form #editSwitchOnWindow
                      (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"
 ></app-fixturecom-form>
@@ -70,4 +71,9 @@
 <app-fixturecomedit-switchoff-form #editSwitchOffWindow
                                    (onSaveEditSwitchOffwinBtn)="saveEditSwitchOffwinBtn()"
 ></app-fixturecomedit-switchoff-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>
 

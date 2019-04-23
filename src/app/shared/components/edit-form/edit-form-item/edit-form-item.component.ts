@@ -1,10 +1,11 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {isUndefined} from 'util';
 
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxdatetimeinput';
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxcombobox';
-import {isUndefined} from 'util';
 import {DateTimeFormat} from '../../../classes/DateTimeFormat';
 import {jqxTextAreaComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxtextarea';
+import {jqxNumberInputComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxnumberinput';
 
 @Component({
   selector: 'app-edit-form-item',
@@ -22,6 +23,7 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('jqxDateTimeInput') jqxDateTimeInput: jqxDateTimeInputComponent;
   @ViewChild('jqxComboBox') jqxComboBox: jqxComboBoxComponent;
   @ViewChild('jqxTextArea') jqxTextArea: jqxTextAreaComponent;
+  @ViewChild('jqxNumberInput') jqxNumberInput: jqxNumberInputComponent;
 
   // other variables
 
@@ -51,6 +53,9 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     if (this.jqxTextArea) {
       this.jqxTextArea.destroy();
+    }
+    if (this.jqxNumberInput) {
+      this.jqxNumberInput.destroy();
     }
   }
 

@@ -120,11 +120,14 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   // refresh table
   refresh_jqxgGrid() {
     this.source_jqxgrid.localdata = this.sourceForJqxGrid.grid.source;
+    // this.myGrid.refresh();
+    // this.myGrid.refreshdata();
+    // this.myGrid.updatebounddata('cells');
     this.myGrid.updatebounddata('data');
   }
 
-  refresh_del(id: any) {
-    this.myGrid.deleterow(id);
+  refresh_del(ids: any[]) {
+    this.myGrid.deleterow(ids);
   }
 
   refresh_ins(id: any, row: any) {

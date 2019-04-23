@@ -1,6 +1,5 @@
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {Fixture, SettingButtonPanel} from '../../interfaces';
-import {FixturelistJqxgridComponent} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-jqxgrid/fixturelist-jqxgrid.component';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {SettingButtonPanel} from '../../interfaces';
 import jqxTooltip = jqwidgets.jqxTooltip;
 
 @Component({

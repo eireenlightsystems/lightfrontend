@@ -151,7 +151,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         ];
     }
 
-    // Definde filter
+    // definde filter
     this.sourceForFilter = [
       {
         name: 'geographs',
@@ -194,7 +194,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // Definde window edit form
+    // definde window edit form
     this.settingWinForEditForm = {
       code: 'editFormGateway',
       name: 'Добавить/редактировать шлюз',
@@ -211,7 +211,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       coordY: 65
     };
 
-    // Definde edit form
+    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'contractGateways',
@@ -290,7 +290,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // Definde link form
+    // definde link form
     this.sourceForLinkForm = {
       window: {
         code: 'linkGateway',
@@ -767,7 +767,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           },
           error => MaterialService.toast(error.error.message),
           () => {
-            this.jqxgridComponent.refresh_del(+id);
+            this.jqxgridComponent.refresh_del([+id]);
           }
         );
       }
