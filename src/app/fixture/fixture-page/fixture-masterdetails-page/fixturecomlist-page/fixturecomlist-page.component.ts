@@ -273,9 +273,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    // if it is master grid, then we need refresh child grid
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 

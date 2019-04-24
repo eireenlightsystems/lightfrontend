@@ -387,9 +387,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    // if it is master grid, then we need refresh child grid
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 
@@ -611,7 +611,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'пусто';
+        selectObject.geographCode = 'без привязки к карте';
       }
       // ins
       this.oSub = this.sensorService.ins(selectObject).subscribe(
@@ -665,6 +665,13 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractSensors':
           this.sourceForEditForm[i].source = this.contractSensors;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.contractSensors[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.contractSensors.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.contractSensors.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.contractSensors.find(
@@ -681,6 +688,13 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           break;
         case 'sensorTypes':
           this.sourceForEditForm[i].source = this.sensorTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.sensorTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.sensorTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.sensorTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.sensorTypeId.toString();
             this.sourceForEditForm[i].selectCode = this.sensorTypes.find(

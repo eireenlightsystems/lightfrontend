@@ -1,10 +1,9 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {
-  Fixture,
-  Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
-  CommandStatus,
-  CommandType,
-  FixtureGroupType, SettingButtonPanel
+  Fixture, Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
+  CommandStatus, CommandType,
+  FixtureGroupType,
+  SettingButtonPanel
 } from '../../../shared/interfaces';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
@@ -39,19 +38,19 @@ export class FixturegroupMdPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('fixtureGroupId') fixtureGroupId: number;
   @ViewChild('fixtureGrlistPageComponent') fixtureGrlistPageComponent: FixtureGrlistPageComponent;
   @ViewChild('fixtureMasterdetailsPageComponentFgr') fixtureMasterdetailsPageComponentFgr: FixtureMasterdetailsPageComponent;
 
   // other variables
   fixtures: Fixture[] = [];
   settingFixtureGrButtonPanel: SettingButtonPanel;
+  settingFixtureButtonPanel: SettingButtonPanel;
+  isButtonPanelVisible = false;
 
   constructor() {
   }
 
   ngOnInit() {
-
     // init fixture group button panel
     this.settingFixtureGrButtonPanel = {
       add: {
@@ -103,26 +102,104 @@ export class FixturegroupMdPageComponent implements OnInit {
         disabled: false,
       }
     };
+    this.settingFixtureButtonPanel = {
+      add: {
+        visible: false,
+        disabled: false,
+      },
+      upd: {
+        visible: false,
+        disabled: false,
+      },
+      del: {
+        visible: false,
+        disabled: false,
+      },
+      refresh: {
+        visible: false,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: true,
+        disabled: false,
+      },
+      groupOut: {
+        visible: true,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
   }
-
-  // refreshGrid() {
-  //   this.fixtureGrlistPageComponent.applyFilter(this.filterFixtureGroup);
-  //   this.refreshChildGrid(0);
-  // }
 
   refreshChildGrid(fixtureGroupId: number) {
-    // refresh child grid
-    this.fixtureGroupId = fixtureGroupId;
-    this.fixtureMasterdetailsPageComponentFgr.refreshMDGrid(fixtureGroupId.toString());
+    this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.applyFilterFixtureInGroup(fixtureGroupId.toString());
   }
 
-  refreshChild_ChildGrid() {
-    if (this.fixtureMasterdetailsPageComponentFgr.selectFixtureId > 0) {
-      this.fixtureMasterdetailsPageComponentFgr.refreshChildGrid(this.fixtureMasterdetailsPageComponentFgr.selectFixtureId);
+  ins() {
+    this.fixtureGrlistPageComponent.ins();
+  }
+
+  upd() {
+    this.fixtureGrlistPageComponent.upd();
+  }
+
+  del() {
+    this.fixtureGrlistPageComponent.del();
+  }
+
+  refresh() {
+    this.fixtureGrlistPageComponent.refresh();
+  }
+
+  filterNone() {
+    this.fixtureGrlistPageComponent.filterNone();
+  }
+
+  filterList() {
+    this.fixtureGrlistPageComponent.filterList();
+  }
+
+  switchOn() {
+    this.fixtureGrlistPageComponent.switchOn(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.items);
+  }
+
+  switchOff() {
+    this.fixtureGrlistPageComponent.switchOff(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.items);
+  }
+
+  feedback(event: any) {
+    switch (event) {
+      case 'SwitchOn':
+        this.fixtureMasterdetailsPageComponentFgr.fixturecomlistPageComponent.refreshGrid();
+        break;
+      case 'SwitchOff':
+        this.fixtureMasterdetailsPageComponentFgr.fixturecomlistPageComponent.refreshGrid();
+        break;
+      default:
+        break;
     }
-  }
-
-  getFixtures(event) {
-    this.fixtures = event;
   }
 }

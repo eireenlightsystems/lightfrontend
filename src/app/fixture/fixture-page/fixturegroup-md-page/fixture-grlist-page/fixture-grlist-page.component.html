@@ -1,4 +1,5 @@
 <app-button-panel
+  *ngIf="isButtonPanelVisible"
   [settingButtonPanel]="settingButtonPanel"
   (onIns)="ins()"
   (onUpd)="upd()"
@@ -10,8 +11,8 @@
   (onPinDrop)="pinDrop()"
   (onGroupIn)="groupIn()"
   (onGroupOut)="groupOut()"
-  (onSwitchOn)="switchOn()"
-  (onSwitchOff)="switchOff()"
+  (onSwitchOn)="switchOn([])"
+  (onSwitchOff)="switchOff([])"
 ></app-button-panel>
 
 <app-filter-table

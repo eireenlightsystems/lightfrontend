@@ -442,9 +442,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    // if it is master grid, then we need refresh child grid
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 
@@ -729,6 +729,13 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
           this.sourceForEditForm[i].source = this.geographs;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.geographs[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.geographs.find(
+              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.geographs.find(
+              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).fullName;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.geographs.find(
@@ -745,6 +752,13 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'contractNodes':
           this.sourceForEditForm[i].source = this.contractNodes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.contractNodes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.contractNodes.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.contractNodes.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.contractNodes.find(
@@ -761,6 +775,13 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'nodeTypes':
           this.sourceForEditForm[i].source = this.nodeTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.nodeTypeId.toString();
             this.sourceForEditForm[i].selectCode = this.nodeTypes.find(

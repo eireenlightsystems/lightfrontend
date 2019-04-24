@@ -9,18 +9,18 @@
                       [installers]="installers"
                       [heightTypes]="heightTypes"
 
-                      [heightGrid]="320"
+                      [heightGrid]="317"
                       [isMasterGrid]="true"
+                      [selectionmode]="selectionmode"
 
                       [selectContractId]=""
                       [selectNodeId]=""
                       [fixtureGroupId]="fixtureGroupId"
-                      [selectionmode]="selectionmode"
 
                       [settingButtonPanel]="settingFixtureButtonPanel"
 
                       (onRefreshChildGrid)="refreshChildGrid($event)"
-                      (onGetFixtures)="getFixtures($event)"
+
 ></app-fixturelist-page>
 
 <jqxTabs
@@ -37,9 +37,10 @@
                              [commandTypes]="commandTypes"
                              [commandStatuses]="commandStatuses"
 
-                             [heightGrid]="300"
+                             [heightGrid]="290"
                              [isMasterGrid]="false"
                              [selectionmode]="'checkbox'"
+
                              [selectFixtureId]="selectFixtureId"
 
                              [settingButtonPanel]="settingFixtureComButtonPanel"
@@ -47,18 +48,16 @@
                              (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-fixturecomlist-page>
   </div>
-
-<!--  [filterCommandSwitch]="filterCommandSwitch"-->
-
   <div style="overflow: hidden">
     <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
 
                                   [speedDirectiones]="speedDirectiones"
                                   [commandStatuses]="commandStatuses"
 
-                                  [heightGrid]="300"
+                                  [heightGrid]="290"
                                   [isMasterGrid]="false"
                                   [selectionmode]="'checkbox'"
+
                                   [selectFixtureId]="selectFixtureId"
 
                                   [settingButtonPanel]="settingFixtureSpeedButtonPanel"
@@ -66,9 +65,6 @@
                                   (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-fixturecomspeedlist-page>
   </div>
-
-<!--  [filterCommandSpeedSwitch]="filterCommandSpeedSwitch"-->
-
 </jqxTabs>
 
 

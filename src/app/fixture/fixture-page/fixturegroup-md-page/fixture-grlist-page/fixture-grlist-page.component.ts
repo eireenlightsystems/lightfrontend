@@ -42,10 +42,12 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   @Input() selectionmode: string;
   @Input() isMasterGrid: boolean;
 
+  @Input() isButtonPanelVisible: boolean;
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
+  @Output() onFeedback = new EventEmitter<any>();
 
   // define variables - link to view objects
   @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
@@ -296,8 +298,8 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     this.selectItemId = 0;
 
     // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 
@@ -388,19 +390,19 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
 
   }
 
-  switchOn() {
+  switchOn(fixtures: Fixture[]) {
     const fixtureIds: number[] = [];
-    for (let i = 0; i < this.fixtures.length; i++) {
-      fixtureIds[i] = +this.fixtures[i].fixtureId;
+    for (let i = 0; i < fixtures.length; i++) {
+      fixtureIds[i] = +fixtures[i].fixtureId;
     }
     this.editSwitchOnWindow.positionWindow({x: 600, y: 90});
     this.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
   }
 
-  switchOff() {
+  switchOff(fixtures: Fixture[]) {
     const fixtureIds: number[] = [];
-    for (let i = 0; i < this.fixtures.length; i++) {
-      fixtureIds[i] = +this.fixtures[i].fixtureId;
+    for (let i = 0; i < fixtures.length; i++) {
+      fixtureIds[i] = +fixtures[i].fixtureId;
     }
     this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
     this.editSwitchOffWindow.openWindow(fixtureIds, 'ins');
@@ -523,10 +525,18 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
         this.sourceForEditForm[i].selectCode = 'пусто';
+        this.sourceForEditForm[i].selectName = 'пусто';
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'fixtureGroupOwners':
           this.sourceForEditForm[i].source = this.fixtureGroupOwners;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.fixtureGroupOwners[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.fixtureGroupOwners.find(
+              (one: Owner) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.fixtureGroupOwners.find(
+              (one: Owner) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.ownerId.toString();
             this.sourceForEditForm[i].selectCode = this.fixtureGroupOwners.find(
@@ -543,6 +553,11 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
           break;
         case 'fixtureGroupTypes':
           this.sourceForEditForm[i].source = this.fixtureGroupTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.fixtureGroupTypes[0].id.toString();
+            this.sourceForEditForm[i].selectName = this.fixtureGroupTypes.find(
+              (one: FixtureGroupType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.fixtureGroupTypeId.toString();
             this.sourceForEditForm[i].selectName = this.fixtureGroupTypes.find(
@@ -571,13 +586,13 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   saveSwitchOnEditwinBtn() {
-    // refresh table
-    this.refreshGrid();
+    // refresh child child table
+    this.onFeedback.emit('SwitchOn');
   }
 
   saveEditSwitchOffwinBtn() {
-    // refresh table
-    this.refreshGrid();
+    // refresh child child table
+    this.onFeedback.emit('SwitchOff');
   }
 
   // EVENT FORM

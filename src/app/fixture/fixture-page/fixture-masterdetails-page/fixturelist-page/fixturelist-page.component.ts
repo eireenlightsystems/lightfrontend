@@ -51,7 +51,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
-  @Output() onGetFixtures = new EventEmitter<Fixture[]>();
 
   // define variables - link to view objects
   @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
@@ -533,9 +532,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    // if it is master grid, then we need refresh child grid
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 
@@ -575,7 +574,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       this.settingButtonPanel.switchOff.disabled = false;
     }
 
-    if (isUndefined(this.fixtureGroupId) || +this.fixtureGroupId === 0) {
+    if (isUndefined(this.fixtureGroupId)) {
       const params = Object.assign({}, {
           offset: this.offset,
           limit: this.limit
@@ -593,8 +592,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         this.items = fixtures;
         this.loading = false;
         this.reloading = false;
-        // Send array fixtures for the command switchOn/Off
-        this.onGetFixtures.emit(this.items);
       });
     }
   }
@@ -810,7 +807,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'пусто';
+        selectObject.geographCode = 'без привязки к карте';
       }
       // ins
       this.oSub = this.fixtureService.ins(selectObject).subscribe(
@@ -866,10 +863,18 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
         this.sourceForEditForm[i].selectCode = 'пусто';
+        this.sourceForEditForm[i].selectName = 'пусто';
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractFixtures':
           this.sourceForEditForm[i].source = this.contractFixtures;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.contractFixtures[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.contractFixtures.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.contractFixtures.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.contractFixtures.find(
@@ -886,6 +891,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'fixtureTypes':
           this.sourceForEditForm[i].source = this.fixtureTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.fixtureTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.fixtureTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.fixtureTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.fixtureTypeId.toString();
             this.sourceForEditForm[i].selectCode = this.fixtureTypes.find(
@@ -902,6 +914,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'substations':
           this.sourceForEditForm[i].source = this.substations;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.substations[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.substations.find(
+              (one: Substation) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.substations.find(
+              (one: Substation) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.substationId.toString();
             this.sourceForEditForm[i].selectCode = this.substations.find(
@@ -918,6 +937,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'installers':
           this.sourceForEditForm[i].source = this.installers;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.installers[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.installers.find(
+              (one: Installer) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.installers.find(
+              (one: Installer) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.installerId.toString();
             this.sourceForEditForm[i].selectCode = this.installers.find(
@@ -934,6 +960,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'heightTypes':
           this.sourceForEditForm[i].source = this.heightTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.heightTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.heightTypes.find(
+              (one: HeightType) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.heightTypes.find(
+              (one: HeightType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.heightTypeId.toString();
             this.sourceForEditForm[i].selectCode = this.heightTypes.find(

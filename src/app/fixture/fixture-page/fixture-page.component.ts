@@ -4,12 +4,7 @@ import {Subscription} from 'rxjs';
 import {
   CommandStatus,
   CommandType,
-  Contract, Owner, FixtureGroupType,
-  EquipmentType,
-  Geograph,
-  HeightType,
-  Installer,
-  Substation, SettingButtonPanel
+  Contract, Owner, FixtureGroupType, EquipmentType, Geograph, HeightType, Installer, Substation
 } from '../../shared/interfaces';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
 import {OwnerFixtureService} from '../../shared/services/fixture/ownerFixture.service';
@@ -135,8 +130,10 @@ export class FixturePageComponent implements OnInit, OnDestroy {
     this.heightTypeSub = this.heightTypeService.fetch().subscribe(heightTypes => this.heightTypes = heightTypes);
 
     // fixture group
-    this.fixtureGroupTypeSub = this.fixtureGroupService.getFixtureGroupTypeAll().subscribe(fixtureGroupTypes => this.fixtureGroupTypes = fixtureGroupTypes);
-    this.fixtureGroupOwnerSub = this.fixtureGroupService.getFixtureGroupOwnerAll().subscribe(fixtureGroupOwners => this.fixtureGroupOwners = fixtureGroupOwners);
+    this.fixtureGroupTypeSub = this.fixtureGroupService.getFixtureGroupTypeAll().subscribe(
+      fixtureGroupTypes => this.fixtureGroupTypes = fixtureGroupTypes);
+    this.fixtureGroupOwnerSub = this.fixtureGroupService.getFixtureGroupOwnerAll().subscribe(
+      fixtureGroupOwners => this.fixtureGroupOwners = fixtureGroupOwners);
   }
 
 

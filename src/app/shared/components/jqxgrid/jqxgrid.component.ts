@@ -54,7 +54,7 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.refreshListBox();
+    // this.refreshListBox();
   }
 
   ngOnDestroy() {
@@ -128,6 +128,7 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
   refresh_del(ids: any[]) {
     this.myGrid.deleterow(ids);
+    this.selectRow = undefined;
   }
 
   refresh_ins(id: any, row: any) {
@@ -151,25 +152,40 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // table field filtering
   myListBoxOnCheckChange(event: any) {
+
+    let listboxSource: any;
+    for (let i = 0; i < this.sourceForJqxGrid.listbox.source.length; i++) {
+      if (this.sourceForJqxGrid.listbox.source[i].value === event.args.value) {
+        listboxSource = this.sourceForJqxGrid.listbox.source[i];
+        break;
+      }
+    }
+
     this.myGrid.beginupdate();
     if (event.args.checked) {
       this.myGrid.showcolumn(event.args.value);
+      listboxSource.checked = true;
     } else {
       this.myGrid.hidecolumn(event.args.value);
+      listboxSource.checked = false;
     }
     this.myGrid.endupdate();
   }
 
-  refreshListBox() {
-    this.myGrid.beginupdate();
-    for (let i = 0; i < this.myListBox.attrSource.length; i++) {
-      if (this.myListBox.attrSource[i].checked) {
-        this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-      } else {
-        this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-      }
-    }
-    this.myGrid.endupdate();
-  }
+  // refreshListBox() {
+  //   this.myGrid.beginupdate();
+  //   for (let i = 0; i < this.myListBox.attrSource.length; i++) {
+  //     if (this.myListBox.attrSource[i].checked) {
+  //       try {
+  //         this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
+  //       } catch (e) {
+  //         console.log('refreshListBox');
+  //       }
+  //     } else {
+  //       this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
+  //     }
+  //   }
+  //   this.myGrid.endupdate();
+  // }
 
 }

@@ -384,9 +384,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // if this.nodes id master grid, then we need refresh child grid
-    if (this.isMasterGrid && !isUndefined(this.jqxgridComponent.selectRow)) {
-      this.refreshChildGrid(this.jqxgridComponent.selectRow);
+    // if it is master grid, then we need refresh child grid
+    if (this.isMasterGrid) {
+      this.onRefreshChildGrid.emit(this.selectItemId);
     }
   }
 
@@ -611,7 +611,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'пусто';
+        selectObject.geographCode = 'без привязки к карте';
       }
       // ins
       this.oSub = this.gatewayService.ins(selectObject).subscribe(
@@ -666,6 +666,13 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractGateways':
           this.sourceForEditForm[i].source = this.contractGateways;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.contractGateways[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.contractGateways.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.contractGateways.find(
+              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
             this.sourceForEditForm[i].selectCode = this.contractGateways.find(
@@ -682,6 +689,13 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           break;
         case 'gatewayTypes':
           this.sourceForEditForm[i].source = this.gatewayTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.gatewayTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.gatewayTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.gatewayTypes.find(
+              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.gatewayTypeId.toString();
             this.sourceForEditForm[i].selectCode = this.gatewayTypes.find(

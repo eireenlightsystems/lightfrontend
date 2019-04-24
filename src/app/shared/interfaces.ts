@@ -378,7 +378,7 @@ export class CommandSwitch {
   statusName: string;
 }
 
-export interface FilterCommandSwitch {
+export class FilterCommandSwitch {
   fixtureId: string;
   statusId: string;
   startDateTime: string;
@@ -400,7 +400,7 @@ export class CommandSpeedSwitch {
   speedDirectionName: string;
 }
 
-export interface FilterCommandSpeedSwitch {
+export class FilterCommandSpeedSwitch {
   fixtureId: string;
   statusId: string;
   speedDirectionId: string;
