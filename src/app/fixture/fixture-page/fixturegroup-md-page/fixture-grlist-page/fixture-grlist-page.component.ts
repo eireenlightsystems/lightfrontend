@@ -367,7 +367,8 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
+    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
+    this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {

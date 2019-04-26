@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
+import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
 
 import {SourceForJqxGrid} from '../../interfaces';
+import {DateTimeFormat} from '../../classes/DateTimeFormat';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   // define variables - link to view objects
   @ViewChild('myListBox') myListBox: jqxListBoxComponent;
   @ViewChild('myGrid') myGrid: jqxGridComponent;
+  @ViewChild('settingWindow') settingWindow: jqxWindowComponent;
 
   // other variables
   selectRow: any;
@@ -62,58 +65,14 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   destroyGrid() {
-    if (this.myListBox) {
-      this.myListBox.destroy();
-    }
+    // if (this.myListBox) {
+    //   this.myListBox.destroy();
+    // }
     if (this.myGrid) {
       this.myGrid.destroy();
     }
-  }
-
-  // define width of table
-  getWidth(): any {
-    if (document.body.offsetWidth > 1600) {
-      if (this.islistBoxVisible) {
-        return '85%';
-      } else {
-        return '99.8%';
-      }
-    } else if (document.body.offsetWidth > 1400) {
-      if (this.islistBoxVisible) {
-        return '85%';
-      } else {
-        return '99.8%';
-      }
-    } else if (document.body.offsetWidth > 1200) {
-      if (this.islistBoxVisible) {
-        return '80%';
-      } else {
-        return '99.8%';
-      }
-    } else if (document.body.offsetWidth > 1000) {
-      if (this.islistBoxVisible) {
-        return '75%';
-      } else {
-        return '99.8%';
-      }
-    } else if (document.body.offsetWidth > 800) {
-      if (this.islistBoxVisible) {
-        return '70%';
-      } else {
-        return '99.8%';
-      }
-    } else if (document.body.offsetWidth > 600) {
-      if (this.islistBoxVisible) {
-        return '65%';
-      } else {
-        return '99.8%';
-      }
-    } else {
-      if (this.islistBoxVisible) {
-        return '40%';
-      } else {
-        return '99.8%';
-      }
+    if (this.settingWindow) {
+      this.settingWindow.destroy();
     }
   }
 
@@ -188,4 +147,52 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   //   this.myGrid.endupdate();
   // }
 
+  openSettinWin() {
+    this.settingWindow.open();
+  }
+
+  excelBtnOnClick() {
+    this.myGrid.exportdata('xls', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  xmlBtnOnClick() {
+    this.myGrid.exportdata('xml', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  csvBtnOnClick() {
+    this.myGrid.exportdata('csv', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  tsvBtnOnClick() {
+    this.myGrid.exportdata('tsv', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  htmlBtnOnClick() {
+    this.myGrid.exportdata('html', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  jsonBtnOnClick() {
+    this.myGrid.exportdata('json', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  pdfBtnOnClick() {
+    this.myGrid.exportdata('pdf', new DateTimeFormat().toDataPickerString(new Date()));
+  }
+
+  btnPrint() {
+    const gridContent = this.myGrid.exportdata('html');
+    const newWindow = window.open('', '', 'width=800, height=500'),
+      document = newWindow.document.open(),
+      pageContent =
+        '<!DOCTYPE html>\n' +
+        '<html>\n' +
+        '<head>\n' +
+        '<meta charset="utf-8" />\n' +
+        '<title>jQWidgets Grid</title>\n' +
+        '</head>\n' +
+        '<body>\n' + gridContent + '\n</body>\n</html>';
+    document.write(pageContent);
+    document.close();
+    newWindow.print();
+  }
 }
