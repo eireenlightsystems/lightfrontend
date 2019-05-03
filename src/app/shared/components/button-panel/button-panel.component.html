@@ -1,8 +1,7 @@
-<div class="fr">
-
-  <div *ngIf="settingButtonPanel.add.visible">
+<div class="fr" style="height: 22px">
+  <div style="float: left" *ngIf="settingButtonPanel.add.visible">
     <jqxTooltip [position]="'bottom'" #tooltipAdd
-                [content]="'Добавить светильник'">
+                [content]="'Добавить'">
       <Button [disabled]="settingButtonPanel.add.disabled"
               (click)="ins()"
               appButtonSimpleStyle
@@ -12,9 +11,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.upd.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.upd.visible">
     <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать светильник'">
+                [content]="'Редактировать'">
       <Button [disabled]="settingButtonPanel.upd.disabled"
               (click)="upd()"
               appButtonSimpleStyle
@@ -24,9 +23,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.del.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.del.visible">
     <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить светильник'">
+                [content]="'Удалить'">
       <Button [disabled]="settingButtonPanel.del.disabled"
               (click)="del()"
               appButtonSimpleStyle
@@ -36,7 +35,7 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.refresh.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.refresh.visible">
     <jqxTooltip [position]="'bottom'" [name]="'refreshTooltip'"
                 [content]="'Обновить таблицу'">
       <button [disabled]="settingButtonPanel.refresh.disabled"
@@ -48,19 +47,19 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.filterNone.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.filterNone.visible">
     <jqxTooltip [position]="'bottom'" [name]="'fieldTooltip'"
-                [content]="'Открыть фильтр по полям таблицы'">
+                [content]="'Настройки таблицы'">
       <button [disabled]="settingButtonPanel.filterNone.disabled"
               (click)="filterNone()"
               appButtonSimpleStyle
       >
-        <i class="material-icons">filter_none</i>
+        <i class="material-icons">settings</i>
       </button>
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.filterList.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.filterList.visible">
     <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
                 [content]="'Открыть фильтр'">
       <button [disabled]="settingButtonPanel.filterList.disabled"
@@ -73,9 +72,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.place.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.place.visible">
     <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
-                [content]="'Привязать светильник к узлу/столбу'">
+                [content]="'Привязать объект к др. объекту'">
       <button [disabled]="settingButtonPanel.place.disabled"
               (click)="place()"
               appButtonSimpleStyle
@@ -85,9 +84,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.pinDrop.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.pinDrop.visible">
     <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
-                [content]="'Отвязать светильник от узла/столба'">
+                [content]="'Отвязать объект от др. объекта'">
       <button [disabled]="settingButtonPanel.pinDrop.disabled"
               (click)="pinDrop()"
               appButtonSimpleStyle
@@ -97,9 +96,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.groupIn.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.groupIn.visible">
     <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Добавить светильники в группу'">
+                [content]="'Добавить объект в группу'">
       <button [disabled]="settingButtonPanel.groupIn.disabled"
               appButtonSimpleStyle
               (click)="groupIn()"
@@ -109,9 +108,9 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.groupOut.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.groupOut.visible">
     <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Удалить светильники из группы'">
+                [content]="'Удалить объект из группы'">
       <button [disabled]="settingButtonPanel.groupOut.disabled"
               appButtonSimpleStyle
               (click)="groupOut()"
@@ -121,7 +120,7 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.switchOn.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.switchOn.visible">
     <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
                 [content]="'Добавить команду ВКЛ. группы светильников'">
       <Button [disabled]="settingButtonPanel.switchOn.disabled"
@@ -133,15 +132,18 @@
     </jqxTooltip>
   </div>
 
-  <div *ngIf="settingButtonPanel.switchOff.visible">
+  <div style="float: left" *ngIf="settingButtonPanel.switchOff.visible">
     <jqxTooltip [position]="'bottom'" [name]="'switchOffTooltip'"
                 [content]="'Добавить команду ВЫКЛ. группы светильников'">
       <Button [disabled]="settingButtonPanel.switchOff.disabled"
               (click)="switchOff()"
               appButtonSimpleStyle
       >
-        <i class="material-icons" >highlight</i>
+        <i class="material-icons">highlight</i>
       </Button>
     </jqxTooltip>
   </div>
+
 </div>
+
+

@@ -9,6 +9,6 @@ export class ButtonFilterDirective implements OnInit {
 
   ngOnInit() {
     const nativeElement = this.element.nativeElement;
-    this.renderer.setStyle(nativeElement, 'margin', '2px 2px 2px 2px');
+    this.renderer.setStyle(nativeElement, 'margin', '10px 5px 10px 5px');
   }
 }

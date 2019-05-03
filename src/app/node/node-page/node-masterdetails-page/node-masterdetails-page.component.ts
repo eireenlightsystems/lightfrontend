@@ -1,13 +1,19 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {isUndefined} from 'util';
 
-import {FixturelistPageComponent} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
+import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
+
+import {FixturelistPageComponent
+} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {
   Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation,
   FilterFixture, FilterGateway,
   FilterNode, FilterSensor, SettingButtonPanel
 } from '../../../shared/interfaces';
 import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
-import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
+import {
+  GatewaylistPageComponent
+} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
 import {SensorlistPageComponent} from '../../../sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
 
 
@@ -51,6 +57,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
   @ViewChild('sensorlistPageComponent') sensorlistPageComponent: SensorlistPageComponent;
+  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
 
   // other variables
   isTabFixture = false;
@@ -94,38 +101,11 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     nodeId: ''
   };
 
-  // define columns for table Node
-  nodeSortcolumn: string[] = ['nodeId'];
-  nodeColumns: any[] =
-    [
-      {text: 'nodeId', datafield: 'nodeId', width: 150},
-      {text: 'Договор', datafield: 'contractCode', width: 150},
-      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
-      {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
-      {text: 'Владелец', datafield: 'ownerCode', width: 150},
+  heightDeltaParentGrid = 55;
+  heightDeltaChildGrid = 103;
+  sizeParentSplitter: any;
+  sizeChildSplitter: any;
 
-      {text: 'Широта', datafield: 'n_coordinate', width: 150},
-      {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-
-      {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-      {text: 'Коментарий', datafield: 'comment', width: 150},
-    ];
-
-  // define a data source for filtering table columns Node
-  nodeListBoxSource: any[] =
-    [
-      {label: 'nodeId', value: 'nodeId', checked: true},
-      {label: 'Договор', value: 'contractCode', checked: true},
-      {label: 'Географическое понятие', value: 'geographCode', checked: true},
-      {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
-      {label: 'Владелец', value: 'ownerCode', checked: true},
-
-      {label: 'Широта', value: 'n_coordinate', checked: true},
-      {label: 'Долгота', value: 'e_coordinate', checked: true},
-
-      {label: 'Серийный номер', value: 'serialNumber', checked: true},
-      {label: 'Коментарий', value: 'comment', checked: true},
-    ];
 
   constructor() {
   }
@@ -394,5 +374,43 @@ export class NodeMasterdetailsPageComponent implements OnInit {
       this.isTabGateway = false;
       this.isTabSensor = true;
     }
+  }
+
+  resize(sizeParent: any, sizeChild: any) {
+    const sizeParentGrid = sizeParent - this.heightDeltaParentGrid;
+    const sizeChildGrid = sizeChild - this.heightDeltaChildGrid;
+
+    this.nodelistPageComponent.jqxgridComponent.myGrid.height(sizeParentGrid);
+    this.nodelistPageComponent.sourceForJqxGrid.grid.height = sizeParentGrid;
+
+    if (!isUndefined(this.fixturelistPageComponent)) {
+      this.fixturelistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.fixturelistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+
+    if (!isUndefined(this.gatewaylistPageComponent)) {
+      this.gatewaylistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.gatewaylistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+
+    if (!isUndefined(this.sensorlistPageComponent)) {
+      this.sensorlistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.sensorlistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+  }
+
+  collapsed(sizeParent: any, sizeChild: any) {
+    this.sizeParentSplitter = sizeParent;
+    this.sizeChildSplitter = sizeChild;
+    this.mainSplitter.attrPanels[0].size = this.getHeightSplitter();
+  }
+
+  expanded() {
+    this.mainSplitter.attrPanels[0].size = this.sizeParentSplitter;
+    this.mainSplitter.attrPanels[1].size = this.sizeChildSplitter;
+  }
+
+  getHeightSplitter() {
+    return 790;
   }
 }

@@ -1,87 +1,95 @@
-<app-nodelist-page #nodelistPageComponent
+<jqxSplitter #mainSplitter
+             [theme]="'material'"
+             [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+             [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
 
-                   [geographs]="geographs"
-                   [ownerNodes]="ownerNodes"
-                   [nodeTypes]="nodeTypes"
-                   [contractNodes]="contractNodes"
-
-                   [heightGrid]="320"
-                   [isMasterGrid]="true"
-
-                   [settingButtonPanel]="settingNodeButtonPanel"
-
-                   (onRefreshChildGrid)="refreshChildGrid($event)"
-                   (onRefreshMap)="refreshMap()"
-></app-nodelist-page>
-
-<!--[nodeSortcolumn]="nodeSortcolumn"-->
-<!--[nodeColumns]="nodeColumns"-->
-<!--[nodeListBoxSource]="nodeListBoxSource"-->
-
-<jqxTabs
-  [theme]="'material'"
-  (onSelected)="selected($event)"
+             (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onExpanded)="expanded()"
 >
-  <ul>
-    <li style="margin-left: 30px">Светильники</li>
-    <li>Шлюзы</li>
-    <li>Сенсоры</li>
-  </ul>
-  <div style="overflow: hidden">
-    <app-fixturelist-page *ngIf="this.isTabFixture" #fixturelistPageComponent
+  <div class="splitter-panel">
+    <app-nodelist-page #nodelistPageComponent
 
-                          [geographs]="geographs"
-                          [ownerFixtures]="ownerFixtures"
-                          [fixtureTypes]="fixtureTypes"
-                          [substations]="substations"
-                          [contractFixtures]="contractFixtures"
-                          [installers]="installers"
-                          [heightTypes]="heightTypes"
+                       [geographs]="geographs"
+                       [ownerNodes]="ownerNodes"
+                       [nodeTypes]="nodeTypes"
+                       [contractNodes]="contractNodes"
 
-                          [selectContractId]="''"
-                          [selectNodeId]="selectNodeId"
+                       [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
+                       [isMasterGrid]="true"
 
-                          [heightGrid]="300"
-                          [selectionmode]="'checkbox'"
+                       [settingButtonPanel]="settingNodeButtonPanel"
 
-                          [settingButtonPanel]="settingFixtureButtonPanel"
-    ></app-fixturelist-page>
-
+                       (onRefreshChildGrid)="refreshChildGrid($event)"
+                       (onRefreshMap)="refreshMap()"
+    ></app-nodelist-page>
   </div>
-  <div style="overflow: hidden">
-    <app-gatewaylist-page *ngIf="this.isTabGateway" #gatewaylistPageComponent
+  <div class="splitter-panel">
+    <jqxTabs
+      [theme]="'material'"
+      (onSelected)="selected($event)"
+    >
+      <ul>
+        <li style="margin-left: 30px">Светильники</li>
+        <li>Шлюзы</li>
+        <li>Сенсоры</li>
+      </ul>
+      <div style="overflow: hidden">
+        <app-fixturelist-page *ngIf="this.isTabFixture" #fixturelistPageComponent
 
-                          [geographs]="geographs"
-                          [ownerGateways]="ownerGateways"
-                          [gatewayTypes]="gatewayTypes"
-                          [contractGateways]="contractGateways"
+                              [geographs]="geographs"
+                              [ownerFixtures]="ownerFixtures"
+                              [fixtureTypes]="fixtureTypes"
+                              [substations]="substations"
+                              [contractFixtures]="contractFixtures"
+                              [installers]="installers"
+                              [heightTypes]="heightTypes"
 
-                          [selectNodeId]="selectNodeId"
+                              [selectContractId]="''"
+                              [selectNodeId]="selectNodeId"
 
-                          [heightGrid]="310"
-                          [isMasterGrid]="false"
-                          [selectionmode]="'checkbox'"
+                              [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                              [selectionmode]="'checkbox'"
 
-                          [settingButtonPanel]="settingGatewayButtonPanel"
-    ></app-gatewaylist-page>
+                              [settingButtonPanel]="settingFixtureButtonPanel"
+        ></app-fixturelist-page>
+
+      </div>
+      <div style="overflow: hidden">
+        <app-gatewaylist-page *ngIf="this.isTabGateway" #gatewaylistPageComponent
+
+                              [geographs]="geographs"
+                              [ownerGateways]="ownerGateways"
+                              [gatewayTypes]="gatewayTypes"
+                              [contractGateways]="contractGateways"
+
+                              [selectNodeId]="selectNodeId"
+
+                              [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                              [isMasterGrid]="false"
+                              [selectionmode]="'checkbox'"
+
+                              [settingButtonPanel]="settingGatewayButtonPanel"
+        ></app-gatewaylist-page>
+      </div>
+      <div style="overflow: hidden">
+        <app-sensorlist-page *ngIf="this.isTabSensor" #sensorlistPageComponent
+
+                             [geographs]="geographs"
+                             [ownerSensors]="ownerSensors"
+                             [sensorTypes]="sensorTypes"
+                             [contractSensors]="contractSensors"
+
+                             [selectNodeId]="selectNodeId"
+
+                             [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                             [isMasterGrid]="false"
+                             [selectionmode]="'checkbox'"
+
+                             [settingButtonPanel]="settingSensorButtonPanel"
+        ></app-sensorlist-page>
+      </div>
+    </jqxTabs>
   </div>
-  <div style="overflow: hidden">
-    <app-sensorlist-page *ngIf="this.isTabSensor" #sensorlistPageComponent
-
-                         [geographs]="geographs"
-                         [ownerSensors]="ownerSensors"
-                         [sensorTypes]="sensorTypes"
-                         [contractSensors]="contractSensors"
-
-                         [selectNodeId]="selectNodeId"
-
-                         [heightGrid]="310"
-                         [isMasterGrid]="false"
-                         [selectionmode]="'checkbox'"
-
-                         [settingButtonPanel]="settingSensorButtonPanel"
-    ></app-sensorlist-page>
-  </div>
-</jqxTabs>
-
+</jqxSplitter>
 

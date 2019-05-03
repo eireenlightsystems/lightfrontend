@@ -99,4 +99,5 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   switchOff() {
     this.onSwitchOff.emit();
   }
+
 }

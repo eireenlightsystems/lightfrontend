@@ -1,4 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {isUndefined} from 'util';
+
+import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 
 import {
   Fixture, Contract, EquipmentType, Geograph, HeightType, Installer, Owner, Substation, CommandType, CommandStatus,
@@ -7,7 +10,6 @@ import {
 import {FixturecomlistPageComponent} from './fixturecomlist-page/fixturecomlist-page.component';
 import {FixturelistPageComponent} from './fixturelist-page/fixturelist-page.component';
 import {FixturecomspeedlistPageComponent} from './fixturecomspeedlist-page/fixturecomspeedlist-page.component';
-import {isUndefined} from 'util';
 
 
 @Component({
@@ -47,6 +49,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('fixturecomlistPageComponent') fixturecomlistPageComponent: FixturecomlistPageComponent;
   @ViewChild('fixturecomspeedlistPageComponent') fixturecomspeedlistPageComponent: FixturecomspeedlistPageComponent;
+  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
 
   // other variables
   selectFixtureId: number;
@@ -55,6 +58,11 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
 
   settingFixtureComButtonPanel: SettingButtonPanel;
   settingFixtureSpeedButtonPanel: SettingButtonPanel;
+
+  heightDeltaParentGrid = 55;
+  heightDeltaChildGrid = 103;
+  sizeParentSplitter: any;
+  sizeChildSplitter: any;
 
   constructor() {
   }
@@ -249,4 +257,48 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
       this.isTabCommandSpeed = true;
     }
   }
+
+  resize(sizeParent: any, sizeChild: any) {
+
+    // console.log('resize = ' + sizeParent);
+
+    const sizeParentGrid = sizeParent - this.heightDeltaParentGrid;
+    const sizeChildGrid = sizeChild - this.heightDeltaChildGrid;
+
+    this.fixturelistPageComponent.jqxgridComponent.myGrid.height(sizeParentGrid);
+    this.fixturelistPageComponent.sourceForJqxGrid.grid.height = sizeParentGrid;
+
+    if (!isUndefined(this.fixturecomlistPageComponent)) {
+      this.fixturecomlistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.fixturecomlistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+
+    if (!isUndefined(this.fixturecomspeedlistPageComponent)) {
+      this.fixturecomspeedlistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.fixturecomspeedlistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+  }
+
+  collapsed(sizeParent: any, sizeChild: any) {
+
+    // console.log('collapsed = ' + sizeParent);
+
+    this.sizeParentSplitter = sizeParent;
+    this.sizeChildSplitter = sizeChild;
+
+    this.mainSplitter.attrPanels[0].size = this.getHeightSplitter();
+  }
+
+  expanded() {
+
+    // console.log('expanded = ' + this.sizeParentSplitter);
+
+    this.mainSplitter.attrPanels[0].size = this.sizeParentSplitter;
+    this.mainSplitter.attrPanels[1].size = this.sizeChildSplitter;
+  }
+
+  getHeightSplitter() {
+    return 775;
+  }
+
 }

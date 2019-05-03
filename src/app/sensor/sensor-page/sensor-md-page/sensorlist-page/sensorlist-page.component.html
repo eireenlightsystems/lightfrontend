@@ -15,11 +15,17 @@
 ></app-button-panel>
 
 <app-filter-table #filterTable
-                  *ngIf="isFilterVisible"
+
                   [sourceForFilter]="sourceForFilter"
+
+                  [isMasterGrid]="isMasterGrid"
+                  [coordinateX]="null"
+                  [coordinateY]="null"
+
                   (onFilter)="applyFilterFromFilter($event)"
-                  (onInitSourceFilter)="initSourceFilter()"
 ></app-filter-table>
+
+<label><b>Фильтр: </b>{{filterSelect}}</label>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->

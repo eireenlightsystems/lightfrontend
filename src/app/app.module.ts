@@ -23,6 +23,7 @@ import {jqxResponsivePanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angula
 import {jqxPanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpanel';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxcombobox';
+import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxsplitter';
 
 import {AppComponent} from './app.component';
 import {LoginPageComponent} from './auth/login-page/login-page.component';
@@ -53,7 +54,6 @@ import {FixtureMasterdetailsPageComponent} from './fixture/fixture-page/fixture-
 import {FixturecomeditSwitchoffFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 import {FixturecomspeedlistPageComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeedlist-page.component';
 import {FixturecomspeededitFormComponent} from './fixture/fixture-page/fixture-masterdetails-page/fixturecomspeedlist-page/fixturecomspeededit-form/fixturecomspeededit-form.component';
-import {LimitedSliderComponent} from './shared/components/limited-slider/limited-slider.component';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {FixturegroupMdPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixturegroup-md-page.component';
 import {FixtureGrlistPageComponent} from './fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
@@ -110,6 +110,7 @@ import { ButtonSettinggridDirective } from './shared/directives/button-settinggr
     jqxResponsivePanelComponent,
     jqxPanelComponent,
     jqxDateTimeInputComponent,
+    jqxSplitterComponent,
 
     FixturePageComponent,
     EventWindowComponent,
@@ -127,7 +128,6 @@ import { ButtonSettinggridDirective } from './shared/directives/button-settinggr
     FixturecomeditSwitchoffFormComponent,
     FixturecomspeedlistPageComponent,
     FixturecomspeededitFormComponent,
-    LimitedSliderComponent,
     NotFoundComponent,
     FixturegroupMdPageComponent,
     FixtureGrlistPageComponent,

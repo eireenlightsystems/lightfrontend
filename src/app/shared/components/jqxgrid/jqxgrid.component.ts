@@ -6,6 +6,7 @@ import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
 
 import {SourceForJqxGrid} from '../../interfaces';
 import {DateTimeFormat} from '../../classes/DateTimeFormat';
+import {isNull, isUndefined} from 'util';
 
 
 @Component({
@@ -29,7 +30,9 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // other variables
   selectRow: any;
-  islistBoxVisible = false;
+  // islistBoxVisible = false;
+  widthDefinde: any;
+  heightDefinde: any;
 
   // define the data source for the table
   source_jqxgrid: any;
@@ -83,6 +86,9 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.myGrid.refreshdata();
     // this.myGrid.updatebounddata('cells');
     this.myGrid.updatebounddata('data');
+
+    this.widthDefinde = !isNull(this.sourceForJqxGrid.grid.width) ? this.sourceForJqxGrid.grid.width : '100%';
+    this.heightDefinde = !isNull(this.sourceForJqxGrid.grid.height) ? this.sourceForJqxGrid.grid.height : '100%';
   }
 
   refresh_del(ids: any[]) {

@@ -11,7 +11,7 @@ export class ButtonSimpleStyleDirective implements OnInit {
   ngOnInit() {
     const nativeElement = this.element.nativeElement;
 
-    this.renderer.setStyle(nativeElement, 'margin', '2px 2px 0px 2px');
+    this.renderer.setStyle(nativeElement, 'margin', '2px 2px 2px 2px');
     this.renderer.setStyle(nativeElement, 'text-align', 'center');
 
     this.renderer.addClass(nativeElement, 'btn');

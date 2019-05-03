@@ -65,6 +65,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   listBoxSource: any[];
   // main
   items: Gateway[] = [];
+  // grid
+  oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
   filter: FilterGateway = {
     geographId: '',
     ownerId: '',
@@ -72,13 +77,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     nodeId: ''
   };
-  // grid
-  oSub: Subscription;
-  selectItemId = 0;
-  sourceForJqxGrid: SourceForJqxGrid;
-  // filter
   sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
+  filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
@@ -158,8 +159,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.geographs,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Геогр. понятие:',
         displayMember: 'code',
         valueMember: 'id',
@@ -171,8 +172,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.ownerGateways,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Владелец:',
         displayMember: 'code',
         valueMember: 'id',
@@ -184,8 +185,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.gatewayTypes,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Тип шлюза:',
         displayMember: 'code',
         valueMember: 'id',
@@ -341,7 +342,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
-        width: 0,
+        width: null,
         height: this.heightGrid,
         columnsresize: true,
         sortable: true,
@@ -370,6 +371,27 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (this.oSub) {
       this.oSub.unsubscribe();
     }
+    if (this.jqxgridComponent) {
+      this.jqxgridComponent.destroyGrid();
+    }
+    if (this.filterTable) {
+      this.filterTable.destroy();
+    }
+    if (this.buttonPanel) {
+      this.buttonPanel.destroy();
+    }
+    if (this.editWindow) {
+      this.editWindow.destroyWindow();
+    }
+    if (this.linkWindow) {
+      this.linkWindow.destroyWindow();
+    }
+    if (this.oSubForLinkWin) {
+      this.oSubForLinkWin.unsubscribe();
+    }
+    if (this.oSubLink) {
+      this.oSubLink.unsubscribe();
+    }
   }
 
   // GRID
@@ -383,6 +405,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
+    this.initSourceFilter();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -481,12 +504,16 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
+    if (this.filterTable.filtrWindow.isOpen()) {
+      this.filterTable.closeWindow();
+    } else {
+      this.initSourceFilter();
+      this.filterTable.openWindow();
+    }
   }
 
   place() {
@@ -530,17 +557,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(filter: FilterGateway) {
-    this.items = [];
-    this.offset = 0;
     this.filter = filter;
-    this.reloading = true;
-    this.getAll();
+    this.refreshGrid();
   }
 
   applyFilterFromFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     for (let i = 0; i < event.length; i++) {
       switch (event[i].name) {
         case 'geographs':
@@ -556,25 +577,30 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.getAll();
+    this.refreshGrid();
   }
 
   initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'geographs':
-          this.sourceForFilter[i].source = this.geographs;
-          break;
-        case 'ownerGateways':
-          this.sourceForFilter[i].source = this.ownerGateways;
-          break;
-        case 'gatewayTypes':
-          this.sourceForFilter[i].source = this.gatewayTypes;
-          break;
-        default:
-          break;
+    if (!this.isFilterVisible) {
+      this.isFilterVisible = true;
+      for (let i = 0; i < this.sourceForFilter.length; i++) {
+        switch (this.sourceForFilter[i].name) {
+          case 'geographs':
+            this.sourceForFilter[i].source = this.geographs;
+            break;
+          case 'ownerGateways':
+            this.sourceForFilter[i].source = this.ownerGateways;
+            break;
+          case 'gatewayTypes':
+            this.sourceForFilter[i].source = this.gatewayTypes;
+            break;
+          default:
+            break;
+        }
       }
     }
+    // view select filter for user
+    this.filterSelect = this.filterTable.getFilterSelect();
   }
 
   // EDIT FORM

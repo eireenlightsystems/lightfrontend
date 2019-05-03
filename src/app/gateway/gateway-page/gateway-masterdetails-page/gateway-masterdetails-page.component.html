@@ -1,44 +1,52 @@
-<app-gatewaylist-page #gatewaylistPageComponent
+<jqxSplitter #mainSplitter
+             [theme]="'material'"
+             [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+             [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
 
-                      [geographs]="geographs"
-                      [ownerGateways]="ownerGateways"
-                      [gatewayTypes]="gatewayTypes"
-                      [contractGateways]="contractGateways"
-
-                      [heightGrid]="300"
-                      [isMasterGrid]="true"
-
-                      [settingButtonPanel]="settingGatewayButtonPanel"
-
-                      (onRefreshChildGrid)="refreshChildGrid($event)"
-                      (onRefreshMap)="refreshMap()"
-></app-gatewaylist-page>
-
-<jqxTabs
-  [theme]="'material'"
+             (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onExpanded)="expanded()"
 >
-  <ul>
-    <li style="margin-left: 30px">Группа узлов шлюза</li>
-  </ul>
-  <div style="overflow: hidden">
-    <app-nodelist-page #nodelistPageComponent
+  <div class="splitter-panel">
+    <app-gatewaylist-page #gatewaylistPageComponent
 
-                       [geographs]="geographs"
-                       [ownerNodes]="ownerNodes"
-                       [nodeTypes]="nodeTypes"
-                       [contractNodes]="contractNodes"
+                          [geographs]="geographs"
+                          [ownerGateways]="ownerGateways"
+                          [gatewayTypes]="gatewayTypes"
+                          [contractGateways]="contractGateways"
 
-                       [heightGrid]="320"
-                       [selectGatewayId]="selectGatewayId"
-                       [selectionmode]="'checkbox'"
-                       [isMasterGrid]="false"
+                          [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
+                          [isMasterGrid]="true"
 
-                       [settingButtonPanel]="settingNodeButtonPanel"
+                          [settingButtonPanel]="settingGatewayButtonPanel"
 
-    ></app-nodelist-page>
+                          (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-gatewaylist-page>
   </div>
-</jqxTabs>
+  <div class="splitter-panel">
+    <jqxTabs
+      [theme]="'material'"
+    >
+      <ul>
+        <li style="margin-left: 30px">Группа узлов шлюза</li>
+      </ul>
+      <div style="overflow: hidden">
+        <app-nodelist-page #nodelistPageComponent
 
-<!--[nodeSortcolumn]="nodeSortcolumn"-->
-<!--[nodeColumns]="nodeColumns"-->
-<!--[nodeListBoxSource]="nodeListBoxSource"-->
+                           [geographs]="geographs"
+                           [ownerNodes]="ownerNodes"
+                           [nodeTypes]="nodeTypes"
+                           [contractNodes]="contractNodes"
+
+                           [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                           [selectGatewayId]="selectGatewayId"
+                           [selectionmode]="'checkbox'"
+                           [isMasterGrid]="false"
+
+                           [settingButtonPanel]="settingNodeButtonPanel"
+
+        ></app-nodelist-page>
+      </div>
+    </jqxTabs>
+  </div>
+</jqxSplitter>

@@ -5,6 +5,7 @@ import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxcombobox';
 
 import {DateTimeFormat} from '../../../classes/DateTimeFormat';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-filter-item',
@@ -24,11 +25,15 @@ export class FilterItemComponent implements OnInit, OnDestroy {
 
   // other variables
 
+
   constructor() {
   }
 
   ngOnInit() {
     switch (this.itemFilter.type) {
+      case 'jqxComboBox':
+
+        break;
       case 'jqxDateTimeInput':
         setTimeout(_ => this.jqxDateTimeInput.setDate(this.itemFilter.defaultValue));
         break;
@@ -47,18 +52,23 @@ export class FilterItemComponent implements OnInit, OnDestroy {
   }
 
   OnSelect(event: any) {
-    if (!isUndefined(event.args)) {
+    this.itemFilter.selectId = '';
+    this.itemFilter.defaultValue = '';
+    if (!isUndefined(event)
+      && !isUndefined(event.args)
+      && !isUndefined(event.args.item)
+      && !isUndefined(event.args.item.value)
+      && !isUndefined(event.args.item.index)) {
       this.itemFilter.selectId = event.args.item.value;
-    } else {
-      this.itemFilter.selectId = '';
+      this.itemFilter.defaultValue = event.args.item.index;
     }
   }
 
   onValueChanged(event: any) {
+    this.itemFilter.selectId = '';
     if (!isUndefined(event.args)) {
       this.itemFilter.selectId = new DateTimeFormat().fromDataPickerString(event.args.date);
-    } else {
-      this.itemFilter.selectId = '';
+      this.itemFilter.defaultValue = formatDate(event.args.date, 'yyyy-MM-dd HH:mm', 'en');
     }
   }
 }

@@ -1,70 +1,80 @@
-<app-fixturelist-page #fixturelistPageComponent
+<jqxSplitter #mainSplitter
+             [theme]="'material'"
+             [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+             [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
 
-                      [geographs]="geographs"
-
-                      [ownerFixtures]="ownerFixtures"
-                      [fixtureTypes]="fixtureTypes"
-                      [substations]="substations"
-                      [contractFixtures]="contractFixtures"
-                      [installers]="installers"
-                      [heightTypes]="heightTypes"
-
-                      [heightGrid]="317"
-                      [isMasterGrid]="true"
-                      [selectionmode]="selectionmode"
-
-                      [selectContractId]=""
-                      [selectNodeId]=""
-                      [fixtureGroupId]="fixtureGroupId"
-
-                      [settingButtonPanel]="settingFixtureButtonPanel"
-
-                      (onRefreshChildGrid)="refreshChildGrid($event)"
-
-></app-fixturelist-page>
-
-<jqxTabs
-  [theme]="'material'"
-  (onSelected)="selected($event)"
+             (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+             (onExpanded)="expanded()"
 >
-  <ul>
-    <li style="margin-left: 30px">Команды режимов освещения</li>
-    <li>Команды скорости возгорания/затухания</li>
-  </ul>
-  <div style="overflow: hidden">
-    <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
+  <div class="splitter-panel">
+    <app-fixturelist-page #fixturelistPageComponent
 
-                             [commandTypes]="commandTypes"
-                             [commandStatuses]="commandStatuses"
+                          [geographs]="geographs"
 
-                             [heightGrid]="290"
-                             [isMasterGrid]="false"
-                             [selectionmode]="'checkbox'"
+                          [ownerFixtures]="ownerFixtures"
+                          [fixtureTypes]="fixtureTypes"
+                          [substations]="substations"
+                          [contractFixtures]="contractFixtures"
+                          [installers]="installers"
+                          [heightTypes]="heightTypes"
 
-                             [selectFixtureId]="selectFixtureId"
+                          [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
+                          [isMasterGrid]="true"
+                          [selectionmode]="selectionmode"
 
-                             [settingButtonPanel]="settingFixtureComButtonPanel"
+                          [selectContractId]=""
+                          [selectNodeId]=""
+                          [fixtureGroupId]="fixtureGroupId"
 
-                             (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixturecomlist-page>
+                          [settingButtonPanel]="settingFixtureButtonPanel"
+
+                          (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-fixturelist-page>
   </div>
-  <div style="overflow: hidden">
-    <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
+  <div class="splitter-panel">
+    <jqxTabs
+      [theme]="'material'"
+      (onSelected)="selected($event)"
+    >
+      <ul>
+        <li style="margin-left: 30px">Команды режимов освещения</li>
+        <li>Команды скорости возгорания/затухания</li>
+      </ul>
+      <div style="overflow: hidden">
+        <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
 
-                                  [speedDirectiones]="speedDirectiones"
-                                  [commandStatuses]="commandStatuses"
+                                 [commandTypes]="commandTypes"
+                                 [commandStatuses]="commandStatuses"
 
-                                  [heightGrid]="290"
-                                  [isMasterGrid]="false"
-                                  [selectionmode]="'checkbox'"
+                                 [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                 [isMasterGrid]="false"
+                                 [selectionmode]="'checkbox'"
 
-                                  [selectFixtureId]="selectFixtureId"
+                                 [selectFixtureId]="selectFixtureId"
 
-                                  [settingButtonPanel]="settingFixtureSpeedButtonPanel"
+                                 [settingButtonPanel]="settingFixtureComButtonPanel"
 
-                                  (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixturecomspeedlist-page>
+                                 (onRefreshChildGrid)="refreshChildGrid($event)"
+        ></app-fixturecomlist-page>
+      </div>
+      <div style="overflow: hidden">
+        <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
+
+                                      [speedDirectiones]="speedDirectiones"
+                                      [commandStatuses]="commandStatuses"
+
+                                      [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                      [isMasterGrid]="false"
+                                      [selectionmode]="'checkbox'"
+
+                                      [selectFixtureId]="selectFixtureId"
+
+                                      [settingButtonPanel]="settingFixtureSpeedButtonPanel"
+
+                                      (onRefreshChildGrid)="refreshChildGrid($event)"
+        ></app-fixturecomspeedlist-page>
+      </div>
+    </jqxTabs>
   </div>
-</jqxTabs>
-
-
+</jqxSplitter>

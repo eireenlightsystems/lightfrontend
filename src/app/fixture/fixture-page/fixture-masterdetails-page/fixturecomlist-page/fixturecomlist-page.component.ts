@@ -76,6 +76,11 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       end: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
     }
   };
+  // grid
+  oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
   filter: FilterCommandSwitch = {
     startDateTime: this.todayEndStart.iso8601TZ.start(),
     endDateTime: this.todayEndStart.iso8601TZ.end(),
@@ -83,13 +88,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     statusId: this.commandSwitchDflt.statusId.toString()
     // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
   };
-  // grid
-  oSub: Subscription;
-  selectItemId = 0;
-  sourceForJqxGrid: SourceForJqxGrid;
-  // filter
   sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
+  filterSelect = '';
   // edit form
   settingWinForEditFormSwitchOff: SettingWinForEditForm;
   sourceForEditFormSwitchOff: SourceForEditForm[];
@@ -154,8 +155,8 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.commandStatuses,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Статус комманды:',
         displayMember: 'name',
         valueMember: 'id',
@@ -167,8 +168,8 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         type: 'jqxDateTimeInput',
         source: [],
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Дата нач. интер.:',
         displayMember: 'code',
         valueMember: 'id',
@@ -180,8 +181,8 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         type: 'jqxDateTimeInput',
         source: [],
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Дата заве. интерв.:',
         displayMember: 'code',
         valueMember: 'id',
@@ -209,7 +210,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
-        width: 0,
+        width: null,
         height: this.heightGrid,
         columnsresize: true,
         sortable: true,
@@ -241,9 +242,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    // if (this.filterTable) {
-    //   this.filterTable.destroy();
-    // }
+    if (this.filterTable) {
+      this.filterTable.destroy();
+    }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
@@ -272,6 +273,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
+    this.initSourceFilter();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -377,12 +379,16 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
+    if (this.filterTable.filtrWindow.isOpen()) {
+      this.filterTable.closeWindow();
+    } else {
+      this.initSourceFilter();
+      this.filterTable.openWindow();
+    }
   }
 
   place() {
@@ -414,17 +420,11 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(filter: FilterCommandSwitch) {
-    this.items = [];
-    this.offset = 0;
     this.filter = filter;
-    this.reloading = true;
-    this.getAll();
+    this.refreshGrid();
   }
 
   applyFilterFromFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     for (let i = 0; i < event.length; i++) {
       switch (event[i].name) {
         case 'commandStatuses':
@@ -440,22 +440,27 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.getAll();
+    this.refreshGrid();
   }
 
   initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'commandStatuses':
-          this.sourceForFilter[i].source = this.commandStatuses;
-          this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
-            (currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
-          this.sourceForFilter[i].selectId = this.commandSwitchDflt.statusId.toString();
-          break;
-        default:
-          break;
+    if (!this.isFilterVisible) {
+      this.isFilterVisible = true;
+      for (let i = 0; i < this.sourceForFilter.length; i++) {
+        switch (this.sourceForFilter[i].name) {
+          case 'commandStatuses':
+            this.sourceForFilter[i].source = this.commandStatuses;
+            this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
+              (currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
+            this.sourceForFilter[i].selectId = this.commandSwitchDflt.statusId.toString();
+            break;
+          default:
+            break;
+        }
       }
     }
+    // view select filter for user
+    this.filterSelect = this.filterTable.getFilterSelect();
   }
 
   // EDIT FORM
@@ -487,4 +492,5 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       }
     }
   }
+
 }

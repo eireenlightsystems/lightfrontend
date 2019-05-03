@@ -1,15 +1,29 @@
-<div class="fr">
-
-  <app-filter-item *ngFor="let itemFilter of sourceForFilter" [itemFilter]="itemFilter" #filterItemComponent
-  ></app-filter-item>
-
-  <div appButtonFilter>
-    <jqxButton
-      [theme]="sourceForFilter[0].theme"
-      [width]="100" [height]="43"
-      (click)="submitFilter()"
-    >Применить
-    </jqxButton>
+<jqxWindow #filtrWindow
+           [theme]="sourceForFilter[0].theme"
+           [autoOpen]="false"
+           [isModal]="false"
+           [position]="{ x: getCoordinateX(), y: getCoordinateY() }"
+           [width]="400"
+           [height]="getHeight()"
+>
+  <div>
+    <b>Фильтр</b>
   </div>
 
-</div>
+  <div>
+    <div *ngIf="filtrWindow.isOpen()">
+      <app-filter-item style="float: left;" *ngFor="let itemFilter of sourceForFilter"
+                       [itemFilter]="itemFilter" #filterItemComponent
+      ></app-filter-item>
+    </div>
+    <div appButtonFilter>
+      <jqxButton
+        [theme]="sourceForFilter[0].theme"
+        [width]="100" [height]="45"
+        (click)="submitFilter()"
+      >Применить
+      </jqxButton>
+    </div>
+  </div>
+
+</jqxWindow>

@@ -52,12 +52,7 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
-    }
-    if (this.myGrid) {
-      this.myGrid.destroy();
-    }
+    this.destroyWindow();
   }
 
   // refresh table

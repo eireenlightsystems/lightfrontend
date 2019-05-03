@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription, timer} from 'rxjs';
+import {isUndefined} from 'util';
 
 import {
   Fixture, Contract, EquipmentType, HeightType, Installer, Substation,
@@ -8,10 +9,13 @@ import {
 } from '../../../shared/interfaces';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
-import {FixturecomeditFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
+import {
+  FixturecomeditFormComponent
+} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
 import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup.service';
-import {FixturecomeditSwitchoffFormComponent} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
-import {isUndefined} from "util";
+import {
+  FixturecomeditSwitchoffFormComponent
+} from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 import {MaterialService} from '../../../shared/classes/material.service';
 import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
 
@@ -91,9 +95,9 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
       width: 450,
       maxWidth: 500,
       minWidth: 460,
-      height: 600,
-      maxHeight: 600,
-      minHeight: 600,
+      height: 550,
+      maxHeight: 550,
+      minHeight: 550,
       coordX: 500,
       coordY: 65
     };
@@ -576,7 +580,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           return function (properties: any) {
             return function () {
               const fixtureIds: number[] = [];
-              fixtureIds[0] = properties._data.saveFixture.fixtureId;
+              fixtureIds[0] = properties._data.fixture.fixtureId;
               mapComponent.editSwitchOnWindow.positionWindow({x: 600, y: 90});
               mapComponent.editSwitchOnWindow.openWindow(fixtureIds, 'ins');
             };

@@ -1,5 +1,9 @@
-<div class="fr" [ngStyle]="{'width': '100%'}">
-  <div [ngStyle]="{'width': '100%'}">
+<jqxSplitter #mainSplitter
+             [theme]="'material'"
+             [width]="'100%'" [height]="getHeightSplitter()"
+             [panels]="[{ size: '50%'}]"
+>
+  <div class="splitter-panel">
     <app-button-panel
       [settingButtonPanel]="settingFixtureGrButtonPanel"
       (onIns)="ins()"
@@ -19,7 +23,7 @@
                              [fixtureGroupOwners]="fixtureGroupOwners"
 
                              [widthGrid]="'100%'"
-                             [heightGrid]="725"
+                             [heightGrid]="this.getHeightSplitter() - this.heightDeltaGrid"
                              [isMasterGrid]="true"
 
                              [isButtonPanelVisible] = "isButtonPanelVisible"
@@ -29,7 +33,7 @@
                              (onFeedback)="feedback($event)"
     ></app-fixture-grlist-page>
   </div>
-  <div [ngStyle]="{'margin-left': '10px', 'width': '100%'}">
+  <div class="splitter-panel">
     <app-fixture-masterdetails-page #fixtureMasterdetailsPageComponentFgr
 
                                     [geographs]="geographs"
@@ -50,7 +54,6 @@
                                     [settingFixtureButtonPanel]="settingFixtureButtonPanel"
 
                                     [fixtureGroupId]="0"
-   ></app-fixture-masterdetails-page>
+    ></app-fixture-masterdetails-page>
   </div>
-</div>
-
+</jqxSplitter>

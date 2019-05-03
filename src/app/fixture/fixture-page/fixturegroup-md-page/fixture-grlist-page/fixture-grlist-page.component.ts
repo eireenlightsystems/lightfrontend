@@ -70,17 +70,18 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   listBoxSource: any[];
   // main
   items: FixtureGroup[] = [];
-  filter: FilterFixtureGroup = {
-    ownerId: '',
-    fixtureGroupTypeId: '',
-  };
   // grid
   oSub: Subscription;
   selectItemId = 0;
   sourceForJqxGrid: SourceForJqxGrid;
   // filter
+  filter: FilterFixtureGroup = {
+    ownerId: '',
+    fixtureGroupTypeId: '',
+  };
   sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
+  filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
@@ -126,8 +127,8 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.fixtureGroupOwners,
         theme: 'material',
-        width: '250',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Владелец:',
         displayMember: 'code',
         valueMember: 'id',
@@ -139,8 +140,8 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.fixtureGroupTypes,
         theme: 'material',
-        width: '250',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Тип группы:',
         displayMember: 'name',
         valueMember: 'id',
@@ -232,7 +233,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
-        width: 0,
+        width: null,
         height: this.heightGrid,
         columnsresize: true,
         sortable: true,
@@ -259,9 +260,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    // if (this.filterTable) {
-    //   this.filterTable.destroy();
-    // }
+    if (this.filterTable) {
+      this.filterTable.destroy();
+    }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
@@ -296,6 +297,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
+    this.initSourceFilter();
 
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -367,12 +369,16 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
+    if (this.filterTable.filtrWindow.isOpen()) {
+      this.filterTable.closeWindow();
+    } else {
+      this.initSourceFilter();
+      this.filterTable.openWindow();
+    }
   }
 
   place() {
@@ -412,17 +418,11 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(filter: FilterFixtureGroup) {
-    this.items = [];
-    this.offset = 0;
     this.filter = filter;
-    this.reloading = true;
-    this.getAll();
+    this.refreshGrid();
   }
 
   applyFilterFromFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     for (let i = 0; i < event.length; i++) {
       switch (event[i].name) {
         case 'fixtureGroupOwners':
@@ -435,22 +435,27 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.getAll();
+    this.refreshGrid();
   }
 
   initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'fixtureGroupOwners':
-          this.sourceForFilter[i].source = this.fixtureGroupOwners;
-          break;
-        case 'fixtureGroupTypes':
-          this.sourceForFilter[i].source = this.fixtureGroupTypes;
-          break;
-        default:
-          break;
+    if (!this.isFilterVisible) {
+      this.isFilterVisible = true;
+      for (let i = 0; i < this.sourceForFilter.length; i++) {
+        switch (this.sourceForFilter[i].name) {
+          case 'fixtureGroupOwners':
+            this.sourceForFilter[i].source = this.fixtureGroupOwners;
+            break;
+          case 'fixtureGroupTypes':
+            this.sourceForFilter[i].source = this.fixtureGroupTypes;
+            break;
+          default:
+            break;
+        }
       }
     }
+    // view select filter for user
+    this.filterSelect = this.filterTable.getFilterSelect();
   }
 
   // EDIT FORM

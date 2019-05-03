@@ -1,4 +1,7 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
+
+import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
+
 import {
   Fixture, Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   CommandStatus, CommandType,
@@ -7,6 +10,7 @@ import {
 } from '../../../shared/interfaces';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
+
 
 @Component({
   selector: 'app-fixturegroup-md-page',
@@ -40,12 +44,16 @@ export class FixturegroupMdPageComponent implements OnInit {
   // define variables - link to view objects
   @ViewChild('fixtureGrlistPageComponent') fixtureGrlistPageComponent: FixtureGrlistPageComponent;
   @ViewChild('fixtureMasterdetailsPageComponentFgr') fixtureMasterdetailsPageComponentFgr: FixtureMasterdetailsPageComponent;
+  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
 
   // other variables
   fixtures: Fixture[] = [];
   settingFixtureGrButtonPanel: SettingButtonPanel;
   settingFixtureButtonPanel: SettingButtonPanel;
   isButtonPanelVisible = false;
+
+  heightDeltaGrid = 50;
+
 
   constructor() {
   }
@@ -201,5 +209,9 @@ export class FixturegroupMdPageComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  getHeightSplitter() {
+    return 775;
   }
 }

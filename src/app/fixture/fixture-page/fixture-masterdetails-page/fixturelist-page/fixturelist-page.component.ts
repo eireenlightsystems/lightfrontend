@@ -71,6 +71,11 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   listBoxSource: any[];
   // main
   items: Fixture[] = [];
+  // grid
+  oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
   filter: FilterFixture = {
     geographId: '',
     ownerId: '',
@@ -81,13 +86,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     nodeId: ''
   };
-  // grid
-  oSub: Subscription;
-  selectItemId = 0;
-  sourceForJqxGrid: SourceForJqxGrid;
-  // filter
   sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
+  filterSelect = '';
   modes = [
     {
       id: 0,
@@ -195,8 +196,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.geographs,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Геогр. понятие:',
         displayMember: 'code',
         valueMember: 'id',
@@ -208,8 +209,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.ownerFixtures,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Владелец:',
         displayMember: 'code',
         valueMember: 'id',
@@ -221,8 +222,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.fixtureTypes,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Тип светильника:',
         displayMember: 'code',
         valueMember: 'id',
@@ -234,8 +235,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.substations,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Подстанция:',
         displayMember: 'code',
         valueMember: 'id',
@@ -247,8 +248,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.modes,
         theme: 'material',
-        width: '200',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Вкл./выкл.:',
         displayMember: 'code',
         valueMember: 'id',
@@ -468,7 +469,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
-        width: 0,
+        width: null,
         height: this.heightGrid,
         columnsresize: true,
         sortable: true,
@@ -500,9 +501,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    // if (this.filterTable) {
-    //   this.filterTable.destroy();
-    // }
+    if (this.filterTable) {
+      this.filterTable.destroy();
+    }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
@@ -531,6 +532,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
+    this.initSourceFilter();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -637,12 +639,16 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
+    if (this.filterTable.filtrWindow.isOpen()) {
+      this.filterTable.closeWindow();
+    } else {
+      this.initSourceFilter();
+      this.filterTable.openWindow();
+    }
   }
 
   place() {
@@ -700,17 +706,11 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     this.filter = event;
     this.refreshGrid();
   }
 
   applyFilterFromFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     for (let i = 0; i < event.length; i++) {
       switch (event[i].name) {
         case 'geographs':
@@ -736,30 +736,33 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'geographs':
-          this.sourceForFilter[i].source = this.geographs;
-          break;
-        case 'ownerFixtures':
-          this.sourceForFilter[i].source = this.ownerFixtures;
-          break;
-        case 'fixtureTypes':
-          this.sourceForFilter[i].source = this.fixtureTypes;
-          break;
-        case 'substations':
-          this.sourceForFilter[i].source = this.substations;
-          break;
-        default:
-          break;
+    if (!this.isFilterVisible) {
+      this.isFilterVisible = true;
+      for (let i = 0; i < this.sourceForFilter.length; i++) {
+        switch (this.sourceForFilter[i].name) {
+          case 'geographs':
+            this.sourceForFilter[i].source = this.geographs;
+            break;
+          case 'ownerFixtures':
+            this.sourceForFilter[i].source = this.ownerFixtures;
+            break;
+          case 'fixtureTypes':
+            this.sourceForFilter[i].source = this.fixtureTypes;
+            break;
+          case 'substations':
+            this.sourceForFilter[i].source = this.substations;
+            break;
+          default:
+            break;
+        }
       }
     }
+    // view select filter for user
+    this.filterSelect = this.filterTable.getFilterSelect();
   }
 
   applyFilterFixtureInGroup(fixtureGroupId: string) {
-    this.items = [];
     this.fixtureGroupId = fixtureGroupId;
-    this.reloading = true;
     this.refreshGrid();
   }
 
@@ -1117,6 +1120,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       );
     }
   }
+
 }
 
 

@@ -66,6 +66,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   listBoxSource: any[];
   // main
   items: Node[] = [];
+  // grid
+  oSub: Subscription;
+  selectItemId = 0;
+  sourceForJqxGrid: SourceForJqxGrid;
+  // filter
   filter: FilterNode = {
     geographId: '',
     ownerId: '',
@@ -73,13 +78,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     contractId: '',
     gatewayId: ''
   };
-  // grid
-  oSub: Subscription;
-  selectItemId = 0;
-  sourceForJqxGrid: SourceForJqxGrid;
-  // filter
   sourceForFilter: SourceForFilter[];
   isFilterVisible = false;
+  filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
@@ -165,8 +166,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.geographs,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Геогр. понятие:',
         displayMember: 'code',
         valueMember: 'id',
@@ -178,8 +179,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.ownerNodes,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Владелец:',
         displayMember: 'code',
         valueMember: 'id',
@@ -191,8 +192,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         type: 'jqxComboBox',
         source: this.nodeTypes,
         theme: 'material',
-        width: '300',
-        height: '43',
+        width: '380',
+        height: '45',
         placeHolder: 'Тип узла/столба:',
         displayMember: 'code',
         valueMember: 'id',
@@ -378,7 +379,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         source: this.items,
         columns: this.columnsGrid,
         theme: 'material',
-        width: 0,
+        width: null,
         height: this.heightGrid,
         columnsresize: true,
         sortable: true,
@@ -410,9 +411,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    // if (this.filterTable) {
-    //   this.filterTable.destroy();
-    // }
+    if (this.filterTable) {
+      this.filterTable.destroy();
+    }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
@@ -441,6 +442,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
+    this.initSourceFilter();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -539,12 +541,16 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   filterNone() {
-    // this.jqxgridComponent.islistBoxVisible = !this.jqxgridComponent.islistBoxVisible;
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    this.isFilterVisible = !this.isFilterVisible;
+    if (this.filterTable.filtrWindow.isOpen()) {
+      this.filterTable.closeWindow();
+    } else {
+      this.initSourceFilter();
+      this.filterTable.openWindow();
+    }
   }
 
   place() {
@@ -588,17 +594,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   // FILTER
 
   applyFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     this.filter = event;
-    this.getAll();
+    this.refreshGrid();
   }
 
   applyFilterFromFilter(event: any) {
-    this.items = [];
-    this.offset = 0;
-    this.reloading = true;
     for (let i = 0; i < event.length; i++) {
       switch (event[i].name) {
         case 'geographs':
@@ -614,25 +614,30 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.getAll();
+    this.refreshGrid();
   }
 
   initSourceFilter() {
-    for (let i = 0; i < this.sourceForFilter.length; i++) {
-      switch (this.sourceForFilter[i].name) {
-        case 'geographs':
-          this.sourceForFilter[i].source = this.geographs;
-          break;
-        case 'ownerNodes':
-          this.sourceForFilter[i].source = this.ownerNodes;
-          break;
-        case 'nodeTypes':
-          this.sourceForFilter[i].source = this.nodeTypes;
-          break;
-        default:
-          break;
+    if (!this.isFilterVisible) {
+      this.isFilterVisible = true;
+      for (let i = 0; i < this.sourceForFilter.length; i++) {
+        switch (this.sourceForFilter[i].name) {
+          case 'geographs':
+            this.sourceForFilter[i].source = this.geographs;
+            break;
+          case 'ownerNodes':
+            this.sourceForFilter[i].source = this.ownerNodes;
+            break;
+          case 'nodeTypes':
+            this.sourceForFilter[i].source = this.nodeTypes;
+            break;
+          default:
+            break;
+        }
       }
     }
+    // view select filter for user
+    this.filterSelect = this.filterTable.getFilterSelect();
   }
 
   // EDIT FORM

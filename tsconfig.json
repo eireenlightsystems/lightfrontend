@@ -42,6 +42,7 @@
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxtooltip.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxresponsivepanel.ts",
     "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxpanel.ts",
-    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput.ts"
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput.ts",
+    "node_modules/jqwidgets-scripts/jqwidgets-ts/angular_jqxsplitter.ts"
   ]
 }

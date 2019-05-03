@@ -1,8 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {isUndefined} from "util";
+
+import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 
 import {Contract, Geograph, Owner, EquipmentType, FilterGateway, FilterNode, SettingButtonPanel} from '../../../shared/interfaces';
 import {GatewaylistPageComponent} from './gatewaylist-page/gatewaylist-page.component';
 import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
+
 
 @Component({
   selector: 'app-gateway-masterdetails-page',
@@ -30,12 +34,12 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   settingGatewayButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
-  @Output() onRefreshMap = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('selectGatewayId') selectGatewayId = 0;
   @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
   @ViewChild('nodelistPageComponent') nodelistPageComponent: NodelistPageComponent;
+  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
 
   // other variables
   filterGateway: FilterGateway = {
@@ -53,10 +57,18 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
     gatewayId: '',
   };
 
+  heightDeltaParentGrid = 55;
+  heightDeltaChildGrid = 103;
+  sizeParentSplitter: any;
+  sizeChildSplitter: any;
+
+
   constructor() {
   }
 
   ngOnInit() {
+    this.selectGatewayId = 0;
+
     // init gateway button panel
     this.settingGatewayButtonPanel = {
       add: {
@@ -160,17 +172,11 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
-
   }
 
   refreshGrid() {
     this.gatewaylistPageComponent.applyFilter(this.filterGateway);
     this.refreshChildGrid(0);
-  }
-
-  refreshMap() {
-    // make flag to refresh map
-    this.onRefreshMap.emit();
   }
 
   refreshChildGrid(gatewayId: number) {
@@ -179,5 +185,35 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
     this.filterNode.gatewayId = gatewayId.toString();
     this.nodelistPageComponent.applyFilter(this.filterNode);
   }
+
+  resize(sizeParent: any, sizeChild: any) {
+    const sizeParentGrid = sizeParent - this.heightDeltaParentGrid;
+    const sizeChildGrid = sizeChild - this.heightDeltaChildGrid;
+
+    this.gatewaylistPageComponent.jqxgridComponent.myGrid.height(sizeParentGrid);
+    this.gatewaylistPageComponent.sourceForJqxGrid.grid.height = sizeParentGrid;
+
+    if (!isUndefined(this.nodelistPageComponent)) {
+      this.nodelistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
+      this.nodelistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
+    }
+  }
+
+  collapsed(sizeParent: any, sizeChild: any) {
+    this.sizeParentSplitter = sizeParent;
+    this.sizeChildSplitter = sizeChild;
+
+    this.mainSplitter.attrPanels[0].size = this.getHeightSplitter();
+  }
+
+  expanded() {
+    this.mainSplitter.attrPanels[0].size = this.sizeParentSplitter;
+    this.mainSplitter.attrPanels[1].size = this.sizeChildSplitter;
+  }
+
+  getHeightSplitter() {
+    return 790;
+  }
+
 
 }
