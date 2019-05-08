@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 
-import {FixturelistPageComponent
+import {
+  FixturelistPageComponent
 } from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {
   Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation,
@@ -49,7 +50,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component
-  @Output() onRefreshMap = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('selectNodeId') selectNodeId = 0;
@@ -60,10 +60,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
 
   // other variables
-  isTabFixture = false;
-  isTabGateway = false;
-  isTabSensor = false;
-
   settingNodeButtonPanel: SettingButtonPanel;
   settingFixtureButtonPanel: SettingButtonPanel;
   settingGatewayButtonPanel: SettingButtonPanel;
@@ -112,9 +108,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
 
   ngOnInit() {
     this.selectNodeId = 0;
-    this.isTabFixture = true;
-    this.isTabGateway = false;
-    this.isTabSensor = false;
 
     // init node button panel
     this.settingNodeButtonPanel = {
@@ -330,49 +323,62 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     this.refreshChildGrid(0);
   }
 
-  refreshMap() {
-    // make flag to refresh map
-    this.onRefreshMap.emit();
-  }
-
   refreshChildGrid(id_node: number) {
-    // refresh child grid
     this.selectNodeId = id_node;
-
-    // fixture
     this.filterFixture.nodeId = id_node.toString();
-    if (this.isTabFixture) {
-      this.fixturelistPageComponent.applyFilter(this.filterFixture);
-    }
-
-    // gateway
     this.filterGateway.nodeId = id_node.toString();
-    if (this.isTabGateway) {
-      this.gatewaylistPageComponent.applyFilter(this.filterGateway);
-    }
-
-    // sensor
     this.filterSensor.nodeId = id_node.toString();
-    if (this.isTabSensor) {
-      this.sensorlistPageComponent.applyFilter(this.filterSensor);
+
+    if (id_node === 0) {
+      // fixture
+      if (!isUndefined(this.fixturelistPageComponent)) {
+        this.fixturelistPageComponent.items = [];
+        if (!isUndefined(this.fixturelistPageComponent.jqxgridComponent)) {
+          this.fixturelistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.fixturelistPageComponent.getDisabledButtons();
+      }
+      // gateway
+      if (!isUndefined(this.gatewaylistPageComponent)) {
+        this.gatewaylistPageComponent.items = [];
+        if (!isUndefined(this.gatewaylistPageComponent.jqxgridComponent)) {
+          this.gatewaylistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.gatewaylistPageComponent.getDisabledButtons();
+      }
+      // sensor
+      if (!isUndefined(this.sensorlistPageComponent)) {
+        this.sensorlistPageComponent.items = [];
+        if (!isUndefined(this.sensorlistPageComponent.jqxgridComponent)) {
+          this.sensorlistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.sensorlistPageComponent.getDisabledButtons();
+      }
+    } else {
+      // fixture
+      if (!isUndefined(this.fixturelistPageComponent)) {
+        this.fixturelistPageComponent.applyFilter(this.filterFixture);
+      }
+      // gateway
+      if (!isUndefined(this.gatewaylistPageComponent)) {
+        this.gatewaylistPageComponent.applyFilter(this.filterGateway);
+      }
+      // sensor
+      if (!isUndefined(this.sensorlistPageComponent)) {
+        this.sensorlistPageComponent.applyFilter(this.filterSensor);
+      }
     }
   }
 
   selected(event: any): void {
     if (event.args.item === 0) {
-      this.isTabFixture = true;
-      this.isTabGateway = false;
-      this.isTabSensor = false;
+
     }
     if (event.args.item === 1) {
-      this.isTabFixture = false;
-      this.isTabGateway = true;
-      this.isTabSensor = false;
+
     }
     if (event.args.item === 2) {
-      this.isTabFixture = false;
-      this.isTabGateway = false;
-      this.isTabSensor = true;
+
     }
   }
 

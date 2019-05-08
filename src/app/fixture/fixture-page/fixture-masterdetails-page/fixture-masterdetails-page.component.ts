@@ -53,12 +53,8 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
 
   // other variables
   selectFixtureId: number;
-  isTabCommandSwitchOn = false;
-  isTabCommandSpeed = false;
-
   settingFixtureComButtonPanel: SettingButtonPanel;
   settingFixtureSpeedButtonPanel: SettingButtonPanel;
-
   heightDeltaParentGrid = 55;
   heightDeltaChildGrid = 103;
   sizeParentSplitter: any;
@@ -69,8 +65,6 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
 
   ngOnInit() {
     this.selectFixtureId = 0;
-    this.isTabCommandSwitchOn = true;
-    this.isTabCommandSpeed = false;
 
     // init fixture button panel
     if (isUndefined(this.settingFixtureButtonPanel)) {
@@ -228,20 +222,34 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   refreshChildGrid(fixtureId: number) {
-    // refresh child grid
     this.selectFixtureId = fixtureId;
+    this.fixturecomlistPageComponent.filter.fixtureId = fixtureId.toString();
+    this.fixturecomspeedlistPageComponent.filter.fixtureId = fixtureId.toString();
 
-    if (this.isTabCommandSwitchOn === true) {
+    if (fixtureId === 0) {
       // command_switchon
-      this.fixturecomlistPageComponent.filter.fixtureId = fixtureId.toString();
-      if (this.isTabCommandSwitchOn && this.fixturecomlistPageComponent) {
+      if (!isUndefined(this.fixturecomlistPageComponent)) {
+        this.fixturecomlistPageComponent.items = [];
+        if (!isUndefined(this.fixturecomlistPageComponent.jqxgridComponent)) {
+          this.fixturecomlistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.fixturecomlistPageComponent.getDisabledButtons();
+      }
+      // command_speed_switchon
+      if (!isUndefined(this.fixturecomspeedlistPageComponent)) {
+        this.fixturecomspeedlistPageComponent.items = [];
+        if (!isUndefined(this.fixturecomspeedlistPageComponent.jqxgridComponent)) {
+          this.fixturecomspeedlistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.fixturecomspeedlistPageComponent.getDisabledButtons();
+      }
+    } else {
+      // command_switchon
+      if (!isUndefined(this.fixturecomlistPageComponent)) {
         this.fixturecomlistPageComponent.applyFilter(this.fixturecomlistPageComponent.filter);
       }
-    }
-    if (this.isTabCommandSpeed === true) {
       // command_speed_switchon
-      this.fixturecomspeedlistPageComponent.filter.fixtureId = fixtureId.toString();
-      if (this.isTabCommandSpeed && this.fixturecomspeedlistPageComponent) {
+      if (!isUndefined(this.fixturecomspeedlistPageComponent)) {
         this.fixturecomspeedlistPageComponent.applyFilter(this.fixturecomspeedlistPageComponent.filter);
       }
     }
@@ -249,12 +257,10 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
 
   selected(event: any): void {
     if (event.args.item === 0) {
-      this.isTabCommandSwitchOn = true;
-      this.isTabCommandSpeed = false;
+
     }
     if (event.args.item === 1) {
-      this.isTabCommandSwitchOn = false;
-      this.isTabCommandSpeed = true;
+
     }
   }
 

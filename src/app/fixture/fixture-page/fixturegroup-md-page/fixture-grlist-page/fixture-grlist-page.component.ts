@@ -249,8 +249,12 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.getAll();
-    this.reloading = true;
+    if (this.isMasterGrid) {
+      this.refreshGrid();
+    } else {
+      // disabled/available buttons
+      this.getAvailabilityButtons();
+    }
   }
 
   ngOnDestroy(): void {
@@ -297,7 +301,14 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
-    this.initSourceFilter();
+
+    // initialization source for filter
+    setTimeout(() => {
+      this.initSourceFilter();
+    }, 1000);
+
+    // disabled/available buttons
+    this.getAvailabilityButtons();
 
     // if this.nodes id master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -312,8 +323,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    // Disabled/available buttons
-
     const params = Object.assign({}, {
         offset: this.offset,
         limit: this.limit
@@ -326,6 +335,48 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.reloading = false;
     });
+  }
+
+  getAvailabilityButtons() {
+    if (!this.isMasterGrid) {
+      this.getDisabledButtons();
+    } else {
+      this.getEnabledButtons();
+    }
+  }
+
+  getDisabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
+    }
+  }
+
+  getEnabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
+    }
   }
 
   loadMore() {
@@ -439,7 +490,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   initSourceFilter() {
-    if (!this.isFilterVisible) {
+    if (this.isFilterVisible === false
+      && !isUndefined(this.fixtureGroupOwners)
+      && !isUndefined(this.fixtureGroupTypes)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
@@ -455,7 +508,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       }
     }
     // view select filter for user
-    this.filterSelect = this.filterTable.getFilterSelect();
+    if (this.isFilterVisible === true) {
+      this.filterSelect = this.filterTable.getFilterSelect();
+    }
   }
 
   // EDIT FORM

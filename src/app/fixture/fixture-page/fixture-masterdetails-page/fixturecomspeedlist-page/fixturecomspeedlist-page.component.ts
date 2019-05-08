@@ -217,13 +217,12 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // if this.node is child grid, then we need update this.filter.fixtureId
-    if (!this.isMasterGrid) {
-      this.filter.fixtureId = this.selectFixtureId.toString();
+    if (this.isMasterGrid) {
+      this.refreshGrid();
+    } else {
+      // disabled/available buttons
+      this.getAvailabilityButtons();
     }
-
-    this.getAll();
-    this.reloading = true;
   }
 
   ngOnDestroy() {
@@ -261,7 +260,14 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
-    this.initSourceFilter();
+
+    // initialization source for filter
+    setTimeout(() => {
+      this.initSourceFilter();
+    }, 1000);
+
+    // disabled/available buttons
+    this.getAvailabilityButtons();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -276,35 +282,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    // Disabled/available buttons
-    if (!this.isMasterGrid && +this.filter.fixtureId <= 0) {
-      this.settingButtonPanel.add.disabled = true;
-      this.settingButtonPanel.upd.disabled = true;
-      this.settingButtonPanel.del.disabled = true;
-      this.settingButtonPanel.refresh.disabled = true;
-      this.settingButtonPanel.filterNone.disabled = true;
-      this.settingButtonPanel.filterList.disabled = true;
-      this.settingButtonPanel.place.disabled = true;
-      this.settingButtonPanel.pinDrop.disabled = true;
-      this.settingButtonPanel.groupIn.disabled = true;
-      this.settingButtonPanel.groupOut.disabled = true;
-      this.settingButtonPanel.switchOn.disabled = true;
-      this.settingButtonPanel.switchOff.disabled = true;
-    } else {
-      this.settingButtonPanel.add.disabled = false;
-      this.settingButtonPanel.upd.disabled = false;
-      this.settingButtonPanel.del.disabled = false;
-      this.settingButtonPanel.refresh.disabled = false;
-      this.settingButtonPanel.filterNone.disabled = false;
-      this.settingButtonPanel.filterList.disabled = false;
-      this.settingButtonPanel.place.disabled = false;
-      this.settingButtonPanel.pinDrop.disabled = false;
-      this.settingButtonPanel.groupIn.disabled = false;
-      this.settingButtonPanel.groupOut.disabled = false;
-      this.settingButtonPanel.switchOn.disabled = false;
-      this.settingButtonPanel.switchOff.disabled = false;
-    }
-
     const params = Object.assign({}, {
         offset: this.offset,
         limit: this.limit
@@ -328,6 +305,48 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       this.loading = false;
       this.reloading = false;
     });
+  }
+
+  getAvailabilityButtons() {
+    if (!this.isMasterGrid && +this.filter.fixtureId === 0) {
+      this.getDisabledButtons();
+    } else {
+      this.getEnabledButtons();
+    }
+  }
+
+  getDisabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
+    }
+  }
+
+  getEnabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
+    }
   }
 
   loadMore() {
@@ -439,7 +458,8 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   initSourceFilter() {
-    if (!this.isFilterVisible) {
+    if (!this.isFilterVisible
+      && !isUndefined(this.commandStatuses)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
@@ -448,6 +468,9 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
             this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
               (currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
             this.sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
+            break;
+          case 'speedDirectiones':
+            this.sourceForFilter[i].source = this.speedDirectiones;
             break;
           default:
             break;

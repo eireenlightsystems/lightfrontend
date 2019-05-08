@@ -358,13 +358,12 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // if this.node is child grid, then we need update this.filter.nodeId
-    if (!this.isMasterGrid) {
-      this.filter.nodeId = this.selectNodeId.toString();
+    if (this.isMasterGrid) {
+      this.refreshGrid();
+    } else {
+      // disabled/available buttons
+      this.getAvailabilityButtons();
     }
-
-    this.getAll();
-    this.reloading = true;
   }
 
   ngOnDestroy() {
@@ -405,7 +404,14 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
-    this.initSourceFilter();
+
+    // initialization source for filter
+    setTimeout(() => {
+      this.initSourceFilter();
+    }, 1000);
+
+    // disabled/available buttons
+    this.getAvailabilityButtons();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -420,8 +426,30 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    // Disabled/available buttons
-    if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
+    const params = Object.assign({}, {
+        offset: this.offset,
+        limit: this.limit
+      },
+      this.filter);
+
+    this.oSub = this.gatewayService.getAll(params).subscribe(gateways => {
+      this.items = this.items.concat(gateways);
+      this.noMoreItems = gateways.length < STEP;
+      this.loading = false;
+      this.reloading = false;
+    });
+  }
+
+  getAvailabilityButtons() {
+    if (!this.isMasterGrid && +this.filter.nodeId === 0) {
+      this.getDisabledButtons();
+    } else {
+      this.getEnabledButtons();
+    }
+  }
+
+  getDisabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
       this.settingButtonPanel.add.disabled = true;
       this.settingButtonPanel.upd.disabled = true;
       this.settingButtonPanel.del.disabled = true;
@@ -434,7 +462,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.settingButtonPanel.groupOut.disabled = true;
       this.settingButtonPanel.switchOn.disabled = true;
       this.settingButtonPanel.switchOff.disabled = true;
-    } else {
+    }
+  }
+
+  getEnabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
       this.settingButtonPanel.add.disabled = false;
       this.settingButtonPanel.upd.disabled = false;
       this.settingButtonPanel.del.disabled = false;
@@ -448,19 +480,6 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.settingButtonPanel.switchOn.disabled = false;
       this.settingButtonPanel.switchOff.disabled = false;
     }
-
-    const params = Object.assign({}, {
-        offset: this.offset,
-        limit: this.limit
-      },
-      this.filter);
-
-    this.oSub = this.gatewayService.getAll(params).subscribe(gateways => {
-      this.items = this.items.concat(gateways);
-      this.noMoreItems = gateways.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
   }
 
   loadMore() {
@@ -581,7 +600,10 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   initSourceFilter() {
-    if (!this.isFilterVisible) {
+    if (this.isFilterVisible === false
+      && !isUndefined(this.geographs)
+      && !isUndefined(this.ownerGateways)
+      && !isUndefined(this.gatewayTypes)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
@@ -600,7 +622,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
     }
     // view select filter for user
-    this.filterSelect = this.filterTable.getFilterSelect();
+    if (this.isFilterVisible === true) {
+      this.filterSelect = this.filterTable.getFilterSelect();
+    }
   }
 
   // EDIT FORM

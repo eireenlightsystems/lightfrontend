@@ -9,9 +9,7 @@
 >
   <div class="splitter-panel">
     <app-fixturelist-page #fixturelistPageComponent
-
                           [geographs]="geographs"
-
                           [ownerFixtures]="ownerFixtures"
                           [fixtureTypes]="fixtureTypes"
                           [substations]="substations"
@@ -22,13 +20,11 @@
                           [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                           [isMasterGrid]="true"
                           [selectionmode]="selectionmode"
-
                           [selectContractId]=""
                           [selectNodeId]=""
                           [fixtureGroupId]="fixtureGroupId"
 
                           [settingButtonPanel]="settingFixtureButtonPanel"
-
                           (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-fixturelist-page>
   </div>
@@ -42,35 +38,29 @@
         <li>Команды скорости возгорания/затухания</li>
       </ul>
       <div style="overflow: hidden">
-        <app-fixturecomlist-page *ngIf="this.isTabCommandSwitchOn" #fixturecomlistPageComponent
-
+        <app-fixturecomlist-page #fixturecomlistPageComponent
                                  [commandTypes]="commandTypes"
                                  [commandStatuses]="commandStatuses"
+                                 [settingButtonPanel]="settingFixtureComButtonPanel"
 
                                  [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                                  [isMasterGrid]="false"
                                  [selectionmode]="'checkbox'"
-
                                  [selectFixtureId]="selectFixtureId"
-
-                                 [settingButtonPanel]="settingFixtureComButtonPanel"
 
                                  (onRefreshChildGrid)="refreshChildGrid($event)"
         ></app-fixturecomlist-page>
       </div>
       <div style="overflow: hidden">
-        <app-fixturecomspeedlist-page *ngIf="this.isTabCommandSpeed" #fixturecomspeedlistPageComponent
-
+        <app-fixturecomspeedlist-page #fixturecomspeedlistPageComponent
                                       [speedDirectiones]="speedDirectiones"
                                       [commandStatuses]="commandStatuses"
+                                      [settingButtonPanel]="settingFixtureSpeedButtonPanel"
 
                                       [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                                       [isMasterGrid]="false"
                                       [selectionmode]="'checkbox'"
-
                                       [selectFixtureId]="selectFixtureId"
-
-                                      [settingButtonPanel]="settingFixtureSpeedButtonPanel"
 
                                       (onRefreshChildGrid)="refreshChildGrid($event)"
         ></app-fixturecomspeedlist-page>

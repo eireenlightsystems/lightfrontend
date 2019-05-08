@@ -67,12 +67,12 @@ import {ButtonFilterDirective} from './shared/directives/button-filter.directive
 import {FilterTableComponent} from './shared/components/filter-table/filter-table.component';
 import {FilterItemComponent} from './shared/components/filter-table/filter-item/filter-item.component';
 import {LinkFormComponent} from './shared/components/link-form/link-form.component';
-import { ButtonLinkDirective } from './shared/directives/button-link.directive';
-import { ButtonPanelComponent } from './shared/components/button-panel/button-panel.component';
-import { EditFormComponent } from './shared/components/edit-form/edit-form.component';
-import { EditFormItemComponent } from './shared/components/edit-form/edit-form-item/edit-form-item.component';
-import { JqxgridComponent } from './shared/components/jqxgrid/jqxgrid.component';
-import { ButtonSettinggridDirective } from './shared/directives/button-settinggrid.directive';
+import {ButtonLinkDirective} from './shared/directives/button-link.directive';
+import {ButtonPanelComponent} from './shared/components/button-panel/button-panel.component';
+import {EditFormComponent} from './shared/components/edit-form/edit-form.component';
+import {EditFormItemComponent} from './shared/components/edit-form/edit-form-item/edit-form-item.component';
+import {JqxgridComponent} from './shared/components/jqxgrid/jqxgrid.component';
+import {ButtonSettinggridDirective} from './shared/directives/button-settinggrid.directive';
 
 
 @NgModule({

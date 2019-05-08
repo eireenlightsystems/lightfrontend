@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {isUndefined} from "util";
+import {isUndefined} from 'util';
 
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 
@@ -180,10 +180,22 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   }
 
   refreshChildGrid(gatewayId: number) {
-    // refresh child grid
     this.selectGatewayId = gatewayId;
     this.filterNode.gatewayId = gatewayId.toString();
-    this.nodelistPageComponent.applyFilter(this.filterNode);
+
+    if (gatewayId === 0) {
+      if (!isUndefined(this.nodelistPageComponent)) {
+        this.nodelistPageComponent.items = [];
+        if (!isUndefined(this.nodelistPageComponent.jqxgridComponent)) {
+          this.nodelistPageComponent.jqxgridComponent.empty_jqxgGrid();
+        }
+        this.nodelistPageComponent.getDisabledButtons();
+      }
+    } else {
+      if (!isUndefined(this.nodelistPageComponent)) {
+        this.nodelistPageComponent.applyFilter(this.filterNode);
+      }
+    }
   }
 
   resize(sizeParent: any, sizeChild: any) {

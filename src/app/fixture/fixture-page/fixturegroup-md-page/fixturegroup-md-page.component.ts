@@ -10,6 +10,7 @@ import {
 } from '../../../shared/interfaces';
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
+import {isUndefined} from 'util';
 
 
 @Component({
@@ -51,7 +52,6 @@ export class FixturegroupMdPageComponent implements OnInit {
   settingFixtureGrButtonPanel: SettingButtonPanel;
   settingFixtureButtonPanel: SettingButtonPanel;
   isButtonPanelVisible = false;
-
   heightDeltaGrid = 50;
 
 
@@ -163,7 +163,18 @@ export class FixturegroupMdPageComponent implements OnInit {
   }
 
   refreshChildGrid(fixtureGroupId: number) {
-    this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.applyFilterFixtureInGroup(fixtureGroupId.toString());
+    if (!isUndefined(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent)) {
+      if (fixtureGroupId === 0) {
+        this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.items = [];
+        if (!isUndefined(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.jqxgridComponent)) {
+          this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.jqxgridComponent.empty_jqxgGrid();
+          this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.getDisabledButtons();
+          this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.refreshChildGrid({fixtureId: 0});
+        }
+      } else {
+        this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.applyFilterFixtureInGroup(fixtureGroupId.toString());
+      }
+    }
   }
 
   ins() {

@@ -9,7 +9,6 @@
 >
   <div class="splitter-panel">
     <app-gatewaylist-page #gatewaylistPageComponent
-
                           [geographs]="geographs"
                           [ownerGateways]="ownerGateways"
                           [gatewayTypes]="gatewayTypes"
@@ -17,7 +16,6 @@
 
                           [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                           [isMasterGrid]="true"
-
                           [settingButtonPanel]="settingGatewayButtonPanel"
 
                           (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -32,7 +30,6 @@
       </ul>
       <div style="overflow: hidden">
         <app-nodelist-page #nodelistPageComponent
-
                            [geographs]="geographs"
                            [ownerNodes]="ownerNodes"
                            [nodeTypes]="nodeTypes"
@@ -42,9 +39,7 @@
                            [selectGatewayId]="selectGatewayId"
                            [selectionmode]="'checkbox'"
                            [isMasterGrid]="false"
-
                            [settingButtonPanel]="settingNodeButtonPanel"
-
         ></app-nodelist-page>
       </div>
     </jqxTabs>

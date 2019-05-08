@@ -16,16 +16,13 @@
       (onSwitchOff)="switchOff()"
     ></app-button-panel>
     <app-fixture-grlist-page #fixtureGrlistPageComponent
-
                              [fixtures]="fixtures"
-
                              [fixtureGroupTypes]="fixtureGroupTypes"
                              [fixtureGroupOwners]="fixtureGroupOwners"
 
                              [widthGrid]="'100%'"
                              [heightGrid]="this.getHeightSplitter() - this.heightDeltaGrid"
                              [isMasterGrid]="true"
-
                              [isButtonPanelVisible] = "isButtonPanelVisible"
                              [settingButtonPanel]="settingFixtureGrButtonPanel"
 
@@ -35,9 +32,7 @@
   </div>
   <div class="splitter-panel">
     <app-fixture-masterdetails-page #fixtureMasterdetailsPageComponentFgr
-
                                     [geographs]="geographs"
-
                                     [ownerFixtures]="ownerFixtures"
                                     [fixtureTypes]="fixtureTypes"
                                     [substations]="substations"
@@ -48,9 +43,7 @@
                                     [commandTypes]="commandTypes"
                                     [commandStatuses]="commandStatuses"
                                     [speedDirectiones]="speedDirectiones"
-
                                     [selectionmode]=""
-
                                     [settingFixtureButtonPanel]="settingFixtureButtonPanel"
 
                                     [fixtureGroupId]="0"

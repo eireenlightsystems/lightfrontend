@@ -1,15 +1,25 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 
 import {FixtureService} from '../../../../shared/services/fixture/fixture.service';
 import {
-  Fixture, EquipmentType, Geograph, Owner, Substation, Contract, Installer, HeightType,
-  FilterFixture, SourceForFilter,
+  Contract,
+  EquipmentType,
+  FilterFixture,
+  Fixture,
+  Geograph,
+  HeightType,
+  Installer,
+  ItemsLinkForm,
+  Owner,
   SettingButtonPanel,
+  SettingWinForEditForm,
+  SourceForEditForm,
+  SourceForFilter,
   SourceForJqxGrid,
-  SettingWinForEditForm, SourceForEditForm,
-  SourceForLinkForm, ItemsLinkForm
+  SourceForLinkForm,
+  Substation
 } from '../../../../shared/interfaces';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
@@ -485,13 +495,16 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // if this.node is child grid, then we need update this.filter.nodeId
-    if (!this.isMasterGrid) {
-      this.filter.nodeId = this.selectNodeId;
+    if (this.isMasterGrid) {
+      if (+this.fixtureGroupId === 0) {
+        this.getDisabledButtons();
+      } else {
+        this.refreshGrid();
+      }
+    } else {
+      // disabled/available buttons
+      this.getAvailabilityButtons();
     }
-
-    this.getAll();
-    this.reloading = true;
   }
 
   ngOnDestroy() {
@@ -532,7 +545,14 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.reloading = true;
     this.selectItemId = 0;
-    this.initSourceFilter();
+
+    // initialization source for filter
+    setTimeout(() => {
+      this.initSourceFilter();
+    }, 1000);
+
+    // disabled/available buttons
+    this.getAvailabilityButtons();
 
     // if it is master grid, then we need refresh child grid
     if (this.isMasterGrid) {
@@ -547,35 +567,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    // Disabled/available buttons
-    if (!this.isMasterGrid && +this.filter.nodeId <= 0) {
-      this.settingButtonPanel.add.disabled = true;
-      this.settingButtonPanel.upd.disabled = true;
-      this.settingButtonPanel.del.disabled = true;
-      this.settingButtonPanel.refresh.disabled = true;
-      this.settingButtonPanel.filterNone.disabled = true;
-      this.settingButtonPanel.filterList.disabled = true;
-      this.settingButtonPanel.place.disabled = true;
-      this.settingButtonPanel.pinDrop.disabled = true;
-      this.settingButtonPanel.groupIn.disabled = true;
-      this.settingButtonPanel.groupOut.disabled = true;
-      this.settingButtonPanel.switchOn.disabled = true;
-      this.settingButtonPanel.switchOff.disabled = true;
-    } else {
-      this.settingButtonPanel.add.disabled = false;
-      this.settingButtonPanel.upd.disabled = false;
-      this.settingButtonPanel.del.disabled = false;
-      this.settingButtonPanel.refresh.disabled = false;
-      this.settingButtonPanel.filterNone.disabled = false;
-      this.settingButtonPanel.filterList.disabled = false;
-      this.settingButtonPanel.place.disabled = false;
-      this.settingButtonPanel.pinDrop.disabled = false;
-      this.settingButtonPanel.groupIn.disabled = false;
-      this.settingButtonPanel.groupOut.disabled = false;
-      this.settingButtonPanel.switchOn.disabled = false;
-      this.settingButtonPanel.switchOff.disabled = false;
-    }
-
     if (isUndefined(this.fixtureGroupId)) {
       const params = Object.assign({}, {
           offset: this.offset,
@@ -595,6 +586,48 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         this.loading = false;
         this.reloading = false;
       });
+    }
+  }
+
+  getAvailabilityButtons() {
+    if (!this.isMasterGrid && +this.filter.nodeId === 0) {
+      this.getDisabledButtons();
+    } else {
+      this.getEnabledButtons();
+    }
+  }
+
+  getDisabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = true;
+      this.settingButtonPanel.upd.disabled = true;
+      this.settingButtonPanel.del.disabled = true;
+      this.settingButtonPanel.refresh.disabled = true;
+      this.settingButtonPanel.filterNone.disabled = true;
+      this.settingButtonPanel.filterList.disabled = true;
+      this.settingButtonPanel.place.disabled = true;
+      this.settingButtonPanel.pinDrop.disabled = true;
+      this.settingButtonPanel.groupIn.disabled = true;
+      this.settingButtonPanel.groupOut.disabled = true;
+      this.settingButtonPanel.switchOn.disabled = true;
+      this.settingButtonPanel.switchOff.disabled = true;
+    }
+  }
+
+  getEnabledButtons() {
+    if (!isUndefined(this.settingButtonPanel)) {
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
+      this.settingButtonPanel.refresh.disabled = false;
+      this.settingButtonPanel.filterNone.disabled = false;
+      this.settingButtonPanel.filterList.disabled = false;
+      this.settingButtonPanel.place.disabled = false;
+      this.settingButtonPanel.pinDrop.disabled = false;
+      this.settingButtonPanel.groupIn.disabled = false;
+      this.settingButtonPanel.groupOut.disabled = false;
+      this.settingButtonPanel.switchOn.disabled = false;
+      this.settingButtonPanel.switchOff.disabled = false;
     }
   }
 
@@ -736,7 +769,11 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   initSourceFilter() {
-    if (!this.isFilterVisible) {
+    if (this.isFilterVisible === false
+      && !isUndefined(this.geographs)
+      && !isUndefined(this.ownerFixtures)
+      && !isUndefined(this.fixtureTypes)
+      && !isUndefined(this.substations)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
@@ -758,7 +795,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       }
     }
     // view select filter for user
-    this.filterSelect = this.filterTable.getFilterSelect();
+    if (this.isFilterVisible === true) {
+      this.filterSelect = this.filterTable.getFilterSelect();
+    }
   }
 
   applyFilterFixtureInGroup(fixtureGroupId: string) {

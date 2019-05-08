@@ -104,6 +104,11 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     this.myGrid.updaterow(id, row);
   }
 
+  empty_jqxgGrid() {
+    this.source_jqxgrid.localdata = [];
+    this.myGrid.updatebounddata('data');
+  }
+
   onRowSelect(event: any) {
     if (event.args.row) {
       this.selectRow = event.args.row;

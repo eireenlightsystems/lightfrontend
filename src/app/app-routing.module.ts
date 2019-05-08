@@ -45,7 +45,6 @@ const routes: Routes = [
             ]
           },
 
-          // {path: '', redirectTo: 'gateway', pathMatch: 'full'},
           {
             path: 'gateway', component: GatewayPageComponent, canActivate: [AuthGuard], children: [
               {path: 'gatewaylist', component: GatewaylistPageComponent},
@@ -54,20 +53,18 @@ const routes: Routes = [
           },
 
           {
-            path: 'sensor', component: SensorPageComponent, canActivate: [AuthGuard], children: [
-              {path: 'sensorlist', component: SensorlistPageComponent}
-            ]
-          },
-
-          // {path: '', redirectTo: 'fixture', pathMatch: 'full'},
-          {
             path: 'fixture', component: FixturePageComponent, canActivate: [AuthGuard], children: [
               {path: 'fixturelist', component: FixturelistPageComponent},
               {path: 'fixturegroup', component: FixtureGrlistPageComponent},
               {path: 'fixturemap', component: FixturemapPageComponent}
             ]
-          }
+          },
 
+          {
+            path: 'sensor', component: SensorPageComponent, canActivate: [AuthGuard], children: [
+              {path: 'sensorlist', component: SensorlistPageComponent}
+            ]
+          }
 
         ]
       },
@@ -83,12 +80,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {
 }
