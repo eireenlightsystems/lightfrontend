@@ -46,12 +46,15 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('linkWindow') linkWindow: LinkFormComponent;
 
   // other variables
+  myMap: any;
+  nCoord = 60.0503;
+  eCoord = 30.4269;
+
   gatewayGroups: Gateway[];
   nodeInGroups: Node[];
   selectGatewayId: number;
   selectNodeId: number;
   selectGatewayNodeId: number;
-  myMap: any;
   actionEventWindow = '';
   warningEventWindow = '';
   sourceForLinkForm: SourceForLinkForm;
@@ -164,8 +167,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // map initialization
   mapInit() {
     ymaps.ready().then(() => {
-      this.myMap = new ymaps.Map('node_yamaps', {
-        center: [60.0503, 30.4269],
+      this.myMap = new ymaps.Map('gateway_yamaps', {
+        center: [this.nCoord, this.eCoord],
         zoom: 17,
         controls: ['zoomControl']
       });
@@ -226,13 +229,13 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       // +
       // "<a id='my-listbox-header' class='dropdown-trigger' data-target='my-listbox'>{{data.title}}<i class='material-icons right'>arrow_drop_down</i></a>"
       // +
-      '<button id=\'my-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-orange white blue-text\' data-toggle=\'dropdown\'>' +
+      '<button id=\'gateway-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-orange white blue-text\' data-toggle=\'dropdown\'>' +
       '{{data.title}} <span class=\'caret\'></span>' +
       '</button>' +
       // Этот элемент будет служить контейнером для элементов списка.
       // В зависимости от того, свернут или развернут список, этот контейнер будет
       // скрываться или показываться вместе с дочерними элементами.
-      '<ul id=\'my-listbox\'' +
+      '<ul id=\'gateway-listbox\'' +
       ' class=\'dropdown-menu\' role=\'menu\' aria-labelledby=\'dropdownMenu\'' +
       ' style=\'display: {% if state.expanded %}block{% else %}none{% endif %};\'></ul>'
       ,
@@ -242,7 +245,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // дополнительных действий.
           ListBoxLayout.superclass.build.call(this);
 
-          this.childContainerElement = $('#my-listbox').get(0);
+          this.childContainerElement = $('#gateway-listbox').get(0);
           // Генерируем специальное событие, оповещающее элемент управления
           // о смене контейнера дочерних элементов.
           this.events.fire('childcontainerchange', {
@@ -285,7 +288,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       listBox = new ymaps.control.ListBox({
         items: listBoxItems,
         data: {
-          title: 'Выберите группу узлов'
+          title: 'Выберите шлюз'
         },
         options: {
           // С помощью опций можно задать как макет непосредственно для списка,
@@ -299,7 +302,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
     listBox.events.add('click',
       (function () {
-        // var map = this.myMap;
         const mapComponent: GatewaymapPageComponent = this;
         return function (e) {
           // Получаем ссылку на объект, по которому кликнули.

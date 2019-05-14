@@ -1,11 +1,85 @@
-<router-outlet></router-outlet>
+<!--<router-outlet></router-outlet>-->
 
+<div>
+  <div [hidden]="isFixtureVisible()">
+    <app-fixture-page
+      [geographs]="geographs"
+
+      [ownerFixtures]="ownerFixtures"
+      [fixtureTypes]="fixtureTypes"
+      [substations]="substations"
+      [contractFixtures]="contractFixtures"
+      [installers]="installers"
+      [heightTypes]="heightTypes"
+
+      [fixtureGroupTypes]="fixtureGroupTypes"
+      [fixtureGroupOwners]="fixtureGroupOwners"
+
+      [commandTypes]="commandTypes"
+      [commandStatuses]="commandStatuses"
+      [speedDirectiones]="speedDirectiones"
+
+    ></app-fixture-page>
+  </div>
+  <div [hidden]="isNodeVisible()">
+    <app-node-page
+      [geographs]="geographs"
+
+      [ownerFixtures]="ownerFixtures"
+      [fixtureTypes]="fixtureTypes"
+      [substations]="substations"
+      [contractFixtures]="contractFixtures"
+      [installers]="installers"
+      [heightTypes]="heightTypes"
+
+      [ownerNodes]="ownerNodes"
+      [nodeTypes]="nodeTypes"
+      [contractNodes]="contractNodes"
+
+      [ownerGateways]="ownerGateways"
+      [gatewayTypes]="gatewayTypes"
+      [contractGateways]="contractGateways"
+
+      [ownerSensors]="ownerSensors"
+      [sensorTypes]="sensorTypes"
+      [contractSensors]="contractSensors"
+
+    ></app-node-page>
+  </div>
+  <div [hidden]="isGatewayVisible()">
+    <app-gateway-page
+      [geographs]="geographs"
+
+      [ownerNodes]="ownerNodes"
+      [nodeTypes]="nodeTypes"
+      [contractNodes]="contractNodes"
+
+      [ownerGateways]="ownerGateways"
+      [gatewayTypes]="gatewayTypes"
+      [contractGateways]="contractGateways"
+    ></app-gateway-page>
+  </div>
+  <div [hidden]="isSensorVisible()">
+    <app-sensor-page
+      [geographs]="geographs"
+
+      [ownerSensors]="ownerSensors"
+      [sensorTypes]="sensorTypes"
+      [contractSensors]="contractSensors"
+    ></app-sensor-page>
+  </div>
+</div>
 
 <div class="fixed-action-btn" #floating>
   <a class="btn-floating btn-large waves-effect waves-orange red">
     <i class="large material-icons">add</i>
   </a>
   <ul>
+    <li>
+      <a class="btn-floating waves-effect waves-orange red" routerLink="/operator/fixture">
+        <i class="material-icons">lightbulb_outline</i>
+      </a>
+    </li>
     <li>
       <a class="btn-floating waves-effect waves-orange red" routerLink="/operator/node">
         <i class="material-icons">assistant_photo</i>
@@ -14,11 +88,6 @@
     <li>
       <a class="btn-floating waves-effect waves-orange red" routerLink="/operator/gateway">
         <i class="material-icons">router</i>
-      </a>
-    </li>
-    <li>
-      <a class="btn-floating waves-effect waves-orange red" routerLink="/operator/fixture">
-        <i class="material-icons">lightbulb_outline</i>
       </a>
     </li>
     <li>

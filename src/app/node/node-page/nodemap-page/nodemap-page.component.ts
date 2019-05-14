@@ -44,6 +44,10 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
 
   // other variables
+  myMap: any;
+  nCoord = 60.0503;
+  eCoord = 30.4269;
+
   nodes: Node[];
   saveNode: Node = new Node();
   selectNode: Node = new Node();
@@ -52,7 +56,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   moveNodeId: number;
   n_coord: number;
   e_coord: number;
-  map: any;
   actionEventWindow = '';
   warningEventWindow = '';
   oSub: Subscription;
@@ -210,8 +213,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.oSub) {
       this.oSub.unsubscribe();
     }
-    if (this.map) {
-      this.map.destroy();
+    if (this.myMap) {
+      this.myMap.destroy();
     }
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
@@ -224,8 +227,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // map initialization
   mapInit(): void {
     ymaps.ready().then(() => {
-      this.map = new ymaps.Map('node_yamaps', {
-        center: [60.0503, 30.4269],
+      this.myMap = new ymaps.Map('node_yamaps', {
+        center: [this.nCoord, this.eCoord],
         zoom: 17,
         controls: ['zoomControl']
       });
@@ -318,7 +321,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
 
-    this.map.controls.add(buttonIns, {
+    this.myMap.controls.add(buttonIns, {
       right: 5,
       top: 5
     });
@@ -436,8 +439,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    this.map.geoObjects.removeAll();
-    this.map.geoObjects.add(collection);
+    this.myMap.geoObjects.removeAll();
+    this.myMap.geoObjects.add(collection);
     for (const node of this.nodes) {
       const myGeoObject = new ymaps.GeoObject(
         {
@@ -484,11 +487,11 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // add empty object with coordinates
   insItem() {
-    this.map.events.add('click', this.mapClickIns, this);
+    this.myMap.events.add('click', this.mapClickIns, this);
   }
 
   mapClickIns(event: any) {
-    this.map.events.remove('click', this.mapClickIns, this);
+    this.myMap.events.remove('click', this.mapClickIns, this);
     const coords = event.get('coords');
 
     // this.saveNode.nodeId = 1;

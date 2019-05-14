@@ -1,16 +1,9 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 
 import {Contract, Geograph, EquipmentType, Owner} from '../../shared/interfaces';
-import {GeographService} from '../../shared/services/geograph/geograph.service';
-import {OwnerNodeService} from '../../shared/services/node/ownerNode';
-import {NodeTypeService} from '../../shared/services/node/nodeType.service';
-import {ContractNodeService} from '../../shared/services/node/contractNode.service';
 import {GatewayMasterdetailsPageComponent} from './gateway-masterdetails-page/gateway-masterdetails-page.component';
 import {GatewaymapPageComponent} from './gatewaymap-page/gatewaymap-page.component';
-import {ContractGatewayService} from '../../shared/services/gateway/contractGateway.service';
-import {OwnerGatewayService} from '../../shared/services/gateway/ownerGateway';
-import {GatewayTypeService} from '../../shared/services/gateway/gatewayType.service';
+
 
 @Component({
   selector: 'app-gateway-page',
@@ -19,34 +12,23 @@ import {GatewayTypeService} from '../../shared/services/gateway/gatewayType.serv
 })
 export class GatewayPageComponent implements OnInit, OnDestroy {
 
+  // variables from master component
+  @Input() geographs: Geograph[];
+  // node source
+  @Input() ownerNodes: Owner[];
+  @Input() nodeTypes: EquipmentType[];
+  @Input() contractNodes: Contract[];
+  // gateway source
+  @Input() ownerGateways: Owner[];
+  @Input() gatewayTypes: EquipmentType[];
+  @Input() contractGateways: Contract[];
+
   // define variables - link to view objects
   @ViewChild('gatewayMasterdetailsPageComponent') gatewayMasterdetailsPageComponent: GatewayMasterdetailsPageComponent;
   @ViewChild('gatewaymapPageComponent') gatewaymapPageComponent: GatewaymapPageComponent;
 
   isSourceChangeTab0: boolean;
   isSourceChangeTab1: boolean;
-
-  // gateway subscription
-  geographSub: Subscription;
-  ownerGatewaySub: Subscription;
-  gatewayTypeSub: Subscription;
-  contractGatewaySub: Subscription;
-
-  // node subscription
-  ownerNodeSub: Subscription;
-  nodeTypeSub: Subscription;
-  contractNodeSub: Subscription;
-
-  // gateway source
-  geographs: Geograph[];
-  ownerGateways: Owner[];
-  gatewayTypes: EquipmentType[];
-  contractGateways: Contract[];
-
-  // node source
-  ownerNodes: Owner[];
-  nodeTypes: EquipmentType[];
-  contractNodes: Contract[];
 
   // define columns for table Node
   nodeSortcolumn: string[] = ['nodeId'];
@@ -81,37 +63,15 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
       {label: 'Коментарий', value: 'comment', checked: false},
     ];
 
-  constructor(
-    // gateway service
-    private geographService: GeographService,
-    private ownerGatewayService: OwnerGatewayService,
-    private gatewayTypeService: GatewayTypeService,
-    private contract_gatewayService: ContractGatewayService,
-    // node service
-    private ownerNodeService: OwnerNodeService,
-    private nodeTypeService: NodeTypeService,
-    private contractNodeService: ContractNodeService
-  ) {
+  constructor() {
   }
 
   ngOnInit() {
     this.isSourceChangeTab0 = false;
     this.isSourceChangeTab1 = false;
-    this.fetch_refbook();
   }
 
   ngOnDestroy() {
-    // gateway subscription
-    this.geographSub.unsubscribe();
-    this.ownerGatewaySub.unsubscribe();
-    this.gatewayTypeSub.unsubscribe();
-    this.contractGatewaySub.unsubscribe();
-
-    // node subscription
-    this.ownerNodeSub.unsubscribe();
-    this.nodeTypeSub.unsubscribe();
-    this.contractNodeSub.unsubscribe();
-
   }
 
   selected(event: any): void {
@@ -139,19 +99,6 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
 
   refreshMap() {
     this.isSourceChangeTab0 = true;
-  }
-
-  fetch_refbook() {
-    // gateway refbook
-    this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
-    this.ownerGatewaySub = this.ownerGatewayService.fetch().subscribe(owners => this.ownerGateways = owners);
-    this.gatewayTypeSub = this.gatewayTypeService.fetch().subscribe(gatewayTypes => this.gatewayTypes = gatewayTypes);
-    this.contractGatewaySub = this.contract_gatewayService.fetch().subscribe(contracts => this.contractGateways = contracts);
-
-    // node refbook
-    this.ownerNodeSub = this.ownerNodeService.fetch().subscribe(owners => this.ownerNodes = owners);
-    this.nodeTypeSub = this.nodeTypeService.fetch().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
-    this.contractNodeSub = this.contractNodeService.fetch().subscribe(contracts => this.contractNodes = contracts);
   }
 
 }

@@ -22,9 +22,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit {
   itemMenu: string;
   sidenavLinks: any [];
   sidenavDefaultLinks = [
-    {url: '/operator/node', name: 'Узлы/столбы', icon: 'assistant_photo'},
-    {url: '/operator/gateway', name: 'Интернет шлюзы', icon: 'router'}, // network_cell
     {url: '/operator/fixture', name: 'Светильники', icon: 'lightbulb_outline'},
+    {url: '/operator/node', name: 'Узлы/столбы', icon: 'assistant_photo'},
+    {url: '/operator/gateway', name: 'Интернет шлюзы', icon: 'router'},
     {url: '/operator/sensor', name: 'Сенсоры', icon: 'hearing'}
   ];
 
