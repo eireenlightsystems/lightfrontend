@@ -12,7 +12,7 @@ export class InstallerFixtureService {
   }
 
   fetch(): Observable<Installer[]> {
-    return this.http.get<Installer[]>('/api2/fixtures-installers');
+    return this.http.get<Installer[]>('/api/v1/fixtures-installers');
   }
 
 }

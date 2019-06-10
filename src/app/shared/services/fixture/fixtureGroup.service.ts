@@ -18,7 +18,7 @@ export class FixtureGroupService {
   // get
 
   getAll(params: any = {}): Observable<FixtureGroup[]> {
-    return this.http.get<FixtureGroup[]>('/api2/fixtures-groups', {
+    return this.http.get<FixtureGroup[]>('/api/v1/fixtures-groups', {
       params: new HttpParams({
         fromObject: params
       })
@@ -26,28 +26,28 @@ export class FixtureGroupService {
   }
 
   getFixtureGroupTypeAll(): Observable<FixtureGroupType[]> {
-    return this.http.get<FixtureGroupType[]>('/api2/fixtures-groups-types');
+    return this.http.get<FixtureGroupType[]>('/api/v1/fixtures-groups-types');
   }
 
   getFixtureGroupOwnerAll(): Observable<Owner[]> {
-    return this.http.get<Owner[]>('/api2/fixtures-groups-owners');
+    return this.http.get<Owner[]>('/api/v1/fixtures-groups-owners');
   }
 
   // post
 
   ins(fixtureGroup: FixtureGroup): Observable<FixtureGroup> {
-    return this.http.post<FixtureGroup>('/api2/fixtures-groups', fixtureGroup);
+    return this.http.post<FixtureGroup>('/api/v1/fixtures-groups', fixtureGroup);
   }
 
   // patch
 
   upd(fixtureGroup: FixtureGroup): Observable<FixtureGroup> {
-    return this.http.patch<FixtureGroup>('/api2/fixtures-groups', fixtureGroup);
+    return this.http.patch<FixtureGroup>('/api/v1/fixtures-groups', fixtureGroup);
   }
 
   // delete
 
   del(fixtureGroupId: number): Observable<Message> {
-    return this.http.delete<Message>(`/api2/fixtures-groups/${fixtureGroupId}`);
+    return this.http.delete<Message>(`/api/v1/fixtures-groups/${fixtureGroupId}`);
   }
 }

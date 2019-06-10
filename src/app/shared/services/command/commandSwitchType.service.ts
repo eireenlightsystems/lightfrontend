@@ -12,7 +12,7 @@ export class CommandSwitchTypeService {
   }
 
   fetch(): Observable<CommandType[]> {
-    return this.http.get<CommandType[]>('/api2/fixtures-lightlevel-commands-types');
+    return this.http.get<CommandType[]>('/api/v1/fixtures-lightlevel-commands-types');
   }
 
 }

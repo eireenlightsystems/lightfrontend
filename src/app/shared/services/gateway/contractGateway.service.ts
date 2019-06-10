@@ -11,7 +11,7 @@ export class ContractGatewayService {
   }
 
   fetch(): Observable<Contract[]> {
-    return this.http.get<Contract[]>('/api2/gateways-contracts');
+    return this.http.get<Contract[]>('/api/v1/gateways-contracts');
   }
 
 }

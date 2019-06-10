@@ -12,7 +12,7 @@ export class CommandSpeedTypeService {
   }
 
   fetch(): Observable<CommandType[]> {
-    return this.http.get<CommandType[]>('/api2/fixtures-lightspeed-commands-types');
+    return this.http.get<CommandType[]>('/api/v1/fixtures-lightspeed-commands-types');
   }
 
 }

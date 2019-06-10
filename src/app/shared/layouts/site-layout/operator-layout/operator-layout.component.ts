@@ -40,6 +40,8 @@ import {ContractGatewayService} from '../../../services/gateway/contractGateway.
 import {OwnerSensorService} from '../../../services/sensor/ownerSensor';
 import {SensorTypeService} from '../../../services/sensor/sensorType.service';
 import {ContractSensorService} from '../../../services/sensor/contractSensor.service';
+import {NodeService} from '../../../services/node/node.service';
+import {SensorService} from '../../../services/sensor/sensor.service';
 
 
 @Component({
@@ -130,7 +132,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     private speedDirectionService: SpeedDirectionService,
     // node service
     private ownerNodeService: OwnerNodeService,
-    private nodeTypeService: NodeTypeService,
+    private nodeService: NodeService,
     private contractNodeService: ContractNodeService,
     // gateway service
     private ownerGatewayService: OwnerGatewayService,
@@ -138,7 +140,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     private contractGatewayService: ContractGatewayService,
     // sensor service
     private ownerSensorService: OwnerSensorService,
-    private sensorTypeService: SensorTypeService,
+    private sensorService: SensorService,
     private contractSensorService: ContractSensorService,
   ) {
   }
@@ -209,7 +211,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     // node refbook
     this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
     this.ownerSub = this.ownerNodeService.fetch().subscribe(owners => this.ownerNodes = owners);
-    this.nodeTypeSub = this.nodeTypeService.fetch().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
+    this.nodeTypeSub = this.nodeService.getNodeTypes().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
     this.contractSub = this.contractNodeService.fetch().subscribe(contracts => this.contractNodes = contracts);
 
     // gateway refbook
@@ -219,7 +221,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
     // sensor refbook
     this.ownerSensorSub = this.ownerSensorService.fetch().subscribe(owners => this.ownerSensors = owners);
-    this.sensorTypeSub = this.sensorTypeService.fetch().subscribe(sensorTypes => this.sensorTypes = sensorTypes);
+    this.sensorTypeSub = this.sensorService.getSensorTypes().subscribe(sensorTypes => this.sensorTypes = sensorTypes);
     this.contractSensorSub = this.contractSensorService.fetch().subscribe(contracts => this.contractSensors = contracts);
   }
 

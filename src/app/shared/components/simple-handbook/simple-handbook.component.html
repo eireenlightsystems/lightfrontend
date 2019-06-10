@@ -1,0 +1,47 @@
+<app-button-panel #buttonPanel
+                  [settingButtonPanel]="settingButtonPanel"
+                  (onIns)="ins()"
+                  (onUpd)="upd()"
+                  (onDel)="del()"
+                  (onRefresh)="refresh()"
+></app-button-panel>
+
+<div *ngIf="!reloading; else reloadingBlock">
+  <!--*ngIf="nodes.length > 0; else empty"-->
+  <div>
+    <app-jqxgrid #jqxgridComponent
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+    ></app-jqxgrid>
+<!--    <div-->
+<!--      class="center mb2"-->
+<!--      *ngIf="!noMoreItems; else "-->
+<!--    >-->
+<!--      <ng-template #loader>-->
+<!--        <app-loader></app-loader>-->
+<!--      </ng-template>-->
+<!--    </div>-->
+  </div>
+  <ng-template #empty>
+    <div class="center">Элеменов пока нет</div>
+  </ng-template>
+</div>
+
+<ng-template #reloadingBlock>
+  <app-loader></app-loader>
+</ng-template>
+
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onSetEditFormVisible)="setEditFormVisible()"
+               (onSaveEditwinBtn)="saveEditwinBtn()"
+></app-edit-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

@@ -15,7 +15,7 @@ export class GatewayService {
   }
 
   getAll(params: any = {}): Observable<Gateway[]> {
-    return this.http.get<Gateway[]>('/api2/gateways', {
+    return this.http.get<Gateway[]>('/api/v1/gateways', {
       params: new HttpParams({
         fromObject: params
       })
@@ -23,28 +23,28 @@ export class GatewayService {
   }
 
   getAllWithoutParam(): Observable<Gateway[]> {
-    return this.http.get<Gateway[]>('/api2/gateways');
+    return this.http.get<Gateway[]>('/api/v1/gateways');
   }
 
   getGatewayNotInGroup(): Observable<Gateway[]> {
-    return this.http.get<Gateway[]>('/api2/nodes/1/gateways');
+    return this.http.get<Gateway[]>('/api/v1/nodes/1/gateways');
   }
 
   ins(gateway: Gateway): Observable<Gateway> {
-    return this.http.post<Gateway>('/api2/gateways', gateway);
+    return this.http.post<Gateway>('/api/v1/gateways', gateway);
   }
 
   del(id_gateway: number): Observable<Message> {
-    return this.http.delete<Message>(`/api2/gateways/${id_gateway}`);
+    return this.http.delete<Message>(`/api/v1/gateways/${id_gateway}`);
   }
 
   upd(gateway: Gateway): Observable<Gateway> {
-    return this.http.patch<Gateway>('/api2/gateways', gateway);
+    return this.http.patch<Gateway>('/api/v1/gateways', gateway);
   }
 
   setNodeId(nodeId: number, gatewayIds: number[]): Observable<any> {
     const options = JSON.stringify(gatewayIds);
-    return this.http.post<any>(`/api2/nodes/${nodeId}/gateways`, options);
+    return this.http.post<any>(`/api/v1/nodes/${nodeId}/gateways`, options);
   }
 
   delNodeId(nodeId: number, gatewayIds: number[]): Observable<any> {
@@ -52,6 +52,6 @@ export class GatewayService {
       headers: new HttpHeaders({}),
       body: JSON.stringify(gatewayIds)
     };
-    return this.http.delete<any>(`/api2/nodes/${nodeId}/gateways`, options);
+    return this.http.delete<any>(`/api/v1/nodes/${nodeId}/gateways`, options);
   }
 }

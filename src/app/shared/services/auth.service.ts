@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   login(user: User): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>('/api2/auth/login', user)
+    return this.http.post<{ token: string }>('/api/v1/auth/login', user)
       .pipe(
         tap(
           ({token}) => {
@@ -52,7 +52,7 @@ export class AuthService {
   logout() {
     // Токен чистится в компоненте выхова
     // this.clearToken();
-    return this.http.post('/api2/auth/logout', null)
+    return this.http.post('/api/v1/auth/logout', null)
       .pipe(
         tap(
           () => {

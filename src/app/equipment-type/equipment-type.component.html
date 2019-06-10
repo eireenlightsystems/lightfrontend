@@ -1,0 +1,34 @@
+<h5>
+  {{getHeadline()}}
+</h5>
+
+<div>
+  <div *ngIf="(this.router.url === '/handbook/equipment/nodetype')">
+    <app-simple-handbook #nodeType
+                         [typeHandBook]="handBookNodeType"
+                         [settingButtonPanel]="settingButtonPanel"
+                         [sourceForJqxGrid]="sourceForJqxGridNodeType"
+                         [settingWinForEditForm]="settingWinForEditFormNodeType"
+                         [sourceForEditForm]="sourceForEditFormNodeType"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+  <div *ngIf="(this.router.url === '/handbook/equipment/sensortype')">
+    <app-simple-handbook #sensorType
+                         [typeHandBook]="handBookSensorType"
+                         [settingButtonPanel]="settingButtonPanel"
+                         [sourceForJqxGrid]="sourceForJqxGridSensorType"
+                         [settingWinForEditForm]="settingWinForEditFormSensorType"
+                         [sourceForEditForm]="sourceForEditFormSensorType"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+</div>

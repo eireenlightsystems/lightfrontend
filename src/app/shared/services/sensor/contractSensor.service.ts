@@ -12,7 +12,7 @@ export class ContractSensorService {
   }
 
   fetch(): Observable<Contract[]> {
-    return this.http.get<Contract[]>('/api2/sensors-contracts');
+    return this.http.get<Contract[]>('/api/v1/sensors-contracts');
   }
 
 }

@@ -542,8 +542,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   refreshGrid() {
     this.items = [];
-    this.getAll();
     this.reloading = true;
+    this.getAll();
     this.selectItemId = 0;
 
     // initialization source for filter

@@ -9,6 +9,8 @@ import {OperatorModule} from './operator-layout/operator.module';
 import {SiteLayoutComponent} from './site-layout.component';
 import {HandbookLayoutComponent} from './handbook-layout/handbook-layout.component';
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
+import {EquipmentTypeComponent} from '../../../equipment-type/equipment-type.component';
+import {SimpleHandbookComponent} from '../../components/simple-handbook/simple-handbook.component';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
     SiteLayoutComponent,
     HandbookLayoutComponent,
     AdminLayoutComponent,
+    EquipmentTypeComponent,
+    SimpleHandbookComponent,
   ],
   imports: [
     BrowserModule,

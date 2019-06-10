@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {Gateway, Message, NodeSensor, Sensor} from '../../interfaces';
+import {EquipmentType, Gateway, Message, NodeSensor, Sensor} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,9 @@ export class SensorService {
   constructor(private http: HttpClient) {
   }
 
+  // get
   getAll(params: any = {}): Observable<Sensor[]> {
-    return this.http.get<Sensor[]>('/api2/sensors', {
+    return this.http.get<Sensor[]>('/api/v1/sensors', {
       params: new HttpParams({
         fromObject: params
       })
@@ -23,24 +24,31 @@ export class SensorService {
   }
 
   getSensorNotInGroup(): Observable<Gateway[]> {
-    return this.http.get<Gateway[]>('/api2/nodes/1/sensors');
+    return this.http.get<Gateway[]>('/api/v1/nodes/1/sensors');
   }
 
+  getSensorTypes(): Observable<EquipmentType[]> {
+    return this.http.get<EquipmentType[]>('/api/v1/sensors-types');
+  }
+
+  // post
   ins(sensor: Sensor): Observable<Sensor> {
-    return this.http.post<Sensor>('/api2/sensors', sensor);
-  }
-
-  upd(sensor: Sensor): Observable<Sensor> {
-    return this.http.patch<Sensor>('/api2/sensors', sensor);
-  }
-
-  del(id_sensor: number): Observable<Message> {
-    return this.http.delete<Message>(`/api2/sensors/${id_sensor}`);
+    return this.http.post<Sensor>('/api/v1/sensors', sensor);
   }
 
   setNodeId(nodeId: number, sensorIds: number[]): Observable<any> {
     const options = JSON.stringify(sensorIds);
-    return this.http.post<any>(`/api2/nodes/${nodeId}/sensors`, options);
+    return this.http.post<any>(`/api/v1/nodes/${nodeId}/sensors`, options);
+  }
+
+  // patch
+  upd(sensor: Sensor): Observable<Sensor> {
+    return this.http.patch<Sensor>('/api/v1/sensors', sensor);
+  }
+
+  // delete
+  del(id_sensor: number): Observable<Message> {
+    return this.http.delete<Message>(`/api/v1/sensors/${id_sensor}`);
   }
 
   delNodeId(nodeId: number, sensorIds: number[]): Observable<any> {
@@ -48,6 +56,6 @@ export class SensorService {
       headers: new HttpHeaders({}),
       body: JSON.stringify(sensorIds)
     };
-    return this.http.delete<any>(`/api2/nodes/${nodeId}/sensors`, options);
+    return this.http.delete<any>(`/api/v1/nodes/${nodeId}/sensors`, options);
   }
 }

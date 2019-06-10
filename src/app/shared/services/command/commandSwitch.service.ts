@@ -15,7 +15,7 @@ export class CommandSwitchService {
   }
 
   getAll(params: any = {}): Observable<CommandSwitch[]> {
-    return this.http.get<CommandSwitch[]>(`/api2/fixtures-lightlevel-commands`, {
+    return this.http.get<CommandSwitch[]>(`/api/v1/fixtures-lightlevel-commands`, {
         params: new HttpParams({
           fromObject: params
         })
@@ -24,7 +24,7 @@ export class CommandSwitchService {
   }
 
   send(сommandSwitch: CommandSwitch[]): Observable<CommandSwitch[]> {
-    return this.http.post<CommandSwitch[]>('/api2/fixtures-lightlevel-commands', сommandSwitch);
+    return this.http.post<CommandSwitch[]>('/api/v1/fixtures-lightlevel-commands', сommandSwitch);
   }
 
   del(params: any []): any {
@@ -32,7 +32,7 @@ export class CommandSwitchService {
       headers: new HttpHeaders({}),
       body: JSON.stringify(params)
     };
-    return this.http.delete(`/api2/fixtures-lightlevel-commands`, options);
+    return this.http.delete(`/api/v1/fixtures-lightlevel-commands`, options);
   }
 
   dfltParams(): CommandSwitchDflt {

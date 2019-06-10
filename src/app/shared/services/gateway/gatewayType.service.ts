@@ -12,7 +12,7 @@ export class GatewayTypeService {
   }
 
   fetch(): Observable<EquipmentType[]> {
-    return this.http.get<EquipmentType[]>('/api2/gateways-types');
+    return this.http.get<EquipmentType[]>('/api/v1/gateways-types');
   }
 
 }

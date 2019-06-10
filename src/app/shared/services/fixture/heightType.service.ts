@@ -12,7 +12,7 @@ export class HeightTypeService {
   }
 
   fetch(): Observable<HeightType[]> {
-    return this.http.get<HeightType[]>('/api2/fixtures-height-types');
+    return this.http.get<HeightType[]>('/api/v1/fixtures-height-types');
   }
 
 }

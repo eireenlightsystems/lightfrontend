@@ -12,7 +12,7 @@ export class GeographService {
   }
 
   fetch(): Observable<Geograph[]> {
-    return this.http.get<Geograph[]>('/api2/geographs');
+    return this.http.get<Geograph[]>('/api/v1/geographs');
   }
 
 }

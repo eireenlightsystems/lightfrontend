@@ -13,7 +13,6 @@ import {RegisterPageComponent} from './auth/register-page/register-page.componen
 import {TokenInterceptor} from './shared/classes/token.interceptor';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

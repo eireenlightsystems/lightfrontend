@@ -12,7 +12,7 @@ export class SubstationService {
   }
 
   fetch(): Observable<Substation[]> {
-    return this.http.get<Substation[]>('/api2/substations');
+    return this.http.get<Substation[]>('/api/v1/substations');
   }
 
 }

@@ -16,7 +16,7 @@ export class CommandSpeedSwitchService {
   }
 
   getAll(params: any = {}): Observable<CommandSpeedSwitch[]> {
-    return this.http.get<CommandSpeedSwitch[]>(`/api2/fixtures-lightspeed-commands`, {
+    return this.http.get<CommandSpeedSwitch[]>(`/api/v1/fixtures-lightspeed-commands`, {
         params: new HttpParams({
           fromObject: params
         })
@@ -25,7 +25,7 @@ export class CommandSpeedSwitchService {
   }
 
   send(commandSpeedSwitch: CommandSpeedSwitch[]): Observable<CommandSpeedSwitch[]> {
-    return this.http.post<CommandSpeedSwitch[]>('/api2/fixtures-lightspeed-commands', commandSpeedSwitch);
+    return this.http.post<CommandSpeedSwitch[]>('/api/v1/fixtures-lightspeed-commands', commandSpeedSwitch);
   }
 
   del(params: any []): any {
@@ -33,7 +33,7 @@ export class CommandSpeedSwitchService {
       headers: new HttpHeaders({}),
       body: JSON.stringify(params)
     };
-    return this.http.delete(`/api2/fixtures-lightspeed-commands`, options);
+    return this.http.delete(`/api/v1/fixtures-lightspeed-commands`, options);
   }
 
   dfltParams(): CommandSpeedSwitchDflt {

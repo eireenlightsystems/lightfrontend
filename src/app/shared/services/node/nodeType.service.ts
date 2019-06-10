@@ -1,18 +1,47 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {EquipmentType} from '../../interfaces';
+import {NodeType, Message} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NodeTypeService {
+  private headers = new Headers({'Content-Type': 'application/json'});
+
   constructor(private http: HttpClient) {
   }
 
-  fetch(): Observable<EquipmentType[]> {
-    return this.http.get<EquipmentType[]>('/api2/nodes-types');
+  // get
+
+  getAll(params: any = {}): Observable<NodeType[]> {
+    return this.http.get<NodeType[]>('/api/v1/nodes-types', {
+      params: new HttpParams({
+        fromObject: params
+      })
+    });
+  }
+
+  // post
+
+  ins(nodeType: NodeType): Observable<NodeType> {
+    return this.http.post<NodeType>('/api/v1/nodes-types', nodeType);
+  }
+
+  // patch
+
+  upd(nodeType: NodeType): Observable<NodeType> {
+
+    console.log(nodeType)
+
+    return this.http.patch<NodeType>('/api/v1/nodes-types', nodeType);
+  }
+
+  // delete
+
+  del(id_nodeType: number): Observable<Message> {
+    return this.http.delete<Message>(`/api/v1/nodes-types/${id_nodeType}`);
   }
 
 }

@@ -12,7 +12,7 @@ export class FixtureTypeService {
   }
 
   fetch(): Observable<EquipmentType[]> {
-    return this.http.get<EquipmentType[]>('/api2/fixtures-types');
+    return this.http.get<EquipmentType[]>('/api/v1/fixtures-types');
   }
 
 }

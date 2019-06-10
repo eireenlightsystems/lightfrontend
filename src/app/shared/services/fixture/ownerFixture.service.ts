@@ -12,7 +12,7 @@ export class OwnerFixtureService {
   }
 
   fetch(): Observable<Owner[]> {
-    return this.http.get<Owner[]>('/api2/fixtures-owners');
+    return this.http.get<Owner[]>('/api/v1/fixtures-owners');
   }
 
 }

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {Node, Message} from '../../interfaces';
+import {Node, Message, EquipmentType} from '../../interfaces';
 
 
 @Injectable({
@@ -18,7 +18,7 @@ export class NodeService {
   // get
 
   getAll(params: any = {}): Observable<Node[]> {
-    return this.http.get<Node[]>('/api2/nodes', {
+    return this.http.get<Node[]>('/api/v1/nodes', {
       params: new HttpParams({
         fromObject: params
       })
@@ -26,24 +26,28 @@ export class NodeService {
   }
 
   getNodeInGroup(gatewayId: number): Observable<Node[]> {
-    return this.http.get<Node[]>(`/api2/gateways/${gatewayId}/nodes`);
+    return this.http.get<Node[]>(`/api/v1/gateways/${gatewayId}/nodes`);
+  }
+
+  getNodeTypes(): Observable<EquipmentType[]> {
+    return this.http.get<EquipmentType[]>('/api/v1/nodes-types');
   }
 
   // post
 
   ins(node: Node): Observable<Node> {
-    return this.http.post<Node>('/api2/nodes', node);
+    return this.http.post<Node>('/api/v1/nodes', node);
   }
 
   setNodeInGatewayGr(gatewayId: number, nodeIds: number[]): Observable<any> {
     const options = JSON.stringify(nodeIds);
-    return this.http.post<any>(`/api2/gateways/${gatewayId}/nodes`, options);
+    return this.http.post<any>(`/api/v1/gateways/${gatewayId}/nodes`, options);
   }
 
   // patch
 
   upd(node: Node): Observable<Node> {
-    return this.http.patch<Node>('/api2/nodes', node);
+    return this.http.patch<Node>('/api/v1/nodes', node);
   }
 
   // delete
@@ -53,10 +57,10 @@ export class NodeService {
       headers: new HttpHeaders({}),
       body: JSON.stringify(nodeIds)
     };
-    return this.http.delete<any>(`/api2/gateways/${gatewayId}/nodes`, options);
+    return this.http.delete<any>(`/api/v1/gateways/${gatewayId}/nodes`, options);
   }
 
   del(id_node: number): Observable<Message> {
-    return this.http.delete<Message>(`/api2/nodes/${id_node}`);
+    return this.http.delete<Message>(`/api/v1/nodes/${id_node}`);
   }
 }

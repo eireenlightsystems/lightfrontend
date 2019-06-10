@@ -12,7 +12,7 @@ export class ContractFixtureService {
   }
 
   fetch(): Observable<Contract[]> {
-    return this.http.get<Contract[]>('/api2/fixtures-contracts');
+    return this.http.get<Contract[]>('/api/v1/fixtures-contracts');
   }
 
 }

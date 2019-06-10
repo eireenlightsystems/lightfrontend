@@ -7,3 +7,23 @@ Frontend
 
 /api/auth/login
 /api/category
+
+
+  "/api2/*": {
+  "target": "http://31.134.167.47:8095",
+  "secure": false,
+  "logLevel": "debug",
+  "changeOrigin": true
+  },
+  "/api/*": {
+    "target": "http://localhost:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/uploads/*": {
+    "target": "http://localhost:5000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }

@@ -27,11 +27,12 @@ export interface Owner {
   name: string;
 }
 
-export interface EquipmentType {
+export class EquipmentType {
   id: number;
   code: string;
   name: string;
   model: string;
+  comment: string;
 }
 
 export interface SourceForFilter {
@@ -292,6 +293,8 @@ export interface FixtureGroupType {
   name: string;
 }
 
+
+
 // Node
 
 export class Node {
@@ -327,9 +330,18 @@ export interface FilterNode {
   gatewayId: string;
 }
 
-export class NodeGateway {
-  nodeId: number;
-  gatewayId: number;
+// export class NodeGateway {
+//   nodeId: number;
+//   gatewayId: number;
+// }
+
+export class NodeType {
+  id: number;
+  code: string;
+  name: string;
+  model: string;
+  comments: string;
+  height: number;
 }
 
 // Gateway
@@ -459,4 +471,13 @@ export interface FilterSensor {
 export interface NodeSensor {
   nodeId: number;
   sensorId: number;
+}
+
+export class SensorType {
+  id: number;
+  code: string;
+  name: string;
+  model: string;
+  comments: string;
+  detectionRange: number;
 }

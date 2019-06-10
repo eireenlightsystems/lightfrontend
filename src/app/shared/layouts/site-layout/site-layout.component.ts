@@ -49,7 +49,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit {
 
   onClickHandbook(event: any) {
     this.sidenavLinks = [
-      {url: '/handbook', name: 'Нужно создать справочники'},
+      {url: '/handbook/equipment/nodetype', name: 'Типы узлов'},
+      {url: '/handbook/equipment/sensortype', name: 'Типы сенсоров'},
     ];
     this.itemMenu = 'Управление справочниками';
   }

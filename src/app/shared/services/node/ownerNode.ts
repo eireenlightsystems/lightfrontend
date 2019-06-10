@@ -12,7 +12,7 @@ export class OwnerNodeService {
   }
 
   fetch(): Observable<Owner[]> {
-    return this.http.get<Owner[]>('/api2/nodes-owners');
+    return this.http.get<Owner[]>('/api/v1/nodes-owners');
   }
 
 }

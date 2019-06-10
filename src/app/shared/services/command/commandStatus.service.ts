@@ -12,7 +12,7 @@ export class CommandStatusService {
   }
 
   fetch(): Observable<CommandStatus[]> {
-    return this.http.get<CommandStatus[]>('/api2/fixtures-commands-statuses');
+    return this.http.get<CommandStatus[]>('/api/v1/fixtures-commands-statuses');
   }
 
 }

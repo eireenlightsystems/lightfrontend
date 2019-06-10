@@ -12,6 +12,6 @@ export class ContractNodeService {
   }
 
   fetch(): Observable<Contract[]> {
-    return this.http.get<Contract[]>('/api2/nodes-contracts');
+    return this.http.get<Contract[]>('/api/v1/nodes-contracts');
   }
 }
