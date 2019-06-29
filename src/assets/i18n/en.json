@@ -1,0 +1,93 @@
+{
+  "site": {
+    "namecompany": "Eireen Light Systems Lmt.",
+    "menu": {
+      "operator": {
+        "management": "Management",
+        "fixture": "Fixtures",
+        "node": "Nodes",
+        "gateway": "Gateways",
+        "sensor": "Sensors"
+      },
+      "handbooks": {
+        "handbooks": "Handbooks",
+        "handbooks-headline": "Select a нandbook to edit",
+        "equipments": "Equipments",
+        "fixturetype": "Fixture types",
+        "fixturetype-headline": "Handbook of types of fixtures",
+        "nodetype": "Node types",
+        "nodetype-headline": "Handbook of types of nodes",
+        "gatewaytype": "Gateway types",
+        "gatewaytype-headline": "Handbook of types of internet gateways",
+        "sensortype": "Sensor types",
+        "sensortype-headline": "Handbook of types of sensors",
+        "contragents": "Contragents",
+        "companies": "Companies",
+        "companies-headline": "Handbook of types of companies",
+        "persons": "Persons",
+        "persons-headline": "Handbook of types of persons",
+        "substations": "Substations",
+        "substations-headline": "Handbook of types of substations",
+
+        "contract": {
+          "contracts": "Contracts",
+          "contracts-types": "Contract types",
+          "contracts-types-headline": "Handbook of types of contracts"
+        }
+      },
+      "administration": {
+        "administration": "Administration"
+      },
+      "exit": "Exit"
+    },
+
+    "forms": {
+      "editforms": {
+        "edit": "Add/Edit"
+      }
+    },
+
+    "company": {
+      "aboutUs": {
+        "team": "Project team",
+        "aboutUs": "About Us"
+      },
+      "contacts": {
+        "office": "Moscow office",
+        "address": "Address",
+        "addressName": "143026, Moscow, the territory of the innovation center Skolkovo, ul. Nobel, house 7, room 57",
+        "phone": "Phone",
+        "phoneName": "+7 (977) - 828 - 58 - 27",
+        "email": "Email",
+        "emailName": "alexei555@gmail.com",
+        "manager": "CEO",
+        "managerName": "Leshov Aleksei Mikhailovich"
+      },
+      "investors": {
+        "investors": "Investors",
+        "partners": "Partners"
+      }
+    },
+
+    "products": {
+      "projectLCS": "Control system of dynamic lighting of the road network",
+      "problem": "Problem!",
+      "problemName": "The city spends electricity when no one is on the street.",
+      "decision": "Decision!",
+      "decisionName": "Maximum light at the right time, in the right place.",
+      "technology": "Technology!",
+      "technologyName": "Light fixture, wireless communication, motion detection.",
+
+      "projectGoals": "Project Goals",
+      "projectGoalsName": "Dynamic lighting system provides improved energy efficiency and safety of street lighting networks. The system allows you to light with the required level of brightness necessary for safe movement of the road, creating  local light spot that accompanies a moving object.  The rest of the road is illuminated in the standby mode with reduced brightness. The system can be used in populated\n  points on the test sites. Control and management of lighting is carried out as part of a single automated system, which includes following items: lamps with adjustable luminous flux; a participant monitoring subsystem; luminaire mode control subsystem; subsystem monitoring the level of natural light; dispatch center.",
+
+      "team": "Project team",
+
+      "maproad": "Road map"
+    },
+
+    "footer": {
+      "rights": "All rights reserved"
+    }
+  }
+}

@@ -1,11 +1,19 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
-import {EquipmentType, SettingButtonPanel, SettingWinForEditForm, SourceForEditForm, SourceForJqxGrid} from '../../interfaces';
+import {
+  EquipmentType,
+  Geograph,
+  OrgForm,
+  SettingButtonPanel,
+  SettingWinForEditForm,
+  SourceForEditForm,
+  SourceForJqxGrid
+} from '../../interfaces';
 import {EventWindowComponent} from '../event-window/event-window.component';
 import {EditFormComponent} from '../edit-form/edit-form.component';
 import {ButtonPanelComponent} from '../button-panel/button-panel.component';
 import {JqxgridComponent} from '../jqxgrid/jqxgrid.component';
-import {isUndefined} from 'util';
+import {isNull, isUndefined} from 'util';
 
 @Component({
   selector: 'app-simple-handbook',
@@ -16,10 +24,12 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
 
   // variables from master component
   @Input() typeHandBook: string;
-  @Input() settingButtonPanel: SettingButtonPanel;
   @Input() sourceForJqxGrid: SourceForJqxGrid;
   @Input() settingWinForEditForm: SettingWinForEditForm;
   @Input() sourceForEditForm: SourceForEditForm[];
+
+  @Input() geographs: Geograph[];
+  @Input() orgForms: OrgForm[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetSourceForJqxGrid = new EventEmitter<any>();
@@ -33,6 +43,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   @ViewChild('eventWindow') eventWindow: EventWindowComponent;
 
   // other variables
+  settingButtonPanel: SettingButtonPanel;
   loading = false;
   reloading = false;
   // main
@@ -52,7 +63,57 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.refreshGrid();
+    // init button panel
+    this.settingButtonPanel = {
+      add: {
+        visible: true,
+        disabled: false,
+      },
+      upd: {
+        visible: true,
+        disabled: false,
+      },
+      del: {
+        visible: true,
+        disabled: false,
+      },
+      refresh: {
+        visible: true,
+        disabled: false,
+      },
+      filterNone: {
+        visible: false,
+        disabled: false,
+      },
+      filterList: {
+        visible: false,
+        disabled: false,
+      },
+      place: {
+        visible: false,
+        disabled: false,
+      },
+      pinDrop: {
+        visible: false,
+        disabled: false,
+      },
+      groupIn: {
+        visible: false,
+        disabled: false,
+      },
+      groupOut: {
+        visible: false,
+        disabled: false,
+      },
+      switchOn: {
+        visible: false,
+        disabled: false,
+      },
+      switchOff: {
+        visible: false,
+        disabled: false,
+      }
+    };
   }
 
   ngOnDestroy() {
@@ -136,7 +197,10 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
     const saveEditwinObject = new Object();
     const selectObject = new Object();
     for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      selectObject[this.sourceForEditForm[i].nameField] = this.sourceForEditForm[i].selectCode;
+      selectObject[this.sourceForEditForm[i].nameField] = isNull(this.sourceForEditForm[i].selectCode) ? 0 : this.sourceForEditForm[i].selectCode;
+    }
+    if (this.typeEditWindow === 'upd') {
+      selectObject['id'] = this.jqxgridComponent.selectRow.id;
     }
     saveEditwinObject['handBookType'] = this.typeHandBook;
     saveEditwinObject['typeEditWindow'] = this.typeEditWindow;
@@ -162,6 +226,56 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
       }
       if (this.typeEditWindow === 'upd') {
         this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow[this.sourceForEditForm[i].nameField];
+      }
+      switch (this.sourceForEditForm[i].nameField) {
+        case 'geographs':
+          this.sourceForEditForm[i].source = this.geographs;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.geographs[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.geographs.find(
+              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.geographs.find(
+              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).fullName;
+          }
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
+            this.sourceForEditForm[i].selectCode = this.geographs.find(
+              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).code;
+            this.sourceForEditForm[i].selectName = this.geographs.find(
+              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).fullName;
+            for (let j = 0; j < this.geographs.length; j++) {
+              if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.geographId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'orgForms':
+          this.sourceForEditForm[i].source = this.orgForms;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.orgForms[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.orgForms.find(
+              (one: OrgForm) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.orgForms.find(
+              (one: OrgForm) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.orgFormId.toString();
+            this.sourceForEditForm[i].selectCode = this.orgForms.find(
+              (one: OrgForm) => one.id === +this.jqxgridComponent.selectRow.orgFormId).code;
+            this.sourceForEditForm[i].selectName = this.orgForms.find(
+              (one: OrgForm) => one.id === +this.jqxgridComponent.selectRow.orgFormId).name;
+            for (let j = 0; j < this.orgForms.length; j++) {
+              if (+this.orgForms[j].id === +this.jqxgridComponent.selectRow.orgFormId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        default:
+          break;
       }
     }
   }

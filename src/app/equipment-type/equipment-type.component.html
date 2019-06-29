@@ -1,12 +1,26 @@
-<h5>
-  {{getHeadline()}}
-</h5>
+<h6 style="margin: 0px 2px 2px 2px; text-align: center"
+    appBackgroundLightorangeDirective
+>{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="(this.router.url === '/handbook/equipment/nodetype')">
+  <div *ngIf="(this.router.url === '/handbook/equipment/fixturetype')"
+       class="table_border">
+    <app-simple-handbook #fixtureType
+                         [typeHandBook]="handBookFixtureType"
+                         [sourceForJqxGrid]="sourceForJqxGridFixtureType"
+                         [settingWinForEditForm]="settingWinForEditFormFixtureType"
+                         [sourceForEditForm]="sourceForEditFormFixtureType"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+  <div *ngIf="(this.router.url === '/handbook/equipment/nodetype')"
+       class="table_border">
     <app-simple-handbook #nodeType
                          [typeHandBook]="handBookNodeType"
-                         [settingButtonPanel]="settingButtonPanel"
                          [sourceForJqxGrid]="sourceForJqxGridNodeType"
                          [settingWinForEditForm]="settingWinForEditFormNodeType"
                          [sourceForEditForm]="sourceForEditFormNodeType"
@@ -17,10 +31,24 @@
     ></app-simple-handbook>
   </div>
 
-  <div *ngIf="(this.router.url === '/handbook/equipment/sensortype')">
+  <div *ngIf="(this.router.url === '/handbook/equipment/gatewaytype')"
+       class="table_border">
+    <app-simple-handbook #gatewayType
+                         [typeHandBook]="handBookGatewayType"
+                         [sourceForJqxGrid]="sourceForJqxGridGatewayType"
+                         [settingWinForEditForm]="settingWinForEditFormGatewayType"
+                         [sourceForEditForm]="sourceForEditFormGatewayType"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+  <div *ngIf="(this.router.url === '/handbook/equipment/sensortype')"
+       class="table_border">
     <app-simple-handbook #sensorType
                          [typeHandBook]="handBookSensorType"
-                         [settingButtonPanel]="settingButtonPanel"
                          [sourceForJqxGrid]="sourceForJqxGridSensorType"
                          [settingWinForEditForm]="settingWinForEditFormSensorType"
                          [sourceForEditForm]="sourceForEditFormSensorType"

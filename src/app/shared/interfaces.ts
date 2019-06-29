@@ -1,5 +1,13 @@
 import {Input} from '@angular/core';
 
+export interface NavItem {
+  displayName: string;
+  disabled?: boolean;
+  iconName: string;
+  route?: string;
+  children?: NavItem[];
+}
+
 export interface User {
   login: string;
   password: string;
@@ -13,12 +21,6 @@ export interface Geograph {
   id: number;
   code: string;
   fullName: string;
-}
-
-export interface Contract {
-  id: number;
-  code: string;
-  name: string;
 }
 
 export interface Owner {
@@ -293,7 +295,25 @@ export interface FixtureGroupType {
   name: string;
 }
 
+export class FixtureType {
+  id: number;
+  code: string;
+  name: string;
+  model: string;
 
+  height: number;
+  width: number;
+  length: number;
+  weight: number;
+
+  countlamp: number;
+  power: number;
+  cos: number;
+  ip: number;
+  efficiency: number;
+
+  comments: string;
+}
 
 // Node
 
@@ -335,7 +355,7 @@ export interface FilterNode {
 //   gatewayId: number;
 // }
 
-export class NodeType {
+export class Contract {
   id: number;
   code: string;
   name: string;
@@ -376,6 +396,15 @@ export interface FilterGateway {
   gatewayTypeId: string;
   contractId: string;
   nodeId: string;
+}
+
+export class GatewayType {
+  id: number;
+  code: string;
+  name: string;
+  model: string;
+  comments: string;
+  communicationStandard: string;
 }
 
 // Command
@@ -480,4 +509,72 @@ export class SensorType {
   model: string;
   comments: string;
   detectionRange: number;
+}
+
+// Contragent
+
+export class CompanyDepartment {
+  id: number;
+  geographId: number;
+  geographCode: string;
+  code: string;
+  name: string;
+  inn: number;
+  comments: string;
+  orgFormId: number;
+  orgFormCode: string;
+}
+
+export class Substation {
+  id: number;
+  geographId: number;
+  geographCode: string;
+  code: string;
+  name: string;
+  inn: number;
+  comments: string;
+  orgFormId: number;
+  orgFormCode: string;
+  power: number;
+}
+
+export class Person {
+  id: number;
+  geographId: number;
+  geographCode: string;
+  code: string;
+  name: string;
+  inn: number;
+  comments: string;
+  name_first: string;
+  name_second: string;
+  name_third: string;
+}
+
+export interface OrgForm {
+  id: number;
+  code: string;
+  name: string;
+}
+
+// Contract
+
+export interface Contract {
+  id: number;
+  contractTypeId: number;
+  senderId: number;
+  recipientId: number;
+  contractTypeCode: string;
+  senderCode: string;
+  recipientCode: string;
+  code: string;
+  name: string;
+  comments: string;
+}
+
+export interface ContractType {
+  id: number;
+  code: string;
+  name: string;
+  comments: string;
 }

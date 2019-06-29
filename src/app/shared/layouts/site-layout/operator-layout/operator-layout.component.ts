@@ -42,6 +42,8 @@ import {SensorTypeService} from '../../../services/sensor/sensorType.service';
 import {ContractSensorService} from '../../../services/sensor/contractSensor.service';
 import {NodeService} from '../../../services/node/node.service';
 import {SensorService} from '../../../services/sensor/sensor.service';
+import {GatewayService} from '../../../services/gateway/gateway.service';
+import {FixtureService} from '../../../services/fixture/fixture.service';
 
 
 @Component({
@@ -117,8 +119,9 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     // service
     private geographService: GeographService,
     // fixture service
+    private fixtureService: FixtureService,
     private ownerFixtureService: OwnerFixtureService,
-    private fixtureTypeService: FixtureTypeService,
+    // private fixtureTypeService: FixtureTypeService,
     private substationService: SubstationService,
     private contractFixtureService: ContractFixtureService,
     private installerService: InstallerFixtureService,
@@ -131,16 +134,17 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     private commandStatusService: CommandStatusService,
     private speedDirectionService: SpeedDirectionService,
     // node service
-    private ownerNodeService: OwnerNodeService,
     private nodeService: NodeService,
+    private ownerNodeService: OwnerNodeService,
     private contractNodeService: ContractNodeService,
     // gateway service
+    private gatewayService: GatewayService,
     private ownerGatewayService: OwnerGatewayService,
     private gatewayTypeService: GatewayTypeService,
     private contractGatewayService: ContractGatewayService,
     // sensor service
-    private ownerSensorService: OwnerSensorService,
     private sensorService: SensorService,
+    private ownerSensorService: OwnerSensorService,
     private contractSensorService: ContractSensorService,
   ) {
   }
@@ -191,7 +195,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
     // fixture refbook
     this.ownerFixtureSub = this.ownerFixtureService.fetch().subscribe(owners => this.ownerFixtures = owners);
-    this.fixtureTypeSub = this.fixtureTypeService.fetch().subscribe(fixtureTypes => this.fixtureTypes = fixtureTypes);
+    this.fixtureTypeSub = this.fixtureService.getFixtureTypes().subscribe(fixtureTypes => this.fixtureTypes = fixtureTypes);
     this.substationSub = this.substationService.fetch().subscribe(substations => this.substations = substations);
     this.contractFixtureSub = this.contractFixtureService.fetch().subscribe(contracts => this.contractFixtures = contracts);
     this.installerSub = this.installerService.fetch().subscribe(installers => this.installers = installers);
@@ -216,7 +220,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
     // gateway refbook
     this.ownerGatewaySub = this.ownerGatewayService.fetch().subscribe(owners => this.ownerGateways = owners);
-    this.gatewayTypeSub = this.gatewayTypeService.fetch().subscribe(gatewayTypes => this.gatewayTypes = gatewayTypes);
+    this.gatewayTypeSub = this.gatewayService.getGatewayTypes().subscribe(gatewayTypes => this.gatewayTypes = gatewayTypes);
     this.contractGatewaySub = this.contractGatewayService.fetch().subscribe(contracts => this.contractGateways = contracts);
 
     // sensor refbook

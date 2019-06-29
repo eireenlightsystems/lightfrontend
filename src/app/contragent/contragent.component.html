@@ -1,0 +1,55 @@
+<h6 style="margin: 0px 2px 2px 2px; text-align: center"
+    appBackgroundLightorangeDirective
+>{{getHeadline()}}</h6>
+
+<div>
+  <div *ngIf="(this.router.url === '/handbook/contragent/companies')"
+       class="table_border">
+    <app-simple-handbook #companies
+                         [typeHandBook]="handBookCompanies"
+                         [sourceForJqxGrid]="sourceForJqxGridCompanies"
+                         [settingWinForEditForm]="settingWinForEditFormCompanies"
+                         [sourceForEditForm]="sourceForEditFormCompanies"
+
+                         [geographs]="geographs"
+                         [orgForms]="orgForms"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+  <div *ngIf="(this.router.url === '/handbook/contragent/persons')"
+       class="table_border">
+    <app-simple-handbook #persons
+                         [typeHandBook]="handBookPersons"
+                         [sourceForJqxGrid]="sourceForJqxGridPersons"
+                         [settingWinForEditForm]="settingWinForEditFormPersons"
+                         [sourceForEditForm]="sourceForEditFormPersons"
+
+                         [geographs]="geographs"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+
+  <div *ngIf="(this.router.url === '/handbook/contragent/substations')"
+       class="table_border">
+    <app-simple-handbook #substations
+                         [typeHandBook]="handBookSubstations"
+                         [sourceForJqxGrid]="sourceForJqxGridSubstations"
+                         [settingWinForEditForm]="settingWinForEditFormSubstations"
+                         [sourceForEditForm]="sourceForEditFormSubstations"
+
+                         [geographs]="geographs"
+                         [orgForms]="orgForms"
+
+                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-handbook>
+  </div>
+</div>

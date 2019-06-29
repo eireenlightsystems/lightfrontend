@@ -1,7 +1,12 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
@@ -34,6 +39,7 @@ import {ButtonPanelComponent} from './components/button-panel/button-panel.compo
 import {EditFormComponent} from './components/edit-form/edit-form.component';
 import {EditFormItemComponent} from './components/edit-form/edit-form-item/edit-form-item.component';
 import {JqxgridComponent} from './components/jqxgrid/jqxgrid.component';
+import {SimpleHandbookComponent} from './components/simple-handbook/simple-handbook.component';
 
 import {ButtonSettinggridDirective} from './directives/button-settinggrid.directive';
 import {ButtonSimpleStyleDirective} from './directives/button-simple-style.directive';
@@ -41,6 +47,11 @@ import {InputFilterStyleDirective} from './directives/input-filter-style.directi
 import {ComboboxFilterDirective} from './directives/combobox-filter.directive';
 import {ButtonFilterDirective} from './directives/button-filter.directive';
 import {ButtonLinkDirective} from './directives/button-link.directive';
+import {BackgroundLightorangeDirective} from './directives/background-lightorange.directive';
+import {BackgroundLightredDirective} from './directives/background-lightred.directive';
+import {YellowWavesDirectiveDirective} from './directives/yellow-waves-directive.directive';
+import {ButtonMenuDirective} from './directives/button-menu.directive';
+import {TextFontweightDirective} from './directives/text-fontweight.directive';
 
 
 @NgModule({
@@ -76,6 +87,7 @@ import {ButtonLinkDirective} from './directives/button-link.directive';
     EditFormComponent,
     EditFormItemComponent,
     JqxgridComponent,
+    // SimpleHandbookComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -83,12 +95,28 @@ import {ButtonLinkDirective} from './directives/button-link.directive';
     ComboboxFilterDirective,
     ButtonFilterDirective,
     ButtonLinkDirective,
+    BackgroundLightorangeDirective,
+    BackgroundLightredDirective,
+    YellowWavesDirectiveDirective,
+    ButtonMenuDirective,
+    TextFontweightDirective,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
+    FlexLayoutModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
   ],
   exports: [
     jqxGridComponent,
@@ -129,7 +157,19 @@ import {ButtonLinkDirective} from './directives/button-link.directive';
     ComboboxFilterDirective,
     ButtonFilterDirective,
     ButtonLinkDirective,
+    BackgroundLightorangeDirective,
+    BackgroundLightredDirective,
+    YellowWavesDirectiveDirective,
+    ButtonMenuDirective,
+    TextFontweightDirective,
   ]
 })
 export class SharedModule {
+}
+
+// platformBrowserDynamic().bootstrapModule(SharedModule);
+
+// required for AOT compilation
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

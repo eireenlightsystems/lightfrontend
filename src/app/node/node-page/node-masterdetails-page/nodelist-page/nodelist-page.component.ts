@@ -258,7 +258,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         theme: 'material',
         width: '285',
         height: '20',
-        placeHolder: 'Тип датчика:',
+        placeHolder: 'Тип узла:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -767,13 +767,13 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
               (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).fullName;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
             this.sourceForEditForm[i].selectCode = this.geographs.find(
               (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).code;
             this.sourceForEditForm[i].selectName = this.geographs.find(
               (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).fullName;
             for (let j = 0; j < this.geographs.length; j++) {
-              if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.contractId) {
+              if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.geographId) {
                 this.sourceForEditForm[i].selectedIndex = j;
                 break;
               }

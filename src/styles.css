@@ -2,3 +2,15 @@
 @import "theme/styles.min.css";
 /*@import "//api-maps.yandex.ru/2.1/?lang=ru_RU";*/
 /*@import "//yandex.st/jquery/2.2.3/jquery.min.js";*/
+
+/*Angular Material Theme*/
+/*@import "./theme/material/material-theme";*/
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+/*@import '@angular/material/prebuilt-themes/indigo-pink.css';*/
+/*@import '@angular/material/prebuilt-themes/pink-bluegrey.css';*/
+/*@import '@angular/material/prebuilt-themes/purple-green.css';*/
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

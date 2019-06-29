@@ -42,14 +42,16 @@
           [width]="+itemEditForm.width" [height]="+itemEditForm.height"
           [min]="0" [spinButtons]="true"
           [spinMode]="'simple'"
-          [digits]="2"
-          [decimalDigits]="6"
+
           [(ngModel)]="itemEditForm.selectCode"
         >
         </jqxNumberInput>
       </td>
     </tr>
   </div>
+
+<!--  [digits]="2"-->
+<!--  [decimalDigits]="6"-->
 
   <div *ngSwitchCase="'jqxDateTimeInput'">
     <tr>

@@ -21,50 +21,50 @@ import {SiteLayoutComponent} from '../site-layout.component';
 
 
 // canActivate: [AuthGuard] - защита роутов
-const operatorRoutes: Routes = [
-  {
-    path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
-      {
-        path: 'operator', component: OperatorLayoutComponent, canActivate: [AuthGuard], children: [
-
-          {path: '', redirectTo: 'fixture', pathMatch: 'full'},
-          {
-            path: 'node', component: NodePageComponent, canActivate: [AuthGuard], children: [
-              {path: 'nodelist', component: NodelistPageComponent},
-              {path: 'nodemap', component: NodemapPageComponent}
-            ]
-          },
-
-          {
-            path: 'gateway', component: GatewayPageComponent, canActivate: [AuthGuard], children: [
-              {path: 'gatewaylist', component: GatewaylistPageComponent},
-              {path: 'gatewaymap', component: GatewaymapPageComponent}
-            ]
-          },
-
-          {
-            path: 'fixture', component: FixturePageComponent, canActivate: [AuthGuard], children: [
-              {path: 'fixturelist', component: FixturelistPageComponent},
-              {path: 'fixturegroup', component: FixtureGrlistPageComponent},
-              {path: 'fixturemap', component: FixturemapPageComponent}
-            ]
-          },
-
-          {
-            path: 'sensor', component: SensorPageComponent, canActivate: [AuthGuard], children: [
-              {path: 'sensorlist', component: SensorlistPageComponent}
-            ]
-          }
-
-        ]
-      },
-    ]
-  },
-  {path: '**', component: NotFoundComponent},
+const routes: Routes = [
+  // {
+  //   path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
+  //     {
+  //       path: 'operator', component: OperatorLayoutComponent, canActivate: [AuthGuard], children: [
+  //
+  //         // {path: '', redirectTo: 'fixture', pathMatch: 'full'},
+  //         {
+  //           path: 'node', component: NodePageComponent, canActivate: [AuthGuard], children: [
+  //             {path: 'nodelist', component: NodelistPageComponent},
+  //             {path: 'nodemap', component: NodemapPageComponent}
+  //           ]
+  //         },
+  //
+  //         {
+  //           path: 'gateway', component: GatewayPageComponent, canActivate: [AuthGuard], children: [
+  //             {path: 'gatewaylist', component: GatewaylistPageComponent},
+  //             {path: 'gatewaymap', component: GatewaymapPageComponent}
+  //           ]
+  //         },
+  //
+  //         {
+  //           path: 'fixture', component: FixturePageComponent, canActivate: [AuthGuard], children: [
+  //             {path: 'fixturelist', component: FixturelistPageComponent},
+  //             {path: 'fixturegroup', component: FixtureGrlistPageComponent},
+  //             {path: 'fixturemap', component: FixturemapPageComponent}
+  //           ]
+  //         },
+  //
+  //         {
+  //           path: 'sensor', component: SensorPageComponent, canActivate: [AuthGuard], children: [
+  //             {path: 'sensorlist', component: SensorlistPageComponent}
+  //           ]
+  //         }
+  //
+  //       ]
+  //     },
+  //   ]
+  // },
+  // {path: '**', component: NotFoundComponent},
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(operatorRoutes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class OperatorRoutingModule {

@@ -60,6 +60,9 @@ import {SensorlistPageComponent} from '../../../../sensor/sensor-page/sensor-md-
     SensorMdPageComponent,
     SensorlistPageComponent,
   ],
+  exports: [
+    OperatorLayoutComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,

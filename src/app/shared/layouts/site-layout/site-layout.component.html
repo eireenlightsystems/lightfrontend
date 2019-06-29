@@ -1,58 +1,208 @@
-<ul id="dropdown-mode" class="dropdown-content" #menu>
-  <li routerLinkActive="active" (click)="onClickOperator($event)" #operator>
-    <a routerLink="/operator" class="waves-effect waves-orange white blue-text"><i class="material-icons">touch_app</i>Управление оборудованием</a>
-  </li>
-  <li class="divider"></li>
-  <li routerLinkActive="active" (click)="onClickHandbook($event)" #handbook>
-    <a routerLink="/handbook" class="waves-effect waves-orange white blue-text"><i class="material-icons">import_contacts</i>Управление справочниками</a>
-  </li>
-  <li class="divider"></li>
-  <li routerLinkActive="active" (click)="onClickAdmin($event)" #admin>
-    <a routerLink="/admin" class="waves-effect waves-orange white blue-text"><i class="material-icons">settings</i>Администирование приложения</a>
-  </li>
-</ul>
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
 
-<ul id="slide-out" class="sidenav ul-menu" #sidenav>
-  <li
-    class="bold"
-    *ngFor="let link of sidenavLinks"
-    routerLinkActive="active"
-  >
-    <a [routerLink]="[link.url]" class="sidenav-close waves-effect waves-orange">
-      <i class="material-icons">{{link.icon}}</i> {{link.name}}
-    </a>
-  </li>
-</ul>
+  <mat-toolbar appBackgroundLightredDirective class="example-header example-toolbar">
+    <mat-toolbar-row>
+      <div [hidden]="mobileQuery.matches ? false : false">
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (click)="toggle()">
+          <mat-icon>{{snav.opened ? 'close' : 'menu'}}</mat-icon>
+        </button>
+      </div>
 
-<nav>
-  <div class="nav-wrapper">
-    <ul class="left hide-on-med-and-down">
-      <li>
-        <a data-target="slide-out" class="sidenav-trigger display_menu"><i class="material-icons">menu</i></a>
-      </li>
-      <li>
-        <a class="brand-logo">Light</a>
-      </li>
-      <!-- Dropdown Trigger -->
-      <li style="margin: 0px 0px 0px 100px;">
-        <a class="dropdown-trigger" data-target="dropdown-mode">{{itemMenu}}<i class="material-icons right">arrow_drop_down</i></a>
-      </li>
-    </ul>
+      <div class="button-top-menu">
+        <a href="http://eireenlight.ru:8100/home"><img class="button-top-menu" src="pictures/eireenlight.jpg"></a>
+      </div>
 
+      <div fxShow="true" fxHide.lt-md style="margin-left: 10px">
+        <!-- The following menu items will be hidden on both SM and XS screen sizes -->
+        <a [routerLink]="'/operator'"
+           mat-button
+           class="button-top-menu"
+           style="width: 200px"
+           appYellowWavesDirective
+           appButtonMenuDirective
+           (click)="chooseMenuItem('/operator')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">touch_app</mat-icon>
+          {{ 'site.menu.operator.management' | translate }}
+        </a>
+        <a [routerLink]="'/handbook'"
+           mat-button
+           [matMenuTriggerFor]=handbooks
+           class="button-top-menu"
+           style="width: 200px"
+           appYellowWavesDirective
+           appButtonMenuDirective
+           (click)="chooseMenuItem('')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">import_contacts</mat-icon>
+          {{ 'site.menu.handbooks.handbooks' | translate }}
+        </a>
+        <a [routerLink]="'/admin'"
+           mat-button
+           class="button-top-menu"
+           style="width: 200px"
+           appYellowWavesDirective
+           appButtonMenuDirective
+           (click)="chooseMenuItem('/admin')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">settings</mat-icon>
+          {{ 'site.menu.administration.administration' | translate }}
+        </a>
+      </div>
 
-    <ul id="nav-mobile-right" class="right hide-on-med-and-down">
-      <li routerLinkActive="active" (click)="onClickAdmin($event)">
-        <a routerLink="/admin" class="waves-effect waves-orange"><i class="material-icons">settings</i></a>
-      </li>
-      <li routerLinkActive="active">
-        <a href="#" class="waves-effect waves-orange" (click)="logout($event)">Выйти</a>
-      </li>
-      <!--<li routerLinkActive="active">-->
-      <!--<a routerLink="/register">Регистрация</a>-->
-      <!--</li>-->
-    </ul>
+      <mat-menu #handbooks="matMenu">
+        <a [routerLink]="'/handbook/equipment'"
+           mat-menu-item
+           appButtonMenuDirective [theme]="'light'"
+           (click)="chooseMenuItem('/equipment')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">build</mat-icon>
+          {{ 'site.menu.handbooks.equipments' | translate }}
+        </a>
+        <a [routerLink]="'/handbook/contragent'"
+           mat-menu-item
+           appButtonMenuDirective [theme]="'light'"
+           (click)="chooseMenuItem('/contragent')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">group</mat-icon>
+          {{ 'site.menu.handbooks.contragents' | translate }}
+        </a>
+        <a [routerLink]="'/handbook/contract'"
+           mat-menu-item
+           appButtonMenuDirective [theme]="'light'"
+           (click)="chooseMenuItem('/cntr')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">list_alt</mat-icon>
+          {{ 'site.menu.handbooks.contract.contracts' | translate }}
+        </a>
+      </mat-menu>
 
-  </div>
-</nav>
+      <span class="spacer"></span>
+      <span>
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                appBackgroundLightredDirective
+                (click)="switchLanguage()"
+        >
+          <mat-icon>language</mat-icon>
+          {{ language }}
+        </button>
+      </span>
+      <span style="margin-left: 10px">
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (click)="logout($event)"
+        >
+          {{ 'site.menu.exit' | translate }}
+        </button>
+      </span>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-<router-outlet></router-outlet>
+  <mat-sidenav-container class="example-sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+                         (backdropClick)="snav.close()">
+
+    <mat-sidenav #snav
+                 [ngStyle]="{ 'width.px': sidenavWidth }"
+                 class="example-sidenav"
+                 [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
+                 (keydown.escape)="snav.close()" disableClose
+    >
+      <mat-tree #matTtree
+                [dataSource]="dataSource"
+                [treeControl]="treeControl"
+      >
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node
+          *matTreeNodeDef="let node"
+          matTreeNodePadding
+          style="margin-left: 15px"
+        >
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <button *ngIf="this.isSidenavMax === true"
+             mat-button
+             appButtonMenuDirective [theme]="'light'"
+             (click)="onItemSelected(node)"
+             (click)="mobileQuery.matches ? snav.close() : ''"
+          >
+            <mat-icon class="routeIcon" style="margin-right: 25px">{{node.iconName}}</mat-icon>
+            {{ node.name | translate}}
+          </button>
+          <button *ngIf="this.isSidenavMax === false"
+             mat-button
+             appButtonMenuDirective [theme]="'light'"
+             (click)="onItemSelected(node)"
+             (click)="mobileQuery.matches ? snav.close() : ''"
+          >
+            <mat-icon class="routeIcon">{{node.iconName}}</mat-icon>
+          </button>
+
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node
+          *matTreeNodeDef="let node;when: hasChild"
+          matTreeNodePadding
+          style="margin-left: 5px"
+        >
+          <a mat-button
+             appYellowWavesDirective
+             appButtonMenuDirective
+             (click)="onItemSelected(node)">
+            <mat-icon class="routeIcon" style="margin-right: 10px">{{node.iconName}}</mat-icon>
+            {{node.name | translate}}
+          </a>
+          <button mat-icon-button
+                  matTreeNodeToggle
+                  appYellowWavesDirective
+                  appButtonMenuDirective
+                  appBackgroundLightredDirective
+                  [attr.aria-label]="'toggle ' + node.name"
+          >
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'expand_less'}}
+            </mat-icon>
+          </button>
+        </mat-tree-node>
+      </mat-tree>
+      <button mat-button
+         appButtonMenuDirective [theme]="'light'"
+         class="bottom"
+         style="margin-left: 15px; margin-bottom: 10px;"
+         (click)="getSnavWidth()"
+      >
+        <mat-icon>{{sidenavWidth === sidenavWidthMax ? 'arrow_back' : 'arrow_forward'}}</mat-icon>
+      </button>
+    </mat-sidenav>
+
+    <mat-sidenav-content
+      class="example-sidenav-content"
+    >
+      <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
+           [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
+      >
+        <app-operator-layout
+        ></app-operator-layout>
+      </div>
+      <div *ngIf="(this.router.url.substring(0,5) === '/hand')"
+           [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft}"
+      >
+        <app-handbook-layout
+        ></app-handbook-layout>
+      </div>
+      <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
+           [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
+      >
+        <app-admin-layout
+        ></app-admin-layout>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+</div>

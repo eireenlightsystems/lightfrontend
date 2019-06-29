@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/index';
 
-import {Fixture, Message} from '../../interfaces';
+import {EquipmentType, Fixture, Message} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ export class FixtureService {
 
   getFixtureInGroup(fixtureGroupId: string): Observable<Fixture[]> {
     return this.http.get<Fixture[]>(`/api/v1/fixtures-groups/${fixtureGroupId}/fixtures`);
+  }
+
+  getFixtureTypes(): Observable<EquipmentType[]> {
+    return this.http.get<EquipmentType[]>('/api/v1/fixtures-types');
   }
 
   // post
