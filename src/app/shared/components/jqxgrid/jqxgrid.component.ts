@@ -31,8 +31,8 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   // other variables
   selectRow: any;
   // islistBoxVisible = false;
-  widthDefinde: any;
-  heightDefinde: any;
+  widthDefined: any;
+  heightDefined: any;
 
   // define the data source for the table
   source_jqxgrid: any;
@@ -87,8 +87,8 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.myGrid.updatebounddata('cells');
     this.myGrid.updatebounddata('data');
 
-    this.widthDefinde = !isNull(this.sourceForJqxGrid.grid.width) ? this.sourceForJqxGrid.grid.width : '100%';
-    this.heightDefinde = !isNull(this.sourceForJqxGrid.grid.height) ? this.sourceForJqxGrid.grid.height : '100%';
+    this.widthDefined = !isNull(this.sourceForJqxGrid.grid.width) ? this.sourceForJqxGrid.grid.width : '100%';
+    this.heightDefined = !isNull(this.sourceForJqxGrid.grid.height) ? this.sourceForJqxGrid.grid.height : '100%';
   }
 
   refresh_del(ids: any[]) {

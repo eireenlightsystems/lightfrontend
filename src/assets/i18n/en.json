@@ -31,6 +31,7 @@
 
         "contract": {
           "contracts": "Contracts",
+          "contracts-headline": "Handbook of contracts",
           "contracts-types": "Contract types",
           "contracts-types-headline": "Handbook of types of contracts"
         }

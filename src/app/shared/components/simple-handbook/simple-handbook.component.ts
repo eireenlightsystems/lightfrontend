@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {
+  CompanyDepartment, ContractType,
   EquipmentType,
   Geograph,
   OrgForm,
@@ -30,6 +31,8 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
 
   @Input() geographs: Geograph[];
   @Input() orgForms: OrgForm[];
+  @Input() companies: CompanyDepartment[];
+  @Input() contractTypes: ContractType[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetSourceForJqxGrid = new EventEmitter<any>();
@@ -268,6 +271,75 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
               (one: OrgForm) => one.id === +this.jqxgridComponent.selectRow.orgFormId).name;
             for (let j = 0; j < this.orgForms.length; j++) {
               if (+this.orgForms[j].id === +this.jqxgridComponent.selectRow.orgFormId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'senders':
+          this.sourceForEditForm[i].source = this.companies;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.companies[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.senderId.toString();
+            this.sourceForEditForm[i].selectCode = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.senderId).code;
+            this.sourceForEditForm[i].selectName = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.senderId).name;
+            for (let j = 0; j < this.companies.length; j++) {
+              if (+this.companies[j].id === +this.jqxgridComponent.selectRow.senderId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'recipients':
+          this.sourceForEditForm[i].source = this.companies;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.companies[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.recipientId.toString();
+            this.sourceForEditForm[i].selectCode = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.recipientId).code;
+            this.sourceForEditForm[i].selectName = this.companies.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.recipientId).name;
+            for (let j = 0; j < this.companies.length; j++) {
+              if (+this.companies[j].id === +this.jqxgridComponent.selectRow.recipientId) {
+                this.sourceForEditForm[i].selectedIndex = j;
+                break;
+              }
+            }
+          }
+          break;
+        case 'contractTypes':
+          this.sourceForEditForm[i].source = this.contractTypes;
+          if (this.typeEditWindow === 'ins') {
+            this.sourceForEditForm[i].selectId = this.contractTypes[0].id.toString();
+            this.sourceForEditForm[i].selectCode = this.contractTypes.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).code;
+            this.sourceForEditForm[i].selectName = this.contractTypes.find(
+              (one: CompanyDepartment) => one.id === +this.sourceForEditForm[i].selectId).name;
+          }
+          if (this.typeEditWindow === 'upd') {
+            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractTypeId.toString();
+            this.sourceForEditForm[i].selectCode = this.contractTypes.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.contractTypeId).code;
+            this.sourceForEditForm[i].selectName = this.contractTypes.find(
+              (one: CompanyDepartment) => one.id === +this.jqxgridComponent.selectRow.contractTypeId).name;
+            for (let j = 0; j < this.contractTypes.length; j++) {
+              if (+this.contractTypes[j].id === +this.jqxgridComponent.selectRow.contractTypeId) {
                 this.sourceForEditForm[i].selectedIndex = j;
                 break;
               }

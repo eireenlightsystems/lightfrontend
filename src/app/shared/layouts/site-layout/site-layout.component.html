@@ -1,4 +1,7 @@
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+<!--For Computer-->
+<div *ngIf="mobileQuery.matches === false"
+     class="example-container"
+     [class.example-is-mobile]="mobileQuery.matches">
 
   <mat-toolbar appBackgroundLightredDirective class="example-header example-toolbar">
     <mat-toolbar-row>
@@ -115,70 +118,39 @@
                  [fixedInViewport]="mobileQuery.matches" fixedTopGap="56"
                  (keydown.escape)="snav.close()" disableClose
     >
-      <mat-tree #matTtree
-                [dataSource]="dataSource"
-                [treeControl]="treeControl"
-      >
-        <!-- This is the tree node template for leaf nodes -->
-        <mat-tree-node
-          *matTreeNodeDef="let node"
-          matTreeNodePadding
-          style="margin-left: 15px"
-        >
-          <!-- use a disabled button to provide padding for tree leaf -->
+
+      <ul *ngFor="let navitem of navItems">
+        <li [routerLink]="navitem.route"
+            style="margin-left: 15px">
           <button *ngIf="this.isSidenavMax === true"
-             mat-button
-             appButtonMenuDirective [theme]="'light'"
-             (click)="onItemSelected(node)"
-             (click)="mobileQuery.matches ? snav.close() : ''"
+                  mat-button
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="mobileQuery.matches ? snav.close() : ''"
           >
-            <mat-icon class="routeIcon" style="margin-right: 25px">{{node.iconName}}</mat-icon>
-            {{ node.name | translate}}
+            <mat-icon class="routeIcon" style="margin-right: 25px">{{navitem.iconName}}</mat-icon>
+            {{ navitem.displayName | translate}}
           </button>
           <button *ngIf="this.isSidenavMax === false"
-             mat-button
-             appButtonMenuDirective [theme]="'light'"
-             (click)="onItemSelected(node)"
-             (click)="mobileQuery.matches ? snav.close() : ''"
+                  mat-button
+                  matTooltip="{{ navitem.displayName | translate}}"
+                  [matTooltipPosition]="'right'"
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="mobileQuery.matches ? snav.close() : ''"
           >
-            <mat-icon class="routeIcon">{{node.iconName}}</mat-icon>
+            <mat-icon class="routeIcon">{{navitem.iconName}}</mat-icon>
           </button>
+        </li>
+      </ul>
 
-        </mat-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <mat-tree-node
-          *matTreeNodeDef="let node;when: hasChild"
-          matTreeNodePadding
-          style="margin-left: 5px"
-        >
-          <a mat-button
-             appYellowWavesDirective
-             appButtonMenuDirective
-             (click)="onItemSelected(node)">
-            <mat-icon class="routeIcon" style="margin-right: 10px">{{node.iconName}}</mat-icon>
-            {{node.name | translate}}
-          </a>
-          <button mat-icon-button
-                  matTreeNodeToggle
-                  appYellowWavesDirective
-                  appButtonMenuDirective
-                  appBackgroundLightredDirective
-                  [attr.aria-label]="'toggle ' + node.name"
-          >
-            <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'expand_less'}}
-            </mat-icon>
-          </button>
-        </mat-tree-node>
-      </mat-tree>
       <button mat-button
-         appButtonMenuDirective [theme]="'light'"
-         class="bottom"
-         style="margin-left: 15px; margin-bottom: 10px;"
-         (click)="getSnavWidth()"
+              appButtonMenuDirective [theme]="'light'"
+              class="bottom"
+              style="margin-left: 15px; margin-bottom: 10px;"
+              (click)="getSnavWidth()"
       >
         <mat-icon>{{sidenavWidth === sidenavWidthMax ? 'arrow_back' : 'arrow_forward'}}</mat-icon>
       </button>
+
     </mat-sidenav>
 
     <mat-sidenav-content
@@ -203,6 +175,130 @@
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>
+  </mat-sidenav-container>
+
+</div>
+
+<!--For Mobile-->
+<div *ngIf="mobileQuery.matches === true"
+     class="example-container"
+     [class.example-is-mobile]="mobileQuery.matches">
+
+  <mat-toolbar appBackgroundLightredDirective class="example-header example-toolbar">
+    <mat-toolbar-row>
+      <div [hidden]="mobileQuery.matches ? false : false">
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (click)="snavonmobile.toggle()">
+          <mat-icon>{{snavonmobile.opened ? 'close' : 'menu'}}</mat-icon>
+        </button>
+      </div>
+
+      <div class="button-top-menu">
+        <a href="http://eireenlight.ru:8100/home"><img class="button-top-menu" src="pictures/eireenlight.jpg"></a>
+      </div>
+
+      <span class="spacer"></span>
+      <span>
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                appBackgroundLightredDirective
+                (click)="switchLanguage()"
+        >
+          <mat-icon>language</mat-icon>
+          {{ language }}
+        </button>
+      </span>
+      <span style="margin-left: 10px">
+        <button mat-button
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (click)="logout($event)"
+        >
+          {{ 'site.menu.exit' | translate }}
+        </button>
+      </span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="example-sidenav-container"
+                         [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+                         (backdropClick)="snavonmobile.close()">
+
+    <mat-sidenav #snavonmobile
+                 class="example-sidenav"
+                 [mode]="'over'"
+                 [fixedInViewport]="mobileQuery.matches"
+                 fixedTopGap="56"
+                 (keydown.escape)="snavonmobile.close()" disableClose
+    >
+      <mat-tree #matTtree
+                [dataSource]="this.dataSourceOnMobile"
+                [treeControl]="treeControl"
+      >
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node
+          *matTreeNodeDef="let node"
+          matTreeNodePadding
+        >
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <button mat-button
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="onItemSelected(node)"
+                  (click)="snavonmobile.close()"
+          >
+            <mat-icon class="routeIcon" style="margin-right: 5px">{{node.iconName}}</mat-icon>
+            {{ node.name | translate}}
+          </button>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node
+          *matTreeNodeDef="let node;when: hasChild"
+          matTreeNodePadding
+          style="margin-left: 5px"
+        >
+          <a mat-button
+             appButtonMenuDirective [theme]="'light'"
+             (click)="onItemSelected(node)">
+            <mat-icon class="routeIcon" style="margin-right: 5px">{{node.iconName}}</mat-icon>
+            {{node.name | translate}}
+          </a>
+          <button mat-icon-button
+                  matTreeNodeToggle
+                  appYellowWavesDirective
+                  appButtonMenuDirective [theme]="'light'"
+                  [attr.aria-label]="'toggle ' + node.name"
+          >
+            <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'expand_less'}}
+            </mat-icon>
+          </button>
+        </mat-tree-node>
+      </mat-tree>
+    </mat-sidenav>
+
+    <mat-sidenav-content
+      class="example-sidenav-content"
+    >
+      <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
+      >
+        <app-operator-layout
+        ></app-operator-layout>
+      </div>
+      <div *ngIf="(this.router.url.substring(0,5) === '/hand')"
+      >
+        <app-handbook-layout
+        ></app-handbook-layout>
+      </div>
+      <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
+      >
+        <app-admin-layout
+        ></app-admin-layout>
+      </div>
+    </mat-sidenav-content>
+
   </mat-sidenav-container>
 
 </div>

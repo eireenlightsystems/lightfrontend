@@ -271,12 +271,12 @@ export interface FilterFixtureGroup {
   fixtureGroupTypeId: any;
 }
 
-export interface Substation {
-  id: number;
-  code: string;
-  name: string;
-  power: number;
-}
+// export interface Substation {
+//   id: number;
+//   code: string;
+//   name: string;
+//   power: number;
+// }
 
 export interface Installer {
   id: number;
@@ -355,14 +355,14 @@ export interface FilterNode {
 //   gatewayId: number;
 // }
 
-export class Contract {
-  id: number;
-  code: string;
-  name: string;
-  model: string;
-  comments: string;
-  height: number;
-}
+// export class Contract {
+//   id: number;
+//   code: string;
+//   name: string;
+//   model: string;
+//   comments: string;
+//   height: number;
+// }
 
 // Gateway
 

@@ -7,7 +7,7 @@ import {ContractType, Message} from '../../interfaces';
 @Injectable({
   providedIn: 'root'
 })
-export class ContractService {
+export class ContractTypeService {
   private headers = new Headers({'Content-Type': 'application/json'});
 
   constructor(private http: HttpClient) {

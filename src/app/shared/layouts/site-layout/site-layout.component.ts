@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, AfterViewChecked, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -37,12 +37,12 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   language = 'en';
   sidenavWidth = 85;
   sidenavWidthMin = 85;
-  sidenavWidthMax = 200;
+  sidenavWidthMax = 230;
   sidenavContentMarginLeft = 0;
   isSidenavMax = false;
 
   // Left tree-menu in mat-sidenav
-  // navItems: NavItem[];
+  navItems: NavItem[];
   navItemsOperator: NavItem[];
   navItemsEquipment: NavItem[];
   navItemsContragent: NavItem[];
@@ -64,6 +64,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   treeFlattener = new MatTreeFlattener(
     this.transformer, node => node.level, node => node.expandable, node => node.children);
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  dataSourceOnMobile = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   constructor(private auth: AuthService,
               private router: Router,
@@ -81,9 +82,6 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   ngOnInit(): void {
-    // this.itemMenu = 'Управление оборудованием';
-    // this.sidenavLinks = this.sidenavDefaultLinks;
-    // MaterialService.initDropdown();
 
     this.translate.use(this.language);
 
@@ -92,13 +90,114 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
         displayName: 'site.menu.operator.management',
         iconName: 'touch_app',
         route: '/operator',
-        children: []
+        children: [
+          {
+            displayName: 'site.menu.operator.fixture',
+            iconName: 'lightbulb_outline',
+            route: '/operator/fixture',
+            children: []
+          },
+          {
+            displayName: 'site.menu.operator.node',
+            iconName: 'assistant_photo',
+            route: '/operator/node',
+            children: []
+          },
+          {
+            displayName: 'site.menu.operator.gateway',
+            iconName: 'router',
+            route: '/operator/gateway',
+            children: []
+          },
+          {
+            displayName: 'site.menu.operator.sensor',
+            iconName: 'hearing',
+            route: '/operator/sensor',
+            children: []
+          },
+        ]
       },
       {
         displayName: 'site.menu.handbooks.handbooks',
         iconName: 'import_contacts',
         route: '/handbook',
-        children: []
+        children: [
+          {
+            displayName: 'site.menu.handbooks.equipments',
+            iconName: 'build',
+            route: '/handbook/equipment',
+            children: [
+              {
+                displayName: 'site.menu.handbooks.fixturetype',
+                iconName: 'lightbulb_outline',
+                route: '/handbook/equipment/fixturetype',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.nodetype',
+                iconName: 'assistant_photo',
+                route: '/handbook/equipment/nodetype',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.gatewaytype',
+                iconName: 'router',
+                route: '/handbook/equipment/gatewaytype',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.sensortype',
+                iconName: 'hearing',
+                route: '/handbook/equipment/sensortype',
+                children: []
+              },
+            ]
+          },
+          {
+            displayName: 'site.menu.handbooks.contragents',
+            iconName: 'group',
+            route: '/handbook/contragent',
+            children: [
+              {
+                displayName: 'site.menu.handbooks.companies',
+                iconName: 'business',
+                route: '/handbook/contragent/companies',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.substations',
+                iconName: 'flash_on',
+                route: '/handbook/contragent/substations',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.persons',
+                iconName: 'face',
+                route: '/handbook/contragent/persons',
+                children: []
+              },
+            ]
+          },
+          {
+            displayName: 'site.menu.handbooks.contract.contracts',
+            iconName: 'list_alt',
+            route: '/handbook/contract',
+            children: [
+              {
+                displayName: 'site.menu.handbooks.contract.contracts-types',
+                iconName: 'insert_drive_file',
+                route: '/handbook/contract/contracts-types',
+                children: []
+              },
+              {
+                displayName: 'site.menu.handbooks.contract.contracts',
+                iconName: 'list_alt',
+                route: '/handbook/contract/contracts',
+                children: []
+              },
+            ]
+          }
+        ]
       },
       {
         displayName: 'site.menu.administration.administration',
@@ -108,107 +207,18 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       },
     ];
 
-    this.navItemsOperator = [
-      {
-        displayName: 'site.menu.operator.fixture',
-        iconName: 'lightbulb_outline',
-        route: '/operator/fixture',
-        children: []
-      },
-      {
-        displayName: 'site.menu.operator.node',
-        iconName: 'assistant_photo',
-        route: '/operator/node',
-        children: []
-      },
-      {
-        displayName: 'site.menu.operator.gateway',
-        iconName: 'router',
-        route: '/operator/gateway',
-        children: []
-      },
-      {
-        displayName: 'site.menu.operator.sensor',
-        iconName: 'hearing',
-        route: '/operator/sensor',
-        children: []
-      },
-    ];
+    this.navItemsOperator = this.menuItems[0].children;
 
-    this.navItemsEquipment = [
-      {
-        displayName: 'site.menu.handbooks.fixturetype',
-        iconName: 'lightbulb_outline',
-        route: '/handbook/equipment/fixturetype',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.nodetype',
-        iconName: 'assistant_photo',
-        route: '/handbook/equipment/nodetype',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.gatewaytype',
-        iconName: 'router',
-        route: '/handbook/equipment/gatewaytype',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.sensortype',
-        iconName: 'hearing',
-        route: '/handbook/equipment/sensortype',
-        children: []
-      },
-    ];
+    this.navItemsEquipment = this.menuItems[1].children[0].children;
 
-    this.navItemsContragent = [
-      {
-        displayName: 'site.menu.handbooks.companies',
-        iconName: 'business',
-        route: '/handbook/contragent/companies',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.substations',
-        iconName: 'flash_on',
-        route: '/handbook/contragent/substations',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.persons',
-        iconName: 'face',
-        route: '/handbook/contragent/persons',
-        children: []
-      },
-    ];
+    this.navItemsContragent = this.menuItems[1].children[1].children;
 
-    this.navItemsContract = [
-      {
-        displayName: 'site.menu.handbooks.contract.contracts',
-        iconName: 'list_alt',
-        route: '/handbook/contract/contracts',
-        children: []
-      },
-      {
-        displayName: 'site.menu.handbooks.contract.contracts-types',
-        iconName: 'list_alt',
-        route: '/handbook/contract/contracts-types',
-        children: []
-      },
-    ];
+    this.navItemsContract = this.menuItems[1].children[2].children;
 
-    this.navItemsAdmin = [
-      {
-        displayName: 'site.menu.administration.administration',
-        iconName: 'assistant_photo',
-        route: '/admin',
-        children: []
-      }
-    ];
+    this.navItemsAdmin = this.menuItems[2].children;
 
-    // this.navItems = this.navItemsEquipment;
-    this.chooseMenuItem(this.router.url);
+    this.dataSourceOnMobile.data = this.menuItems;
+
   }
 
   ngAfterViewInit() {
@@ -247,22 +257,22 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   chooseMenuItem(route) {
     switch (route.substring(0, 5)) {
       case '/oper':
-        this.dataSource.data = this.navItemsOperator;
+        this.navItems = this.navItemsOperator;
         break;
       case '/equi':
-        this.dataSource.data = this.navItemsEquipment;
+        this.navItems = this.navItemsEquipment;
         break;
       case '/cont':
-        this.dataSource.data = this.navItemsContragent;
+        this.navItems = this.navItemsContragent;
         break;
       case '/cntr':
-        this.dataSource.data = this.navItemsContract;
+        this.navItems = this.navItemsContract;
         break;
       case '/admi':
-        this.dataSource.data = this.navItemsAdmin;
+        this.navItems = this.navItemsAdmin;
         break;
       default:
-        this.dataSource.data = [{
+        this.navItems = [{
           displayName: '',
           iconName: '',
           route: '',
@@ -276,11 +286,12 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   getSnavWidth() {
     if (this.sidenavWidth === this.sidenavWidthMax) {
       this.sidenavWidth = this.sidenavWidthMin;
+      this.sidenavContentMarginLeft = 0;
     } else {
       this.sidenavWidth = this.sidenavWidthMax;
+      this.sidenavContentMarginLeft = this.sidenavWidthMax === null ? this.snav._width : this.sidenavWidthMax - this.sidenavWidthMin;
     }
     this.isSidenavMax = !this.isSidenavMax;
-    this.sidenavContentMarginLeft = this.sidenavWidth - this.sidenavWidthMin;
   }
 
   toggle() {
