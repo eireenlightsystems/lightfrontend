@@ -546,9 +546,9 @@ export class Person {
   name: string;
   inn: number;
   comments: string;
-  name_first: string;
-  name_second: string;
-  name_third: string;
+  nameFirst: string;
+  nameSecond: string;
+  nameThird: string;
 }
 
 export interface OrgForm {

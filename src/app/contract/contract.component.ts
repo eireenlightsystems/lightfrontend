@@ -421,9 +421,31 @@ export class ContractComponent implements OnInit, OnDestroy {
     let selectObject: any;
     switch (saveEditwinObject.handBookType) {
       case 'contracts':
+
         selectObject = saveEditwinObject.selectObject;
+        for (let i = 0; i < this.sourceForEditFormContracts.length; i++) {
+          switch (this.sourceForEditFormContracts[i].nameField) {
+            case 'contractTypes':
+              selectObject.contractTypeId = +this.sourceForEditFormContracts[i].selectId;
+              selectObject.contractTypeCode = this.sourceForEditFormContracts[i].selectCode;
+              break;
+            case 'senders':
+              selectObject.senderId = +this.sourceForEditFormContracts[i].selectId;
+              selectObject.senderCode = this.sourceForEditFormContracts[i].selectCode;
+              break;
+            case 'recipients':
+              selectObject.recipientId = +this.sourceForEditFormContracts[i].selectId;
+              selectObject.recipientCode = this.sourceForEditFormContracts[i].selectCode;
+              break;
+            default:
+              break;
+          }
+        }
+
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
+
+          console.log(selectObject);
 
           // ins
           this.oSubContracts = this.contractService.ins(selectObject).subscribe(
@@ -437,11 +459,19 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.contracts.editWindow.closeDestroyWindow();
               // update data source
               this.contracts.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
+          this.contracts.jqxgridComponent.selectRow.contractTypeId = selectObject.contractTypeId;
+          this.contracts.jqxgridComponent.selectRow.contractTypeCode = selectObject.contractTypeCode;
+          this.contracts.jqxgridComponent.selectRow.senderId = selectObject.senderId;
+          this.contracts.jqxgridComponent.selectRow.senderCode = selectObject.senderCode;
+          this.contracts.jqxgridComponent.selectRow.recipientId = selectObject.recipientId;
+          this.contracts.jqxgridComponent.selectRow.recipientCode = selectObject.recipientCode;
           this.contracts.jqxgridComponent.selectRow.code = selectObject.code;
           this.contracts.jqxgridComponent.selectRow.name = selectObject.name;
           this.contracts.jqxgridComponent.selectRow.comments = selectObject.comments;
@@ -478,6 +508,8 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.contractTypes.editWindow.closeDestroyWindow();
               // update data source
               this.contractTypes.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
@@ -520,6 +552,8 @@ export class ContractComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.contracts.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -535,6 +569,8 @@ export class ContractComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.contractTypes.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }

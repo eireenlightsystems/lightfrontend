@@ -263,9 +263,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           {label: 'Адрес', value: 'geographCode', checked: true},
           {label: 'Код', value: 'code', checked: true},
           {label: 'ИНН', value: 'inn', checked: true},
-          {label: 'Имя', value: 'name_first', checked: true},
-          {label: 'Фамилия', value: 'name_second', checked: true},
-          {label: 'Отчество', value: 'name_third', checked: true},
+          {label: 'Имя', value: 'nameFirst', checked: true},
+          {label: 'Фамилия', value: 'nameSecond', checked: true},
+          {label: 'Отчество', value: 'nameThird', checked: true},
           {label: 'Коментарий', value: 'comments', checked: true}
         ],
         theme: 'material',
@@ -283,9 +283,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           {text: 'Адрес', datafield: 'geographCode', width: 150},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'ИНН', datafield: 'inn', width: 150},
-          {text: 'Имя', datafield: 'name_first', width: 150},
-          {text: 'Фамилия', datafield: 'name_second', width: 150},
-          {text: 'Отчество', datafield: 'name_third', width: 150},
+          {text: 'Имя', datafield: 'nameFirst', width: 150},
+          {text: 'Фамилия', datafield: 'nameSecond', width: 150},
+          {text: 'Отчество', datafield: 'nameThird', width: 150},
           {text: 'Коментарий', datafield: 'comments', width: 150}
         ],
         theme: 'material',
@@ -372,7 +372,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       },
       {
-        nameField: 'name_first',
+        nameField: 'nameFirst',
         type: 'jqxTextArea',
         source: [],
         theme: 'material',
@@ -387,7 +387,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       },
       {
-        nameField: 'name_second',
+        nameField: 'nameSecond',
         type: 'jqxTextArea',
         source: [],
         theme: 'material',
@@ -402,7 +402,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       },
       {
-        nameField: 'name_third',
+        nameField: 'nameThird',
         type: 'jqxTextArea',
         source: [],
         theme: 'material',
@@ -656,6 +656,11 @@ export class ContragentComponent implements OnInit, OnDestroy {
     });
   }
 
+  fetch_refbook() {
+    // refbook
+    this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
+  }
+
   getSourceForJqxGrid(handBookType: any) {
     switch (handBookType) {
       case 'companies':
@@ -706,7 +711,23 @@ export class ContragentComponent implements OnInit, OnDestroy {
     let selectObject: any;
     switch (saveEditwinObject.handBookType) {
       case 'companies':
+
         selectObject = saveEditwinObject.selectObject;
+        for (let i = 0; i < this.sourceForEditFormCompanies.length; i++) {
+          switch (this.sourceForEditFormCompanies[i].nameField) {
+            case 'geographs':
+              selectObject.geographId = +this.sourceForEditFormCompanies[i].selectId;
+              selectObject.geographCode = this.sourceForEditFormCompanies[i].selectCode;
+              break;
+            case 'orgForms':
+              selectObject.orgFormId = +this.sourceForEditFormCompanies[i].selectId;
+              selectObject.orgFormCode = this.sourceForEditFormCompanies[i].selectCode;
+              break;
+            default:
+              break;
+          }
+        }
+
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
 
@@ -722,11 +743,17 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.companies.editWindow.closeDestroyWindow();
               // update data source
               this.companies.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
+          this.companies.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.companies.jqxgridComponent.selectRow.geographCode = selectObject.geographCode;
+          this.companies.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
+          this.companies.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
           this.companies.jqxgridComponent.selectRow.code = selectObject.code;
           this.companies.jqxgridComponent.selectRow.name = selectObject.name;
           this.companies.jqxgridComponent.selectRow.inn = selectObject.inn;
@@ -748,7 +775,19 @@ export class ContragentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'persons':
+
         selectObject = saveEditwinObject.selectObject;
+        for (let i = 0; i < this.sourceForEditFormPersons.length; i++) {
+          switch (this.sourceForEditFormPersons[i].nameField) {
+            case 'geographs':
+              selectObject.geographId = +this.sourceForEditFormPersons[i].selectId;
+              selectObject.geographCode = this.sourceForEditFormPersons[i].selectCode;
+              break;
+            default:
+              break;
+          }
+        }
+
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
 
@@ -764,13 +803,19 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.persons.editWindow.closeDestroyWindow();
               // update data source
               this.persons.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
+          this.persons.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.persons.jqxgridComponent.selectRow.geographCode = selectObject.geographCode;
           this.persons.jqxgridComponent.selectRow.code = selectObject.code;
-          this.persons.jqxgridComponent.selectRow.name = selectObject.name;
+          this.persons.jqxgridComponent.selectRow.nameFirst = selectObject.nameFirst;
+          this.persons.jqxgridComponent.selectRow.nameSecond = selectObject.nameSecond;
+          this.persons.jqxgridComponent.selectRow.nameThird = selectObject.nameThird;
           this.persons.jqxgridComponent.selectRow.inn = selectObject.inn;
           this.persons.jqxgridComponent.selectRow.comments = selectObject.comments;
 
@@ -791,7 +836,23 @@ export class ContragentComponent implements OnInit, OnDestroy {
         }
         break;
       case 'substations':
+
         selectObject = saveEditwinObject.selectObject;
+        for (let i = 0; i < this.sourceForEditFormSubstations.length; i++) {
+          switch (this.sourceForEditFormSubstations[i].nameField) {
+            case 'geographs':
+              selectObject.geographId = +this.sourceForEditFormSubstations[i].selectId;
+              selectObject.geographCode = this.sourceForEditFormSubstations[i].selectCode;
+              break;
+            case 'orgForms':
+              selectObject.orgFormId = +this.sourceForEditFormSubstations[i].selectId;
+              selectObject.orgFormCode = this.sourceForEditFormSubstations[i].selectCode;
+              break;
+            default:
+              break;
+          }
+        }
+
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
 
@@ -807,11 +868,17 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.substations.editWindow.closeDestroyWindow();
               // update data source
               this.substations.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
+          this.substations.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.substations.jqxgridComponent.selectRow.geographCode = selectObject.geographCode;
+          this.substations.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
+          this.substations.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
           this.substations.jqxgridComponent.selectRow.code = selectObject.code;
           this.substations.jqxgridComponent.selectRow.name = selectObject.name;
           this.substations.jqxgridComponent.selectRow.inn = selectObject.inn;
@@ -851,6 +918,8 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.companies.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -866,6 +935,8 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.persons.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -881,6 +952,8 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.substations.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -889,11 +962,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-
   }
 
-  fetch_refbook() {
-    // refbook
-    this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
-  }
 }

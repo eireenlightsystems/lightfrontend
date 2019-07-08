@@ -923,6 +923,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.fixtureType.editWindow.closeDestroyWindow();
               // update data source
               this.fixtureType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
@@ -976,6 +978,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.nodeType.editWindow.closeDestroyWindow();
               // update data source
               this.nodeType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
@@ -1020,6 +1024,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.gatewayType.editWindow.closeDestroyWindow();
               // update data source
               this.gatewayType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
@@ -1065,6 +1071,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.sensorType.editWindow.closeDestroyWindow();
               // update data source
               this.sensorType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
             }
           );
         }
@@ -1110,6 +1118,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.fixtureType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -1125,6 +1135,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.nodeType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -1140,6 +1152,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.gatewayType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -1155,6 +1169,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error => MaterialService.toast(error.error.message),
               () => {
                 this.sensorType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
               }
             );
           }
@@ -1163,6 +1179,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-
   }
+
 }

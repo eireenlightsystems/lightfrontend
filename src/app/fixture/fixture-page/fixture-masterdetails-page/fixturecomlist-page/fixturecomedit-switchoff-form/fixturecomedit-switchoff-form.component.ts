@@ -38,7 +38,7 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   commandSwitchs: CommandSwitch[] = [];
   // commandSwitch: CommandSwitch = new CommandSwitch
   oSub: Subscription;
-  typeWindow: string = '';
+  typeWindow = '';
 
   constructor(private fixturecommandService: CommandSwitchService) {
   }

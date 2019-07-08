@@ -153,8 +153,6 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
 
   getAll() {
     this.onGetSourceForJqxGrid.emit(this.typeHandBook);
-    // this.loading = false;
-    // this.reloading = false;
   }
 
   ins() {
@@ -170,7 +168,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
       this.isEditFormVisible = !this.isEditFormVisible;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать тип оборудования для редактирования`;
+      this.warningEventWindow = `Вам следует выбрать запись справочника для редактирования`;
       this.eventWindow.openEventWindow();
     }
   }
@@ -182,7 +180,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
       this.warningEventWindow = `Удалить тип оборудования id = "${this.jqxgridComponent.myGrid.getrowid(this.jqxgridComponent.myGrid.getselectedrowindex())}"?`;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать тип оборудования для удаления`;
+      this.warningEventWindow = `Вам следует выбрать запись справочника для удаления`;
     }
     this.eventWindow.openEventWindow();
   }
