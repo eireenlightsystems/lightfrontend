@@ -1,5 +1,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+// import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
+
 import {
   Geograph,
   SettingWinForEditForm,
@@ -14,6 +16,7 @@ import {PersonService} from '../shared/services/contragent/person.service';
 import {CompanyService} from '../shared/services/contragent/company.service';
 import {SubstationService} from '../shared/services/contragent/substation.service';
 import {GeographService} from '../shared/services/geograph/geograph.service';
+
 
 @Component({
   selector: 'app-contragent',
@@ -51,6 +54,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
     }
   ];
   // main
+  // config: DadataConfig = {
+  //   apiKey: '1c499d931fc4823b6f940adeb0e5d50cf4e4b792',
+  //   type: DadataType.address
+  // };
 
   // grid
   oSubCompanies: Subscription;

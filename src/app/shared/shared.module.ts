@@ -7,6 +7,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+// import {NgxDadataModule} from '@kolkov/ngx-dadata';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
@@ -117,6 +118,7 @@ import {TextFontweightDirective} from './directives/text-fontweight.directive';
         deps: [HttpClient]
       }
     }),
+    // NgxDadataModule
   ],
   exports: [
     jqxGridComponent,

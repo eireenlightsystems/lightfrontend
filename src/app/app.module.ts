@@ -14,6 +14,7 @@ import {RegisterPageComponent} from './auth/register-page/register-page.componen
 import {TokenInterceptor} from './shared/classes/token.interceptor';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {MaterialModule} from './shared/material-module';
+// import {NgxDadataModule} from '@kolkov/ngx-dadata';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {MaterialModule} from './shared/material-module';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    // NgxDadataModule,
 
     AppRoutingModule,
     SharedModule,
