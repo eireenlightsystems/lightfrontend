@@ -1,15 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  OnDestroy,
-  Output,
-  ViewChild,
-  AfterViewInit, ElementRef
-} from '@angular/core';
+// @ts-ignore
+import {Component, EventEmitter, Input, OnInit, OnDestroy, Output, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {MaterialService} from '../../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../../shared/classes/materialize.service';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
@@ -34,11 +26,11 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
   @Output() onSaveEditwinBtn = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('datebeg') datebeg: jqxDateTimeInputComponent;
-  @ViewChild('speedLevel') speedLevel: ElementRef;
-  @ViewChild('speedLevelOutput') speedLevelOutput: ElementRef;
-  @ViewChild('speedDirectionId') id_speed_direction: jqxDropDownListComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
+  @ViewChild('datebeg', {static: false}) datebeg: jqxDateTimeInputComponent;
+  @ViewChild('speedLevel', {static: true}) speedLevel: ElementRef;
+  @ViewChild('speedLevelOutput', {static: true}) speedLevelOutput: ElementRef;
+  @ViewChild('speedDirectionId', {static: false}) id_speed_direction: jqxDropDownListComponent;
 
   // other variables
   fixtureId: number;
@@ -99,9 +91,9 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
 
     this.oSub = this.fixturecommandService.send(this.commandSpeedSwitches).subscribe(
       response => {
-        MaterialService.toast(`Команда отправлена.`);
+        MaterializeService.toast(`Команда отправлена.`);
       },
-      error => MaterialService.toast(error.error.message),
+      error => MaterializeService.toast(error.error.message),
       () => {
         // close edit window
         this.hideWindow();

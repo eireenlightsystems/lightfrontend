@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {isNull, isUndefined} from 'util';
 
@@ -21,7 +22,7 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   @Output() onFilter = new EventEmitter<any>();
 
   // define variables - link to view objects
-  @ViewChild('filtrWindow') filtrWindow: jqxWindowComponent;
+  @ViewChild('filtrWindow', {static: false}) filtrWindow: jqxWindowComponent;
 
   // other variables
   filterItems: Array<{ name: string, id: number }> = [];

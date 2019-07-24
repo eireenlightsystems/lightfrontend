@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 
 import {Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation} from '../../shared/interfaces';
@@ -36,8 +37,8 @@ export class NodePageComponent implements OnInit, OnDestroy {
   @Input() contractSensors: Contract[];
 
   // define variables - link to view objects
-  @ViewChild('nodeMasterdetailsPageComponent') nodeMasterdetailsPageComponent: NodeMasterdetailsPageComponent;
-  @ViewChild('nodemapPageComponent') nodemapPageComponent: NodemapPageComponent;
+  @ViewChild('nodeMasterdetailsPageComponent', {static: false}) nodeMasterdetailsPageComponent: NodeMasterdetailsPageComponent;
+  @ViewChild('nodemapPageComponent', {static: false}) nodemapPageComponent: NodemapPageComponent;
 
   isSourceChangeTab0: boolean;
   isSourceChangeTab1: boolean;

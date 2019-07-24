@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
@@ -46,10 +47,10 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Output() onGetFixtures = new EventEmitter<Fixture[]>();
 
   // define variables - link to view objects
-  @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
-  @ViewChild('fixturecomlistPageComponent') fixturecomlistPageComponent: FixturecomlistPageComponent;
-  @ViewChild('fixturecomspeedlistPageComponent') fixturecomspeedlistPageComponent: FixturecomspeedlistPageComponent;
-  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
+  @ViewChild('fixturelistPageComponent', { static: false }) fixturelistPageComponent: FixturelistPageComponent;
+  @ViewChild('fixturecomlistPageComponent', { static: true }) fixturecomlistPageComponent: FixturecomlistPageComponent;
+  @ViewChild('fixturecomspeedlistPageComponent', { static: true }) fixturecomspeedlistPageComponent: FixturecomspeedlistPageComponent;
+  @ViewChild('mainSplitter', { static: false }) mainSplitter: jqxSplitterComponent;
 
   // other variables
   selectFixtureId: number;

@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
@@ -8,7 +9,7 @@ import {
 } from '../shared/interfaces';
 import {Subscription} from 'rxjs';
 import {SimpleHandbookComponent} from '../shared/components/simple-handbook/simple-handbook.component';
-import {MaterialService} from '../shared/classes/material.service';
+import {MaterializeService} from '../shared/classes/materialize.service';
 import {TranslateService} from '@ngx-translate/core';
 import {CompanyService} from '../shared/services/contragent/company.service';
 import {ContractService} from '../shared/services/contract/contract.service';
@@ -26,8 +27,8 @@ export class ContractComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('contract') contracts: SimpleHandbookComponent;
-  @ViewChild('contractType') contractTypes: SimpleHandbookComponent;
+  @ViewChild('contract', { static: false }) contracts: SimpleHandbookComponent;
+  @ViewChild('contractType', { static: false }) contractTypes: SimpleHandbookComponent;
 
   // other variables
   handBookContracts = 'contracts';
@@ -451,9 +452,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           this.oSubContracts = this.contractService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Контракт c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Контракт c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.contracts.editWindow.closeDestroyWindow();
@@ -479,9 +480,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           // upd
           this.oSubContracts = this.contractService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Контракт c id = ${selectObject.id} был обновлен.`);
+              MaterializeService.toast(`Контракт c id = ${selectObject.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.contracts.editWindow.closeDestroyWindow();
@@ -500,9 +501,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           this.oSubContractTypes = this.contractTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Тип контракта c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Тип контракта c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.contractTypes.editWindow.closeDestroyWindow();
@@ -522,9 +523,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           // upd
           this.oSubContractTypes = this.contractTypeService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Тип контракта c id = ${this.contractTypes.jqxgridComponent.selectRow.id} был обновлен.`);
+              MaterializeService.toast(`Тип контракта c id = ${this.contractTypes.jqxgridComponent.selectRow.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.contractTypes.editWindow.closeDestroyWindow();
@@ -547,9 +548,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.contractService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Контракт был удален!');
+                MaterializeService.toast('Контракт был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.contracts.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -564,9 +565,9 @@ export class ContractComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.contractTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Тип контракта был удален!');
+                MaterializeService.toast('Тип контракта был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.contractTypes.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

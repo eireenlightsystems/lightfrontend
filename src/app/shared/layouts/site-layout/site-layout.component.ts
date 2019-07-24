@@ -1,4 +1,5 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, AfterViewChecked, OnDestroy, OnInit, ViewChild} from '@angular/core';
+// @ts-ignore
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -27,8 +28,8 @@ interface ExampleFlatNode {
 })
 export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('snav') snav: MatSidenav;
-  @ViewChild('matTtree') matTtree: MatTree<any>;
+  @ViewChild('snav', {static: false}) snav: MatSidenav;
+  @ViewChild('matTtree', {static: false}) matTtree: MatTree<any>;
 
   aSub: Subscription;
 

@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+// @ts-ignore
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
@@ -36,10 +37,10 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('selectGatewayId') selectGatewayId = 0;
-  @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
-  @ViewChild('nodelistPageComponent') nodelistPageComponent: NodelistPageComponent;
-  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
+  @ViewChild('selectGatewayId', {static: false}) selectGatewayId = 0;
+  @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
+  @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
+  @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
 
   // other variables
   filterGateway: FilterGateway = {

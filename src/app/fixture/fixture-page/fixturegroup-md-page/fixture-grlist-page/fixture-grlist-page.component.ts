@@ -1,7 +1,8 @@
+// @ts-ignore
 import {Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 import {
   Fixture, FixtureGroup, Owner, FixtureGroupType,
@@ -50,15 +51,15 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   @Output() onFeedback = new EventEmitter<any>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
-  @ViewChild('editSwitchOnWindow') editSwitchOnWindow: FixturecomeditFormComponent;
-  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('editSwitchOnWindow', {static: false}) editSwitchOnWindow: FixturecomeditFormComponent;
+  @ViewChild('editSwitchOffWindow', {static: false}) editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
 
   // other variables
   offset = 0;
@@ -543,9 +544,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.fixtureGroupService.ins(selectObject).subscribe(
         response => {
           selectObject.fixtureGroupId = +response;
-          MaterialService.toast(`Группа светильников c id = ${selectObject.fixtureGroupId} была добавлена.`);
+          MaterializeService.toast(`Группа светильников c id = ${selectObject.fixtureGroupId} была добавлена.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -566,9 +567,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.fixtureGroupService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterialService.toast(`Группа c id = ${this.jqxgridComponent.selectRow.fixtureGroupId} была обновлена.`);
+          MaterializeService.toast(`Группа c id = ${this.jqxgridComponent.selectRow.fixtureGroupId} была обновлена.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -666,9 +667,9 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.fixtureGroupService.del(+id).subscribe(
           response => {
-            MaterialService.toast('Группа светильников была удалена!');
+            MaterializeService.toast('Группа светильников была удалена!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }

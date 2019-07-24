@@ -1,7 +1,8 @@
+// @ts-ignore
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {MaterialService} from '../../../shared/classes/material.service';
+import {MaterializeService} from '../../../shared/classes/materialize.service';
 
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
@@ -40,8 +41,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   myMap: any;
@@ -506,9 +507,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSub = this.nodeService.ins(this.saveNode).subscribe(
       response => {
         this.saveNode.nodeId = +response;
-        MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был добавлен.`);
+        MaterializeService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был добавлен.`);
       },
-      error => MaterialService.toast(error.error.message),
+      error => MaterializeService.toast(error.error.message),
       () => {
         // insert fixture
         this.mapClickInsFixture(this.saveNode.nodeId);
@@ -536,9 +537,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.oSub = this.fixtureService.ins(this.saveFixture).subscribe(
         response => {
           this.saveFixture.fixtureId = +response;
-          MaterialService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был добавлен.`);
+          MaterializeService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был добавлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
         }
       );
@@ -553,9 +554,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     node.e_coordinate = e_coord;
     this.oSub = this.nodeService.upd(node).subscribe(
       response => {
-        MaterialService.toast(`Место положения узла/столба c id = ${node.nodeId} изменилось.`);
+        MaterializeService.toast(`Место положения узла/столба c id = ${node.nodeId} изменилось.`);
       },
-      error => MaterialService.toast(error.error.message),
+      error => MaterializeService.toast(error.error.message),
       () => {
         // refresh grid
         this.onRefreshGrid.emit();
@@ -572,9 +573,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.oSub = this.nodeService.upd(this.saveNode).subscribe(
         response => {
-          MaterialService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был убран с карты.`);
+          MaterializeService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был убран с карты.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // hide event window
           this.eventWindow.hideEventWindow();
@@ -592,9 +593,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (+id >= 0) {
       this.nodeService.del(+id).subscribe(
         response => {
-          MaterialService.toast('Узел/столб удален!');
+          MaterializeService.toast('Узел/столб удален!');
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // hide event window
           this.eventWindow.hideEventWindow();
@@ -660,9 +661,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       // upd
       this.oSub = this.nodeService.upd(selectObject).subscribe(
         response => {
-          MaterialService.toast(`Узел/столб c id = ${selectObject.nodeId} был обновлен.`);
+          MaterializeService.toast(`Узел/столб c id = ${selectObject.nodeId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();

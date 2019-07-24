@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
@@ -16,8 +17,8 @@ export class EventWindowComponent {
   @Output() onOkEvenwinBtn = new EventEmitter();
   @Output() onCancelEvenwinBtn = new EventEmitter();
 
-  @ViewChild('eventWindow') eventWindow: jqxWindowComponent;
-  @ViewChild('okButton') okButton: jqxButtonComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: jqxWindowComponent;
+  @ViewChild('okButton', {static: false}) okButton: jqxButtonComponent;
 
   okEvenwinBtn() {
     this.onOkEvenwinBtn.emit();

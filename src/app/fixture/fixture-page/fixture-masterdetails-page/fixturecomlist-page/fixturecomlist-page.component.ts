@@ -1,7 +1,8 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 import {
   CommandSwitch, CommandType, CommandStatus,
@@ -48,15 +49,15 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', { static: false }) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', { static: false }) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', { static: false }) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', { static: false }) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', { static: false }) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', { static: false }) eventWindow: EventWindowComponent;
 
-  @ViewChild('editSwitchOnWindow') editSwitchOnWindow: FixturecomeditFormComponent;
-  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('editSwitchOnWindow', {static: false}) editSwitchOnWindow: FixturecomeditFormComponent;
+  @ViewChild('editSwitchOffWindow', {static: false}) editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
 
   // other variables
   offset = 0;
@@ -502,9 +503,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       if (this.ids.length >= 0) {
         this.commandSwitchService.del(this.ids).subscribe(
           response => {
-            MaterialService.toast('Комманды удалены!');
+            MaterializeService.toast('Комманды удалены!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del(this.ids);
           }

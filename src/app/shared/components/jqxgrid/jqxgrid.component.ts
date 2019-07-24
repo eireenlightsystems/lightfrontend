@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+// @ts-ignore
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
@@ -24,9 +25,9 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() onGetSourceForJqxGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('myListBox') myListBox: jqxListBoxComponent;
-  @ViewChild('myGrid') myGrid: jqxGridComponent;
-  @ViewChild('settingWindow') settingWindow: jqxWindowComponent;
+  @ViewChild('myListBox', {static: false}) myListBox: jqxListBoxComponent;
+  @ViewChild('myGrid', {static: true}) myGrid: jqxGridComponent;
+  @ViewChild('settingWindow', {static: false}) settingWindow: jqxWindowComponent;
 
   // other variables
   selectRow: any;

@@ -1,7 +1,8 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 import {NodeService} from '../../../../shared/services/node/node.service';
 import {
@@ -49,12 +50,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   offset = 0;
@@ -707,9 +708,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.nodeService.ins(selectObject).subscribe(
         response => {
           selectObject.nodeId = +response;
-          MaterialService.toast(`Узел/столб c id = ${selectObject.nodeId} был добавлен.`);
+          MaterializeService.toast(`Узел/столб c id = ${selectObject.nodeId} был добавлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -735,9 +736,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.nodeService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterialService.toast(`Узел/столб c id = ${this.jqxgridComponent.selectRow.nodeId} был обновлен.`);
+          MaterializeService.toast(`Узел/столб c id = ${this.jqxgridComponent.selectRow.nodeId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -866,10 +867,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Узлы добавлены в группу!');
+          MaterializeService.toast('Узлы добавлены в группу!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkWindow.hideWindow();
@@ -887,7 +888,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         this.linkWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }
@@ -907,9 +908,9 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.nodeService.del(+id).subscribe(
           response => {
-            MaterialService.toast('Узел/столб был удален!');
+            MaterializeService.toast('Узел/столб был удален!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -919,10 +920,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
         response => {
-          MaterialService.toast('Узлы удалены из группы!');
+          MaterializeService.toast('Узлы удалены из группы!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           // refresh table

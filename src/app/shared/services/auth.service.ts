@@ -1,9 +1,10 @@
+// @ts-ignore
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from '../interfaces';
 import {tap} from 'rxjs/operators';
-import {MaterialService} from '../classes/material.service';
+import {MaterializeService} from '../classes/materialize.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class AuthService {
           ({token}) => {
             localStorage.setItem('auth-token', token);
             this.setToken(token);
-            // MaterialService.toast('Авторизация пройдена');
+            // MaterializeService.toast('Авторизация пройдена');
           }
         )
       );
@@ -56,7 +57,7 @@ export class AuthService {
       .pipe(
         tap(
           () => {
-            // MaterialService.toast('');
+            // MaterializeService.toast('');
           }
         )
       );

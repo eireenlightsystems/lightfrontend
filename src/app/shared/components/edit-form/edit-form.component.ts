@@ -1,3 +1,4 @@
+// @ts-ignore
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
@@ -21,9 +22,9 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onSetEditFormVisible = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('windowHeader') windowHeader: ElementRef;
-  @ViewChild('editFormItemComponent') editFormItemComponent: EditFormItemComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
+  @ViewChild('windowHeader', {static: false}) windowHeader: ElementRef;
+  @ViewChild('editFormItemComponent', {static: false}) editFormItemComponent: EditFormItemComponent;
 
   // other variables
 

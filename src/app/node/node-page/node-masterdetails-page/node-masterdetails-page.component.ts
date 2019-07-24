@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
@@ -52,12 +53,12 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('selectNodeId') selectNodeId = 0;
-  @ViewChild('nodelistPageComponent') nodelistPageComponent: NodelistPageComponent;
-  @ViewChild('fixturelistPageComponent') fixturelistPageComponent: FixturelistPageComponent;
-  @ViewChild('gatewaylistPageComponent') gatewaylistPageComponent: GatewaylistPageComponent;
-  @ViewChild('sensorlistPageComponent') sensorlistPageComponent: SensorlistPageComponent;
-  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
+  @ViewChild('selectNodeId', {static: false}) selectNodeId = 0;
+  @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
+  @ViewChild('fixturelistPageComponent', {static: false}) fixturelistPageComponent: FixturelistPageComponent;
+  @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
+  @ViewChild('sensorlistPageComponent', {static: false}) sensorlistPageComponent: SensorlistPageComponent;
+  @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
 
   // other variables
   settingNodeButtonPanel: SettingButtonPanel;

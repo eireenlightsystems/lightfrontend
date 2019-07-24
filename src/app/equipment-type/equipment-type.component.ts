@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
@@ -12,7 +13,7 @@ import {NodeTypeService} from '../shared/services/node/nodeType.service';
 import {Subscription} from 'rxjs';
 import {SensorTypeService} from '../shared/services/sensor/sensorType.service';
 import {SimpleHandbookComponent} from '../shared/components/simple-handbook/simple-handbook.component';
-import {MaterialService} from '../shared/classes/material.service';
+import {MaterializeService} from '../shared/classes/materialize.service';
 import {GatewayTypeService} from '../shared/services/gateway/gatewayType.service';
 import {FixtureTypeService} from '../shared/services/fixture/fixtureType.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -29,10 +30,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('fixtureType') fixtureType: SimpleHandbookComponent;
-  @ViewChild('nodeType') nodeType: SimpleHandbookComponent;
-  @ViewChild('gatewayType') gatewayType: SimpleHandbookComponent;
-  @ViewChild('sensorType') sensorType: SimpleHandbookComponent;
+  @ViewChild('fixtureType', { static: false }) fixtureType: SimpleHandbookComponent;
+  @ViewChild('nodeType', { static: false }) nodeType: SimpleHandbookComponent;
+  @ViewChild('gatewayType', { static: false }) gatewayType: SimpleHandbookComponent;
+  @ViewChild('sensorType', { static: false }) sensorType: SimpleHandbookComponent;
 
   // other variables
   handBookFixtureType = 'fixtureType';
@@ -915,9 +916,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           this.oSubFixtureType = this.fixtureTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Тип светильника c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Тип светильника c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.fixtureType.editWindow.closeDestroyWindow();
@@ -949,9 +950,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           // upd
           this.oSubFixtureType = this.fixtureTypeService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Тип светильника c id = ${selectObject.id} был обновлен.`);
+              MaterializeService.toast(`Тип светильника c id = ${selectObject.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.fixtureType.editWindow.closeDestroyWindow();
@@ -970,9 +971,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           this.oSubNodeType = this.nodeTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Тип узла/столба c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Тип узла/столба c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.nodeType.editWindow.closeDestroyWindow();
@@ -994,9 +995,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           // upd
           this.oSubNodeType = this.nodeTypeService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Тип узла/столба c id = ${this.nodeType.jqxgridComponent.selectRow.id} был обновлен.`);
+              MaterializeService.toast(`Тип узла/столба c id = ${this.nodeType.jqxgridComponent.selectRow.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.nodeType.editWindow.closeDestroyWindow();
@@ -1016,9 +1017,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           this.oSubGatewayType = this.gatewayTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Тип интернет шлюза c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Тип интернет шлюза c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.gatewayType.editWindow.closeDestroyWindow();
@@ -1040,9 +1041,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           // upd
           this.oSubGatewayType = this.gatewayTypeService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Тип интернет шлюза c id = ${this.gatewayType.jqxgridComponent.selectRow.id} был обновлен.`);
+              MaterializeService.toast(`Тип интернет шлюза c id = ${this.gatewayType.jqxgridComponent.selectRow.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.gatewayType.editWindow.closeDestroyWindow();
@@ -1063,9 +1064,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           this.oSubSensorType = this.sensorTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Тип датчика c id = ${selectObject.id} был добавлен.`);
+              MaterializeService.toast(`Тип датчика c id = ${selectObject.id} был добавлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.sensorType.editWindow.closeDestroyWindow();
@@ -1087,9 +1088,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           // upd
           this.oSubSensorType = this.sensorTypeService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Тип датчика c id = ${this.sensorType.jqxgridComponent.selectRow.id} был обновлен.`);
+              MaterializeService.toast(`Тип датчика c id = ${this.sensorType.jqxgridComponent.selectRow.id} был обновлен.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.sensorType.editWindow.closeDestroyWindow();
@@ -1113,9 +1114,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.fixtureTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Тип оборудования был удален!');
+                MaterializeService.toast('Тип оборудования был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.fixtureType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1130,9 +1131,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.nodeTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Тип оборудования был удален!');
+                MaterializeService.toast('Тип оборудования был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.nodeType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1147,9 +1148,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.gatewayTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Тип интернет шлюза был удален!');
+                MaterializeService.toast('Тип интернет шлюза был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.gatewayType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1164,9 +1165,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.sensorTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Тип датчика был удален!');
+                MaterializeService.toast('Тип датчика был удален!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.sensorType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

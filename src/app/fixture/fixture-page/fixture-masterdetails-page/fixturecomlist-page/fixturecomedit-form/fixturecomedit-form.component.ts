@@ -1,14 +1,7 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  Output,
-  ViewChild,
-  AfterViewInit, ElementRef
-} from '@angular/core';
+// @ts-ignore
+import {Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {MaterialService} from '../../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../../shared/classes/materialize.service';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
@@ -31,15 +24,15 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
   @Output() onSaveSwitchOnEditwinBtn = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('datebeg') datebeg: jqxDateTimeInputComponent;
-  @ViewChild('dateend') dateend: jqxDateTimeInputComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
+  @ViewChild('datebeg', {static: false}) datebeg: jqxDateTimeInputComponent;
+  @ViewChild('dateend', {static: false}) dateend: jqxDateTimeInputComponent;
   // @ViewChild('jqxSliderWorkLevel') jqxSliderWorkLevel: jqxSliderComponent
   // @ViewChild('jqxSliderStandbyLevel') jqxSliderStandbyLevel: jqxSliderComponent
-  @ViewChild('workLevel') workLevel: ElementRef;
-  @ViewChild('standbyLevel') standbyLevel: ElementRef;
-  @ViewChild('standbyLevelOutput') standbyLevelOutput: ElementRef;
-  @ViewChild('workLevelOutput') workLevelOutput: ElementRef;
+  @ViewChild('workLevel', {static: true}) workLevel: ElementRef;
+  @ViewChild('standbyLevel', {static: true}) standbyLevel: ElementRef;
+  @ViewChild('standbyLevelOutput', {static: true}) standbyLevelOutput: ElementRef;
+  @ViewChild('workLevelOutput', {static: true}) workLevelOutput: ElementRef;
 
   // other variables
   fixtureIds: number[];
@@ -56,6 +49,10 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngAfterViewInit() {
+
+    // this.workLevelOutput.nativeElement.value = this.workLevel.nativeElement.value;
+    // this.standbyLevelOutput.nativeElement.value = this.standbyLevel.nativeElement.value;
+
     this.dateend.disabled(!this.flg_dateend);
     this.datebeg.value(new Date());
     this.dateend.value(new Date());
@@ -73,17 +70,17 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
       if (+this.workLevel.nativeElement.value > +this.standbyLevel.nativeElement.value) {
         this.saveCommand();
       } else {
-        MaterialService.toast('Установите уровень рабочего режима больше уровня дежурного режима.');
+        MaterializeService.toast('Установите уровень рабочего режима больше уровня дежурного режима.');
       }
     } else {
       if (this.datebeg.ngValue < this.dateend.ngValue) {
         if (+this.workLevel.nativeElement.value > +this.standbyLevel.nativeElement.value) {
           this.saveCommand();
         } else {
-          MaterialService.toast('Установите уровень рабочего режима больше уровня дежурного режима.');
+          MaterializeService.toast('Установите уровень рабочего режима больше уровня дежурного режима.');
         }
       } else {
-        MaterialService.toast('Установите время начала действия команды меньше времени завершения действия команды.');
+        MaterializeService.toast('Установите время начала действия команды меньше времени завершения действия команды.');
       }
     }
   }
@@ -115,9 +112,9 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
 
     this.oSub = this.fixturecommandService.send(commandSwitchs).subscribe(
       response => {
-        // MaterialService.toast(`Команда на включение отправлена.`)
+        // MaterializeService.toast(`Команда на включение отправлена.`)
       },
-      response => MaterialService.toast(response.error.message),
+      response => MaterializeService.toast(response.error.message),
       () => {
         // close edit window
         this.hideWindow();

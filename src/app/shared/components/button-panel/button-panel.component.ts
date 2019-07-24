@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {SettingButtonPanel} from '../../interfaces';
 import jqxTooltip = jqwidgets.jqxTooltip;
@@ -28,7 +29,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   @Output() onSwitchOff = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('tooltipAdd') tooltipAdd: jqxTooltip;
+  @ViewChild('tooltipAdd', {static: false}) tooltipAdd: jqxTooltip;
 
   // other variables
 

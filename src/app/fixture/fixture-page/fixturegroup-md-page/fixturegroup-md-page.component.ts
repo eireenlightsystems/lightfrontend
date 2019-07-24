@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
@@ -43,9 +44,9 @@ export class FixturegroupMdPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('fixtureGrlistPageComponent') fixtureGrlistPageComponent: FixtureGrlistPageComponent;
-  @ViewChild('fixtureMasterdetailsPageComponentFgr') fixtureMasterdetailsPageComponentFgr: FixtureMasterdetailsPageComponent;
-  @ViewChild('mainSplitter') mainSplitter: jqxSplitterComponent;
+  @ViewChild('fixtureGrlistPageComponent', {static: false}) fixtureGrlistPageComponent: FixtureGrlistPageComponent;
+  @ViewChild('fixtureMasterdetailsPageComponentFgr', {static: true}) fixtureMasterdetailsPageComponentFgr: FixtureMasterdetailsPageComponent;
+  @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
 
   // other variables
   fixtures: Fixture[] = [];

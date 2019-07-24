@@ -1,3 +1,4 @@
+// @ts-ignore
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
@@ -20,10 +21,10 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('jqxDateTimeInput') jqxDateTimeInput: jqxDateTimeInputComponent;
-  @ViewChild('jqxComboBox') jqxComboBox: jqxComboBoxComponent;
-  @ViewChild('jqxTextArea') jqxTextArea: jqxTextAreaComponent;
-  @ViewChild('jqxNumberInput') jqxNumberInput: jqxNumberInputComponent;
+  @ViewChild('jqxDateTimeInput', {static: false}) jqxDateTimeInput: jqxDateTimeInputComponent;
+  @ViewChild('jqxComboBox', {static: false}) jqxComboBox: jqxComboBoxComponent;
+  @ViewChild('jqxTextArea', {static: false}) jqxTextArea: jqxTextAreaComponent;
+  @ViewChild('jqxNumberInput', {static: false}) jqxNumberInput: jqxNumberInputComponent;
 
   // other variables
 

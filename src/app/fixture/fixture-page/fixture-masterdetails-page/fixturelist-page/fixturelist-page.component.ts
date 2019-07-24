@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
@@ -27,7 +28,7 @@ import {FilterTableComponent} from '../../../../shared/components/filter-table/f
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 
 const STEP = 1000000000000;
@@ -63,13 +64,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('linkGrFixWindow') linkGrFixWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('linkGrFixWindow', {static: false}) linkGrFixWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   offset = 0;
@@ -856,9 +857,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.fixtureService.ins(selectObject).subscribe(
         response => {
           selectObject.fixtureId = +response;
-          MaterialService.toast(`Светильник c id = ${selectObject.fixtureId} был добавлен.`);
+          MaterializeService.toast(`Светильник c id = ${selectObject.fixtureId} был добавлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -886,9 +887,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.fixtureService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterialService.toast(`Светильник c id = ${this.jqxgridComponent.selectRow.fixtureId} был обновлен.`);
+          MaterializeService.toast(`Светильник c id = ${this.jqxgridComponent.selectRow.fixtureId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -1050,10 +1051,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.fixtureService.setNodeId(+this.selectNodeId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Выбранные елементы привязаны!');
+          MaterializeService.toast('Выбранные елементы привязаны!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkWindow.hideWindow();
@@ -1065,10 +1066,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (event.code === this.sourceGrFixForLinkForm.window.code) {
       this.oSubLink = this.fixtureService.setFixtureInGroup(+this.fixtureGroupId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Светильники добавлены в группу!');
+          MaterializeService.toast('Светильники добавлены в группу!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkGrFixWindow.hideWindow();
@@ -1086,7 +1087,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         this.linkWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }
@@ -1098,7 +1099,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         this.linkGrFixWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }
@@ -1119,9 +1120,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.fixtureService.del(+id).subscribe(
           response => {
-            MaterialService.toast('Светильник был удален!');
+            MaterializeService.toast('Светильник был удален!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -1132,10 +1133,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'pinDrop') {
       this.oSub = this.fixtureService.delNodeId(+this.selectNodeId, fixtureIds).subscribe(
         response => {
-          MaterialService.toast('Светильники отвязаны от столба!');
+          MaterializeService.toast('Светильники отвязаны от столба!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           // refresh table
@@ -1147,10 +1148,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.fixtureService.delFixtureInGroup(+this.fixtureGroupId, fixtureIds).subscribe(
         response => {
-          MaterialService.toast('Светильники удалены из группы!');
+          MaterializeService.toast('Светильники удалены из группы!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           // refresh table

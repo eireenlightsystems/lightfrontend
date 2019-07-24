@@ -1,6 +1,7 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 import {isUndefined} from 'util';
 
 import {
@@ -49,12 +50,12 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   offset = 0;
@@ -647,9 +648,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.sensorService.ins(selectObject).subscribe(
         response => {
           selectObject.sensorId = +response;
-          MaterialService.toast(`Датчик c id = ${selectObject.sensorId} был добавлен.`);
+          MaterializeService.toast(`Датчик c id = ${selectObject.sensorId} был добавлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -671,9 +672,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.sensorService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterialService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.sensorId} был обновлен.`);
+          MaterializeService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.sensorId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -765,10 +766,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.sensorService.setNodeId(this.selectNodeId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Выбранные елементы привязаны!');
+          MaterializeService.toast('Выбранные елементы привязаны!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkWindow.hideWindow();
@@ -786,7 +787,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         this.linkWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }
@@ -801,9 +802,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.sensorService.del(+id).subscribe(
           response => {
-            MaterialService.toast('Датчик был удален!');
+            MaterializeService.toast('Датчик был удален!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -818,10 +819,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       }
       this.oSub = this.sensorService.delNodeId(this.selectNodeId, sensorIds).subscribe(
         response => {
-          MaterialService.toast('Датчики отвязаны от узла!');
+          MaterializeService.toast('Датчики отвязаны от узла!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           // refresh table

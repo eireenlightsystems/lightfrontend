@@ -1,3 +1,4 @@
+// @ts-ignore
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
@@ -20,9 +21,9 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() onGetSourceForLinkForm = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('linkWindow') linkWindow: jqxWindowComponent;
-  @ViewChild('myGrid') myGrid: jqxGridComponent;
-  @ViewChild('windowHeader') windowHeader: ElementRef;
+  @ViewChild('linkWindow', {static: false}) linkWindow: jqxWindowComponent;
+  @ViewChild('myGrid', {static: true}) myGrid: jqxGridComponent;
+  @ViewChild('windowHeader', {static: true}) windowHeader: ElementRef;
 
   // define the data source for the table
   source_jqxgrid: any;

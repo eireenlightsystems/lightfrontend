@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {
@@ -40,10 +41,10 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   @Output() onOkEvenwinBtn = new EventEmitter<any>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   settingButtonPanel: SettingButtonPanel;

@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 
 import {Contract, Geograph, EquipmentType, Owner} from '../../shared/interfaces';
@@ -24,8 +25,8 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
   @Input() contractGateways: Contract[];
 
   // define variables - link to view objects
-  @ViewChild('gatewayMasterdetailsPageComponent') gatewayMasterdetailsPageComponent: GatewayMasterdetailsPageComponent;
-  @ViewChild('gatewaymapPageComponent') gatewaymapPageComponent: GatewaymapPageComponent;
+  @ViewChild('gatewayMasterdetailsPageComponent', {static: false}) gatewayMasterdetailsPageComponent: GatewayMasterdetailsPageComponent;
+  @ViewChild('gatewaymapPageComponent', {static: false}) gatewaymapPageComponent: GatewaymapPageComponent;
 
   isSourceChangeTab0: boolean;
   isSourceChangeTab1: boolean;

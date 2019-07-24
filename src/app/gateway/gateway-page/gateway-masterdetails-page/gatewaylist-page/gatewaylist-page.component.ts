@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 
@@ -16,7 +17,7 @@ import {FilterTableComponent} from '../../../../shared/components/filter-table/f
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 import {isUndefined} from 'util';
 
 
@@ -48,12 +49,12 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   offset = 0;
@@ -668,9 +669,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.gatewayService.ins(selectObject).subscribe(
         response => {
           selectObject.gatewayId = +response;
-          MaterialService.toast(`Датчик c id = ${selectObject.gatewayId} был добавлен.`);
+          MaterializeService.toast(`Датчик c id = ${selectObject.gatewayId} был добавлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -693,9 +694,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.gatewayService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterialService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.gatewayId} был обновлен.`);
+          MaterializeService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.gatewayId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();
@@ -792,10 +793,10 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.gatewayService.setNodeId(this.selectNodeId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Выбранные елементы привязаны!');
+          MaterializeService.toast('Выбранные елементы привязаны!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkWindow.hideWindow();
@@ -813,7 +814,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         this.linkWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }
@@ -828,9 +829,9 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.gatewayService.del(+id).subscribe(
           response => {
-            MaterialService.toast('Шлюз был удален!');
+            MaterializeService.toast('Шлюз был удален!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -845,10 +846,10 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
       this.oSub = this.gatewayService.delNodeId(this.selectNodeId, gatewayIds).subscribe(
         response => {
-          MaterialService.toast('Шлюз отвязаны от узла!');
+          MaterializeService.toast('Шлюз отвязаны от узла!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           // refresh table

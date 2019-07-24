@@ -1,7 +1,8 @@
+// @ts-ignore
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MaterialService} from '../../../classes/material.service';
+import {MaterializeService} from '../../../classes/materialize.service';
 
 import {
   CommandStatus,
@@ -53,7 +54,7 @@ import {FixtureService} from '../../../services/fixture/fixture.service';
 })
 export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  @ViewChild('floating') floatingRef: ElementRef;
+  @ViewChild('floating', {static: false}) floatingRef: ElementRef;
 
   // subscription
   geographSub: Subscription;
@@ -154,7 +155,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit() {
-    MaterialService.initializeFloatingButton(this.floatingRef);
+    MaterializeService.initializeFloatingButton(this.floatingRef);
   }
 
   ngOnDestroy(): void {

@@ -1,3 +1,4 @@
+// @ts-ignore
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription, timer} from 'rxjs';
@@ -16,7 +17,7 @@ import {FixtureGroupService} from '../../../shared/services/fixture/fixtureGroup
 import {
   FixturecomeditSwitchoffFormComponent
 } from '../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
-import {MaterialService} from '../../../shared/classes/material.service';
+import {MaterializeService} from '../../../shared/classes/materialize.service';
 import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
 
 
@@ -41,11 +42,11 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('editSwitchOnWindow') editSwitchOnWindow: FixturecomeditFormComponent;
-  @ViewChild('editSwitchOffWindow') editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('warningEventWindow') warningEventWindow: string;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('editSwitchOnWindow', {static: false}) editSwitchOnWindow: FixturecomeditFormComponent;
+  @ViewChild('editSwitchOffWindow', {static: false}) editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
+  @ViewChild('warningEventWindow', {static: false}) warningEventWindow: string;
 
   // other variables
   myMap: any;
@@ -692,9 +693,9 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
       // upd
       this.oSub = this.fixtureService.upd(selectObject).subscribe(
         response => {
-          MaterialService.toast(`Светильник c id = ${selectObject.fixtureId} был обновлен.`);
+          MaterializeService.toast(`Светильник c id = ${selectObject.fixtureId} был обновлен.`);
         },
-        error => MaterialService.toast(error.error.message),
+        error => MaterializeService.toast(error.error.message),
         () => {
           // close edit window
           this.editWindow.closeDestroyWindow();

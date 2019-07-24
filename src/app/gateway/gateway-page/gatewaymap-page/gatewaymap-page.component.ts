@@ -1,20 +1,11 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+// @ts-ignore
+import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 
 import {Gateway, Node, Contract, EquipmentType, Geograph, Owner, SourceForLinkForm, ItemsLinkForm} from '../../../shared/interfaces';
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
-import {MaterialService} from '../../../shared/classes/material.service';
+import {MaterializeService} from '../../../shared/classes/materialize.service';
 import {NodeService} from '../../../shared/services/node/node.service';
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {LinkFormComponent} from '../../../shared/components/link-form/link-form.component';
@@ -42,8 +33,8 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
 
   // other variables
   myMap: any;
@@ -432,10 +423,10 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     nodeIds[0] = this.selectNodeId;
     this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
       response => {
-        MaterialService.toast('Узлы удалены из группы!');
+        MaterializeService.toast('Узлы удалены из группы!');
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       },
       () => {
         // refresh map
@@ -459,10 +450,10 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
         response => {
-          MaterialService.toast('Узлы добавлены в группу!');
+          MaterializeService.toast('Узлы добавлены в группу!');
         },
         error => {
-          MaterialService.toast(error.error.message);
+          MaterializeService.toast(error.error.message);
         },
         () => {
           this.linkWindow.hideWindow();
@@ -479,7 +470,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         this.linkWindow.refreshGrid();
       },
       error => {
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
       }
     );
   }

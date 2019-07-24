@@ -1,0 +1,19 @@
+<div class="container">
+  <header class="header">
+    <h1>ngx-dadata</h1>
+    <p>
+      DaData suggestion (подсказки) service implementation for Angular 6+
+    </p>
+  </header>
+  <div class="dadata-example">
+    <div>
+      <label for="address">Выбрать адрес: </label>
+      <ngx-dadata [config]="configAddress" id="address" (selected)="setCurrAddress($event)"></ngx-dadata>
+    </div>
+  </div>
+
+  <pre>{{this.currentAddress | json}}</pre>
+  <!--  [(ngModel)]="currentAddress"-->
+  <!--  (ngModelChange)="setCurrAddress($event)"-->
+
+</div>

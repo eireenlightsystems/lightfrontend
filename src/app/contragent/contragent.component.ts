@@ -1,6 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-// import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
 
 import {
   Geograph,
@@ -10,7 +9,7 @@ import {
 } from '../shared/interfaces';
 import {Subscription} from 'rxjs';
 import {SimpleHandbookComponent} from '../shared/components/simple-handbook/simple-handbook.component';
-import {MaterialService} from '../shared/classes/material.service';
+import {MaterializeService} from '../shared/classes/materialize.service';
 import {TranslateService} from '@ngx-translate/core';
 import {PersonService} from '../shared/services/contragent/person.service';
 import {CompanyService} from '../shared/services/contragent/company.service';
@@ -31,9 +30,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('companies') companies: SimpleHandbookComponent;
-  @ViewChild('persons') persons: SimpleHandbookComponent;
-  @ViewChild('substations') substations: SimpleHandbookComponent;
+  @ViewChild('companies', {static: false}) companies: SimpleHandbookComponent;
+  @ViewChild('persons', {static: false}) persons: SimpleHandbookComponent;
+  @ViewChild('substations', {static: false}) substations: SimpleHandbookComponent;
 
   // other variables
   handBookCompanies = 'companies';
@@ -54,11 +53,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
     }
   ];
   // main
-  // config: DadataConfig = {
-  //   apiKey: '1c499d931fc4823b6f940adeb0e5d50cf4e4b792',
-  //   type: DadataType.address
-  // };
-
   // grid
   oSubCompanies: Subscription;
   oSubPersons: Subscription;
@@ -742,9 +736,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.oSubCompanies = this.companyService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Юридическое лицо c id = ${selectObject.id} было добавлено.`);
+              MaterializeService.toast(`Юридическое лицо c id = ${selectObject.id} было добавлено.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.companies.editWindow.closeDestroyWindow();
@@ -769,9 +763,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           // upd
           this.oSubCompanies = this.companyService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Юридическое лицо c id = ${selectObject.id} было обновлено.`);
+              MaterializeService.toast(`Юридическое лицо c id = ${selectObject.id} было обновлено.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.companies.editWindow.closeDestroyWindow();
@@ -802,9 +796,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.oSubPersons = this.personService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Физическое лицо c id = ${selectObject.id} было добавлено.`);
+              MaterializeService.toast(`Физическое лицо c id = ${selectObject.id} было добавлено.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.persons.editWindow.closeDestroyWindow();
@@ -829,9 +823,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           // upd
           this.oSubPersons = this.personService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Физическое лицо c id = ${this.persons.jqxgridComponent.selectRow.id} было обновлено.`);
+              MaterializeService.toast(`Физическое лицо c id = ${this.persons.jqxgridComponent.selectRow.id} было обновлено.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.persons.editWindow.closeDestroyWindow();
@@ -867,9 +861,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.oSubSubstations = this.substationService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterialService.toast(`Электростанция c id = ${selectObject.id} была добавлена.`);
+              MaterializeService.toast(`Электростанция c id = ${selectObject.id} была добавлена.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.substations.editWindow.closeDestroyWindow();
@@ -895,9 +889,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           // upd
           this.oSubSubstations = this.substationService.upd(selectObject).subscribe(
             response => {
-              MaterialService.toast(`Электростанция c id = ${this.substations.jqxgridComponent.selectRow.id} была обновлена.`);
+              MaterializeService.toast(`Электростанция c id = ${this.substations.jqxgridComponent.selectRow.id} была обновлена.`);
             },
-            error => MaterialService.toast(error.error.message),
+            error => MaterializeService.toast(error.error.message),
             () => {
               // close edit window
               this.substations.editWindow.closeDestroyWindow();
@@ -920,9 +914,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.companyService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Юридическое лицо было удалено!');
+                MaterializeService.toast('Юридическое лицо было удалено!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.companies.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -937,9 +931,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.personService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Физическое лицо было удалено!');
+                MaterializeService.toast('Физическое лицо было удалено!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.persons.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -954,9 +948,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.substationService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterialService.toast('Электростанция была удалена!');
+                MaterializeService.toast('Электростанция была удалена!');
               },
-              error => MaterialService.toast(error.error.message),
+              error => MaterializeService.toast(error.error.message),
               () => {
                 this.substations.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

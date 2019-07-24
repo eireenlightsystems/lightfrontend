@@ -1,14 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  Output,
-  ViewChild,
-  AfterViewInit
-} from '@angular/core';
+// @ts-ignore
+// @ts-ignore
+import {Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, AfterViewInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {MaterialService} from '../../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../../shared/classes/materialize.service';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
@@ -30,8 +24,8 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   @Output() onSaveEditSwitchOffwinBtn = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow') editWindow: jqxWindowComponent;
-  @ViewChild('dateend') dateend: jqxDateTimeInputComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
+  @ViewChild('dateend', {static: false}) dateend: jqxDateTimeInputComponent;
 
   // other variables
   fixtureIds: number[];
@@ -71,9 +65,9 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
 
     this.oSub = this.fixturecommandService.send(this.commandSwitchs).subscribe(
       response => {
-        MaterialService.toast(`Команда на выключение отправлена.`);
+        MaterializeService.toast(`Команда на выключение отправлена.`);
       },
-      response => MaterialService.toast(response.error.message),
+      response => MaterializeService.toast(response.error.message),
       () => {
         // close edit window
         this.hideWindow();

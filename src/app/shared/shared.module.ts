@@ -1,13 +1,13 @@
+// @ts-ignore
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
-// import {NgxDadataModule} from '@kolkov/ngx-dadata';
+import {NgxDadataModule} from '@kolkov/ngx-dadata';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
@@ -53,6 +53,7 @@ import {BackgroundLightredDirective} from './directives/background-lightred.dire
 import {YellowWavesDirectiveDirective} from './directives/yellow-waves-directive.directive';
 import {ButtonMenuDirective} from './directives/button-menu.directive';
 import {TextFontweightDirective} from './directives/text-fontweight.directive';
+import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggestions.component';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import {TextFontweightDirective} from './directives/text-fontweight.directive';
     EditFormComponent,
     EditFormItemComponent,
     JqxgridComponent,
-    // SimpleHandbookComponent,
+    NgxSuggestionsComponent,
+    SimpleHandbookComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -107,6 +109,7 @@ import {TextFontweightDirective} from './directives/text-fontweight.directive';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxDadataModule,
 
     BrowserAnimationsModule,
     NoopAnimationsModule,
@@ -118,7 +121,6 @@ import {TextFontweightDirective} from './directives/text-fontweight.directive';
         deps: [HttpClient]
       }
     }),
-    // NgxDadataModule
   ],
   exports: [
     jqxGridComponent,
@@ -152,6 +154,8 @@ import {TextFontweightDirective} from './directives/text-fontweight.directive';
     EditFormComponent,
     EditFormItemComponent,
     JqxgridComponent,
+    NgxSuggestionsComponent,
+    SimpleHandbookComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,

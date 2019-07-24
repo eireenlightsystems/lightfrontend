@@ -1,10 +1,11 @@
+// @ts-ignore
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
 import {AuthService} from '../../shared/services/auth.service';
-import {MaterialService} from '../../shared/classes/material.service';
+import {MaterializeService} from '../../shared/classes/materialize.service';
 
 @Component({
   selector: 'app-login-page',
@@ -29,9 +30,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((params: Params) => {
       if (params['registered']) {
-        MaterialService.toast('Теперь вы можете зайти в систему используя свои данные');
+        MaterializeService.toast('Теперь вы можете зайти в систему используя свои данные');
       } else if (params['accessDenied']) {
-        MaterialService.toast('Для начала авторизуйтесь в системе');
+        MaterializeService.toast('Для начала авторизуйтесь в системе');
       }
     });
   }
@@ -48,7 +49,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       () => this.router.navigate(['/handbook']),
       error => {
         console.warn(error.error.message);
-        MaterialService.toast(error.error.message);
+        MaterializeService.toast(error.error.message);
         this.form.enable();
       }
     );

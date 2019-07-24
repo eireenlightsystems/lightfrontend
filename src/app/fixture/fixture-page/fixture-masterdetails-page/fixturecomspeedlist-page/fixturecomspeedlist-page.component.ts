@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
@@ -18,7 +19,7 @@ import {EditFormComponent} from '../../../../shared/components/edit-form/edit-fo
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {FixturecomspeededitFormComponent} from './fixturecomspeededit-form/fixturecomspeededit-form.component';
-import {MaterialService} from '../../../../shared/classes/material.service';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 
 const STEP = 1000000000000;
@@ -48,14 +49,14 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent') jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel') buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable') filterTable: FilterTableComponent;
-  @ViewChild('editWindow') editWindow: EditFormComponent;
-  @ViewChild('linkWindow') linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow') eventWindow: EventWindowComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
-  @ViewChild('editSpeedComWindow') editSpeedComWindow: FixturecomspeededitFormComponent;
+  @ViewChild('editSpeedComWindow', {static: false}) editSpeedComWindow: FixturecomspeededitFormComponent;
 
   // other variables
   offset = 0;
@@ -495,9 +496,9 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       if (this.ids.length >= 0) {
         this.commandSpeedSwitchService.del(this.ids).subscribe(
           response => {
-            MaterialService.toast('Комманды удалены!');
+            MaterializeService.toast('Комманды удалены!');
           },
-          error => MaterialService.toast(error.error.message),
+          error => MaterializeService.toast(error.error.message),
           () => {
             this.jqxgridComponent.refresh_del(this.ids);
           }

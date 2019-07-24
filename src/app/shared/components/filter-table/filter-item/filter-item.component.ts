@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 
@@ -20,8 +21,8 @@ export class FilterItemComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('jqxDateTimeInput') jqxDateTimeInput: jqxDateTimeInputComponent;
-  @ViewChild('jqxComboBox') jqxComboBox: jqxComboBoxComponent;
+  @ViewChild('jqxDateTimeInput', {static: false}) jqxDateTimeInput: jqxDateTimeInputComponent;
+  @ViewChild('jqxComboBox', {static: false}) jqxComboBox: jqxComboBoxComponent;
 
   // other variables
 

@@ -1,3 +1,4 @@
+// @ts-ignore
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 
 import {Contract, Geograph, Owner, EquipmentType, SettingButtonPanel} from '../../shared/interfaces';
@@ -18,7 +19,7 @@ export class SensorPageComponent implements OnInit, OnDestroy {
   @Input() contractSensors: Contract[];
 
   // define variables - link to view objects
-  @ViewChild('sensorlistPageComponent') sensorlistPageComponent: SensorlistPageComponent;
+  @ViewChild('sensorlistPageComponent', {static: false}) sensorlistPageComponent: SensorlistPageComponent;
 
   // other variables
   settingSensorButtonPanel: SettingButtonPanel;
