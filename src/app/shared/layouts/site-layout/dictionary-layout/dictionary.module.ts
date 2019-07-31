@@ -5,8 +5,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {SharedModule} from '../../../shared.module';
 
-import {HandbookLayoutComponent} from './handbook-layout.component';
-import {HandbookRoutingModule} from './handbook-routing.module';
+import {DictionaryLayoutComponent} from './dictionary-layout.component';
+import {DictionaryRoutingModule} from './dictionary-routing.module';
 import {EquipmentTypeComponent} from '../../../../equipment-type/equipment-type.component';
 import {ContragentComponent} from '../../../../contragent/contragent.component';
 import {ContractComponent} from '../../../../contract/contract.component';
@@ -15,14 +15,14 @@ import {JsonFormatedPipe} from '../../../pipe/json-formated.pipe';
 
 @NgModule({
   declarations: [
-    HandbookLayoutComponent,
+    DictionaryLayoutComponent,
     EquipmentTypeComponent,
     ContragentComponent,
     ContractComponent,
     JsonFormatedPipe,
   ],
   exports: [
-    HandbookLayoutComponent
+    DictionaryLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +30,9 @@ import {JsonFormatedPipe} from '../../../pipe/json-formated.pipe';
     ReactiveFormsModule,
     HttpClientModule,
 
-    HandbookRoutingModule,
+    DictionaryRoutingModule,
     SharedModule,
   ]
 })
-export class HandbookModule {
+export class DictionaryModule {
 }

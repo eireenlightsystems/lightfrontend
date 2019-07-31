@@ -1,0 +1,17 @@
+<div>
+  <div *ngIf="(this.router.url.substring(0, 21) === '/dictionary/equipment')">
+    <app-equipment-type
+    ></app-equipment-type>
+  </div>
+
+  <div *ngIf="(this.router.url.substring(0, 22) === '/dictionary/contragent')">
+    <app-contragent>
+    </app-contragent>
+  </div>
+
+  <div *ngIf="(this.router.url.substring(0, 20) === '/dictionary/contract')">
+    <app-contract>
+    </app-contract>
+  </div>
+</div>
+

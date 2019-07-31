@@ -10,6 +10,7 @@
 >
   <div #windowHeader>
     <b>Добавить/Редактировать</b>
+<!--    <b>{{ 'site.forms.editforms.edit' | translate }}</b>-->
   </div>
 
   <div #windowContent>
@@ -25,7 +26,7 @@
                    [width]="100"
                    (onClick)="saveBtn()"
         >
-          Сохранить
+          {{ 'site.forms.editforms.save' | translate }}
         </jqxButton>
       </div>
       <div appButtonLink>
@@ -34,7 +35,7 @@
                    [width]="100"
                    (onClick)="cancelBtn()"
         >
-          Отмена
+          {{ 'site.forms.editforms.cancel' | translate }}
         </jqxButton>
       </div>
     </div>

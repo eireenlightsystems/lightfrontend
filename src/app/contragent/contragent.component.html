@@ -3,55 +3,53 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="(this.router.url === '/handbook/contragent/companies')"
+  <div *ngIf="(this.router.url === '/dictionary/contragent/companies')"
        class="table_border">
-    <app-simple-handbook #companies
-                         [typeHandBook]="handBookCompanies"
-                         [sourceForJqxGrid]="sourceForJqxGridCompanies"
-                         [settingWinForEditForm]="settingWinForEditFormCompanies"
-                         [sourceForEditForm]="sourceForEditFormCompanies"
+    <app-simple-dictionary #companies
+                           [typeDictionary]="dictionaryCompanies"
+                           [sourceForJqxGrid]="sourceForJqxGridCompanies"
+                           [settingWinForEditForm]="settingWinForEditFormCompanies"
+                           [sourceForEditForm]="sourceForEditFormCompanies"
 
-                         [geographs]="geographs"
-                         [orgForms]="orgForms"
+                           [geographs]="geographs"
+                           [orgForms]="orgForms"
 
-                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
-                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-handbook>
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/handbook/contragent/persons')"
+  <div *ngIf="(this.router.url === '/dictionary/contragent/persons')"
        class="table_border">
-    <app-simple-handbook #persons
-                         [typeHandBook]="handBookPersons"
-                         [sourceForJqxGrid]="sourceForJqxGridPersons"
-                         [settingWinForEditForm]="settingWinForEditFormPersons"
-                         [sourceForEditForm]="sourceForEditFormPersons"
+    <app-simple-dictionary #persons
+                           [typeDictionary]="dictionaryPersons"
+                           [sourceForJqxGrid]="sourceForJqxGridPersons"
+                           [settingWinForEditForm]="settingWinForEditFormPersons"
+                           [sourceForEditForm]="sourceForEditFormPersons"
 
-                         [geographs]="geographs"
+                           [geographs]="geographs"
 
-                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
-                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-handbook>
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/handbook/contragent/substations')"
+  <div *ngIf="(this.router.url === '/dictionary/contragent/substations')"
        class="table_border">
-    <app-simple-handbook #substations
-                         [typeHandBook]="handBookSubstations"
-                         [sourceForJqxGrid]="sourceForJqxGridSubstations"
-                         [settingWinForEditForm]="settingWinForEditFormSubstations"
-                         [sourceForEditForm]="sourceForEditFormSubstations"
+    <app-simple-dictionary #substations
+                           [typeDictionary]="dictionarySubstations"
+                           [sourceForJqxGrid]="sourceForJqxGridSubstations"
+                           [settingWinForEditForm]="settingWinForEditFormSubstations"
+                           [sourceForEditForm]="sourceForEditFormSubstations"
 
-                         [geographs]="geographs"
-                         [orgForms]="orgForms"
+                           [geographs]="geographs"
+                           [orgForms]="orgForms"
 
-                         (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                         (onSaveEditwinBtn)="saveEditwinBtn($event)"
-                         (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-handbook>
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
   </div>
 </div>
-
-<app-ngx-suggestions></app-ngx-suggestions>

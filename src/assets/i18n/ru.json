@@ -9,9 +9,9 @@
         "gateway": "Шлюзы",
         "sensor": "Датчики"
       },
-      "handbooks": {
-        "handbooks": "Справочники",
-        "handbooks-headline": "Выберите справочник для редактирования",
+      "dictionarys": {
+        "dictionarys": "Справочники",
+        "dictionarys-headline": "Выберите справочник для редактирования",
         "equipments": "Оборудование",
         "fixturetype": "Типы светильников",
         "fixturetype-headline": "Справочник типов светильников",
@@ -44,7 +44,10 @@
 
     "forms": {
       "editforms": {
-        "edit": "Добавить/редактировать"
+        "edit": "Добавить/редактировать",
+        "empty": "пусто",
+        "save": "Сохранить",
+        "cancel": "Отмена"
       }
     },
 

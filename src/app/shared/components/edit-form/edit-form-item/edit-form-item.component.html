@@ -100,4 +100,29 @@
     </tr>
   </div>
 
+  <div *ngSwitchCase="'InputSlider'">
+    <tr>
+      <td align="right"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td align="left">
+        <div class="fr">
+          <input #workLevel type="range" step="5" min="0" max="100"
+                 (input)="this.workLevelOutput.nativeElement.value = $event.target.value"/>
+          <output #workLevelOutput></output>
+        </div>
+      </td>
+    </tr>
+  </div>
+
+  <div *ngSwitchCase="'ngxSuggestionAddress'">
+    <tr>
+      <td width="150"><b>{{itemEditForm.placeHolder}}</b></td>
+      <td [width]="+itemEditForm.width" [height]="+itemEditForm.height" align="right">
+        <app-ngx-suggestions
+          [placeholder]="itemEditForm.selectName"
+          (onChangeFiasAddress)="changeFiasAddress($event)"
+        ></app-ngx-suggestions>
+      </td>
+    </tr>
+  </div>
+
 </div>

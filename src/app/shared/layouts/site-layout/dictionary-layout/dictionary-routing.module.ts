@@ -5,7 +5,7 @@ import {AuthGuard} from '../../../classes/auth.guard';
 import {NotFoundComponent} from '../../../components/not-found/not-found.component';
 
 import {SiteLayoutComponent} from '../site-layout.component';
-import {HandbookLayoutComponent} from './handbook-layout.component';
+import {DictionaryLayoutComponent} from './dictionary-layout.component';
 import {EquipmentTypeComponent} from '../../../../equipment-type/equipment-type.component';
 
 
@@ -14,7 +14,7 @@ const routes: Routes = [
   // {
   //   path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
   //     {
-  //       path: 'handbook', component: HandbookLayoutComponent, children: [
+  //       path: 'dictionary', component: DictionaryLayoutComponent, children: [
   //         {path: 'equipment', component: EquipmentTypeComponent, children: [
   //             {path: 'nodetype', component: EquipmentTypeComponent},
   //             {path: 'sensortype', component: EquipmentTypeComponent}
@@ -31,5 +31,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HandbookRoutingModule {
+export class DictionaryRoutingModule {
 }

@@ -16,16 +16,17 @@ import {EditFormComponent} from '../edit-form/edit-form.component';
 import {ButtonPanelComponent} from '../button-panel/button-panel.component';
 import {JqxgridComponent} from '../jqxgrid/jqxgrid.component';
 import {isNull, isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-simple-handbook',
-  templateUrl: './simple-handbook.component.html',
-  styleUrls: ['./simple-handbook.component.css']
+  selector: 'app-simple-dictionary',
+  templateUrl: './simple-dictionary.component.html',
+  styleUrls: ['./simple-dictionary.component.css']
 })
-export class SimpleHandbookComponent implements OnInit, OnDestroy {
+export class SimpleDictionaryComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() typeHandBook: string;
+  @Input() typeDictionary: string;
   @Input() sourceForJqxGrid: SourceForJqxGrid;
   @Input() settingWinForEditForm: SettingWinForEditForm;
   @Input() sourceForEditForm: SourceForEditForm[];
@@ -51,7 +52,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   loading = false;
   reloading = false;
   // main
-  items: EquipmentType[] = [];
+
   // grid
   selectItemId = 0;
   // filter
@@ -63,7 +64,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor() {
+  constructor(public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -135,11 +136,10 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   // GRID
 
   getSourceForJqxGrid() {
-    // this.getAll();
+
   }
 
   refreshGrid() {
-    this.items = [];
     this.reloading = true;
     this.getAll();
     this.selectItemId = 0;
@@ -153,7 +153,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
   }
 
   getAll() {
-    this.onGetSourceForJqxGrid.emit(this.typeHandBook);
+    this.onGetSourceForJqxGrid.emit(this.typeDictionary);
   }
 
   ins() {
@@ -204,7 +204,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'upd') {
       selectObject['id'] = this.jqxgridComponent.selectRow.id;
     }
-    saveEditwinObject['handBookType'] = this.typeHandBook;
+    saveEditwinObject['dictionaryType'] = this.typeDictionary;
     saveEditwinObject['typeEditWindow'] = this.typeEditWindow;
     saveEditwinObject['selectObject'] = selectObject;
     this.onSaveEditwinBtn.emit(saveEditwinObject);
@@ -217,7 +217,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
         this.sourceForEditForm[i].selectId = '1';
         switch (this.sourceForEditForm[i].type) {
           case 'jqxTextArea':
-            this.sourceForEditForm[i].selectCode = 'пусто';
+            this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
             break;
           case 'jqxNumberInput':
             this.sourceForEditForm[i].selectCode = '0';
@@ -226,9 +226,11 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
             this.sourceForEditForm[i].selectCode = '';
         }
       }
+
       if (this.typeEditWindow === 'upd') {
         this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow[this.sourceForEditForm[i].nameField];
       }
+
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
           this.sourceForEditForm[i].source = this.geographs;
@@ -242,9 +244,9 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
             this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).code;
+              (one: Geograph) => one.id === +this.jqxgridComponent.selectRow.geographId).code;
             this.sourceForEditForm[i].selectName = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).fullName;
+              (one: Geograph) => one.id === +this.jqxgridComponent.selectRow.geographId).fullName;
             for (let j = 0; j < this.geographs.length; j++) {
               if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.geographId) {
                 this.sourceForEditForm[i].selectedIndex = j;
@@ -363,7 +365,7 @@ export class SimpleHandbookComponent implements OnInit, OnDestroy {
     const okEvenwinObject = new Object();
     const selectedrowindex = this.jqxgridComponent.myGrid.getselectedrowindex();
     const id = this.jqxgridComponent.myGrid.getrowid(selectedrowindex);
-    okEvenwinObject['handBookType'] = this.typeHandBook;
+    okEvenwinObject['dictionaryType'] = this.typeDictionary;
     okEvenwinObject['actionEventWindow'] = 'del';
     okEvenwinObject['id'] = id;
     this.onOkEvenwinBtn.emit(okEvenwinObject);

@@ -9,31 +9,31 @@
         "gateway": "Gateways",
         "sensor": "Sensors"
       },
-      "handbooks": {
-        "handbooks": "Handbooks",
-        "handbooks-headline": "Select a нandbook to edit",
+      "dictionarys": {
+        "dictionarys": "Dictionaries",
+        "dictionarys-headline": "Select a dictionary to edit",
         "equipments": "Equipments",
         "fixturetype": "Fixture types",
-        "fixturetype-headline": "Handbook of types of fixtures",
+        "fixturetype-headline": "Dictionary of types of fixtures",
         "nodetype": "Node types",
-        "nodetype-headline": "Handbook of types of nodes",
+        "nodetype-headline": "Dictionary of types of nodes",
         "gatewaytype": "Gateway types",
-        "gatewaytype-headline": "Handbook of types of internet gateways",
+        "gatewaytype-headline": "Dictionary of types of internet gateways",
         "sensortype": "Sensor types",
-        "sensortype-headline": "Handbook of types of sensors",
+        "sensortype-headline": "Dictionary of types of sensors",
         "contragents": "Contragents",
         "companies": "Companies",
-        "companies-headline": "Handbook of types of companies",
+        "companies-headline": "Dictionary of types of companies",
         "persons": "Persons",
-        "persons-headline": "Handbook of types of persons",
+        "persons-headline": "Dictionary of types of persons",
         "substations": "Substations",
-        "substations-headline": "Handbook of types of substations",
+        "substations-headline": "Dictionary of types of substations",
 
         "contract": {
           "contracts": "Contracts",
-          "contracts-headline": "Handbook of contracts",
+          "contracts-headline": "Dictionary of contracts",
           "contracts-types": "Contract types",
-          "contracts-types-headline": "Handbook of types of contracts"
+          "contracts-types-headline": "Dictionary of types of contracts"
         }
       },
       "administration": {
@@ -44,7 +44,10 @@
 
     "forms": {
       "editforms": {
-        "edit": "Add/Edit"
+        "edit": "Add/Edit",
+        "empty": "empty",
+        "save": "Save",
+        "cancel": "Cancel"
       }
     },
 

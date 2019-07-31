@@ -31,9 +31,9 @@
           <mat-icon class="routeIcon" style="margin-right: 10px">touch_app</mat-icon>
           {{ 'site.menu.operator.management' | translate }}
         </a>
-        <a [routerLink]="'/handbook'"
+        <a [routerLink]="'/dictionary'"
            mat-button
-           [matMenuTriggerFor]=handbooks
+           [matMenuTriggerFor]=dictionarys
            class="button-top-menu"
            style="width: 200px"
            appYellowWavesDirective
@@ -41,7 +41,7 @@
            (click)="chooseMenuItem('')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">import_contacts</mat-icon>
-          {{ 'site.menu.handbooks.handbooks' | translate }}
+          {{ 'site.menu.dictionarys.dictionarys' | translate }}
         </a>
         <a [routerLink]="'/admin'"
            mat-button
@@ -56,30 +56,30 @@
         </a>
       </div>
 
-      <mat-menu #handbooks="matMenu">
-        <a [routerLink]="'/handbook/equipment'"
+      <mat-menu #dictionarys="matMenu">
+        <a [routerLink]="'/dictionary/equipment'"
            mat-menu-item
            appButtonMenuDirective [theme]="'light'"
            (click)="chooseMenuItem('/equipment')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">build</mat-icon>
-          {{ 'site.menu.handbooks.equipments' | translate }}
+          {{ 'site.menu.dictionarys.equipments' | translate }}
         </a>
-        <a [routerLink]="'/handbook/contragent'"
+        <a [routerLink]="'/dictionary/contragent'"
            mat-menu-item
            appButtonMenuDirective [theme]="'light'"
            (click)="chooseMenuItem('/contragent')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">group</mat-icon>
-          {{ 'site.menu.handbooks.contragents' | translate }}
+          {{ 'site.menu.dictionarys.contragents' | translate }}
         </a>
-        <a [routerLink]="'/handbook/contract'"
+        <a [routerLink]="'/dictionary/contract'"
            mat-menu-item
            appButtonMenuDirective [theme]="'light'"
            (click)="chooseMenuItem('/cntr')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">list_alt</mat-icon>
-          {{ 'site.menu.handbooks.contract.contracts' | translate }}
+          {{ 'site.menu.dictionarys.contract.contracts' | translate }}
         </a>
       </mat-menu>
 
@@ -162,11 +162,11 @@
         <app-operator-layout
         ></app-operator-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/hand')"
+      <div *ngIf="(this.router.url.substring(0,5) === '/dict')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft}"
       >
-        <app-handbook-layout
-        ></app-handbook-layout>
+        <app-dictionary-layout
+        ></app-dictionary-layout>
       </div>
       <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
@@ -289,8 +289,8 @@
       </div>
       <div *ngIf="(this.router.url.substring(0,5) === '/hand')"
       >
-        <app-handbook-layout
-        ></app-handbook-layout>
+        <app-dictionary-layout
+        ></app-dictionary-layout>
       </div>
       <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
       >

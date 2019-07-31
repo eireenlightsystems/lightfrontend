@@ -2,8 +2,10 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
+import {TranslateService} from '@ngx-translate/core';
 
 import {EditFormItemComponent} from './edit-form-item/edit-form-item.component';
+
 
 @Component({
   selector: 'app-edit-form',
@@ -29,7 +31,7 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   // other variables
 
 
-  constructor() {
+  constructor(public translate: TranslateService) {
   }
 
   ngOnInit() {

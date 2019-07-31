@@ -46,7 +46,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.form.disable();
     this.aSub = this.auth.login(this.form.value).subscribe(
-      () => this.router.navigate(['/handbook']),
+      () => this.router.navigate(['/dictionary']),
       error => {
         console.warn(error.error.message);
         MaterializeService.toast(error.error.message);

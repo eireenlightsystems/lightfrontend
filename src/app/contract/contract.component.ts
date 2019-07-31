@@ -8,7 +8,7 @@ import {
   SourceForJqxGrid
 } from '../shared/interfaces';
 import {Subscription} from 'rxjs';
-import {SimpleHandbookComponent} from '../shared/components/simple-handbook/simple-handbook.component';
+import {SimpleDictionaryComponent} from '../shared/components/simple-dictionary/simple-dictionary.component';
 import {MaterializeService} from '../shared/classes/materialize.service';
 import {TranslateService} from '@ngx-translate/core';
 import {CompanyService} from '../shared/services/contragent/company.service';
@@ -27,12 +27,12 @@ export class ContractComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('contract', { static: false }) contracts: SimpleHandbookComponent;
-  @ViewChild('contractType', { static: false }) contractTypes: SimpleHandbookComponent;
+  @ViewChild('contract', { static: false }) contracts: SimpleDictionaryComponent;
+  @ViewChild('contractType', { static: false }) contractTypes: SimpleDictionaryComponent;
 
   // other variables
-  handBookContracts = 'contracts';
-  handBookContractTypes = 'contractTypes';
+  dictionaryContracts = 'contracts';
+  dictionaryContractTypes = 'contractTypes';
 
   companies: CompanyDepartment[];
   oSubСompanies: Subscription;
@@ -72,10 +72,10 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridContracts = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'contractTypeId', value: 'contractTypeId', checked: true},
-          {label: 'senderId', value: 'senderId', checked: true},
-          {label: 'recipientId', value: 'recipientId', checked: true},
+          {label: 'Id', value: 'id', checked: false},
+          {label: 'contractTypeId', value: 'contractTypeId', checked: false},
+          {label: 'senderId', value: 'senderId', checked: false},
+          {label: 'recipientId', value: 'recipientId', checked: false},
           {label: 'Тип контракта', value: 'contractTypeCode', checked: true},
           {label: 'Отправитель', value: 'senderCode', checked: true},
           {label: 'Получатель', value: 'recipientCode', checked: true},
@@ -93,10 +93,10 @@ export class ContractComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'contractTypeId', datafield: 'contractTypeId', width: 150},
-          {text: 'senderId', datafield: 'senderId', width: 150},
-          {text: 'recipientId', datafield: 'recipientId', width: 150},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
+          {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
+          {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
+          {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
           {text: 'Тип контракта', datafield: 'contractTypeCode', width: 150},
           {text: 'Отправитель', datafield: 'senderCode', width: 150},
           {text: 'Получатель', datafield: 'recipientCode', width: 150},
@@ -111,7 +111,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -242,7 +242,7 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridContractTypes = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
+          {label: 'Id', value: 'id', checked: false},
           {label: 'Код', value: 'code', checked: true},
           {label: 'Наименование', value: 'name', checked: true},
           {label: 'Коментарий', value: 'comments', checked: true}
@@ -257,7 +257,7 @@ export class ContractComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'Наименование', datafield: 'name', width: 150},
           {text: 'Коментарий', datafield: 'comments', width: 150}
@@ -269,7 +269,7 @@ export class ContractComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -382,8 +382,8 @@ export class ContractComponent implements OnInit, OnDestroy {
     this.oSubСompanies = this.companyService.getAll().subscribe(companies => this.companies = companies);
   }
 
-  getSourceForJqxGrid(handBookType: any) {
-    switch (handBookType) {
+  getSourceForJqxGrid(dictionaryType: any) {
+    switch (dictionaryType) {
       case 'contracts':
         this.oSubContracts = this.contractService.getAll().subscribe(items => {
           this.sourceForJqxGridContracts.grid.source = items;
@@ -406,23 +406,22 @@ export class ContractComponent implements OnInit, OnDestroy {
   getHeadline() {
     let headline: any;
     switch (this.router.url) {
-      case '/handbook/contract/contracts':
-        headline = this.translate.instant('site.menu.handbooks.contract.contracts-headline');
+      case '/dictionary/contract/contracts':
+        headline = this.translate.instant('site.menu.dictionarys.contract.contracts-headline');
         break;
-      case '/handbook/contract/contracts-types':
-        headline = this.translate.instant('site.menu.handbooks.contract.contracts-types-headline');
+      case '/dictionary/contract/contracts-types':
+        headline = this.translate.instant('site.menu.dictionarys.contract.contracts-types-headline');
         break;
       default:
-        headline = this.translate.instant('site.menu.handbooks.handbooks-headline');
+        headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');
     }
     return headline;
   }
 
   saveEditwinBtn(saveEditwinObject: any) {
     let selectObject: any;
-    switch (saveEditwinObject.handBookType) {
+    switch (saveEditwinObject.dictionaryType) {
       case 'contracts':
-
         selectObject = saveEditwinObject.selectObject;
         for (let i = 0; i < this.sourceForEditFormContracts.length; i++) {
           switch (this.sourceForEditFormContracts[i].nameField) {
@@ -446,8 +445,6 @@ export class ContractComponent implements OnInit, OnDestroy {
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
 
-          console.log(selectObject);
-
           // ins
           this.oSubContracts = this.contractService.ins(selectObject).subscribe(
             response => {
@@ -461,7 +458,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               // update data source
               this.contracts.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -510,7 +507,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               // update data source
               this.contractTypes.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -542,7 +539,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   }
 
   okEvenwinBtn(okEvenwinObject: any) {
-    switch (okEvenwinObject.handBookType) {
+    switch (okEvenwinObject.dictionaryType) {
       case 'contracts':
         if (okEvenwinObject.actionEventWindow === 'del') {
           if (+okEvenwinObject.id >= 0) {
@@ -554,7 +551,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               () => {
                 this.contracts.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -571,7 +568,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               () => {
                 this.contractTypes.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }

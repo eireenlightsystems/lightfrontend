@@ -6,11 +6,11 @@ import {Geograph} from '../../../interfaces';
 import {GeographService} from '../../../services/geograph/geograph.service';
 
 @Component({
-  selector: 'app-handbook-layout',
-  templateUrl: './handbook-layout.component.html',
-  styleUrls: ['./handbook-layout.component.css']
+  selector: 'app-dictionary-layout',
+  templateUrl: './dictionary-layout.component.html',
+  styleUrls: ['./dictionary-layout.component.css']
 })
-export class HandbookLayoutComponent implements OnInit, OnDestroy {
+export class DictionaryLayoutComponent implements OnInit, OnDestroy {
 
   // subscription
   geographSub: Subscription;

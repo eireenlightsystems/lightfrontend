@@ -12,7 +12,7 @@ import {
 import {NodeTypeService} from '../shared/services/node/nodeType.service';
 import {Subscription} from 'rxjs';
 import {SensorTypeService} from '../shared/services/sensor/sensorType.service';
-import {SimpleHandbookComponent} from '../shared/components/simple-handbook/simple-handbook.component';
+import {SimpleDictionaryComponent} from '../shared/components/simple-dictionary/simple-dictionary.component';
 import {MaterializeService} from '../shared/classes/materialize.service';
 import {GatewayTypeService} from '../shared/services/gateway/gatewayType.service';
 import {FixtureTypeService} from '../shared/services/fixture/fixtureType.service';
@@ -30,16 +30,16 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('fixtureType', { static: false }) fixtureType: SimpleHandbookComponent;
-  @ViewChild('nodeType', { static: false }) nodeType: SimpleHandbookComponent;
-  @ViewChild('gatewayType', { static: false }) gatewayType: SimpleHandbookComponent;
-  @ViewChild('sensorType', { static: false }) sensorType: SimpleHandbookComponent;
+  @ViewChild('fixtureType', { static: false }) fixtureType: SimpleDictionaryComponent;
+  @ViewChild('nodeType', { static: false }) nodeType: SimpleDictionaryComponent;
+  @ViewChild('gatewayType', { static: false }) gatewayType: SimpleDictionaryComponent;
+  @ViewChild('sensorType', { static: false }) sensorType: SimpleDictionaryComponent;
 
   // other variables
-  handBookFixtureType = 'fixtureType';
-  handBookNodeType = 'nodeType';
-  handBookGatewayType = 'gatewayType';
-  handBookSensorType = 'sensorType';
+  dictionaryFixtureType = 'fixtureType';
+  dictionaryNodeType = 'nodeType';
+  dictionaryGatewayType = 'gatewayType';
+  dictionarySensorType = 'sensorType';
   // main
 
   // grid
@@ -84,7 +84,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridFixtureType = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
+          {label: 'Id', value: 'id', checked: false},
           {label: 'Код', value: 'code', checked: true},
           {label: 'Наименование', value: 'name', checked: true},
           {label: 'Модель', value: 'model', checked: true},
@@ -112,7 +112,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'Наименование', datafield: 'name', width: 150},
           {text: 'Модель', datafield: 'model', width: 150},
@@ -137,7 +137,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -376,7 +376,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridNodeType = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
+          {label: 'Id', value: 'id', checked: false},
           {label: 'Код', value: 'code', checked: true},
           {label: 'Наименование', value: 'name', checked: true},
           {label: 'Модель', value: 'model', checked: true},
@@ -393,7 +393,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'Наименование', datafield: 'name', width: 150},
           {text: 'Модель', datafield: 'model', width: 150},
@@ -407,7 +407,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -524,7 +524,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridGatewayType = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
+          {label: 'Id', value: 'id', checked: false},
           {label: 'Код', value: 'code', checked: true},
           {label: 'Наименование', value: 'name', checked: true},
           {label: 'Модель', value: 'model', checked: true},
@@ -541,7 +541,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'Наименование', datafield: 'name', width: 150},
           {text: 'Модель', datafield: 'model', width: 150},
@@ -555,7 +555,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -671,7 +671,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     this.sourceForJqxGridSensorType = {
       listbox: {
         source: [
-          {label: 'Id', value: 'id', checked: true},
+          {label: 'Id', value: 'id', checked: false},
           {label: 'Код', value: 'code', checked: true},
           {label: 'Наименование', value: 'name', checked: true},
           {label: 'Модель', value: 'model', checked: true},
@@ -688,7 +688,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       grid: {
         source: [],
         columns: [
-          {text: 'Id', datafield: 'id', width: 50},
+          {text: 'Id', datafield: 'id', width: 50, hidden: true},
           {text: 'Код', datafield: 'code', width: 150},
           {text: 'Наименование', datafield: 'name', width: 150},
           {text: 'Модель', datafield: 'model', width: 150},
@@ -702,7 +702,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: '',
+        selectionmode: 'singlerow',
         isMasterGrid: false,
 
         valueMember: 'id',
@@ -847,8 +847,8 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     });
   }
 
-  getSourceForJqxGrid(handBookType: any) {
-    switch (handBookType) {
+  getSourceForJqxGrid(dictionaryType: any) {
+    switch (dictionaryType) {
       case 'fixtureType':
         this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
           this.sourceForJqxGridFixtureType.grid.source = items;
@@ -885,20 +885,20 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   getHeadline() {
     let headline: any;
     switch (this.router.url) {
-      case '/handbook/equipment/fixturetype':
-        headline = this.translate.instant( 'site.menu.handbooks.fixturetype-headline');
+      case '/dictionary/equipment/fixturetype':
+        headline = this.translate.instant( 'site.menu.dictionarys.fixturetype-headline');
         break;
-      case '/handbook/equipment/nodetype':
-        headline = this.translate.instant( 'site.menu.handbooks.nodetype-headline');
+      case '/dictionary/equipment/nodetype':
+        headline = this.translate.instant( 'site.menu.dictionarys.nodetype-headline');
         break;
-      case '/handbook/equipment/gatewaytype':
-        headline = this.translate.instant( 'site.menu.handbooks.gatewaytype-headline');
+      case '/dictionary/equipment/gatewaytype':
+        headline = this.translate.instant( 'site.menu.dictionarys.gatewaytype-headline');
         break;
-      case '/handbook/equipment/sensortype':
-        headline = this.translate.instant( 'site.menu.handbooks.sensortype-headline');
+      case '/dictionary/equipment/sensortype':
+        headline = this.translate.instant( 'site.menu.dictionarys.sensortype-headline');
         break;
       default:
-        headline = this.translate.instant( 'site.menu.handbooks.handbooks-headline');
+        headline = this.translate.instant( 'site.menu.dictionarys.dictionarys-headline');
     ;
   }
     return headline;
@@ -906,7 +906,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
 
   saveEditwinBtn(saveEditwinObject: any) {
     let selectObject: any;
-    switch (saveEditwinObject.handBookType) {
+    switch (saveEditwinObject.dictionaryType) {
       case 'fixtureType':
         selectObject = saveEditwinObject.selectObject;
         if (saveEditwinObject.typeEditWindow === 'ins') {
@@ -925,7 +925,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               // update data source
               this.fixtureType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -980,7 +980,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               // update data source
               this.nodeType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -1026,7 +1026,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               // update data source
               this.gatewayType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -1073,7 +1073,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               // update data source
               this.sensorType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
-              this.getSourceForJqxGrid(saveEditwinObject.handBookType);
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -1108,7 +1108,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   }
 
   okEvenwinBtn(okEvenwinObject: any) {
-    switch (okEvenwinObject.handBookType) {
+    switch (okEvenwinObject.dictionaryType) {
       case 'fixtureType':
         if (okEvenwinObject.actionEventWindow === 'del') {
           if (+okEvenwinObject.id >= 0) {
@@ -1120,7 +1120,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               () => {
                 this.fixtureType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -1137,7 +1137,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               () => {
                 this.nodeType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -1154,7 +1154,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               () => {
                 this.gatewayType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -1171,7 +1171,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               () => {
                 this.sensorType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
-                this.getSourceForJqxGrid(okEvenwinObject.handBookType);
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }

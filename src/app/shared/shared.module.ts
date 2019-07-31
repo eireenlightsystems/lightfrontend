@@ -40,7 +40,7 @@ import {ButtonPanelComponent} from './components/button-panel/button-panel.compo
 import {EditFormComponent} from './components/edit-form/edit-form.component';
 import {EditFormItemComponent} from './components/edit-form/edit-form-item/edit-form-item.component';
 import {JqxgridComponent} from './components/jqxgrid/jqxgrid.component';
-import {SimpleHandbookComponent} from './components/simple-handbook/simple-handbook.component';
+import {SimpleDictionaryComponent} from './components/simple-dictionary/simple-dictionary.component';
 
 import {ButtonSettinggridDirective} from './directives/button-settinggrid.directive';
 import {ButtonSimpleStyleDirective} from './directives/button-simple-style.directive';
@@ -90,7 +90,7 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     EditFormItemComponent,
     JqxgridComponent,
     NgxSuggestionsComponent,
-    SimpleHandbookComponent,
+    SimpleDictionaryComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -155,7 +155,7 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     EditFormItemComponent,
     JqxgridComponent,
     NgxSuggestionsComponent,
-    SimpleHandbookComponent,
+    SimpleDictionaryComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,

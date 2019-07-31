@@ -3,10 +3,10 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="(this.router.url === '/handbook/contract/contracts')"
+  <div *ngIf="(this.router.url === '/dictionary/contract/contracts')"
        class="table_border">
-    <app-simple-handbook #contract
-                         [typeHandBook]="handBookContracts"
+    <app-simple-dictionary #contract
+                           [typeDictionary]="dictionaryContracts"
                          [sourceForJqxGrid]="sourceForJqxGridContracts"
                          [settingWinForEditForm]="settingWinForEditFormContracts"
                          [sourceForEditForm]="sourceForEditFormContracts"
@@ -17,13 +17,13 @@
                          (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
                          (onSaveEditwinBtn)="saveEditwinBtn($event)"
                          (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-handbook>
+    ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/handbook/contract/contracts-types')"
+  <div *ngIf="(this.router.url === '/dictionary/contract/contracts-types')"
        class="table_border">
-    <app-simple-handbook #contractType
-                         [typeHandBook]="handBookContractTypes"
+    <app-simple-dictionary #contractType
+                           [typeDictionary]="dictionaryContractTypes"
                          [sourceForJqxGrid]="sourceForJqxGridContractTypes"
                          [settingWinForEditForm]="settingWinForEditFormContractTypes"
                          [sourceForEditForm]="sourceForEditFormContractTypes"
@@ -31,6 +31,6 @@
                          (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
                          (onSaveEditwinBtn)="saveEditwinBtn($event)"
                          (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-handbook>
+    ></app-simple-dictionary>
   </div>
 </div>

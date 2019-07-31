@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../classes/auth.guard';
 
 import {SiteLayoutComponent} from './site-layout.component';
-import {HandbookLayoutComponent} from './handbook-layout/handbook-layout.component';
+import {DictionaryLayoutComponent} from './dictionary-layout/dictionary-layout.component';
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {NotFoundComponent} from '../../components/not-found/not-found.component';
 import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
@@ -28,9 +28,9 @@ import {ContractComponent} from '../../../contract/contract.component';
 const routes: Routes = [
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
-      {path: '', redirectTo: 'handbook', pathMatch: 'full'},
+      {path: '', redirectTo: 'dictionary', pathMatch: 'full'},
       {
-        path: 'handbook', component: HandbookLayoutComponent, canActivate: [AuthGuard], children: [
+        path: 'dictionary', component: DictionaryLayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'equipment', pathMatch: 'full'},
           {
             path: 'equipment', component: EquipmentTypeComponent, canActivate: [AuthGuard], children: [

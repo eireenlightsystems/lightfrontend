@@ -35,7 +35,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
-  language = 'en';
+  language = 'ru';
   sidenavWidth = 85;
   sidenavWidthMin = 85;
   sidenavWidthMax = 230;
@@ -77,7 +77,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mobileQuery.addListener(this.mobileQueryListener);
     // translate instructions
     translate.addLangs(['en', 'ru']);
-    translate.setDefaultLang('en');
+    translate.setDefaultLang('ru');
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -119,81 +119,81 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
         ]
       },
       {
-        displayName: 'site.menu.handbooks.handbooks',
+        displayName: 'site.menu.dictionarys.dictionarys',
         iconName: 'import_contacts',
-        route: '/handbook',
+        route: '/dictionary',
         children: [
           {
-            displayName: 'site.menu.handbooks.equipments',
+            displayName: 'site.menu.dictionarys.equipments',
             iconName: 'build',
-            route: '/handbook/equipment',
+            route: '/dictionary/equipment',
             children: [
               {
-                displayName: 'site.menu.handbooks.fixturetype',
+                displayName: 'site.menu.dictionarys.fixturetype',
                 iconName: 'lightbulb_outline',
-                route: '/handbook/equipment/fixturetype',
+                route: '/dictionary/equipment/fixturetype',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.nodetype',
+                displayName: 'site.menu.dictionarys.nodetype',
                 iconName: 'assistant_photo',
-                route: '/handbook/equipment/nodetype',
+                route: '/dictionary/equipment/nodetype',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.gatewaytype',
+                displayName: 'site.menu.dictionarys.gatewaytype',
                 iconName: 'router',
-                route: '/handbook/equipment/gatewaytype',
+                route: '/dictionary/equipment/gatewaytype',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.sensortype',
+                displayName: 'site.menu.dictionarys.sensortype',
                 iconName: 'hearing',
-                route: '/handbook/equipment/sensortype',
+                route: '/dictionary/equipment/sensortype',
                 children: []
               },
             ]
           },
           {
-            displayName: 'site.menu.handbooks.contragents',
+            displayName: 'site.menu.dictionarys.contragents',
             iconName: 'group',
-            route: '/handbook/contragent',
+            route: '/dictionary/contragent',
             children: [
               {
-                displayName: 'site.menu.handbooks.companies',
+                displayName: 'site.menu.dictionarys.companies',
                 iconName: 'business',
-                route: '/handbook/contragent/companies',
+                route: '/dictionary/contragent/companies',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.substations',
+                displayName: 'site.menu.dictionarys.substations',
                 iconName: 'flash_on',
-                route: '/handbook/contragent/substations',
+                route: '/dictionary/contragent/substations',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.persons',
+                displayName: 'site.menu.dictionarys.persons',
                 iconName: 'face',
-                route: '/handbook/contragent/persons',
+                route: '/dictionary/contragent/persons',
                 children: []
               },
             ]
           },
           {
-            displayName: 'site.menu.handbooks.contract.contracts',
+            displayName: 'site.menu.dictionarys.contract.contracts',
             iconName: 'list_alt',
-            route: '/handbook/contract',
+            route: '/dictionary/contract',
             children: [
               {
-                displayName: 'site.menu.handbooks.contract.contracts-types',
+                displayName: 'site.menu.dictionarys.contract.contracts-types',
                 iconName: 'insert_drive_file',
-                route: '/handbook/contract/contracts-types',
+                route: '/dictionary/contract/contracts-types',
                 children: []
               },
               {
-                displayName: 'site.menu.handbooks.contract.contracts',
+                displayName: 'site.menu.dictionarys.contract.contracts',
                 iconName: 'list_alt',
-                route: '/handbook/contract/contracts',
+                route: '/dictionary/contract/contracts',
                 children: []
               },
             ]

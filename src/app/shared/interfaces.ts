@@ -20,8 +20,32 @@ export interface Message {
 export interface Geograph {
   id: number;
   code: string;
+  name: string;
   fullName: string;
 }
+
+export class GeographFias {
+  postalCode: string;
+  okato: string;
+  fiasLevel: number;
+  regionFiasId: string;
+  regionWithType: string;
+  areaFiasId: string;
+  areaWithType: string;
+  cityFiasId: string;
+  cityWithType: string;
+  cityDistrictFiasId: string;
+  cityDistrictWithType: string;
+  settlementFiasId: string;
+  settlementWithType: string;
+  streetFiasId: string;
+  streetWithType: string;
+  houseFiasId: string;
+  houseWithType: string;
+  geoLat: string;
+  geoLon: string;
+}
+
 
 export interface Owner {
   id: number;
@@ -517,6 +541,8 @@ export class CompanyDepartment {
   id: number;
   geographId: number;
   geographCode: string;
+  geographName: string;
+  geographFullName: string;
   code: string;
   name: string;
   inn: number;
