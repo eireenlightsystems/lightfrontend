@@ -1,7 +1,8 @@
 <ngx-dadata
   [config]="configAddress"
-  (selected)="setCurrAddress($event)"
   [placeholder]="placeholder"
+  (selected)="selectedAddress($event)"
+  (input)="inputAddress($event)"
 >
 </ngx-dadata>
 

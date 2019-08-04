@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {
-  Geograph,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
@@ -25,7 +24,6 @@ import {GeographService} from '../shared/services/geograph/geograph.service';
 export class ContragentComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  // @Input() geographs: Geograph[];
 
   // determine the functions that need to be performed in the parent component
 
@@ -38,7 +36,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
   dictionaryCompanies = 'companies';
   dictionaryPersons = 'persons';
   dictionarySubstations = 'substations';
-  geographs: Geograph[];
   orgForms: any;
   // main
   // grid
@@ -168,13 +165,13 @@ export class ContragentComponent implements OnInit, OnDestroy {
         theme: 'material',
         width: '300',
         height: '20',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
         selectId: '',
         selectCode: '',
-        selectName: 'найти адрес'
+        selectName: 'без адрес'
       },
 
       {
@@ -337,7 +334,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
         theme: 'material',
         width: '300',
         height: '20',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -523,7 +520,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
         theme: 'material',
         width: '300',
         height: '20',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -626,8 +623,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
     // definde link form
 
     this.getAll();
-
-    this.fetch_geograph();
   }
 
   ngOnDestroy() {
@@ -639,9 +634,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
     }
     if (this.oSubSubstations) {
       this.oSubSubstations.unsubscribe();
-    }
-    if (this.oSubGeograph) {
-      this.oSubGeograph.unsubscribe();
     }
   }
 
@@ -657,11 +649,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
     this.oSubSubstations = this.substationService.getAll().subscribe(items => {
       this.sourceForJqxGridSubstations.grid.source = items;
     });
-  }
-
-  fetch_geograph() {
-    // refbook
-    this.oSubGeograph = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
   }
 
   getSourceForJqxGrid(dictionaryType: any) {
@@ -745,10 +732,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.companies.editWindow.closeDestroyWindow();
               // update data source
               this.companies.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
-              // update geographs
-              this.fetch_geograph();
-              // refresh temp
-              // this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -775,8 +758,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.companies.editWindow.closeDestroyWindow();
               // update data source
               this.companies.jqxgridComponent.refresh_upd(selectObject.id, this.companies.jqxgridComponent.selectRow);
-              // update geographs
-              this.fetch_geograph();
             }
           );
         }
@@ -809,10 +790,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.persons.editWindow.closeDestroyWindow();
               // update data source
               this.persons.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
-              // update geographs
-              this.fetch_geograph();
-              // refresh temp
-              // this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -840,8 +817,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               // update data source
               this.persons.jqxgridComponent.refresh_upd(
                 this.persons.jqxgridComponent.selectRow.id, this.persons.jqxgridComponent.selectRow);
-              // update geographs
-              this.fetch_geograph();
             }
           );
         }
@@ -878,10 +853,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.substations.editWindow.closeDestroyWindow();
               // update data source
               this.substations.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
-              // update geographs
-              this.fetch_geograph();
-              // refresh temp
-              // this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
@@ -910,8 +881,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               // update data source
               this.substations.jqxgridComponent.refresh_upd(
                 this.substations.jqxgridComponent.selectRow.id, this.substations.jqxgridComponent.selectRow);
-              // update geographs
-              this.fetch_geograph();
             }
           );
         }
@@ -933,8 +902,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterializeService.toast(error.error.message),
               () => {
                 this.companies.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
-                // refresh temp
-                // this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -950,8 +917,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterializeService.toast(error.error.message),
               () => {
                 this.persons.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
-                // refresh temp
-                // this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -967,8 +932,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error => MaterializeService.toast(error.error.message),
               () => {
                 this.substations.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
-                // refresh temp
-                // this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }

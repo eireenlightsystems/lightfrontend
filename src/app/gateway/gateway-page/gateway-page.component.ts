@@ -14,7 +14,7 @@ import {GatewaymapPageComponent} from './gatewaymap-page/gatewaymap-page.compone
 export class GatewayPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
+  @Input() tabsWidth: number;
   // node source
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
@@ -37,7 +37,7 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
     [
       {text: 'nodeId', datafield: 'nodeId', width: 150},
       {text: 'Договор', datafield: 'contractCode', width: 150},
-      {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+      {text: 'Адрес', datafield: 'geographFullName', width: 400},
       {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
       {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
@@ -53,7 +53,7 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
     [
       {label: 'nodeId', value: 'nodeId', checked: true},
       {label: 'Договор', value: 'contractCode', checked: true},
-      {label: 'Географическое понятие', value: 'geographCode', checked: true},
+      {label: 'Адрес', value: 'geographFullName', checked: true},
       {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
       {label: 'Владелец', value: 'ownerCode', checked: true},
 

@@ -12,7 +12,7 @@
 
   <div>
     <div *ngIf="filtrWindow.isOpen()">
-      <app-filter-item style="float: left;" *ngFor="let itemFilter of sourceForFilter"
+      <app-filter-item *ngFor="let itemFilter of sourceForFilter"
                        [itemFilter]="itemFilter" #filterItemComponent
       ></app-filter-item>
     </div>

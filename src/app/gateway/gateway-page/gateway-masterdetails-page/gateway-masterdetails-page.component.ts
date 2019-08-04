@@ -18,7 +18,6 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
 
   // variables from master component
   // gateway source
-  @Input() geographs: Geograph[];
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
@@ -37,12 +36,13 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('selectGatewayId', {static: false}) selectGatewayId = 0;
+  // @ViewChild('selectGatewayId', {static: false}) selectGatewayId = 0;
   @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
   @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
   @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
 
   // other variables
+  selectGatewayId = 0;
   filterGateway: FilterGateway = {
     geographId: '',
     ownerId: '',
@@ -68,7 +68,7 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectGatewayId = 0;
+    // this.selectGatewayId = 0;
 
     // init gateway button panel
     this.settingGatewayButtonPanel = {

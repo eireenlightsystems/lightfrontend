@@ -88,7 +88,7 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  changeFiasAddress(fiasAddress: any) {
+  selectedAddress(fiasAddress: any) {
     let geographFias: GeographFias = new GeographFias();
     let geographID: any;
 

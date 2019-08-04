@@ -3,7 +3,7 @@
 <div>
   <div [hidden]="isFixtureVisible()">
     <app-fixture-page
-      [geographs]="geographs"
+      [tabsWidth]="tabsWidth"
 
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
@@ -23,7 +23,7 @@
   </div>
   <div [hidden]="isNodeVisible()">
     <app-node-page
-      [geographs]="geographs"
+      [tabsWidth]="tabsWidth"
 
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
@@ -48,7 +48,7 @@
   </div>
   <div [hidden]="isGatewayVisible()">
     <app-gateway-page
-      [geographs]="geographs"
+      [tabsWidth]="tabsWidth"
 
       [ownerNodes]="ownerNodes"
       [nodeTypes]="nodeTypes"
@@ -61,8 +61,6 @@
   </div>
   <div [hidden]="isSensorVisible()">
     <app-sensor-page
-      [geographs]="geographs"
-
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"
       [contractSensors]="contractSensors"

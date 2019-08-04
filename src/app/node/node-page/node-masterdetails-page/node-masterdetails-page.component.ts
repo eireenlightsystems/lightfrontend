@@ -30,7 +30,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   // variables from master component
 
   // node source
-  @Input() geographs: Geograph[];
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
@@ -53,7 +52,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  @ViewChild('selectNodeId', {static: false}) selectNodeId = 0;
+  // @ViewChild('selectNodeId', {static: false}) selectNodeId = 0;
   @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
   @ViewChild('fixturelistPageComponent', {static: false}) fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
@@ -61,6 +60,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
 
   // other variables
+  selectNodeId = 0;
   settingNodeButtonPanel: SettingButtonPanel;
   settingFixtureButtonPanel: SettingButtonPanel;
   settingGatewayButtonPanel: SettingButtonPanel;
@@ -108,7 +108,7 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectNodeId = 0;
+    // this.selectNodeId = 0;
 
     // init node button panel
     this.settingNodeButtonPanel = {

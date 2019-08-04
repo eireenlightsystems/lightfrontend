@@ -9,7 +9,6 @@
 >
   <div class="splitter-panel">
     <app-nodelist-page #nodelistPageComponent
-                       [geographs]="geographs"
                        [ownerNodes]="ownerNodes"
                        [nodeTypes]="nodeTypes"
                        [contractNodes]="contractNodes"
@@ -33,7 +32,6 @@
       </ul>
       <div style="overflow: hidden">
         <app-fixturelist-page #fixturelistPageComponent
-                              [geographs]="geographs"
                               [ownerFixtures]="ownerFixtures"
                               [fixtureTypes]="fixtureTypes"
                               [substations]="substations"
@@ -52,7 +50,6 @@
       </div>
       <div style="overflow: hidden">
         <app-gatewaylist-page #gatewaylistPageComponent
-                              [geographs]="geographs"
                               [ownerGateways]="ownerGateways"
                               [gatewayTypes]="gatewayTypes"
                               [contractGateways]="contractGateways"
@@ -67,7 +64,6 @@
       </div>
       <div style="overflow: hidden">
         <app-sensorlist-page #sensorlistPageComponent
-                             [geographs]="geographs"
                              [ownerSensors]="ownerSensors"
                              [sensorTypes]="sensorTypes"
                              [contractSensors]="contractSensors"

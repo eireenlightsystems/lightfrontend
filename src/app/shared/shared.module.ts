@@ -31,6 +31,8 @@ import {jqxPanelComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpanel
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxsplitter';
 
+import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggestions.component';
+
 import {LoaderComponent} from './components/loader/loader.component';
 import {EventWindowComponent} from './components/event-window/event-window.component';
 import {FilterTableComponent} from './components/filter-table/filter-table.component';
@@ -53,7 +55,7 @@ import {BackgroundLightredDirective} from './directives/background-lightred.dire
 import {YellowWavesDirectiveDirective} from './directives/yellow-waves-directive.directive';
 import {ButtonMenuDirective} from './directives/button-menu.directive';
 import {TextFontweightDirective} from './directives/text-fontweight.directive';
-import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggestions.component';
+import {ObjectPosition2Directive} from './directives/object-position2.directive';
 
 
 @NgModule({
@@ -103,6 +105,7 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     YellowWavesDirectiveDirective,
     ButtonMenuDirective,
     TextFontweightDirective,
+    ObjectPosition2Directive,
   ],
   imports: [
     BrowserModule,
@@ -145,6 +148,8 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     jqxDateTimeInputComponent,
     jqxSplitterComponent,
 
+    NgxSuggestionsComponent,
+
     LoaderComponent,
     EventWindowComponent,
     FilterTableComponent,
@@ -154,7 +159,6 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     EditFormComponent,
     EditFormItemComponent,
     JqxgridComponent,
-    NgxSuggestionsComponent,
     SimpleDictionaryComponent,
 
     ButtonSettinggridDirective,
@@ -168,6 +172,7 @@ import {NgxSuggestionsComponent} from './components/ngx-suggestions/ngx-suggesti
     YellowWavesDirectiveDirective,
     ButtonMenuDirective,
     TextFontweightDirective,
+    ObjectPosition2Directive,
   ]
 })
 export class SharedModule {

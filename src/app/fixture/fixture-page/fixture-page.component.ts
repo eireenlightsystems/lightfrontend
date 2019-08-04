@@ -3,7 +3,7 @@ import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {
   CommandStatus,
   CommandType,
-  Contract, Owner, FixtureGroupType, EquipmentType, Geograph, HeightType, Installer, Substation
+  Contract, Owner, FixtureGroupType, EquipmentType, HeightType, Installer, Substation
 } from '../../shared/interfaces';
 
 @Component({
@@ -14,8 +14,7 @@ import {
 export class FixturePageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
-
+  @Input() tabsWidth: number;
   // fixture source
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: EquipmentType[];

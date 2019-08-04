@@ -245,6 +245,7 @@ export class Fixture {
   fixtureTypeCode: string;
   fixtureTypeModel: string;
   geographCode: string;
+  geographFullName: string;
   installerCode: string;
   substationCode: string;
   heightTypeCode: string;
@@ -286,6 +287,7 @@ export class FixtureGroup {
   fixtureGroupTypeName: string;
   ownerCode: string;
   geographCode: string;
+  geographFullName: string;
   n_coordinate: string;
   e_coordinate: string;
 }
@@ -353,6 +355,7 @@ export class Node {
   contractCode: string;
   nodeTypeCode: string;
   geographCode: string;
+  geographFullName: string;
   ownerCode: string;
 
   n_coordinate: number;
@@ -555,6 +558,8 @@ export class Substation {
   id: number;
   geographId: number;
   geographCode: string;
+  geographName: string;
+  geographFullName: string;
   code: string;
   name: string;
   inn: number;
@@ -568,6 +573,8 @@ export class Person {
   id: number;
   geographId: number;
   geographCode: string;
+  geographName: string;
+  geographFullName: string;
   code: string;
   name: string;
   inn: number;

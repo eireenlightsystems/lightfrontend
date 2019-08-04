@@ -13,7 +13,6 @@ import {SensorlistPageComponent} from './sensor-md-page/sensorlist-page/sensorli
 export class SensorPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerSensors: Owner[];
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];

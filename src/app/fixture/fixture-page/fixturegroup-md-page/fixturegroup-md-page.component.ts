@@ -26,7 +26,6 @@ export class FixturegroupMdPageComponent implements OnInit {
   @Input() fixtureGroupOwners: Owner[];
 
   // node source
-  @Input() geographs: Geograph[];
 
   // fixture source
   @Input() ownerFixtures: Owner[];
@@ -53,7 +52,7 @@ export class FixturegroupMdPageComponent implements OnInit {
   settingFixtureGrButtonPanel: SettingButtonPanel;
   settingFixtureButtonPanel: SettingButtonPanel;
   isButtonPanelVisible = false;
-  heightDeltaGrid = 50;
+  heightDeltaGrid = 55;
 
 
   constructor() {

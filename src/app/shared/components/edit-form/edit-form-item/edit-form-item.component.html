@@ -119,7 +119,7 @@
       <td [width]="+itemEditForm.width" [height]="+itemEditForm.height" align="right">
         <app-ngx-suggestions
           [placeholder]="itemEditForm.selectName"
-          (onChangeFiasAddress)="changeFiasAddress($event)"
+          (onSelectedAddress)="selectedAddress($event)"
         ></app-ngx-suggestions>
       </td>
     </tr>

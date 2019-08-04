@@ -1,6 +1,6 @@
 <jqxTabs
   [theme]="'material'"
-  [width]="'99%'"
+  [width]="tabsWidth + '%'"
 >
   <ul>
     <li style="margin-left: 30px">Светильники</li>
@@ -9,9 +9,6 @@
   </ul>
   <div style="overflow: hidden">
     <app-fixture-masterdetails-page
-
-      [geographs]="geographs"
-
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"
@@ -31,9 +28,6 @@
 
   <div style="overflow: hidden">
     <app-fixturegroup-md-page
-
-      [geographs]="geographs"
-
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"

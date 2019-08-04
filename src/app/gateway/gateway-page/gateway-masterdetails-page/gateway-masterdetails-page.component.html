@@ -9,7 +9,6 @@
 >
   <div class="splitter-panel">
     <app-gatewaylist-page #gatewaylistPageComponent
-                          [geographs]="geographs"
                           [ownerGateways]="ownerGateways"
                           [gatewayTypes]="gatewayTypes"
                           [contractGateways]="contractGateways"
@@ -30,7 +29,6 @@
       </ul>
       <div style="overflow: hidden">
         <app-nodelist-page #nodelistPageComponent
-                           [geographs]="geographs"
                            [ownerNodes]="ownerNodes"
                            [nodeTypes]="nodeTypes"
                            [contractNodes]="contractNodes"

@@ -1,16 +1,15 @@
 <div [ngSwitch]="itemFilter.type">
   <div appComboboxFilter *ngSwitchCase="'jqxComboBox'">
     <jqxComboBox #jqxComboBox
-      [theme]="itemFilter.theme"
-      [source]="itemFilter.source"
-      [width]="itemFilter.width"
-      [height]="itemFilter.height"
-      [placeHolder]="itemFilter.placeHolder"
-      [displayMember]="itemFilter.displayMember"
-      [valueMember]="itemFilter.valueMember"
-      [selectedIndex]="itemFilter.defaultValue"
-
-      (onSelect)="OnSelect($event)"
+                 [theme]="itemFilter.theme"
+                 [source]="itemFilter.source"
+                 [width]="itemFilter.width"
+                 [height]="itemFilter.height"
+                 [placeHolder]="itemFilter.placeHolder"
+                 [displayMember]="itemFilter.displayMember"
+                 [valueMember]="itemFilter.valueMember"
+                 [selectedIndex]="itemFilter.defaultValue"
+                 (onSelect)="OnSelect($event)"
     >
     </jqxComboBox>
   </div>
@@ -22,10 +21,17 @@
                       [height]="itemFilter.height"
                       [showTimeButton]="true"
                       [formatString]="'yyyy-MM-dd HH:mm'"
-
                       (onValueChanged)="onValueChanged($event)"
     >
     </jqxDateTimeInput>
+  </div>
+
+  <div appComboboxFilter *ngSwitchCase="'ngxSuggestionAddress'">
+    <app-ngx-suggestions
+      [placeholder]="itemFilter.defaultValue === '' ? this.itemFilter.placeHolder : itemFilter.defaultValue"
+      (onSelectedAddress)="selectedAddress($event)"
+      (onInputAddress)="inputAddress($event)"
+    ></app-ngx-suggestions>
   </div>
 </div>
 

@@ -1,6 +1,6 @@
 <jqxTabs
   [theme]="'material'"
-  [width]="'99%'"
+  [width]="tabsWidth + '%'"
   (onSelected)="selected($event)"
 >
   <ul>
@@ -9,8 +9,6 @@
   </ul>
   <div style="overflow: hidden">
     <app-gateway-masterdetails-page #gatewayMasterdetailsPageComponent
-
-                                    [geographs]="geographs"
                                     [ownerGateways]="ownerGateways"
                                     [gatewayTypes]="gatewayTypes"
                                     [contractGateways]="contractGateways"
@@ -28,7 +26,6 @@
   </div>
   <div style="overflow: hidden">
     <app-gatewaymap-page #gatewaymapPageComponent
-                         [geographs]="geographs"
                          [ownerGateways]="ownerGateways"
                          [gatewayTypes]="gatewayTypes"
                          [contractGateways]="contractGateways"

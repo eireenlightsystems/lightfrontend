@@ -160,6 +160,7 @@
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
       >
         <app-operator-layout
+          [tabsWidth]="tabsWidth"
         ></app-operator-layout>
       </div>
       <div *ngIf="(this.router.url.substring(0,5) === '/dict')"
@@ -285,6 +286,7 @@
       <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
       >
         <app-operator-layout
+          [tabsWidth]="tabsWidth"
         ></app-operator-layout>
       </div>
       <div *ngIf="(this.router.url.substring(0,5) === '/hand')"

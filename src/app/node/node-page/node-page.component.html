@@ -1,6 +1,6 @@
 <jqxTabs
   [theme]="'material'"
-  [width]="'99%'"
+  [width]="tabsWidth + '%'"
   (onSelected)="selected($event)"
 >
   <ul>
@@ -9,9 +9,6 @@
   </ul>
   <div style="overflow: hidden">
     <app-node-masterdetails-page #nodeMasterdetailsPageComponent
-
-                                 [geographs]="geographs"
-
                                  [ownerNodes]="ownerNodes"
                                  [nodeTypes]="nodeTypes"
                                  [contractNodes]="contractNodes"
@@ -36,7 +33,6 @@
   </div>
   <div style="overflow: hidden">
     <app-nodemap-page #nodemapPageComponent
-                      [geographs]="geographs"
                       [ownerNodes]="ownerNodes"
                       [nodeTypes]="nodeTypes"
                       [contractNodes]="contractNodes"

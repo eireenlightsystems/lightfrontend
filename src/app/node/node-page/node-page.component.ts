@@ -15,7 +15,7 @@ import {NodemapPageComponent} from './nodemap-page/nodemap-page.component';
 export class NodePageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
+  @Input() tabsWidth: number;
   // fixture source
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: EquipmentType[];

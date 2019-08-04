@@ -59,7 +59,7 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   }
 
   getHeight() {
-    return 35 + (this.sourceForFilter.length * 65) + 65;
+    return 35 + (this.sourceForFilter.length * 70) + 65;
   }
 
   getCoordinateX() {
@@ -97,6 +97,9 @@ export class FilterTableComponent implements OnInit, OnDestroy {
             }
             break;
           case 'jqxDateTimeInput':
+            selectValue = this.sourceForFilter[i].defaultValue;
+            break;
+          case 'ngxSuggestionAddress':
             selectValue = this.sourceForFilter[i].defaultValue;
             break;
           default:

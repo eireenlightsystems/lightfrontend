@@ -24,6 +24,7 @@ import {MaterialModule} from './shared/material-module';
     AuthLayoutComponent,
     RegisterPageComponent,
     NotFoundComponent,
+
   ],
   imports: [
     BrowserModule,

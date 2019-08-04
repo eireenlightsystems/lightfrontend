@@ -19,6 +19,7 @@ import {LinkFormComponent} from '../../../../shared/components/link-form/link-fo
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {MaterializeService} from '../../../../shared/classes/materialize.service';
 import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -94,7 +95,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(private gatewayService: GatewayService) {
+  constructor(private gatewayService: GatewayService,
+              public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -105,7 +107,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           {text: 'gatewayId', datafield: 'gatewayId', width: 150},
           {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
@@ -121,7 +123,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           {label: 'gatewayId', value: 'gatewayId', checked: true},
           {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
 
@@ -157,12 +159,12 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.sourceForFilter = [
       {
         name: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
         width: '380',
         height: '45',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         defaultValue: '',
@@ -602,14 +604,12 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   initSourceFilter() {
     if (this.isFilterVisible === false
-      && !isUndefined(this.geographs)
       && !isUndefined(this.ownerGateways)
       && !isUndefined(this.gatewayTypes)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
           case 'geographs':
-            this.sourceForFilter[i].source = this.geographs;
             break;
           case 'ownerGateways':
             this.sourceForFilter[i].source = this.ownerGateways;
@@ -663,7 +663,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'без привязки к карте';
+        selectObject.geographCode = this.translate.instant('site.forms.editforms.withoutAddress');
       }
       // ins
       this.oSub = this.gatewayService.ins(selectObject).subscribe(
@@ -713,7 +713,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       if (this.typeEditWindow === 'ins') {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = 'пусто';
+        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractGateways':

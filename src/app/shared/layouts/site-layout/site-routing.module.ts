@@ -7,7 +7,6 @@ import {DictionaryLayoutComponent} from './dictionary-layout/dictionary-layout.c
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {NotFoundComponent} from '../../components/not-found/not-found.component';
 import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
-import {NodeTypeService} from '../../services/node/nodeType.service';
 import {EquipmentTypeComponent} from '../../../equipment-type/equipment-type.component';
 import {OperatorLayoutComponent} from './operator-layout/operator-layout.component';
 import {NodePageComponent} from '../../../node/node-page/node-page.component';
@@ -28,7 +27,7 @@ import {ContractComponent} from '../../../contract/contract.component';
 const routes: Routes = [
   {
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
-      {path: '', redirectTo: 'dictionary', pathMatch: 'full'},
+      {path: '', redirectTo: 'operator', pathMatch: 'full'},
       {
         path: 'dictionary', component: DictionaryLayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'equipment', pathMatch: 'full'},

@@ -22,7 +22,6 @@ declare var ymaps: any;
 export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];

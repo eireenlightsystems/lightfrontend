@@ -3,8 +3,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 
 import {
   CompanyDepartment, ContractType,
-  EquipmentType,
-  Geograph,
   OrgForm,
   SettingButtonPanel,
   SettingWinForEditForm,
@@ -31,7 +29,6 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
   @Input() settingWinForEditForm: SettingWinForEditForm;
   @Input() sourceForEditForm: SourceForEditForm[];
 
-  @Input() geographs: Geograph[];
   @Input() orgForms: OrgForm[];
   @Input() companies: CompanyDepartment[];
   @Input() contractTypes: ContractType[];
@@ -233,26 +230,13 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
 
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
-          this.sourceForEditForm[i].source = this.geographs;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.geographs[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.geographs.find(
-              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).fullName;
+            this.sourceForEditForm[i].selectId = '1';
+            this.sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.withoutAddress');
           }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
-            this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (one: Geograph) => one.id === +this.jqxgridComponent.selectRow.geographId).code;
-            this.sourceForEditForm[i].selectName = this.geographs.find(
-              (one: Geograph) => one.id === +this.jqxgridComponent.selectRow.geographId).fullName;
-            for (let j = 0; j < this.geographs.length; j++) {
-              if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.geographId) {
-                this.sourceForEditForm[i].selectedIndex = j;
-                break;
-              }
-            }
+            this.sourceForEditForm[i].selectName = this.jqxgridComponent.selectRow.geographFullName;
           }
           break;
         case 'orgForms':

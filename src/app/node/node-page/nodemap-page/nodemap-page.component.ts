@@ -2,20 +2,20 @@
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
 import {MaterializeService} from '../../../shared/classes/materialize.service';
 
-import {NodeService} from '../../../shared/services/node/node.service';
-import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {
   Node,
   Fixture,
   Contract,
-  Geograph,
   Owner,
   EquipmentType,
   SettingWinForEditForm,
   SourceForEditForm
 } from '../../../shared/interfaces';
+import {NodeService} from '../../../shared/services/node/node.service';
+import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
 import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
 
@@ -32,7 +32,6 @@ declare var ymaps: any;
 export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
@@ -73,7 +72,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
               public router: Router,
               public route: ActivatedRoute,
               private nodeService: NodeService,
-              private fixtureService: FixtureService) {
+              private fixtureService: FixtureService,
+              public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -87,9 +87,9 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       width: 450,
       maxWidth: 500,
       minWidth: 460,
-      height: 550,
-      maxHeight: 550,
-      minHeight: 550,
+      height: 600,
+      maxHeight: 600,
+      minHeight: 600,
       coordX: 500,
       coordY: 65
     };
@@ -98,12 +98,12 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sourceForEditForm = [
       {
         nameField: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
-        width: '285',
+        width: '300',
         height: '20',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -381,7 +381,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       <table class="table table-sm">
       <tbody>
       <tr><th>Договор</th><td>{{properties.node.contractCode}}</td></tr>
-      <tr><th>Географическое понятие</th><td>{{properties.node.geographCode}}</td></tr>
+      <tr><th>Адрес</th><td>{{properties.node.geographFullName}}</td></tr>
       <tr><th>Тип узла</th><td>{{properties.node.nodeTypeCode}}</td></tr>
       <tr><th>Владелец</th><td>{{properties.node.ownerCode}}</td></tr>
       <tr><th>Широта</th><td>{{properties.node.n_coordinate}}</td></tr>
@@ -501,8 +501,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.saveNode.geographId = 1;
     this.saveNode.n_coordinate = coords[0];
     this.saveNode.e_coordinate = coords[1];
-    this.saveNode.comment = 'пусто';
-    this.saveNode.serialNumber = 'пусто';
+    this.saveNode.comment = this.translate.instant('site.forms.editforms.empty');
+    this.saveNode.serialNumber = this.translate.instant('site.forms.editforms.empty');
 
     this.oSub = this.nodeService.ins(this.saveNode).subscribe(
       response => {
@@ -531,8 +531,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.saveFixture.substationId = 1;
       this.saveFixture.heightTypeId = 1;
       this.saveFixture.nodeId = this.saveNode.nodeId;
-      this.saveFixture.serialNumber = 'пусто';
-      this.saveFixture.comment = 'пусто';
+      this.saveFixture.serialNumber = this.translate.instant('site.forms.editforms.empty');
+      this.saveFixture.comment = this.translate.instant('site.forms.editforms.empty');
 
       this.oSub = this.fixtureService.ins(this.saveFixture).subscribe(
         response => {
@@ -631,7 +631,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
           selectObject.geographId = +this.sourceForEditForm[i].selectId;
-          selectObject.geographCode = this.sourceForEditForm[i].selectCode;
+          selectObject.geographFullName = this.sourceForEditForm[i].selectName;
           break;
         case 'contractNodes':
           selectObject.contractId = +this.sourceForEditForm[i].selectId;
@@ -683,20 +683,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
-          this.sourceForEditForm[i].source = this.geographs;
-          if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.selectNode.contractId.toString();
-            this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.selectNode.geographId).code;
-            this.sourceForEditForm[i].selectName = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.selectNode.geographId).fullName;
-            for (let j = 0; j < this.geographs.length; j++) {
-              if (+this.geographs[j].id === +this.selectNode.contractId) {
-                this.sourceForEditForm[i].selectedIndex = j;
-                break;
-              }
-            }
-          }
+          this.sourceForEditForm[i].selectId = this.selectNode.geographId.toString();
+          this.sourceForEditForm[i].selectName = this.selectNode.geographFullName;
           break;
         case 'contractNodes':
           this.sourceForEditForm[i].source = this.contractNodes;

@@ -14,7 +14,8 @@ export class NgxSuggestionsComponent implements OnInit {
   @Input() placeholder: string;
 
   // determine the functions that need to be performed in the parent component
-  @Output() onChangeFiasAddress = new EventEmitter<any>();
+  @Output() onSelectedAddress = new EventEmitter<any>();
+  @Output() onInputAddress = new EventEmitter<any>();
 
   // define variables - link to view objects
 
@@ -41,8 +42,12 @@ export class NgxSuggestionsComponent implements OnInit {
 
   }
 
-  setCurrAddress(event: any) {
+  selectedAddress(event: any) {
     this.currentAddress = event;
-    this.onChangeFiasAddress.emit(this.currentAddress);
+    this.onSelectedAddress.emit(this.currentAddress);
+  }
+
+  inputAddress(event: any) {
+    this.onInputAddress.emit(event.data);
   }
 }

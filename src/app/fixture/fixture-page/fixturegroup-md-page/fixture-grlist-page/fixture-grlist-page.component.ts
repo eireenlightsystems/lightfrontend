@@ -13,8 +13,10 @@ import {
   SourceForLinkForm
 } from '../../../../shared/interfaces';
 import {FixtureGroupService} from '../../../../shared/services/fixture/fixtureGroup.service';
-import {FixturecomeditFormComponent} from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
-import {FixturecomeditSwitchoffFormComponent} from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
+import {FixturecomeditFormComponent}
+  from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-form/fixturecomedit-form.component';
+import {FixturecomeditSwitchoffFormComponent}
+  from '../../fixture-masterdetails-page/fixturecomlist-page/fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
@@ -107,7 +109,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         {text: 'fixtureGroupId', datafield: 'fixtureGroupId', width: 150},
 
         {text: 'Название', datafield: 'fixtureGroupName', width: 200},
-        {text: 'Географическое понятие', datafield: 'geographCode', width: 200},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
         {text: 'Тип групы', datafield: 'fixtureGroupTypeName', width: 200},
         {text: 'Владелец', datafield: 'ownerCode', width: 200},
       ];
@@ -116,7 +118,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         {label: 'fixtureGroupId', value: 'fixtureGroupId', checked: true},
 
         {label: 'Название', value: 'fixtureGroupName', checked: true},
-        {label: 'Географическое понятие', value: 'geographCode', checked: true},
+        {label: 'Адрес', value: 'geographFullName', checked: true},
         {label: 'Тип групы', value: 'fixtureGroupTypeName', checked: true},
         {label: 'Владелец', value: 'ownerCode', checked: true},
       ];

@@ -26,7 +26,6 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() selectionmode: number;
 
   // node source
-  @Input() geographs: Geograph[];
 
   // fixture source
   @Input() ownerFixtures: Owner[];
@@ -53,7 +52,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @ViewChild('mainSplitter', { static: false }) mainSplitter: jqxSplitterComponent;
 
   // other variables
-  selectFixtureId: number;
+  selectFixtureId = 0;
   settingFixtureComButtonPanel: SettingButtonPanel;
   settingFixtureSpeedButtonPanel: SettingButtonPanel;
   heightDeltaParentGrid = 55;
@@ -65,7 +64,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectFixtureId = 0;
+    // this.selectFixtureId = 0;
 
     // init fixture button panel
     if (isUndefined(this.settingFixtureButtonPanel)) {

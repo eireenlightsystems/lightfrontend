@@ -41,6 +41,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   sidenavWidthMax = 230;
   sidenavContentMarginLeft = 0;
   isSidenavMax = false;
+  tabsWidth = 99.9;
 
   // Left tree-menu in mat-sidenav
   navItems: NavItem[];
@@ -220,6 +221,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.dataSourceOnMobile.data = this.menuItems;
 
+    // choose items for sidenav
+    this.navItems = this.navItemsOperator;
   }
 
   ngAfterViewInit() {
@@ -293,6 +296,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sidenavContentMarginLeft = this.sidenavWidthMax === null ? this.snav._width : this.sidenavWidthMax - this.sidenavWidthMin;
     }
     this.isSidenavMax = !this.isSidenavMax;
+
+    // change width sidenav-content
+    this.tabsWidth = 100 - (((this.sidenavWidthMin + 2) / window.innerWidth * 100));
   }
 
   toggle() {
@@ -300,6 +306,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.snav.toggle();
     this.sidenavContentMarginLeft = 0;
     this.isSidenavMax = false;
+
+    // change width sidenav-content
+    this.tabsWidth = this.tabsWidth === 99.9 ? 100 - (((this.sidenavWidthMin + 2) / window.innerWidth * 100)) : 99.9;
   }
 
 }

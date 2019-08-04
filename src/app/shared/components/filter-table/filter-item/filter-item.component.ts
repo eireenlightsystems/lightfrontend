@@ -1,12 +1,17 @@
 // @ts-ignore
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {isUndefined} from 'util';
+import {Subscription} from 'rxjs';
+import {isNull, isUndefined} from 'util';
+import {formatDate} from '@angular/common';
 
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxcombobox';
 
+import {GeographFias} from '../../../interfaces';
 import {DateTimeFormat} from '../../../classes/DateTimeFormat';
-import {formatDate} from '@angular/common';
+import {MaterializeService} from '../../../classes/materialize.service';
+import {GeographService} from '../../../services/geograph/geograph.service';
+
 
 @Component({
   selector: 'app-filter-item',
@@ -25,9 +30,12 @@ export class FilterItemComponent implements OnInit, OnDestroy {
   @ViewChild('jqxComboBox', {static: false}) jqxComboBox: jqxComboBoxComponent;
 
   // other variables
+  oSubGeographFias: Subscription;
 
 
-  constructor() {
+  constructor(
+    // service
+    private geographService: GeographService) {
   }
 
   ngOnInit() {
@@ -50,6 +58,9 @@ export class FilterItemComponent implements OnInit, OnDestroy {
     if (this.jqxComboBox) {
       this.jqxComboBox.destroy();
     }
+    if (this.oSubGeographFias) {
+      this.oSubGeographFias.unsubscribe();
+    }
   }
 
   OnSelect(event: any) {
@@ -70,6 +81,51 @@ export class FilterItemComponent implements OnInit, OnDestroy {
     if (!isUndefined(event.args)) {
       this.itemFilter.selectId = new DateTimeFormat().fromDataPickerString(event.args.date);
       this.itemFilter.defaultValue = formatDate(event.args.date, 'yyyy-MM-dd HH:mm', 'en');
+    }
+  }
+
+  selectedAddress(fiasAddress: any) {
+    let geographFias: GeographFias = new GeographFias();
+    let geographID: any;
+
+    geographFias.postalCode = fiasAddress.data.postal_code;
+    geographFias.okato = fiasAddress.data.okato;
+    geographFias.fiasLevel = fiasAddress.data.fias_level;
+    geographFias.regionFiasId = fiasAddress.data.region_fias_id;
+    geographFias.regionWithType = fiasAddress.data.region_with_type;
+    geographFias.areaFiasId = fiasAddress.data.area_fias_id;
+    geographFias.areaWithType = fiasAddress.data.area_with_type;
+    geographFias.cityFiasId = fiasAddress.data.city_fias_id;
+    geographFias.cityWithType = fiasAddress.data.city_with_type;
+    geographFias.cityDistrictFiasId = fiasAddress.data.city_district_fias_id;
+    geographFias.cityDistrictWithType = fiasAddress.data.city_district_with_type;
+    geographFias.settlementFiasId = fiasAddress.data.settlement_fias_id;
+    geographFias.settlementWithType = fiasAddress.data.settlement_with_type;
+    geographFias.streetFiasId = fiasAddress.data.street_fias_id;
+    geographFias.streetWithType = fiasAddress.data.street_with_type;
+    geographFias.houseFiasId = fiasAddress.data.house_fias_id;
+    geographFias.houseWithType = fiasAddress.data.house_type + ' ' + fiasAddress.data.house;
+    geographFias.geoLat = fiasAddress.data.geo_lat;
+    geographFias.geoLon = fiasAddress.data.geo_lon;
+
+    // ins
+    this.oSubGeographFias = this.geographService.insFias(geographFias).subscribe(
+      response => {
+        // MaterializeService.toast(`Географич. понятие id = ${+response} было добавлено.`);
+        geographID = +response;
+      },
+      error => MaterializeService.toast(error.error.message),
+      () => {
+        this.itemFilter.selectId = !isUndefined(geographID) ? geographID : '1';
+        this.itemFilter.defaultValue = !isUndefined(fiasAddress.value) ? fiasAddress.value : '';
+      }
+    );
+  }
+
+  inputAddress(event: any) {
+    if (isNull(event)) {
+      this.itemFilter.selectId = '';
+      this.itemFilter.defaultValue = '';
     }
   }
 }

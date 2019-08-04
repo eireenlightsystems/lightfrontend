@@ -20,6 +20,7 @@ import {FilterTableComponent} from '../../../../shared/components/filter-table/f
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
+import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -33,7 +34,6 @@ const STEP = 1000000000000;
 export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerSensors: Owner[];
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
@@ -96,7 +96,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   actionEventWindow = '';
 
 
-  constructor(private sensorService: SensorService) {
+  constructor(private sensorService: SensorService,
+              public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -106,7 +107,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         [
           {text: 'sensorId', datafield: 'sensorId', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
@@ -121,7 +122,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         [
           {label: 'sensorId', value: 'sensorId', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
 
@@ -155,12 +156,12 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.sourceForFilter = [
       {
         name: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
         width: '380',
         height: '45',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         defaultValue: '',
@@ -584,14 +585,12 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   initSourceFilter() {
     if (this.isFilterVisible === false
-      && !isUndefined(this.geographs)
       && !isUndefined(this.ownerSensors)
       && !isUndefined(this.sensorTypes)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
           case 'geographs':
-            this.sourceForFilter[i].source = this.geographs;
             break;
           case 'ownerSensors':
             this.sourceForFilter[i].source = this.ownerSensors;
@@ -642,7 +641,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'без привязки к карте';
+        selectObject.geographCode = this.translate.instant('site.forms.editforms.withoutAddress');
       }
       // ins
       this.oSub = this.sensorService.ins(selectObject).subscribe(
@@ -691,7 +690,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       if (this.typeEditWindow === 'ins') {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = 'пусто';
+        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractSensors':

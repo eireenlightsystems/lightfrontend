@@ -2,14 +2,14 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
+import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
-import {FixtureService} from '../../../../shared/services/fixture/fixture.service';
 import {
   Contract,
   EquipmentType,
   FilterFixture,
   Fixture,
-  Geograph,
   HeightType,
   Installer,
   ItemsLinkForm,
@@ -22,13 +22,13 @@ import {
   SourceForLinkForm,
   Substation
 } from '../../../../shared/interfaces';
+import {FixtureService} from '../../../../shared/services/fixture/fixture.service';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {MaterializeService} from '../../../../shared/classes/materialize.service';
 
 
 const STEP = 1000000000000;
@@ -42,7 +42,6 @@ const STEP = 1000000000000;
 export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: EquipmentType[];
   @Input() substations: Substation[];
@@ -125,7 +124,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   actionEventWindow = '';
 
 
-  constructor(private fixtureService: FixtureService) {
+  constructor(private fixtureService: FixtureService,
+              public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -135,7 +135,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         [
           {text: 'fixtureId', datafield: 'fixtureId', width: 150},
 
-          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
           {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
@@ -153,7 +153,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         [
           {label: 'fixtureId', value: 'fixtureId', checked: true},
 
-          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Договор', value: 'contractCode', checked: false},
           {label: 'Владелец', value: 'ownerCode', checked: true},
           {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
@@ -204,12 +204,12 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.sourceForFilter = [
       {
         name: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
         width: '380',
         height: '45',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         defaultValue: '',
@@ -771,7 +771,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   initSourceFilter() {
     if (this.isFilterVisible === false
-      && !isUndefined(this.geographs)
       && !isUndefined(this.ownerFixtures)
       && !isUndefined(this.fixtureTypes)
       && !isUndefined(this.substations)) {
@@ -779,7 +778,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
           case 'geographs':
-            this.sourceForFilter[i].source = this.geographs;
             break;
           case 'ownerFixtures':
             this.sourceForFilter[i].source = this.ownerFixtures;
@@ -851,7 +849,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
-        selectObject.geographCode = 'без привязки к карте';
+        selectObject.geographCode = this.translate.instant('site.forms.editforms.withoutAddress');
       }
       // ins
       this.oSub = this.fixtureService.ins(selectObject).subscribe(
@@ -906,8 +904,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       if (this.typeEditWindow === 'ins') {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = 'пусто';
-        this.sourceForEditForm[i].selectName = 'пусто';
+        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
+        this.sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.empty');
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'contractFixtures':

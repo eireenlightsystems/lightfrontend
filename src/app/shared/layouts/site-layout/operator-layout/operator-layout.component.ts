@@ -1,5 +1,5 @@
 // @ts-ignore
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MaterializeService} from '../../../classes/materialize.service';
@@ -53,6 +53,8 @@ import {FixtureService} from '../../../services/fixture/fixture.service';
   styleUrls: ['./operator-layout.component.css']
 })
 export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @Input() tabsWidth: number;
 
   @ViewChild('floating', {static: false}) floatingRef: ElementRef;
 
@@ -192,7 +194,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
   fetch_refbook() {
     // refbook
-    this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
+    // this.fetch_geograph();
 
     // fixture refbook
     this.ownerFixtureSub = this.ownerFixtureService.fetch().subscribe(owners => this.ownerFixtures = owners);
@@ -214,7 +216,6 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     this.speedDirectionSub = this.speedDirectionService.fetch().subscribe(speedDirectiones => this.speedDirectiones = speedDirectiones);
 
     // node refbook
-    this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
     this.ownerSub = this.ownerNodeService.fetch().subscribe(owners => this.ownerNodes = owners);
     this.nodeTypeSub = this.nodeService.getNodeTypes().subscribe(nodeTypes => this.nodeTypes = nodeTypes);
     this.contractSub = this.contractNodeService.fetch().subscribe(contracts => this.contractNodes = contracts);
@@ -228,6 +229,10 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     this.ownerSensorSub = this.ownerSensorService.fetch().subscribe(owners => this.ownerSensors = owners);
     this.sensorTypeSub = this.sensorService.getSensorTypes().subscribe(sensorTypes => this.sensorTypes = sensorTypes);
     this.contractSensorSub = this.contractSensorService.fetch().subscribe(contracts => this.contractSensors = contracts);
+  }
+
+  fetch_geograph() {
+    // this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
   }
 
   isFixtureVisible() {

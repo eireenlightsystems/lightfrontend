@@ -6,7 +6,7 @@ import {MaterializeService} from '../../../../shared/classes/materialize.service
 
 import {NodeService} from '../../../../shared/services/node/node.service';
 import {
-  Node, Geograph, Contract, EquipmentType, Owner,
+  Node, Contract, EquipmentType, Owner,
   FilterNode, SourceForFilter,
   SettingButtonPanel,
   SourceForJqxGrid,
@@ -19,6 +19,7 @@ import {FilterTableComponent} from '../../../../shared/components/filter-table/f
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
+import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -33,7 +34,6 @@ const STEP = 1000000000000;
 export class NodelistPageComponent implements OnInit, OnDestroy {
 
   // variables from master component
-  @Input() geographs: Geograph[];
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
@@ -95,7 +95,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(private nodeService: NodeService) {
+  constructor(private nodeService: NodeService,
+              public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -105,7 +106,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         [
           {text: 'nodeId', datafield: 'nodeId', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
 
@@ -120,7 +121,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         [
           {label: 'nodeId', value: 'nodeId', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
 
@@ -135,7 +136,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         [
           {text: 'nodeId', datafield: 'nodeId', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Географическое понятие', datafield: 'geographCode', width: 150},
+          {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
 
           {text: 'Широта', datafield: 'n_coordinate', width: 150},
@@ -149,7 +150,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         [
           {label: 'nodeId', value: 'nodeId', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Географическое понятие', value: 'geographCode', checked: true},
+          {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
 
           {label: 'Широта', value: 'n_coordinate', checked: true},
@@ -164,12 +165,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.sourceForFilter = [
       {
         name: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
         width: '380',
         height: '45',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         defaultValue: '',
@@ -211,11 +212,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       isModal: true,
       modalOpacity: 0.3,
       width: 450,
-      maxWidth: 500,
-      minWidth: 460,
-      height: 550,
-      maxHeight: 550,
-      minHeight: 550,
+      maxWidth: 450,
+      minWidth: 450,
+      height: 600,
+      maxHeight: 600,
+      minHeight: 600,
       coordX: 500,
       coordY: 65
     };
@@ -224,12 +225,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.sourceForEditForm = [
       {
         nameField: 'geographs',
-        type: 'jqxComboBox',
-        source: this.geographs,
+        type: 'ngxSuggestionAddress',
+        source: [],
         theme: 'material',
-        width: '285',
+        width: '300',
         height: '20',
-        placeHolder: 'Геогр. понятие:',
+        placeHolder: 'Адрес:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -391,7 +392,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
         valueMember: 'nodeId',
         sortcolumn: ['nodeId'],
-        sortdirection: 'asc',
+        sortdirection: 'desc',
         selectId: []
       }
     };
@@ -639,14 +640,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   initSourceFilter() {
     if (this.isFilterVisible === false
-      && !isUndefined(this.geographs)
       && !isUndefined(this.ownerNodes)
       && !isUndefined(this.nodeTypes)) {
       this.isFilterVisible = true;
       for (let i = 0; i < this.sourceForFilter.length; i++) {
         switch (this.sourceForFilter[i].name) {
           case 'geographs':
-            this.sourceForFilter[i].source = this.geographs;
             break;
           case 'ownerNodes':
             this.sourceForFilter[i].source = this.ownerNodes;
@@ -674,7 +673,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
           selectObject.geographId = +this.sourceForEditForm[i].selectId;
-          selectObject.geographCode = this.sourceForEditForm[i].selectCode;
+          selectObject.geographFullName = this.sourceForEditForm[i].selectName;
           break;
         case 'contractNodes':
           selectObject.contractId = +this.sourceForEditForm[i].selectId;
@@ -715,15 +714,14 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           // close edit window
           this.editWindow.closeDestroyWindow();
           // update data source
-          this.jqxgridComponent.refresh_ins(
-            selectObject.nodeId, selectObject);
+          this.jqxgridComponent.refresh_ins(selectObject.nodeId, selectObject);
         }
       );
     }
     if (this.typeEditWindow === 'upd') {
       // definde param befor upd
       this.jqxgridComponent.selectRow.geographId = selectObject.geographId;
-      this.jqxgridComponent.selectRow.geographCode = selectObject.geographCode;
+      this.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
       this.jqxgridComponent.selectRow.contractId = selectObject.contractId;
       this.jqxgridComponent.selectRow.contractCode = selectObject.contractCode;
       this.jqxgridComponent.selectRow.nodeTypeId = selectObject.nodeTypeId;
@@ -743,8 +741,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           // close edit window
           this.editWindow.closeDestroyWindow();
           // update data source
-          this.jqxgridComponent.refresh_upd(
-            this.jqxgridComponent.selectRow.nodeId, this.jqxgridComponent.selectRow);
+          this.jqxgridComponent.refresh_upd(this.jqxgridComponent.selectRow.nodeId, this.jqxgridComponent.selectRow);
         }
       );
     }
@@ -755,30 +752,17 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       if (this.typeEditWindow === 'ins') {
         this.sourceForEditForm[i].selectedIndex = 0;
         this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = 'пусто';
+        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
       switch (this.sourceForEditForm[i].nameField) {
         case 'geographs':
-          this.sourceForEditForm[i].source = this.geographs;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.geographs[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.geographs.find(
-              (one: Geograph) => one.id === +this.sourceForEditForm[i].selectId).fullName;
+            this.sourceForEditForm[i].selectId = '1';
+            this.sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.withoutAddress');
           }
           if (this.typeEditWindow === 'upd') {
             this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
-            this.sourceForEditForm[i].selectCode = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).code;
-            this.sourceForEditForm[i].selectName = this.geographs.find(
-              (geographOne: Geograph) => geographOne.id === +this.jqxgridComponent.selectRow.geographId).fullName;
-            for (let j = 0; j < this.geographs.length; j++) {
-              if (+this.geographs[j].id === +this.jqxgridComponent.selectRow.geographId) {
-                this.sourceForEditForm[i].selectedIndex = j;
-                break;
-              }
-            }
+            this.sourceForEditForm[i].selectName = this.jqxgridComponent.selectRow.geographFullName;
           }
           break;
         case 'contractNodes':

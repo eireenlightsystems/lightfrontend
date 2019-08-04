@@ -45,9 +45,10 @@
     "forms": {
       "editforms": {
         "edit": "Add/Edit",
-        "empty": "empty",
+        "empty": " empty",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "withoutAddress": "without address"
       }
     },
 

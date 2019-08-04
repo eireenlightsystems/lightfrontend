@@ -45,9 +45,10 @@
     "forms": {
       "editforms": {
         "edit": "Добавить/редактировать",
-        "empty": "пусто",
+        "empty": " пусто",
         "save": "Сохранить",
-        "cancel": "Отмена"
+        "cancel": "Отмена",
+        "withoutAddress": "без адреса"
       }
     },
 
