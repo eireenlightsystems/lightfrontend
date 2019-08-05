@@ -3,7 +3,7 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="(this.router.url === '/dictionary/contragent/companies')"
+  <div *ngIf="this.router.url === '/dictionary/contragent/companies'"
        class="table_border">
     <app-simple-dictionary #companies
                            [typeDictionary]="dictionaryCompanies"
@@ -19,7 +19,7 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/dictionary/contragent/persons')"
+  <div *ngIf="this.router.url === '/dictionary/contragent/persons'"
        class="table_border">
     <app-simple-dictionary #persons
                            [typeDictionary]="dictionaryPersons"
@@ -33,7 +33,7 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/dictionary/contragent/substations')"
+  <div *ngIf="this.router.url === '/dictionary/contragent/substations'"
        class="table_border">
     <app-simple-dictionary #substations
                            [typeDictionary]="dictionarySubstations"

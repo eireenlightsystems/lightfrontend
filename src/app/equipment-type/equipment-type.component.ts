@@ -2,9 +2,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  EquipmentType,
-  Contract, SensorType,
-  SettingButtonPanel,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid

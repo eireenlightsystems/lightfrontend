@@ -36,8 +36,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
   language = 'ru';
-  sidenavWidth = 85;
-  sidenavWidthMin = 85;
+  sidenavWidth = 70;
+  sidenavWidthMin = 70;
   sidenavWidthMax = 230;
   sidenavContentMarginLeft = 0;
   isSidenavMax = false;
@@ -226,7 +226,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-
+    // open min sidenav
+    this.toggle();
   }
 
   ngOnDestroy(): void {

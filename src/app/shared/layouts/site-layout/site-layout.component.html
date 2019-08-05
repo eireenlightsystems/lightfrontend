@@ -6,7 +6,7 @@
   <mat-toolbar appBackgroundLightredDirective class="example-header example-toolbar">
     <mat-toolbar-row>
       <div [hidden]="mobileQuery.matches ? false : false">
-        <button mat-button
+        <button mat-icon-button
                 appYellowWavesDirective
                 appButtonMenuDirective
                 (click)="toggle()">
@@ -121,13 +121,15 @@
 
       <ul *ngFor="let navitem of navItems">
         <li [routerLink]="navitem.route"
-            style="margin-left: 15px">
+            style="margin-left: 3px"
+        >
           <button *ngIf="this.isSidenavMax === true"
                   mat-button
                   appButtonMenuDirective [theme]="'light'"
+                  style="margin-left: 3px"
                   (click)="mobileQuery.matches ? snav.close() : ''"
           >
-            <mat-icon class="routeIcon" style="margin-right: 25px">{{navitem.iconName}}</mat-icon>
+            <mat-icon class="routeIcon" style="margin-right: 10px">{{navitem.iconName}}</mat-icon>
             {{ navitem.displayName | translate}}
           </button>
           <button *ngIf="this.isSidenavMax === false"
@@ -135,6 +137,7 @@
                   matTooltip="{{ navitem.displayName | translate}}"
                   [matTooltipPosition]="'right'"
                   appButtonMenuDirective [theme]="'light'"
+                  matTooltipClass="tooltip"
                   (click)="mobileQuery.matches ? snav.close() : ''"
           >
             <mat-icon class="routeIcon">{{navitem.iconName}}</mat-icon>
@@ -145,7 +148,7 @@
       <button mat-button
               appButtonMenuDirective [theme]="'light'"
               class="bottom"
-              style="margin-left: 15px; margin-bottom: 10px;"
+              style="margin-left: 3px; margin-bottom: 10px;"
               (click)="getSnavWidth()"
       >
         <mat-icon>{{sidenavWidth === sidenavWidthMax ? 'arrow_back' : 'arrow_forward'}}</mat-icon>
@@ -176,6 +179,7 @@
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>
+
   </mat-sidenav-container>
 
 </div>

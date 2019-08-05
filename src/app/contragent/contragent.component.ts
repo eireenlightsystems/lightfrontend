@@ -42,7 +42,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
   oSubCompanies: Subscription;
   oSubPersons: Subscription;
   oSubSubstations: Subscription;
-  oSubGeograph: Subscription;
   sourceForJqxGridCompanies: SourceForJqxGrid;
   sourceForJqxGridPersons: SourceForJqxGrid;
   sourceForJqxGridSubstations: SourceForJqxGrid;
