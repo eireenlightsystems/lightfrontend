@@ -43,6 +43,7 @@ import {EditFormComponent} from './components/edit-form/edit-form.component';
 import {EditFormItemComponent} from './components/edit-form/edit-form-item/edit-form-item.component';
 import {JqxgridComponent} from './components/jqxgrid/jqxgrid.component';
 import {SimpleDictionaryComponent} from './components/simple-dictionary/simple-dictionary.component';
+import {TreeViewComponent} from './components/tree-view/tree-view.component';
 
 import {ButtonSettinggridDirective} from './directives/button-settinggrid.directive';
 import {ButtonSimpleStyleDirective} from './directives/button-simple-style.directive';
@@ -56,6 +57,8 @@ import {YellowWavesDirectiveDirective} from './directives/yellow-waves-directive
 import {ButtonMenuDirective} from './directives/button-menu.directive';
 import {TextFontweightDirective} from './directives/text-fontweight.directive';
 import {ObjectPosition2Directive} from './directives/object-position2.directive';
+import {NotRightComponent} from './components/not-right/not-right.component';
+import {MaterialModule} from './material-module';
 
 
 @NgModule({
@@ -93,6 +96,8 @@ import {ObjectPosition2Directive} from './directives/object-position2.directive'
     JqxgridComponent,
     NgxSuggestionsComponent,
     SimpleDictionaryComponent,
+    TreeViewComponent,
+    NotRightComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -124,6 +129,7 @@ import {ObjectPosition2Directive} from './directives/object-position2.directive'
         deps: [HttpClient]
       }
     }),
+    MaterialModule,
   ],
   exports: [
     jqxGridComponent,
@@ -160,6 +166,8 @@ import {ObjectPosition2Directive} from './directives/object-position2.directive'
     EditFormItemComponent,
     JqxgridComponent,
     SimpleDictionaryComponent,
+    TreeViewComponent,
+    NotRightComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,

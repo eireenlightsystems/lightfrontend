@@ -1,10 +1,15 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
-
+// app interfaces
 import {ItemsLinkForm, SourceForLinkForm} from '../../../shared/interfaces';
+import {isUndefined} from 'util';
+// app services
+// app components
+
 
 @Component({
   selector: 'app-link-form',
@@ -13,17 +18,17 @@ import {ItemsLinkForm, SourceForLinkForm} from '../../../shared/interfaces';
 })
 export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() sourceForLinkForm: SourceForLinkForm;
 
   // determine the functions that need to be performed in the parent component
-  @Output() onSaveLinkwinBtn = new EventEmitter<ItemsLinkForm>();
+  @Output() onSaveLinkFormBtn = new EventEmitter<ItemsLinkForm>();
+  @Output() onInitLinkForm = new EventEmitter();
   @Output() onGetSourceForLinkForm = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('linkWindow', {static: false}) linkWindow: jqxWindowComponent;
   @ViewChild('myGrid', {static: true}) myGrid: jqxGridComponent;
-  @ViewChild('windowHeader', {static: true}) windowHeader: ElementRef;
 
   // define the data source for the table
   source_jqxgrid: any;
@@ -31,10 +36,15 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   itemsLinkForm: ItemsLinkForm = new ItemsLinkForm();
 
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
+
+    // console.log('ngOnInit')
+
     this.source_jqxgrid =
       {
         datatype: 'array',
@@ -44,24 +54,60 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
         sortdirection: this.sourceForLinkForm.grid.sortdirection
       };
     this.dataAdapter_jqxgrid = new jqx.dataAdapter(this.source_jqxgrid);
-    this.myGrid.selectedrowindexes([]);
-    this.windowHeader.nativeElement.value = this.sourceForLinkForm.window.name;
+    if (!isUndefined(this.myGrid)) {
+      this.myGrid.selectedrowindexes([]);
+    }
   }
 
   ngAfterViewInit() {
-
+    if (this.sourceForLinkForm.window.autoOpen === true) {
+      this.open();
+    }
   }
 
   ngOnDestroy(): void {
-    this.destroyWindow();
+
+    // console.log('ngOnDestroy')
+
+    this.destroy();
   }
 
-  // refresh table
+  destroy() {
+    if (this.linkWindow) {
+      this.linkWindow.destroy();
+    }
+    if (this.myGrid) {
+      this.myGrid.destroy();
+    }
+  }
+
+  open() {
+    this.getAll();
+  }
+
+  close() {
+    this.linkWindow.close();
+  }
+
+  closeDestroy() {
+    this.onInitLinkForm.emit();
+    this.destroy();
+  }
+
+  hide() {
+    this.linkWindow.hide();
+  }
+
+  position(coord: any) {
+    this.linkWindow.position({x: coord.x, y: coord.y});
+  }
+
   refreshGrid() {
     this.source_jqxgrid.localdata = this.sourceForLinkForm.grid.source;
-    this.myGrid.selectedrowindexes([]);
-    this.myGrid.updatebounddata('data');
-
+    if (!isUndefined(this.myGrid)) {
+      this.myGrid.selectedrowindexes([]);
+      this.myGrid.updatebounddata('data');
+    }
     this.linkWindow.open();
   }
 
@@ -77,31 +123,11 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.sourceForLinkForm.grid.selectId = Ids;
     this.itemsLinkForm.code = this.sourceForLinkForm.window.code;
     this.itemsLinkForm.Ids = Ids;
-    this.onSaveLinkwinBtn.emit(this.itemsLinkForm);
+    this.onSaveLinkFormBtn.emit(this.itemsLinkForm);
   }
 
   cancelBtn() {
-    this.hideWindow();
-  }
-
-  openWindow() {
-    this.getAll();
-  }
-
-  destroyWindow() {
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
-    }
-    if (this.myGrid) {
-      this.myGrid.destroy();
-    }
-  }
-
-  hideWindow() {
-    this.linkWindow.hide();
-  }
-
-  positionWindow(coord: any) {
-    this.linkWindow.position({x: coord.x, y: coord.y});
+    // this.hide();
+    this.closeDestroy();
   }
 }

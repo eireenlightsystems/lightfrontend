@@ -1,16 +1,19 @@
-// @ts-ignore
+// angular lib
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {isNull, isUndefined} from 'util';
 import {formatDate} from '@angular/common';
-
+import {MatSnackBar} from '@angular/material';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxdatetimeinput';
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxcombobox';
-
+// app interfaces
 import {GeographFias} from '../../../interfaces';
-import {DateTimeFormat} from '../../../classes/DateTimeFormat';
-import {MaterializeService} from '../../../classes/materialize.service';
+// app services
 import {GeographService} from '../../../services/geograph/geograph.service';
+// app components
+import {DateTimeFormat} from '../../../classes/DateTimeFormat';
 
 
 @Component({
@@ -20,7 +23,7 @@ import {GeographService} from '../../../services/geograph/geograph.service';
 })
 export class FilterItemComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() itemFilter;
 
   // determine the functions that need to be performed in the parent component
@@ -34,7 +37,9 @@ export class FilterItemComponent implements OnInit, OnDestroy {
 
 
   constructor(
+    private _snackBar: MatSnackBar,
     // service
+    public translate: TranslateService,
     private geographService: GeographService) {
   }
 
@@ -85,7 +90,7 @@ export class FilterItemComponent implements OnInit, OnDestroy {
   }
 
   selectedAddress(fiasAddress: any) {
-    let geographFias: GeographFias = new GeographFias();
+    const geographFias: GeographFias = new GeographFias();
     let geographID: any;
 
     geographFias.postalCode = fiasAddress.data.postal_code;
@@ -111,10 +116,9 @@ export class FilterItemComponent implements OnInit, OnDestroy {
     // ins
     this.oSubGeographFias = this.geographService.insFias(geographFias).subscribe(
       response => {
-        // MaterializeService.toast(`Географич. понятие id = ${+response} было добавлено.`);
         geographID = +response;
       },
-      error => MaterializeService.toast(error.error.message),
+      error => this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
       () => {
         this.itemFilter.selectId = !isUndefined(geographID) ? geographID : '1';
         this.itemFilter.defaultValue = !isUndefined(fiasAddress.value) ? fiasAddress.value : '';
@@ -127,5 +131,11 @@ export class FilterItemComponent implements OnInit, OnDestroy {
       this.itemFilter.selectId = '';
       this.itemFilter.defaultValue = '';
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

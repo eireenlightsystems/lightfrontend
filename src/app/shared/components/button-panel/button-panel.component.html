@@ -1,149 +1,295 @@
+<!--<div class="fr" style="height: 22px">-->
+<!--    <div style="float: left" *ngIf="settingButtonPanel.add.visible">-->
+<!--      <jqxTooltip [position]="'bottom'" #tooltipAdd-->
+<!--                  [content]="'Добавить'">-->
+<!--        <Button [disabled]="settingButtonPanel.add.disabled"-->
+<!--                (click)="ins()"-->
+<!--                appButtonSimpleStyle-->
+<!--        >-->
+<!--          <i class="material-icons">add</i>-->
+<!--        </Button>-->
+<!--      </jqxTooltip>-->
+<!--    </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.upd.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"-->
+<!--                [content]="'Редактировать'">-->
+<!--      <Button [disabled]="settingButtonPanel.upd.disabled"-->
+<!--              (click)="upd()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="material-icons">edit</i>-->
+<!--      </Button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.del.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"-->
+<!--                [content]="'Удалить'">-->
+<!--      <Button [disabled]="settingButtonPanel.del.disabled"-->
+<!--              (click)="del()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="material-icons">delete</i>-->
+<!--      </Button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.refresh.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'refreshTooltip'"-->
+<!--                [content]="'Обновить таблицу'">-->
+<!--      <button [disabled]="settingButtonPanel.refresh.disabled"-->
+<!--              (click)="refresh()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="small material-icons">refresh</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.setting.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'fieldTooltip'"-->
+<!--                [content]="'Настройки таблицы'">-->
+<!--      <button [disabled]="settingButtonPanel.setting.disabled"-->
+<!--              (click)="setting()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="material-icons">settings</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.filterList.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"-->
+<!--                [content]="'Открыть фильтр'">-->
+<!--      <button [disabled]="settingButtonPanel.filterList.disabled"-->
+<!--              (click)="filterList()"-->
+<!--              appButtonSimpleStyle-->
+<!--              [ngClass]="{'active':isFilterVisible}"-->
+<!--      >-->
+<!--        <i class="material-icons">filter_list</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.place.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"-->
+<!--                [content]="'Привязать объект к др. объекту'">-->
+<!--      <button [disabled]="settingButtonPanel.place.disabled"-->
+<!--              (click)="place()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="small material-icons">place</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.pinDrop.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"-->
+<!--                [content]="'Отвязать объект от др. объекта'">-->
+<!--      <button [disabled]="settingButtonPanel.pinDrop.disabled"-->
+<!--              (click)="pinDrop()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="small material-icons">pin_drop</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.groupIn.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"-->
+<!--                [content]="'Добавить объект в группу'">-->
+<!--      <button [disabled]="settingButtonPanel.groupIn.disabled"-->
+<!--              appButtonSimpleStyle-->
+<!--              (click)="groupIn()"-->
+<!--      >-->
+<!--        <i class="material-icons">file_download</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.groupOut.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"-->
+<!--                [content]="'Удалить объект из группы'">-->
+<!--      <button [disabled]="settingButtonPanel.groupOut.disabled"-->
+<!--              appButtonSimpleStyle-->
+<!--              (click)="groupOut()"-->
+<!--      >-->
+<!--        <i class="material-icons">file_upload</i>-->
+<!--      </button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.switchOn.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"-->
+<!--                [content]="'Добавить команду ВКЛ. группы светильников'">-->
+<!--      <Button [disabled]="settingButtonPanel.switchOn.disabled"-->
+<!--              (click)="switchOn()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="material-icons" style="color: orange">highlight</i>-->
+<!--      </Button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+
+<!--  <div style="float: left" *ngIf="settingButtonPanel.switchOff.visible">-->
+<!--    <jqxTooltip [position]="'bottom'" [name]="'switchOffTooltip'"-->
+<!--                [content]="'Добавить команду ВЫКЛ. группы светильников'">-->
+<!--      <Button [disabled]="settingButtonPanel.switchOff.disabled"-->
+<!--              (click)="switchOff()"-->
+<!--              appButtonSimpleStyle-->
+<!--      >-->
+<!--        <i class="material-icons">highlight</i>-->
+<!--      </Button>-->
+<!--    </jqxTooltip>-->
+<!--  </div>-->
+<!--</div>-->
+
 <div class="fr" style="height: 22px">
   <div style="float: left" *ngIf="settingButtonPanel.add.visible">
-    <jqxTooltip [position]="'bottom'" #tooltipAdd
-                [content]="'Добавить'">
-      <Button [disabled]="settingButtonPanel.add.disabled"
-              (click)="ins()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">add</i>
-      </Button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.add.disabled"
+            mat-button
+            matTooltip="{{'site.button.ins' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="ins()"
+    >
+      <i class="material-icons">add</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.upd.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                [content]="'Редактировать'">
-      <Button [disabled]="settingButtonPanel.upd.disabled"
-              (click)="upd()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">edit</i>
-      </Button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.upd.disabled"
+            mat-button
+            matTooltip="{{'site.button.upd' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="upd()"
+    >
+      <i class="material-icons">edit</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.del.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                [content]="'Удалить'">
-      <Button [disabled]="settingButtonPanel.del.disabled"
-              (click)="del()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">delete</i>
-      </Button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.del.disabled"
+            mat-button
+            matTooltip="{{'site.button.del' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="del()"
+    >
+      <i class="material-icons">delete</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.refresh.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'refreshTooltip'"
-                [content]="'Обновить таблицу'">
-      <button [disabled]="settingButtonPanel.refresh.disabled"
-              (click)="refresh()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">refresh</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.refresh.disabled"
+            mat-button
+            matTooltip="{{'site.button.refresh' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="refresh()"
+    >
+      <i class="small material-icons">refresh</i>
+    </button>
   </div>
 
-  <div style="float: left" *ngIf="settingButtonPanel.filterNone.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'fieldTooltip'"
-                [content]="'Настройки таблицы'">
-      <button [disabled]="settingButtonPanel.filterNone.disabled"
-              (click)="filterNone()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">settings</i>
-      </button>
-    </jqxTooltip>
+  <div style="float: left" *ngIf="settingButtonPanel.setting.visible">
+    <button [disabled]="settingButtonPanel.setting.disabled"
+            mat-button
+            matTooltip="{{'site.button.setting' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="setting()"
+    >
+      <i class="material-icons">settings</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.filterList.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Открыть фильтр'">
-      <button [disabled]="settingButtonPanel.filterList.disabled"
-              (click)="filterList()"
-              appButtonSimpleStyle
-              [ngClass]="{'active':isFilterVisible}"
-      >
-        <i class="material-icons">filter_list</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.filterList.disabled"
+            mat-button
+            matTooltip="{{'site.button.filterList' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="filterList()"
+    >
+      <i class="material-icons">filter_list</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.place.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'placeTooltip'"
-                [content]="'Привязать объект к др. объекту'">
-      <button [disabled]="settingButtonPanel.place.disabled"
-              (click)="place()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">place</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.place.disabled"
+            mat-button
+            matTooltip="{{'site.button.place' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="place()"
+    >
+      <i class="small material-icons">place</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.pinDrop.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'pin_dropTooltip'"
-                [content]="'Отвязать объект от др. объекта'">
-      <button [disabled]="settingButtonPanel.pinDrop.disabled"
-              (click)="pinDrop()"
-              appButtonSimpleStyle
-      >
-        <i class="small material-icons">pin_drop</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.pinDrop.disabled"
+            mat-button
+            matTooltip="{{'site.button.pinDrop' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="pinDrop()"
+    >
+      <i class="small material-icons">pin_drop</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.groupIn.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Добавить объект в группу'">
-      <button [disabled]="settingButtonPanel.groupIn.disabled"
-              appButtonSimpleStyle
-              (click)="groupIn()"
-      >
-        <i class="material-icons">file_download</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.groupIn.disabled"
+            mat-button
+            matTooltip="{{'site.button.groupIn' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="groupIn()"
+    >
+      <i class="material-icons">file_download</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.groupOut.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'filterTooltip'"
-                [content]="'Удалить объект из группы'">
-      <button [disabled]="settingButtonPanel.groupOut.disabled"
-              appButtonSimpleStyle
-              (click)="groupOut()"
-      >
-        <i class="material-icons">file_upload</i>
-      </button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.groupOut.disabled"
+            mat-button
+            matTooltip="{{'site.button.groupOut' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="groupOut()"
+    >
+      <i class="material-icons">file_upload</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.switchOn.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'addTooltip'"
-                [content]="'Добавить команду ВКЛ. группы светильников'">
-      <Button [disabled]="settingButtonPanel.switchOn.disabled"
-              (click)="switchOn()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons" style="color: orange">highlight</i>
-      </Button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.switchOn.disabled"
+            mat-button
+            matTooltip="{{'site.button.switchOn' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            (click)="switchOn()"
+    >
+      <i class="material-icons" style="color: orange">highlight</i>
+    </button>
   </div>
 
   <div style="float: left" *ngIf="settingButtonPanel.switchOff.visible">
-    <jqxTooltip [position]="'bottom'" [name]="'switchOffTooltip'"
-                [content]="'Добавить команду ВЫКЛ. группы светильников'">
-      <Button [disabled]="settingButtonPanel.switchOff.disabled"
-              (click)="switchOff()"
-              appButtonSimpleStyle
-      >
-        <i class="material-icons">highlight</i>
-      </Button>
-    </jqxTooltip>
+    <button [disabled]="settingButtonPanel.switchOff.disabled"
+            mat-button
+            matTooltip="{{'site.button.switchOff' | translate}}"
+            matTooltipClass="tooltip"
+            appButtonSimpleStyle
+            appButtonSimpleStyle
+            (click)="switchOff()"
+    >
+      <i class="material-icons">highlight</i>
+    </button>
   </div>
-
 </div>
 
 

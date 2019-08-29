@@ -1,16 +1,22 @@
-<div>
-  <div *ngIf="(this.router.url.substring(0, 21) === '/dictionary/equipment')">
+<div [style.width]="tabsWidth + '%'">
+<!--*ngIf="(this.router.url.substring(0, 21) === '/dictionary/equipment')"-->
+  <div [hidden]="!(this.router.url.substring(0, 21) === '/dictionary/equipment')">
     <app-equipment-type
+      [heightGrid]="780"
     ></app-equipment-type>
   </div>
-
-  <div *ngIf="(this.router.url.substring(0, 22) === '/dictionary/contragent')">
-    <app-contragent>
+<!--*ngIf="(this.router.url.substring(0, 22) === '/dictionary/contragent')"-->
+  <div [hidden]="!(this.router.url.substring(0, 22) === '/dictionary/contragent')">
+    <app-contragent
+      [heightGrid]="780"
+    >
     </app-contragent>
   </div>
-
-  <div *ngIf="(this.router.url.substring(0, 20) === '/dictionary/contract')">
-    <app-contract>
+<!-- *ngIf="(this.router.url.substring(0, 20) === '/dictionary/contract')"-->
+  <div [hidden]="!(this.router.url.substring(0, 20) === '/dictionary/contract')">
+    <app-contract
+      [heightGrid]="780"
+    >
     </app-contract>
   </div>
 </div>

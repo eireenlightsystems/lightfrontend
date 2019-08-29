@@ -3,8 +3,31 @@
     "namecompany": "Eireen Light Systems Lmt.",
     "menu": {
       "operator": {
-        "management": "Management",
-        "fixture": "Fixtures",
+        "operation": "Operation",
+        "fixture-page": {
+          "fixtures": "Fixtures",
+          "fixture-masterdetails-page": {
+            "fixture-masterdetails-page": "Fixtures whith child elements on masterdetails page",
+            "fixturelist-page": {
+              "fixturelist-page": "List of fixtures",
+              "fixturelist-page-ins": "Adding button of fixture",
+              "fixturelist-page-upd": "Updating button of fixture",
+              "fixturelist-page-del": "Deleting button of fixture"
+            },
+            "fixturecomlist-page": {
+              "fixturecomlist-page": "List of commands to turn on or to turn off fixtures"
+            },
+            "fixturecomspeedlist-page": {
+              "fixturecomspeedlist-page": "List of commands speeding to turn on or to turn off fixtures"
+            }
+          },
+          "fixturegroup-md-page": {
+            "fixturegroup-md-page": "Fixture groups whith child elements on masterdetails page"
+          },
+          "fixturemap-page": {
+            "fixturemap-page": "Fixtures on map"
+          }
+        },
         "node": "Nodes",
         "gateway": "Gateways",
         "sensor": "Sensors"
@@ -12,32 +35,93 @@
       "dictionarys": {
         "dictionarys": "Dictionaries",
         "dictionarys-headline": "Select a dictionary to edit",
-        "equipments": "Equipments",
-        "fixturetype": "Fixture types",
-        "fixturetype-headline": "Dictionary of types of fixtures",
-        "nodetype": "Node types",
-        "nodetype-headline": "Dictionary of types of nodes",
-        "gatewaytype": "Gateway types",
-        "gatewaytype-headline": "Dictionary of types of internet gateways",
-        "sensortype": "Sensor types",
-        "sensortype-headline": "Dictionary of types of sensors",
-        "contragents": "Contragents",
-        "companies": "Companies",
-        "companies-headline": "Dictionary of types of companies",
-        "persons": "Persons",
-        "persons-headline": "Dictionary of types of persons",
-        "substations": "Substations",
-        "substations-headline": "Dictionary of types of substations",
 
-        "contract": {
+        "equipment-page": {
+          "equipments": "Equipments",
+          "fixturetype": {
+            "fixturetypes": "Fixture types",
+            "fixturetypes-headline": "Dictionary of types of fixtures"
+          },
+          "nodetype": {
+            "nodetypes": "Node types",
+            "nodetypes-headline": "Dictionary of types of nodes"
+          },
+          "gatewaytype": {
+            "gatewaytypes": "Gateway types",
+            "gatewaytypes-headline": "Dictionary of types of internet gateways"
+          },
+          "sensortype": {
+            "sensortypes": "Sensor types",
+            "sensortypes-headline": "Dictionary of types of sensors"
+          }
+        },
+
+        "contragent-page": {
+          "contragents": "Contragents",
+          "company": {
+            "companies": "Companies",
+            "companies-headline": "Dictionary of types of companies"
+          },
+          "person": {
+            "persons": "Persons",
+            "persons-headline": "Dictionary of types of persons"
+          },
+          "substation": {
+            "substations": "Substations",
+            "substations-headline": "Dictionary of types of substations"
+          }
+        },
+
+        "contract-page": {
           "contracts": "Contracts",
-          "contracts-headline": "Dictionary of contracts",
-          "contracts-types": "Contract types",
-          "contracts-types-headline": "Dictionary of types of contracts"
+          "contract": {
+            "contracts": "Contracts",
+            "contracts-headline": "Dictionary of contracts"
+          },
+          "contracttype": {
+            "contracttypes": "Contract types",
+            "contracttypes-headline": "Dictionary of types of contracts"
+          }
         }
       },
       "administration": {
-        "administration": "Administration"
+        "administration": "Administration",
+        "right-page": {
+          "right-page": "Rights",
+          "right-demo": "Demonstration of Rights",
+          "right-demo-comments": "You can see the rights settings on the example of the current user interface. Upon completion of editing rights, the current user rights settings go back.",
+          "not-right": "No rights. Contact your administrator.",
+
+          "roleright-page": {
+            "roleright-page": "Right of role",
+            "roleright-ins": "Right granted, id =",
+            "roleright-del": "The right has been removed!"
+          },
+
+          "user-page": {
+            "user-page": "Users",
+            "ins": "User has been added, id = ",
+            "upd": "User has been updated, id = ",
+            "upd-warning": "You should select a user to edit",
+            "del": "The user has been deleted!",
+            "del-warning": "You should select a user to delete",
+            "del-question": "Delete user id =",
+            "groupIn": "Users added to the role!",
+            "groupIn-warning": "You should choose a role to bind users to",
+            "groupIn-warning2": "You should select users to bind to the role",
+            "groupOut": "Users removed from the role!",
+            "groupOut-warning": "You should choose a user to decouple from the role",
+            "groupOut-question": "Unlink user from role?"
+          },
+
+          "role-page": {
+            "role-page": "Roles"
+          },
+
+          "component-page": {
+            "component-page": "Components"
+          }
+        }
       },
       "exit": "Exit"
     },
@@ -46,10 +130,47 @@
       "editforms": {
         "edit": "Add/Edit",
         "empty": " empty",
+        "ok": "OK",
         "save": "Save",
         "cancel": "Cancel",
+        "close": "Close",
+        "apply": "To apply",
         "withoutAddress": "without address"
       }
+    },
+
+    "grid": {
+      "not-rows": "Записей нет",
+      "columns": "Columns of table",
+      "export": "Export",
+      "print": "Print",
+
+      "excel": "Export to Excel",
+      "xml": "Export to XML",
+      "csv": "Export to CSV",
+      "tsv": "Export to TSV",
+      "html": "Export to HTML",
+      "json": "Export to JSON",
+      "pdf": "Export to PDF"
+    },
+
+    "filter": {
+      "filter": "Filter"
+    },
+
+    "button": {
+      "ins": "Add",
+      "upd": "Edit",
+      "del": "Delete",
+      "refresh": "Refresh table",
+      "setting": "Table settings",
+      "filterList": "Open filter",
+      "place": "Bind an object",
+      "pinDrop": "Untie object",
+      "groupIn": "Add object to group",
+      "groupOut": "Remove object from group",
+      "switchOn": "Add command ON groups of fixtures",
+      "switchOff": "Add command OFF fixture groups"
     },
 
     "company": {

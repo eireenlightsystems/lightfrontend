@@ -3,8 +3,31 @@
     "namecompany": "ООО Айрин Лайт Системс",
     "menu": {
       "operator": {
-        "management": "Управление",
-        "fixture": "Светильники",
+        "operation": "Управление",
+        "fixture-page": {
+          "fixtures": "Светильники",
+          "fixture-masterdetails-page": {
+            "fixture-masterdetails-page": "Светильники и их зависимые объекты",
+            "fixturelist-page": {
+              "fixturelist-page": "Список светльников",
+              "fixturelist-page-ins": "Кнопка добавления светильников",
+              "fixturelist-page-upd": "Кнопка редактирования светильников",
+              "fixturelist-page-del": "Кнопка удаления светильников"
+            },
+            "fixturecomlist-page": {
+              "fixturecomlist-page": "Список команд вкл./выкл. светильников"
+            },
+            "fixturecomspeedlist-page": {
+              "fixturecomspeedlist-page": "Список команд скоростных режимов вкл./выкл. светильников"
+            }
+          },
+          "fixturegroup-md-page": {
+            "fixturegroup-md-page": "Группы светильников и их зависимые объекты"
+          },
+          "fixturemap-page": {
+            "fixturemap-page": "Светильники на карте"
+          }
+        },
         "node": "Узлы/столбы",
         "gateway": "Шлюзы",
         "sensor": "Датчики"
@@ -12,32 +35,93 @@
       "dictionarys": {
         "dictionarys": "Справочники",
         "dictionarys-headline": "Выберите справочник для редактирования",
-        "equipments": "Оборудование",
-        "fixturetype": "Типы светильников",
-        "fixturetype-headline": "Справочник типов светильников",
-        "nodetype": "Типы узлов/столбов",
-        "nodetype-headline": "Справочник типов узлов/столбов",
-        "gatewaytype": "Типы шлюзов",
-        "gatewaytype-headline": "Справочник типов интернет шлюзов",
-        "sensortype": "Типы датчиков",
-        "sensortype-headline": "Справочник типов датчиков",
-        "contragents": "Контрагенты",
-        "companies": "Юридические лица",
-        "companies-headline": "Справочник юридических лиц",
-        "persons": "Физические лица",
-        "persons-headline": "Справочник физических лиц",
-        "substations": "Подстанции",
-        "substations-headline": "Справочник электростанций",
 
-        "contract": {
+        "equipment-page": {
+          "equipments": "Оборудование",
+          "fixturetype": {
+            "fixturetypes": "Типы светильников",
+            "fixturetypes-headline": "Справочник типов светильников"
+          },
+          "nodetype": {
+            "nodetypes": "Типы узлов/столбов",
+            "nodetypes-headline": "Справочник типов узлов/столбов"
+          },
+          "gatewaytype": {
+            "gatewaytypes": "Типы шлюзов",
+            "gatewaytypes-headline": "Справочник типов интернет шлюзов"
+          },
+          "sensortype": {
+            "sensortypes": "Типы датчиков",
+            "sensortypes-headline": "Справочник типов датчиков"
+          }
+        },
+
+        "contragent-page": {
+          "contragents": "Контрагенты",
+          "company": {
+            "companies": "Юридические лица",
+            "companies-headline": "Справочник юридических лиц"
+          },
+          "person": {
+            "persons": "Физические лица",
+            "persons-headline": "Справочник физических лиц"
+          },
+          "substation": {
+            "substations": "Электростанции",
+            "substations-headline": "Справочник электростанций"
+          }
+        },
+
+        "contract-page": {
           "contracts": "Договора",
-          "contracts-headline": "Справочник договоров",
-          "contracts-types": "Типы договоров",
-          "contracts-types-headline": "Справочник типов договоров"
+          "contract": {
+            "contracts": "Договора",
+            "contracts-headline": "Справочник договоров"
+          },
+          "contracttype": {
+            "contracttypes": "Типы договоров",
+            "contracttypes-headline": "Справочник типов договоров"
+          }
         }
       },
       "administration": {
-        "administration": "Администрирование"
+        "administration": "Администрирование",
+        "right-page": {
+          "right-page": "Права",
+          "right-demo": "Демонстрация прав",
+          "right-demo-comments": "Вы можете видеть настройки прав на примере интерфейса текущего пользователя. По завершению редактирования прав, настроки прав текущего пользователя вернуться обратно.",
+          "not-right": "Нет прав. Обратитесь к администратору.",
+
+          "roleright-page": {
+            "roleright-page": "Права роли",
+            "roleright-ins": "Право выдано, id = ",
+            "roleright-del": "Право было удалено!"
+          },
+
+          "user-page": {
+            "user-page": "Пользователи",
+            "ins": "Пользователь был добавлен, id = ",
+            "upd": "Пользователь был обновлен, id = ",
+            "upd-warning": "Вам следует выбрать пользователя для редактирования",
+            "del": "Пользователь был удален!",
+            "del-warning": "Вам следует выбрать пользователя для удаления",
+            "del-question": "Удалить пользователя id = ",
+            "groupIn": "Пользователи добавлены в роль!",
+            "groupIn-warning": "Вам следует выбрать роль для привязки пользователей",
+            "groupIn-warning2": "Вам следует выбрать пользователей для привязки к роли",
+            "groupOut": "Пользователи удалены из роли!",
+            "groupOut-warning": "Вам следует выбрать пользователя для отвязки от роли",
+            "groupOut-question": "Отвязать пользователя от роли?"
+          },
+
+          "role-page": {
+            "role-page": "Роли"
+          },
+
+          "component-page": {
+            "component-page": "Компоненты"
+          }
+        }
       },
       "exit": "Выход"
     },
@@ -46,10 +130,47 @@
       "editforms": {
         "edit": "Добавить/редактировать",
         "empty": " пусто",
+        "ok": "OK",
         "save": "Сохранить",
         "cancel": "Отмена",
+        "close": "Закрыть",
+        "apply": "Применить",
         "withoutAddress": "без адреса"
       }
+    },
+
+    "grid": {
+      "not-rows": "Записей нет",
+      "columns": "Колонки таблицы",
+      "export": "Экспорт",
+      "print": "Печать",
+
+      "excel": "Экспорт в Excel",
+      "xml": "Экспорт в XML",
+      "csv": "Экспорт в CSV",
+      "tsv": "Экспорт в TSV",
+      "html": "Экспорт в HTML",
+      "json": "Экспорт в JSON",
+      "pdf": "Экспорт в PDF"
+    },
+
+    "filter": {
+      "filter": "Фильтр"
+    },
+
+    "button": {
+      "ins": "Добавить",
+      "upd": "Редактировать",
+      "del": "Удалить",
+      "refresh": "Обновить таблицу",
+      "setting": "Настройки таблицы",
+      "filterList": "Открыть фильтр",
+      "place": "Привязать объект",
+      "pinDrop": "Отвязать объект",
+      "groupIn": "Добавить объект в группу",
+      "groupOut": "Удалить объект из группы",
+      "switchOn": "Добавить команду ВКЛ. группы светильников",
+      "switchOff": "Добавить команду ВЫКЛ. группы светильников"
     },
 
     "company": {

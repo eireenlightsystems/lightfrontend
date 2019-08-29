@@ -3,6 +3,7 @@
 <div>
   <div [hidden]="isFixtureVisible()">
     <app-fixture-page
+      [siteMap]="siteMap"
       [tabsWidth]="tabsWidth"
 
       [ownerFixtures]="ownerFixtures"
@@ -23,6 +24,7 @@
   </div>
   <div [hidden]="isNodeVisible()">
     <app-node-page
+      [siteMap]="siteMap"
       [tabsWidth]="tabsWidth"
 
       [ownerFixtures]="ownerFixtures"
@@ -59,7 +61,9 @@
       [contractGateways]="contractGateways"
     ></app-gateway-page>
   </div>
-  <div [hidden]="isSensorVisible()">
+  <div [hidden]="isSensorVisible()"
+       [style.width]="tabsWidth + '%'"
+  >
     <app-sensor-page
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"

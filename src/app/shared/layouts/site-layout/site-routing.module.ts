@@ -6,22 +6,27 @@ import {SiteLayoutComponent} from './site-layout.component';
 import {DictionaryLayoutComponent} from './dictionary-layout/dictionary-layout.component';
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {NotFoundComponent} from '../../components/not-found/not-found.component';
-import {NodelistPageComponent} from '../../../node/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
-import {EquipmentTypeComponent} from '../../../equipment-type/equipment-type.component';
+import {NodelistPageComponent} from '../../../operator/node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
+import {EquipmentTypeComponent} from '../../../dictionary/equipment-type/equipment-type.component';
 import {OperatorLayoutComponent} from './operator-layout/operator-layout.component';
-import {NodePageComponent} from '../../../node/node-page/node-page.component';
-import {NodemapPageComponent} from '../../../node/node-page/nodemap-page/nodemap-page.component';
-import {GatewayPageComponent} from '../../../gateway/gateway-page/gateway-page.component';
-import {GatewaylistPageComponent} from '../../../gateway/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
-import {GatewaymapPageComponent} from '../../../gateway/gateway-page/gatewaymap-page/gatewaymap-page.component';
-import {FixturePageComponent} from '../../../fixture/fixture-page/fixture-page.component';
-import {FixturelistPageComponent} from '../../../fixture/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
-import {FixtureGrlistPageComponent} from '../../../fixture/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
-import {FixturemapPageComponent} from '../../../fixture/fixture-page/fixturemap-page/fixturemap-page.component';
-import {SensorPageComponent} from '../../../sensor/sensor-page/sensor-page.component';
-import {SensorlistPageComponent} from '../../../sensor/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
-import {ContragentComponent} from '../../../contragent/contragent.component';
-import {ContractComponent} from '../../../contract/contract.component';
+import {NodePageComponent} from '../../../operator/node-page/node-page.component';
+import {NodemapPageComponent} from '../../../operator/node-page/nodemap-page/nodemap-page.component';
+import {GatewayPageComponent} from '../../../operator/gateway-page/gateway-page.component';
+import {GatewaylistPageComponent} from '../../../operator/gateway-page/gateway-masterdetails-page/gatewaylist-page/gatewaylist-page.component';
+import {GatewaymapPageComponent} from '../../../operator/gateway-page/gatewaymap-page/gatewaymap-page.component';
+import {FixturePageComponent} from '../../../operator/fixture-page/fixture-page.component';
+import {FixturelistPageComponent} from '../../../operator/fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
+import {FixtureGrlistPageComponent} from '../../../operator/fixture-page/fixturegroup-md-page/fixture-grlist-page/fixture-grlist-page.component';
+import {FixturemapPageComponent} from '../../../operator/fixture-page/fixturemap-page/fixturemap-page.component';
+import {SensorPageComponent} from '../../../operator/sensor-page/sensor-page.component';
+import {SensorlistPageComponent} from '../../../operator/sensor-page/sensor-md-page/sensorlist-page/sensorlist-page.component';
+import {ContragentComponent} from '../../../dictionary/contragent/contragent.component';
+import {ContractComponent} from '../../../dictionary/contract/contract.component';
+import {RightPageComponent} from '../../../admin/right-page/right-page.component';
+import {UserPageComponent} from '../../../admin/right-page/user-page/user-page.component';
+import {RolePageComponent} from '../../../admin/right-page/role-page/role-page.component';
+import {ComponentPageComponent} from '../../../admin/right-page/component-page/component-page.component';
+import {RolerightPageComponent} from '../../../admin/right-page/roleright-page/roleright-page.component';
 
 // canActivate: [AuthGuard] - защита роутов
 const routes: Routes = [
@@ -89,7 +94,15 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'admin', component: AdminLayoutComponent
+        path: 'admin', component: AdminLayoutComponent, canActivate: [AuthGuard], children: [
+          {path: '', redirectTo: 'right', pathMatch: 'full'},
+          {path: 'right', component: RightPageComponent, canActivate: [AuthGuard], children: [
+              {path: 'users', component: UserPageComponent},
+              {path: 'roles', component: RolePageComponent},
+              {path: 'components', component: ComponentPageComponent},
+              {path: 'rolerights', component: RolerightPageComponent}
+            ]}
+        ]
       }
     ]
   },

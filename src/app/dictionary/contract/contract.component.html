@@ -1,0 +1,36 @@
+<h6 style="margin: 0px 2px 2px 2px; text-align: center"
+    appBackgroundLightorangeDirective
+>{{getHeadline()}}</h6>
+
+<div>
+  <div *ngIf="(this.router.url === '/dictionary/contract/contracts')"
+       class="table_border">
+    <app-simple-dictionary #contract
+                           [typeDictionary]="dictionaryContracts"
+                           [sourceForJqxGrid]="sourceForJqxGridContracts"
+                           [settingWinForEditForm]="settingWinForEditFormContracts"
+                           [sourceForEditForm]="sourceForEditFormContracts"
+
+                           [companies]="companies"
+                           [contractTypes]="this.sourceForJqxGridContractTypes.grid.source"
+
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+  </div>
+
+  <div *ngIf="(this.router.url === '/dictionary/contract/contracts-types')"
+       class="table_border">
+    <app-simple-dictionary #contractType
+                           [typeDictionary]="dictionaryContractTypes"
+                           [sourceForJqxGrid]="sourceForJqxGridContractTypes"
+                           [settingWinForEditForm]="settingWinForEditFormContractTypes"
+                           [sourceForEditForm]="sourceForEditFormContractTypes"
+
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+  </div>
+</div>

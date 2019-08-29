@@ -1,0 +1,16 @@
+<div id="node_yamaps"></div>
+
+<app-edit-form #editWindow
+               *ngIf="isEditFormVisible"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditForm"
+
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onInitEditForm)="setEditFormVisible()"
+               (onSaveEditFormBtn)="saveEditwinBtn()"
+></app-edit-form>
+
+<app-event-window #eventWindow
+                  [warning]="warningEventWindow"
+                  (onOkEvenwinBtn)="okEvenwinBtn()"
+></app-event-window>

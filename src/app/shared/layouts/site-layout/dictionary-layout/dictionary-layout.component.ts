@@ -1,6 +1,8 @@
 // @ts-ignore
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {NavItem} from '../../../interfaces';
+import {RightPageComponent} from '../../../../admin/right-page/right-page.component';
 
 
 @Component({
@@ -10,9 +12,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class DictionaryLayoutComponent implements OnInit, OnDestroy {
 
-  // subscription
+  // variables from master component
+  @Input() siteMap: NavItem[];
+  @Input() tabsWidth: number;
 
-  // source
+  // determine the functions that need to be performed in the parent component
+
+  // define variables - link to view objects
+
+  // other variables
 
   constructor(private route: ActivatedRoute,
               private router: Router,

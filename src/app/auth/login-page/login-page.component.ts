@@ -3,9 +3,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
+import {MaterializeService} from '../../shared/classes/materialize.service';
 
 import {AuthService} from '../../shared/services/auth.service';
-import {MaterializeService} from '../../shared/classes/materialize.service';
+
 
 @Component({
   selector: 'app-login-page',
@@ -17,15 +18,17 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   form: FormGroup;
   aSub: Subscription;
 
-  constructor(private auth: AuthService,
-              private router: Router,
-              private route: ActivatedRoute) {
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              // service
+              private auth: AuthService,
+              ) {
   }
 
   ngOnInit() {
     this.form = new FormGroup({
       login: new FormControl(null, [Validators.required]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(4)])
+      password: new FormControl(null, [Validators.required, Validators.minLength(3)])
     });
 
     this.route.queryParams.subscribe((params: Params) => {
@@ -46,7 +49,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.form.disable();
     this.aSub = this.auth.login(this.form.value).subscribe(
-      () => this.router.navigate(['/operator']),
+      () => {
+        this.router.navigate(['/operator']);
+      },
       error => {
         console.warn(error.error.message);
         MaterializeService.toast(error.error.message);
@@ -54,5 +59,4 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       }
     );
   }
-
 }

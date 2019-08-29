@@ -1,32 +1,14 @@
-<!--<div [hidden]="!islistBoxVisible">-->
-<!--  <jqxListBox #myListBox-->
-<!--              style="float: left"-->
-<!--              [theme]="this.sourceForJqxGridNodeType.listbox.theme"-->
-<!--              [width]="this.sourceForJqxGridNodeType.listbox.width"-->
-<!--              [height]="this.sourceForJqxGridNodeType.listbox.height"-->
-<!--              [source]="this.sourceForJqxGridNodeType.listbox.source"-->
-<!--              [checkboxes]="this.sourceForJqxGridNodeType.listbox.checkboxes"-->
-<!--              [filterable]="this.sourceForJqxGridNodeType.listbox.filterable"-->
-<!--              [allowDrag]="this.sourceForJqxGridNodeType.listbox.allowDrag"-->
-
-<!--              (onCheckChange)="myListBoxOnCheckChange($event)"-->
-<!--  >-->
-<!--  </jqxListBox>-->
-<!--</div>-->
-
 <jqxGrid #myGrid
          [theme]="this.sourceForJqxGrid.grid.theme"
          [width]="widthDefined"
          [height]="heightDefined"
          [source]="dataAdapter_jqxgrid"
-         [columns]="this.sourceForJqxGrid.grid.columns"
+         [columns]="columnsGrid"
          [columnsresize]="this.sourceForJqxGrid.grid.columnsresize"
-
          [sortable]="this.sourceForJqxGrid.grid.sortable"
          [filterable]="this.sourceForJqxGrid.grid.filterable"
          [altrows]="this.sourceForJqxGrid.grid.altrows"
          [selectionmode]="this.sourceForJqxGrid.grid.selectionmode"
-
          (onRowselect)="onRowSelect($event)"
 >
 </jqxGrid>
@@ -44,109 +26,108 @@
            [minHeight]="300"
 >
   <div>
-    <b>Настройки таблицы</b>
+    <i class="material-icons">settings</i>
   </div>
-
   <div>
-    <jqxTabs #jqxTabs
-             [theme]="this.sourceForJqxGrid.grid.theme"
-             [width]='"100%"' [height]='"99%"'
-             [position]='"top"'>
-      <ul style="margin-left: 10px;">
-        <li>Колонки таблицы</li>
-        <li>Экспорт</li>
-        <li>Печать</li>
-      </ul>
-      <div>
-        <jqxListBox #myListBox
-                    [theme]="this.sourceForJqxGrid.listbox.theme"
-                    [width]='"99%"'
-                    [height]='"99%"'
-                    [source]="this.sourceForJqxGrid.listbox.source"
-                    [checkboxes]="this.sourceForJqxGrid.listbox.checkboxes"
-                    [filterable]="this.sourceForJqxGrid.listbox.filterable"
-                    [allowDrag]="this.sourceForJqxGrid.listbox.allowDrag"
+    <mat-tab-group #matTabGroup [selectedIndex]="0">
+      <mat-tab label="{{'site.grid.columns' | translate}}">
+        <ng-template matTabContent>
+          <div style="height: 390px">
+            <jqxListBox #myListBox
+                        [theme]="this.sourceForJqxGrid.listbox.theme"
+                        [width]='"99%"'
+                        [height]='"99%"'
+                        [source]="listBoxSource"
+                        [checkboxes]="this.sourceForJqxGrid.listbox.checkboxes"
+                        [filterable]="this.sourceForJqxGrid.listbox.filterable"
+                        [allowDrag]="this.sourceForJqxGrid.listbox.allowDrag"
+                        (onCheckChange)="myListBoxOnCheckChange($event)"
+            >
+            </jqxListBox>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="{{'site.grid.export' | translate}}">
+        <ng-template matTabContent>
+          <div class="fr">
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="excelBtnOnClick()"
+              >{{'site.grid.excel' | translate}}
+              </jqxButton>
+            </div>
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="xmlBtnOnClick()"
+              >{{'site.grid.xml' | translate}}
+              </jqxButton>
+            </div>
+          </div>
 
-                    (onCheckChange)="myListBoxOnCheckChange($event)"
-        >
-        </jqxListBox>
-      </div>
-      <div>
-        <div class="fr">
-          <div appButtonSettinggrid>
-            <jqxButton
-              [theme]="this.sourceForJqxGrid.grid.theme"
-              [width]='"100%"'
-              (onClick)="excelBtnOnClick()">Export to Excel
-            </jqxButton>
+          <div class="fr" style="margin-top: 10px">
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="csvBtnOnClick()"
+              >{{'site.grid.csv' | translate}}
+              </jqxButton>
+            </div>
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="tsvBtnOnClick()"
+              >{{'site.grid.tsv' | translate}}
+              </jqxButton>
+            </div>
           </div>
-          <div appButtonSettinggrid>
-            <jqxButton
-              [theme]="this.sourceForJqxGrid.grid.theme"
-              [width]='"100%"'
-              (onClick)="xmlBtnOnClick()">Export to XML
-            </jqxButton>
-          </div>
-        </div>
 
-        <div class="fr" style="margin-top: 10px">
-          <div appButtonSettinggrid>
-            <jqxButton
-              [theme]="this.sourceForJqxGrid.grid.theme"
-              [width]='"100%"'
-              (onClick)="csvBtnOnClick()"
-            >Export to CSV
-            </jqxButton>
+          <div class="fr" style="margin-top: 10px">
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="htmlBtnOnClick()"
+              >{{'site.grid.html' | translate}}
+              </jqxButton>
+            </div>
+            <div appButtonSettinggrid>
+              <jqxButton
+                [theme]="this.sourceForJqxGrid.grid.theme"
+                [width]='"100%"'
+                (onClick)="jsonBtnOnClick()"
+              >{{'site.grid.json' | translate}}
+              </jqxButton>
+            </div>
           </div>
-          <div appButtonSettinggrid>
-            <jqxButton
-              [theme]="this.sourceForJqxGrid.grid.theme"
-              [width]='"100%"'
-              (onClick)="tsvBtnOnClick()"
-            >Export to TSV
-            </jqxButton>
-          </div>
-        </div>
 
-        <div class="fr" style="margin-top: 10px">
+          <div appButtonSettinggrid style="margin-top: 10px">
+            <jqxButton
+              [theme]="this.sourceForJqxGrid.grid.theme"
+              [width]='"100%"'
+              (onClick)="pdfBtnOnClick()"
+            >{{'site.grid.pdf' | translate}}
+            </jqxButton>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="{{'site.grid.print' | translate}}">
+        <ng-template matTabContent>
           <div appButtonSettinggrid>
             <jqxButton
               [theme]="this.sourceForJqxGrid.grid.theme"
               [width]='"100%"'
-              (onClick)="htmlBtnOnClick()"
-            >Export to HTML
+              (onClick)="btnPrint()"
+            >{{'site.grid.print' | translate}}
             </jqxButton>
           </div>
-          <div appButtonSettinggrid>
-            <jqxButton
-              [theme]="this.sourceForJqxGrid.grid.theme"
-              [width]='"100%"'
-              (onClick)="jsonBtnOnClick()"
-            >Export to JSON
-            </jqxButton>
-          </div>
-        </div>
-
-        <div appButtonSettinggrid style="margin-top: 10px">
-          <jqxButton
-            [theme]="this.sourceForJqxGrid.grid.theme"
-            [width]='"100%"'
-            (onClick)="pdfBtnOnClick()"
-          >Export to PDF
-          </jqxButton>
-        </div>
-      </div>
-      <div>
-        <div appButtonSettinggrid>
-          <jqxButton
-            [theme]="this.sourceForJqxGrid.grid.theme"
-            [width]='"100%"'
-            (onClick)="btnPrint()"
-          >Печать
-          </jqxButton>
-        </div>
-      </div>
-    </jqxTabs>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
-
 </jqxWindow>

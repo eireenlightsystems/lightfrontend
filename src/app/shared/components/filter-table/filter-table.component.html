@@ -7,9 +7,8 @@
            [height]="getHeight()"
 >
   <div>
-    <b>Фильтр</b>
+    <i class="material-icons">filter_list</i>
   </div>
-
   <div>
     <div *ngIf="filtrWindow.isOpen()">
       <app-filter-item *ngFor="let itemFilter of sourceForFilter"
@@ -19,11 +18,11 @@
     <div appButtonFilter>
       <jqxButton
         [theme]="sourceForFilter[0].theme"
-        [width]="100" [height]="45"
+        [width]="100"
         (click)="submitFilter()"
-      >Применить
+      >
+        {{'site.forms.editforms.apply' | translate}}
       </jqxButton>
     </div>
   </div>
-
 </jqxWindow>

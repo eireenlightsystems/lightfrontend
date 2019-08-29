@@ -6,7 +6,7 @@ import {NotFoundComponent} from '../../../components/not-found/not-found.compone
 
 import {SiteLayoutComponent} from '../site-layout.component';
 import {DictionaryLayoutComponent} from './dictionary-layout.component';
-import {EquipmentTypeComponent} from '../../../../equipment-type/equipment-type.component';
+import {EquipmentTypeComponent} from '../../../../dictionary/equipment-type/equipment-type.component';
 
 
 // canActivate: [AuthGuard] - защита роутов

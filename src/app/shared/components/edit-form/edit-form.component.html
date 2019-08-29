@@ -6,17 +6,15 @@
            [width]="settingWinForEditForm.width" [maxWidth]="settingWinForEditForm.maxWidth"
            [minWidth]="settingWinForEditForm.minWidth"
            [position]="{ x: settingWinForEditForm.coordX, y: settingWinForEditForm.coordY }"
-           (onClose)="eventWindowClose($event)"
+           (onClose)="closeDestroy()"
 >
   <div #windowHeader>
-    <b>Добавить/Редактировать</b>
-<!--    <b>{{ 'site.forms.editforms.edit' | translate }}</b>-->
+    <i class="material-icons">edit</i>
   </div>
-
   <div #windowContent>
     <table>
-      <app-edit-form-item *ngFor="let itemEditForm of sourceForEditForm" [itemEditForm]="itemEditForm"
-                          #editFormItemComponent
+      <app-edit-form-item #editFormItemComponent
+                          *ngFor="let itemEditForm of sourceForEditForm" [itemEditForm]="itemEditForm"
       ></app-edit-form-item>
     </table>
     <div class="fr" style="margin-left: 110px">
@@ -40,6 +38,4 @@
       </div>
     </div>
   </div>
-
-
 </jqxWindow>

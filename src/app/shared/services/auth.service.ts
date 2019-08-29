@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from '../interfaces';
 import {tap} from 'rxjs/operators';
-import {MaterializeService} from '../classes/materialize.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,7 @@ import {MaterializeService} from '../classes/materialize.service';
 export class AuthService {
 
   private token = null;
+  private strLogin = null;
 
   constructor(private http: HttpClient) {
   }
@@ -27,7 +28,8 @@ export class AuthService {
           ({token}) => {
             localStorage.setItem('auth-token', token);
             this.setToken(token);
-            // MaterializeService.toast('Авторизация пройдена');
+            localStorage.setItem('login', user.login);
+            this.setLogin(user.login);
           }
         )
       );
@@ -42,8 +44,21 @@ export class AuthService {
   }
 
   clearToken() {
-    this.setToken(null);
+    this.setLogin(null);
+    this.clearLogin();
     localStorage.clear();
+  }
+
+  setLogin(login: string) {
+    this.strLogin = login;
+  }
+
+  getLogin(): string {
+    return this.strLogin;
+  }
+
+  clearLogin() {
+    this.setLogin(null);
   }
 
   isAuthenticated(): boolean {
@@ -57,7 +72,6 @@ export class AuthService {
       .pipe(
         tap(
           () => {
-            // MaterializeService.toast('');
           }
         )
       );

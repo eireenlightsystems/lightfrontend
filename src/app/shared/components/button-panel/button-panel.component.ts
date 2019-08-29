@@ -1,7 +1,13 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {SettingButtonPanel} from '../../interfaces';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import jqxTooltip = jqwidgets.jqxTooltip;
+// app interfaces
+import {SettingButtonPanel} from '../../interfaces';
+// app services
+// app components
+
 
 @Component({
   selector: 'app-button-panel',
@@ -10,7 +16,7 @@ import jqxTooltip = jqwidgets.jqxTooltip;
 })
 export class ButtonPanelComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -19,7 +25,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   @Output() onUpd = new EventEmitter();
   @Output() onDel = new EventEmitter();
   @Output() onRefresh = new EventEmitter();
-  @Output() onFilterNone = new EventEmitter();
+  @Output() onSetting = new EventEmitter();
   @Output() onFilterList = new EventEmitter();
   @Output() onPlace = new EventEmitter();
   @Output() onPinDrop = new EventEmitter();
@@ -34,7 +40,9 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   // other variables
 
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -69,8 +77,8 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     this.onRefresh.emit();
   }
 
-  filterNone() {
-    this.onFilterNone.emit();
+  setting() {
+    this.onSetting.emit();
   }
 
   filterList() {

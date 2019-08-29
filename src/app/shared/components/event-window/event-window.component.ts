@@ -1,8 +1,12 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-
+// jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
 import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbuttons';
+// app interfaces
+// app services
+// app components
+
 
 @Component({
   selector: 'app-event-window',
@@ -12,13 +16,17 @@ import {jqxButtonComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxbutt
 
 export class EventWindowComponent {
 
+  // variables from parent component
   @Input() warning = '';
-
   @Output() onOkEvenwinBtn = new EventEmitter();
   @Output() onCancelEvenwinBtn = new EventEmitter();
+  // determine the functions that need to be performed in the parent component
 
+  // define variables - link to view objects
   @ViewChild('eventWindow', {static: false}) eventWindow: jqxWindowComponent;
   @ViewChild('okButton', {static: false}) okButton: jqxButtonComponent;
+
+  // other variables
 
   okEvenwinBtn() {
     this.onOkEvenwinBtn.emit();

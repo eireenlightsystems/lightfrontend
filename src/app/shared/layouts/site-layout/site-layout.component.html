@@ -20,67 +20,74 @@
 
       <div fxShow="true" fxHide.lt-md style="margin-left: 10px">
         <!-- The following menu items will be hidden on both SM and XS screen sizes -->
-        <a [routerLink]="'/operator'"
-           mat-button
-           class="button-top-menu"
-           style="width: 200px"
-           appYellowWavesDirective
-           appButtonMenuDirective
-           (click)="chooseMenuItem('/operator')"
+        <button *ngIf="siteMap[0].disabled === false"
+                [routerLink]="'/operator/fixture'"
+                mat-button
+                class="button-top-menu"
+                style="width: 200px"
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (mouseup)="chooseNavMenuItem('/operator/fixture')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">touch_app</mat-icon>
-          {{ 'site.menu.operator.management' | translate }}
-        </a>
-        <a [routerLink]="'/dictionary'"
-           mat-button
-           [matMenuTriggerFor]=dictionarys
-           class="button-top-menu"
-           style="width: 200px"
-           appYellowWavesDirective
-           appButtonMenuDirective
-           (click)="chooseMenuItem('')"
+          {{ 'site.menu.operator.operation' | translate }}
+        </button>
+        <button *ngIf="siteMap[1].disabled === false"
+                [routerLink]="'/dictionary'"
+                mat-button
+                [matMenuTriggerFor]=dictionarys
+                class="button-top-menu"
+                style="width: 200px"
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (mouseup)="chooseNavMenuItem('')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">import_contacts</mat-icon>
           {{ 'site.menu.dictionarys.dictionarys' | translate }}
-        </a>
-        <a [routerLink]="'/admin'"
-           mat-button
-           class="button-top-menu"
-           style="width: 200px"
-           appYellowWavesDirective
-           appButtonMenuDirective
-           (click)="chooseMenuItem('/admin')"
+        </button>
+        <button *ngIf="siteMap[2].disabled === false"
+                [routerLink]="'/admin/right'"
+                mat-button
+                class="button-top-menu"
+                style="width: 200px"
+                appYellowWavesDirective
+                appButtonMenuDirective
+                (mouseup)="chooseNavMenuItem('/admin/right')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">settings</mat-icon>
           {{ 'site.menu.administration.administration' | translate }}
-        </a>
+        </button>
+        <!--        [disabled]="siteMap[2].disabled"-->
       </div>
 
       <mat-menu #dictionarys="matMenu">
-        <a [routerLink]="'/dictionary/equipment'"
-           mat-menu-item
-           appButtonMenuDirective [theme]="'light'"
-           (click)="chooseMenuItem('/equipment')"
+        <button
+          [routerLink]="'/dictionary/equipment'"
+          mat-menu-item
+          appButtonMenuDirective [theme]="'light'"
+          (click)="chooseNavMenuItem('/dictionary/equipment')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">build</mat-icon>
-          {{ 'site.menu.dictionarys.equipments' | translate }}
-        </a>
-        <a [routerLink]="'/dictionary/contragent'"
-           mat-menu-item
-           appButtonMenuDirective [theme]="'light'"
-           (click)="chooseMenuItem('/contragent')"
+          {{ 'site.menu.dictionarys.equipment-page.equipments' | translate }}
+        </button>
+        <button
+          [routerLink]="'/dictionary/contragent'"
+          mat-menu-item
+          appButtonMenuDirective [theme]="'light'"
+          (click)="chooseNavMenuItem('/dictionary/contragent')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">group</mat-icon>
-          {{ 'site.menu.dictionarys.contragents' | translate }}
-        </a>
-        <a [routerLink]="'/dictionary/contract'"
-           mat-menu-item
-           appButtonMenuDirective [theme]="'light'"
-           (click)="chooseMenuItem('/cntr')"
+          {{ 'site.menu.dictionarys.contragent-page.contragents' | translate }}
+        </button>
+        <button *ngIf="siteMap[1].children[2].disabled === false"
+                [routerLink]="'/dictionary/contract'"
+                mat-menu-item
+                appButtonMenuDirective [theme]="'light'"
+                (click)="chooseNavMenuItem('/dictionary/contract')"
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">list_alt</mat-icon>
-          {{ 'site.menu.dictionarys.contract.contracts' | translate }}
-        </a>
+          {{ 'site.menu.dictionarys.contract-page.contracts' | translate }}
+        </button>
       </mat-menu>
 
       <span class="spacer"></span>
@@ -99,11 +106,22 @@
         <button mat-button
                 appYellowWavesDirective
                 appButtonMenuDirective
+                [matMenuTriggerFor]=useractions
+        >
+          {{ user.contragentCode }}
+        </button>
+      </span>
+      <mat-menu #useractions="matMenu">
+        <div style="margin-left: 15px">
+          {{ user.login }}
+        </div>
+        <button mat-menu-item
+                appButtonMenuDirective [theme]="'light'"
                 (click)="logout($event)"
         >
           {{ 'site.menu.exit' | translate }}
         </button>
-      </span>
+      </mat-menu>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -123,7 +141,7 @@
         <li [routerLink]="navitem.route"
             style="margin-left: 3px"
         >
-          <button *ngIf="this.isSidenavMax === true"
+          <button *ngIf="navitem.disabled === false && this.isSidenavMax === true"
                   mat-button
                   appButtonMenuDirective [theme]="'light'"
                   style="margin-left: 3px"
@@ -132,13 +150,13 @@
             <mat-icon class="routeIcon" style="margin-right: 10px">{{navitem.iconName}}</mat-icon>
             {{ navitem.displayName | translate}}
           </button>
-          <button *ngIf="this.isSidenavMax === false"
+          <button *ngIf="navitem.disabled === false && this.isSidenavMax === false"
                   mat-button
                   matTooltip="{{ navitem.displayName | translate}}"
+                  matTooltipClass="tooltip"
                   [matTooltipPosition]="'right'"
                   appButtonMenuDirective [theme]="'light'"
-                  matTooltipClass="tooltip"
-                  (click)="mobileQuery.matches ? snav.close() : ''"
+                   (click)="mobileQuery.matches ? snav.close() : ''"
           >
             <mat-icon class="routeIcon">{{navitem.iconName}}</mat-icon>
           </button>
@@ -159,23 +177,34 @@
     <mat-sidenav-content
       class="example-sidenav-content"
     >
-      <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
+
+<!--      *ngIf="(this.router.url.substring(0,5) === '/oper')"-->
+      <div [hidden]="!(this.router.url.substring(0,5) === '/oper')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
       >
         <app-operator-layout
+          [siteMap]="siteMap"
           [tabsWidth]="tabsWidth"
         ></app-operator-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/dict')"
+<!--      *ngIf="(this.router.url.substring(0,5) === '/dict')"-->
+      <div [hidden]="!(this.router.url.substring(0,5) === '/dict')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft}"
       >
         <app-dictionary-layout
+          [siteMap]="siteMap"
+          [tabsWidth]="tabsWidth"
         ></app-dictionary-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
+<!--      *ngIf="(this.router.url.substring(0,5) === '/admi')"-->
+      <div [hidden]="!(this.router.url.substring(0,5) === '/admi')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
       >
-        <app-admin-layout
+        <app-admin-layout #adminLayoutComponent
+                          [siteMap]="siteMap"
+                          [tabsWidth]="tabsWidth"
+
+                          (onUpdRights)="updRights()"
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>
@@ -220,11 +249,22 @@
         <button mat-button
                 appYellowWavesDirective
                 appButtonMenuDirective
+                [matMenuTriggerFor]=useractions
+        >
+          {{ user.contragentCode }}
+        </button>
+      </span>
+      <mat-menu #useractions="matMenu">
+        <div style="margin-left: 15px">
+          {{ user.login }}
+        </div>
+        <button mat-menu-item
+                appButtonMenuDirective [theme]="'light'"
                 (click)="logout($event)"
         >
           {{ 'site.menu.exit' | translate }}
         </button>
-      </span>
+      </mat-menu>
     </mat-toolbar-row>
   </mat-toolbar>
 
@@ -290,10 +330,11 @@
       <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
       >
         <app-operator-layout
+          [siteMap]="siteMap"
           [tabsWidth]="tabsWidth"
         ></app-operator-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/hand')"
+      <div *ngIf="(this.router.url.substring(0,5) === '/dict')"
       >
         <app-dictionary-layout
         ></app-dictionary-layout>
@@ -301,6 +342,8 @@
       <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
       >
         <app-admin-layout
+          [siteMap]="siteMap"
+          [tabsWidth]="tabsWidth"
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>

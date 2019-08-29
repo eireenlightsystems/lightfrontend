@@ -5,21 +5,21 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 
 import {SharedModule} from '../../shared.module';
-import {SiteRoutingModule} from './site-routing.module';
-import {OperatorModule} from './operator-layout/operator.module';
-import {DictionaryModule} from './dictionary-layout/dictionary.module';
-
-import {SiteLayoutComponent} from './site-layout.component';
-import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {MaterialModule} from '../../material-module';
 import {TranslateModule} from '@ngx-translate/core';
 import {ExtendedModule} from '@angular/flex-layout';
+import {SiteRoutingModule} from './site-routing.module';
+
+import {OperatorModule} from './operator-layout/operator.module';
+import {DictionaryModule} from './dictionary-layout/dictionary.module';
+import {AdminModule} from './admin-layout/admin.module';
+
+import {SiteLayoutComponent} from './site-layout.component';
 
 
 @NgModule({
   declarations: [
     SiteLayoutComponent,
-    AdminLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +34,7 @@ import {ExtendedModule} from '@angular/flex-layout';
     ExtendedModule,
     OperatorModule,
     DictionaryModule,
-
+    AdminModule,
   ]
 })
 export class SiteModule {

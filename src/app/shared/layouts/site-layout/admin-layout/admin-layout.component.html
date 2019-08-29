@@ -1,3 +1,14 @@
-<div>
-  <p>Страница в разработке!</p>
+<!--*ngIf="siteMap[2].children[0].disabled === false"-->
+<div
+     [hidden]="!(this.router.url.substring(0, 12) === '/admin/right')"
+     [style.width]="tabsWidth - 0.5 + '%'"
+     style="margin-left: 5px"
+>
+  <app-right-page #rightPageComponent
+                  [siteMap]="siteMap"
+                  [tabsWidth]="tabsWidth"
+                  [theme]="'material'"
+
+                  (onUpdRights)="updRights()"
+  ></app-right-page>
 </div>

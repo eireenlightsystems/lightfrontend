@@ -1,13 +1,17 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-
+import {isNull, isUndefined} from 'util';
+import {MatTabsModule} from '@angular/material';
+// jqwidgets
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxListBoxComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxlistbox';
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
-
+// app interfaces
 import {SourceForJqxGrid} from '../../interfaces';
+// app services
+import {TranslateService} from '@ngx-translate/core';
+// app components
 import {DateTimeFormat} from '../../classes/DateTimeFormat';
-import {isNull, isUndefined} from 'util';
 
 
 @Component({
@@ -17,8 +21,10 @@ import {isNull, isUndefined} from 'util';
 })
 export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() sourceForJqxGrid: SourceForJqxGrid;
+  @Input() columnsGrid: any[];
+  @Input() listBoxSource: any[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<any>();
@@ -28,10 +34,10 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('myListBox', {static: false}) myListBox: jqxListBoxComponent;
   @ViewChild('myGrid', {static: true}) myGrid: jqxGridComponent;
   @ViewChild('settingWindow', {static: false}) settingWindow: jqxWindowComponent;
+  @ViewChild('matTabGroup', {static: false}) matTabGroup: MatTabsModule;
 
   // other variables
   selectRow: any;
-  // islistBoxVisible = false;
   widthDefined: any;
   heightDefined: any;
 
@@ -39,7 +45,9 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   source_jqxgrid: any;
   dataAdapter_jqxgrid: any;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -51,7 +59,6 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
         datatype: 'array',
         localdata: this.sourceForJqxGrid.grid.source,
         id: this.sourceForJqxGrid.grid.valueMember,
-
         sortcolumn: this.sourceForJqxGrid.grid.sortcolumn,
         sortdirection: this.sourceForJqxGrid.grid.sortdirection
       };
@@ -61,7 +68,7 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // this.refreshListBox();
+
   }
 
   ngOnDestroy() {
@@ -69,9 +76,6 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   destroyGrid() {
-    // if (this.myListBox) {
-    //   this.myListBox.destroy();
-    // }
     if (this.myGrid) {
       this.myGrid.destroy();
     }
@@ -83,9 +87,6 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   // refresh table
   refresh_jqxgGrid() {
     this.source_jqxgrid.localdata = this.sourceForJqxGrid.grid.source;
-    // this.myGrid.refresh();
-    // this.myGrid.refreshdata();
-    // this.myGrid.updatebounddata('cells');
     this.myGrid.updatebounddata('data');
 
     this.widthDefined = !isNull(this.sourceForJqxGrid.grid.width) ? this.sourceForJqxGrid.grid.width : '100%';
@@ -123,15 +124,13 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // table field filtering
   myListBoxOnCheckChange(event: any) {
-
     let listboxSource: any;
-    for (let i = 0; i < this.sourceForJqxGrid.listbox.source.length; i++) {
-      if (this.sourceForJqxGrid.listbox.source[i].value === event.args.value) {
-        listboxSource = this.sourceForJqxGrid.listbox.source[i];
+    for (let i = 0; i < this.listBoxSource.length; i++) {
+      if (this.listBoxSource[i].value === event.args.value) {
+        listboxSource = this.listBoxSource[i];
         break;
       }
     }
-
     this.myGrid.beginupdate();
     if (event.args.checked) {
       this.myGrid.showcolumn(event.args.value);
@@ -142,22 +141,6 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.myGrid.endupdate();
   }
-
-  // refreshListBox() {
-  //   this.myGrid.beginupdate();
-  //   for (let i = 0; i < this.myListBox.attrSource.length; i++) {
-  //     if (this.myListBox.attrSource[i].checked) {
-  //       try {
-  //         this.myGrid.showcolumn(this.myListBox.attrSource[i].value);
-  //       } catch (e) {
-  //         console.log('refreshListBox');
-  //       }
-  //     } else {
-  //       this.myGrid.hidecolumn(this.myListBox.attrSource[i].value);
-  //     }
-  //   }
-  //   this.myGrid.endupdate();
-  // }
 
   openSettinWin() {
     this.settingWindow.open();

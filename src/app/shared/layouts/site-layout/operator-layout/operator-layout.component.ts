@@ -12,7 +12,7 @@ import {
   FixtureGroupType,
   Geograph,
   HeightType,
-  Installer,
+  Installer, NavItem,
   Owner,
   Substation
 } from '../../../interfaces';
@@ -54,12 +54,13 @@ import {FixtureService} from '../../../services/fixture/fixture.service';
 })
 export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
 
   @ViewChild('floating', {static: false}) floatingRef: ElementRef;
 
   // subscription
-  geographSub: Subscription;
+  // geographSub: Subscription;
   // fixture subscription
   ownerFixtureSub: Subscription;
   fixtureTypeSub: Subscription;
@@ -88,7 +89,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   contractSensorSub: Subscription;
 
   // source
-  geographs: Geograph[];
+  // geographs: Geograph[];
   // fixture source
   ownerFixtures: Owner[];
   fixtureTypes: EquipmentType[];
@@ -120,7 +121,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     private route: ActivatedRoute,
     private router: Router,
     // service
-    private geographService: GeographService,
+    // private geographService: GeographService,
     // fixture service
     private fixtureService: FixtureService,
     private ownerFixtureService: OwnerFixtureService,
@@ -162,7 +163,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy(): void {
     // subscription
-    this.geographSub.unsubscribe();
+    // this.geographSub.unsubscribe();
     // fixture subscription
     this.ownerFixtureSub.unsubscribe();
     this.fixtureTypeSub.unsubscribe();
@@ -178,7 +179,7 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     this.commandStatusSub.unsubscribe();
     this.speedDirectionSub.unsubscribe();
     // node subscription
-    this.geographSub.unsubscribe();
+    // this.geographSub.unsubscribe();
     this.ownerSub.unsubscribe();
     this.nodeTypeSub.unsubscribe();
     this.contractSub.unsubscribe();

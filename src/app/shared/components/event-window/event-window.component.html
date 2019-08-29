@@ -2,17 +2,14 @@
            [theme]="'material'"
            [autoOpen]="false"
            [isModal]="true" [modalOpacity]="0.3"
-
            [width]="300" [minWidth]="300" [maxWidth]="400"
            [height]="155" [minHeight]="155" [maxHeight]="500"
-
            [cancelButton]="'.cancel'" [okButton]="'.ok'" [resizable]="false"
            [position]="{ x: 500, y: 200 }"
            [hidden]="true"
 >
   <div>
     <i class="material-icons">warning</i>
-    <b style="margin-left: 10px;">Предупреждение</b>
   </div>
   <div>
     <div>
@@ -26,39 +23,16 @@
                    [width]="80"
                    (click)="okEvenwinBtn()"
         >
-          OK
+          {{'site.forms.editforms.ok' | translate}}
         </jqxButton>
         <jqxButton #cancelButton class="cancel waves-effect waves-orange white blue-text"
                    style="display: inline-block; margin-left: 10px;"
                    [width]="80"
                    (click)="cancelEvenwinBtn()"
         >
-          Cancel
+          {{'site.forms.editforms.cancel' | translate}}
         </jqxButton>
       </div>
     </div>
-
-
-<!--    <div class="fr" style="margin-left: 65px">-->
-<!--      <div appButtonLink>-->
-<!--        <jqxButton #okButton-->
-<!--                   [theme]="'material'"-->
-<!--                   [width]="80"-->
-<!--                   (onClick)="okEvenwinBtn()"-->
-<!--        >-->
-<!--          OK-->
-<!--        </jqxButton>-->
-<!--      </div>-->
-<!--      <div appButtonLink>-->
-<!--        <jqxButton #cancelButton-->
-<!--                   [theme]="'material'"-->
-<!--                   [width]="80"-->
-<!--                   (onClick)="cancelEvenwinBtn()"-->
-<!--        >-->
-<!--          Отмена-->
-<!--        </jqxButton>-->
-<!--      </div>-->
-<!--    </div>-->
-
   </div>
 </jqxWindow>

@@ -7,9 +7,9 @@ import {SharedModule} from '../../../shared.module';
 
 import {DictionaryLayoutComponent} from './dictionary-layout.component';
 import {DictionaryRoutingModule} from './dictionary-routing.module';
-import {EquipmentTypeComponent} from '../../../../equipment-type/equipment-type.component';
-import {ContragentComponent} from '../../../../contragent/contragent.component';
-import {ContractComponent} from '../../../../contract/contract.component';
+import {EquipmentTypeComponent} from '../../../../dictionary/equipment-type/equipment-type.component';
+import {ContragentComponent} from '../../../../dictionary/contragent/contragent.component';
+import {ContractComponent} from '../../../../dictionary/contract/contract.component';
 import {JsonFormatedPipe} from '../../../pipe/json-formated.pipe';
 
 

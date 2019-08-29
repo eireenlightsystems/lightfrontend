@@ -1,16 +1,77 @@
 import {Input} from '@angular/core';
 
-export interface NavItem {
+export class NavItem {
   displayName: string;
-  disabled?: boolean;
-  iconName: string;
+  rolerightId?: number;
+  componentName?: string;
+  disabled?: boolean; // скрывать/показывать элемент в соответсвие с назначенным правом
+  expandable?: boolean; // раскрывать дочерние элементы, если данный элемент встроен в древовидное меню
+  iconName?: string;
   route?: string;
   children?: NavItem[];
 }
 
-export interface User {
+export class User {
+  userId: number;
+  contragentId: number;
   login: string;
   password: string;
+  contragentCode: string;
+  contragentName: string;
+  contragentInn: string;
+  contragentAdres: string;
+  comments: string;
+}
+
+export interface FilterUser {
+  roleId: string;
+  contragentId: string;
+  notRoleId: string;
+}
+
+export class Role {
+  roleId: number;
+  contragentId: number;
+  password: string;
+  contragentCode: string;
+  contragentName: string;
+  contragentInn: string;
+  contragentAdres: string;
+  name: string;
+  comments: string;
+}
+
+export interface FilterRole {
+  userId: string;
+  notUserId: string;
+}
+
+export class Components {
+  componentId: number;
+  code: string;
+  name: string;
+  comments: string;
+  rights: string;
+}
+
+export interface FilterComponent {
+  roleId: string;
+  userId: string;
+}
+
+export class Roleright {
+  rolerightId: number;
+  componentId: number;
+  componentCode: string;
+  componentName: string;
+  componentComments: string;
+  roleId: number;
+  roleName: string;
+  rights: string;
+}
+
+export interface FilterRoleright {
+  roleId: string;
 }
 
 export interface Message {
@@ -79,6 +140,7 @@ export interface SettingWinForEditForm {
   code: string;
   name: string;
   theme: string;
+  autoOpen?: boolean;
   isModal: boolean;
   modalOpacity: number;
   width: number;
@@ -143,7 +205,7 @@ export interface SourceForLinkForm {
 
 export interface SourceForJqxGrid {
   listbox: {
-    source: any[];
+    source?: any[];
     theme: string;
     width: number;
     height: number;
@@ -153,7 +215,7 @@ export interface SourceForJqxGrid {
   };
   grid: {
     source: any[];
-    columns: any[];
+    columns?: any[];
     theme: string;
     width: number;
     height: number;
@@ -194,7 +256,7 @@ export class SettingButtonPanel {
     visible: boolean;
     disabled: boolean;
   };
-  filterNone: {
+  setting: {
     visible: boolean;
     disabled: boolean;
   };

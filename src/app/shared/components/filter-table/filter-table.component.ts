@@ -1,8 +1,12 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {isNull, isUndefined} from 'util';
-
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
+// app interfaces
+// app services
+// app components
 
 
 @Component({
@@ -12,7 +16,7 @@ import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
 })
 export class FilterTableComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() sourceForFilter;
   @Input() isMasterGrid;
   @Input() coordinateX;
@@ -29,7 +33,9 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   offsetWidth: any;
   offsetHeight: any;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -45,6 +51,18 @@ export class FilterTableComponent implements OnInit, OnDestroy {
     if (this.filtrWindow) {
       this.filtrWindow.destroy();
     }
+  }
+
+  open() {
+    this.filtrWindow.open();
+  }
+
+  close() {
+    this.filtrWindow.close();
+  }
+
+  hide() {
+    this.filtrWindow.hide();
   }
 
   submitFilter() {
@@ -114,13 +132,5 @@ export class FilterTableComponent implements OnInit, OnDestroy {
       }
     }
     return filterSelect;
-  }
-
-  openWindow() {
-    this.filtrWindow.open();
-  }
-
-  closeWindow() {
-    this.filtrWindow.close();
   }
 }

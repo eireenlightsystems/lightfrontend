@@ -83,7 +83,7 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
         visible: true,
         disabled: false,
       },
-      filterNone: {
+      setting: {
         visible: false,
         disabled: false,
       },
@@ -126,7 +126,7 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
       this.jqxgridComponent.destroyGrid();
     }
     if (this.editWindow) {
-      this.editWindow.destroyWindow();
+      this.editWindow.destroy();
     }
   }
 

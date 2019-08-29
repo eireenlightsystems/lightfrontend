@@ -1,0 +1,65 @@
+<jqxTabs
+  [theme]="'material'"
+  [width]="tabsWidth + '%'"
+>
+  <ul style="margin-left: 30px">
+    <li>Светильники</li>
+    <li>Группы светильников</li>
+    <li>Карта</li>
+  </ul>
+  <div style="overflow: hidden">
+    <app-fixture-masterdetails-page
+      *ngIf="siteMap[0].children[0].children[0].disabled === false"
+      [siteMap]="siteMap"
+
+      [ownerFixtures]="ownerFixtures"
+      [fixtureTypes]="fixtureTypes"
+      [substations]="substations"
+      [contractFixtures]="contractFixtures"
+      [installers]="installers"
+      [heightTypes]="heightTypes"
+
+      [commandTypes]="commandTypes"
+      [commandStatuses]="commandStatuses"
+      [speedDirectiones]="speedDirectiones"
+
+      [selectionmode]=""
+      [fixtureGroupId]=""
+
+    ></app-fixture-masterdetails-page>
+  </div>
+
+  <div style="overflow: hidden">
+    <app-fixturegroup-md-page
+      *ngIf="siteMap[0].children[0].children[1].disabled === false"
+      [siteMap]="siteMap"
+
+      [ownerFixtures]="ownerFixtures"
+      [fixtureTypes]="fixtureTypes"
+      [substations]="substations"
+      [contractFixtures]="contractFixtures"
+      [installers]="installers"
+      [heightTypes]="heightTypes"
+
+      [fixtureGroupTypes]="fixtureGroupTypes"
+      [fixtureGroupOwners]="fixtureGroupOwners"
+
+      [commandTypes]="commandTypes"
+      [commandStatuses]="commandStatuses"
+      [speedDirectiones]="speedDirectiones"
+
+    ></app-fixturegroup-md-page>
+  </div>
+
+  <div style="overflow: hidden">
+    <app-fixturemap-page #fixturemapPageComponent
+                         *ngIf="siteMap[0].children[0].children[2].disabled === false"
+
+                         [fixtureTypes]="fixtureTypes"
+                         [substations]="substations"
+                         [contractFixtures]="contractFixtures"
+                         [installers]="installers"
+                         [heightTypes]="heightTypes"
+    ></app-fixturemap-page>
+  </div>
+</jqxTabs>

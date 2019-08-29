@@ -1,0 +1,6 @@
+<ul>
+  <li *ngFor="let node of treeData">
+    {{ node.displayName | translate}}
+    <app-tree-view [treeData]="node.children"></app-tree-view>
+  </li>
+</ul>

@@ -1,10 +1,12 @@
-// @ts-ignore
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-
-import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
+// angular lib
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-
-import {EditFormItemComponent} from './edit-form-item/edit-form-item.component';
+// jqwidgets
+import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
+// app interfaces
+import {SettingWinForEditForm, SourceForEditForm} from '../../interfaces';
+// app services
+// app components
 
 
 @Component({
@@ -14,24 +16,24 @@ import {EditFormItemComponent} from './edit-form-item/edit-form-item.component';
 })
 export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // variables from master component
-  @Input() sourceForEditForm;
-  @Input() settingWinForEditForm;
-
+  // variables from parent component
+  @Input() settingWinForEditForm: SettingWinForEditForm;
+  @Input() sourceForEditForm: SourceForEditForm[];
 
   // determine the functions that need to be performed in the parent component
-  @Output() onSaveEditwinBtn = new EventEmitter<any>();
-  @Output() onSetEditFormVisible = new EventEmitter();
+  @Output() onSaveEditFormBtn = new EventEmitter();
+  @Output() onInitEditForm = new EventEmitter();
+  @Output() onGetSourceForEditForm = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
-  @ViewChild('windowHeader', {static: false}) windowHeader: ElementRef;
-  @ViewChild('editFormItemComponent', {static: false}) editFormItemComponent: EditFormItemComponent;
 
   // other variables
 
 
-  constructor(public translate: TranslateService) {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -43,33 +45,41 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyWindow();
+    this.destroy();
   }
 
-  saveBtn() {
-    this.onSaveEditwinBtn.emit();
-  }
-
-  cancelBtn() {
-    this.closeDestroyWindow();
-  }
-
-  destroyWindow() {
+  destroy() {
     if (this.editWindow) {
       this.editWindow.destroy();
     }
   }
 
-  closeDestroyWindow() {
-    this.onSetEditFormVisible.emit();
-    this.destroyWindow();
+  open() {
+    this.editWindow.open();
   }
 
-  positionWindow(coord: any) {
+  close() {
+    this.editWindow.close();
+  }
+
+  closeDestroy() {
+    this.onInitEditForm.emit();
+    this.destroy();
+  }
+
+  hide() {
+    this.editWindow.hide();
+  }
+
+  position(coord: any) {
     this.editWindow.position({x: coord.x, y: coord.y});
   }
 
-  eventWindowClose(event: any): void {
-    this.closeDestroyWindow();
+  saveBtn() {
+    this.onSaveEditFormBtn.emit();
+  }
+
+  cancelBtn() {
+    this.closeDestroy();
   }
 }

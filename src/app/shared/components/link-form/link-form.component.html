@@ -11,9 +11,8 @@
            [minHeight]="sourceForLinkForm.window.minHeight"
 >
   <div>
-    <b #windowHeader>Выберите элементы {{sourceForLinkForm.window.name}}</b>
+    <i class="material-icons">file_download</i>
   </div>
-
   <div>
     <jqxGrid #myGrid
              [theme]="sourceForLinkForm.grid.theme"
@@ -21,7 +20,6 @@
              [height]="sourceForLinkForm.grid.height"
              [source]="dataAdapter_jqxgrid"
              [columns]="sourceForLinkForm.grid.columns"
-
              [columnsresize]="sourceForLinkForm.grid.columnsresize"
              [sortable]="sourceForLinkForm.grid.sortable"
              [filterable]="sourceForLinkForm.grid.filterable"
@@ -29,7 +27,6 @@
              [selectionmode]="sourceForLinkForm.grid.selectionmode"
     >
     </jqxGrid>
-
     <div class="fr">
       <div appButtonLink>
         <jqxButton #okButton
@@ -37,7 +34,7 @@
                    [width]="100"
                    (onClick)="saveBtn()"
         >
-          Сохранить
+          {{'site.forms.editforms.save' | translate}}
         </jqxButton>
       </div>
       <div appButtonLink>
@@ -46,10 +43,9 @@
                    [width]="100"
                    (onClick)="cancelBtn()"
         >
-          Отмена
+          {{'site.forms.editforms.cancel' | translate}}
         </jqxButton>
       </div>
     </div>
   </div>
-
 </jqxWindow>
