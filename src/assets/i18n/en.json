@@ -5,84 +5,236 @@
       "operator": {
         "operation": "Operation",
         "fixture-page": {
-          "fixtures": "Fixtures",
+          "fixture-page": "Fixtures",
           "fixture-masterdetails-page": {
             "fixture-masterdetails-page": "Fixtures whith child elements on masterdetails page",
             "fixturelist-page": {
               "fixturelist-page": "List of fixtures",
               "fixturelist-page-ins": "Adding button of fixture",
               "fixturelist-page-upd": "Updating button of fixture",
-              "fixturelist-page-del": "Deleting button of fixture"
+              "fixturelist-page-del": "Deleting button of fixture",
+              "ins": "Fixture has been added, id = ",
+              "upd": "Fixture has been updated, id = ",
+              "upd-warning": "You should select a fixture to edit",
+              "del": "The fixture has been deleted!",
+              "del-warning": "You should select a fixture to delete",
+              "del-question": "Delete fixture id =",
+              "groupIn": "Fixtures added to the group!",
+              "groupIn-warning": "You should choose a group to bind fixtures to",
+              "groupIn-warning2": "You should select fixtures to bind to the group",
+              "groupOut": "Fixtures removed from the group!",
+              "groupOut-warning": "You should choose a fixtures to decouple from the group",
+              "groupOut-question": "Unlink fixtures from group?",
+              "place": "The fixture is attached to the node!",
+              "place-warning": "You should choose a node for binding fixtures",
+              "pinDrop": "The fixtures are untied from the pillar!",
+              "pinDrop-warning": "You should choose fixtures to untie from the node",
+              "pinDrop-question": "Untie the fixtures from the node?"
             },
             "fixturecomlist-page": {
-              "fixturecomlist-page": "List of commands to turn on or to turn off fixtures"
+              "fixturecomlist-page": "Lighting mode commands",
+              "time-on": "Date / Time on",
+              "time-off": "Date / Time Off",
+              "command-off": "Shutdown command",
+              "work-mode": "Work mode",
+              "standby-mode": "Standby mode",
+              "warning1-mode": "Set the operating mode level higher than the standby level",
+              "warning2-mode": "Set the start time of the command to be less than the time to complete the command",
+              "del": "Commands deleted!",
+              "del-warning": "You should select a command to delete",
+              "del-question": "Delete commands?"
             },
             "fixturecomspeedlist-page": {
-              "fixturecomspeedlist-page": "List of commands speeding to turn on or to turn off fixtures"
+              "fixturecomspeedlist-page": "Fire/attenuation commands",
+              "time-on": "Date / Time on",
+              "command-type": "Command type",
+              "time-transition": "Transition time, sec",
+              "del": "Commands deleted!",
+              "del-warning": "You should select a command to delete",
+              "del-question": "Delete commands?"
             }
           },
           "fixturegroup-md-page": {
+            "fixture-grlist-page": {
+              "fixture-grlist-page": "Groups of fixtures",
+              "fixture-grlist-page-ins": "Adding button of fixture group",
+              "fixture-grlist-page-upd": "Updating button of fixture group",
+              "fixture-grlist-page-del": "Deleting button of fixture group",
+              "ins": "Fixture group has been added, id = ",
+              "upd": "Fixture group has been updated, id = ",
+              "upd-warning": "You should select a fixture group to edit",
+              "del": "The fixture group has been deleted!",
+              "del-warning": "You should select a fixture group to delete",
+              "del-question": "Delete fixture group id ="
+            },
             "fixturegroup-md-page": "Fixture groups whith child elements on masterdetails page"
           },
           "fixturemap-page": {
-            "fixturemap-page": "Fixtures on map"
+            "fixturemap-page": "Fixtures on map",
+            "select": "Select group of fixture"
           }
         },
-        "node": "Nodes",
-        "gateway": "Gateways",
-        "sensor": "Sensors"
+        "node-page": {
+          "node-page": "Nodes",
+          "node-masterdetails-page": {
+            "node-masterdetails-page": "Nodes and their dependent objects",
+            "nodelist-page": {
+              "nodelist-page": "List of nodes",
+              "nodelist-page-ins": "Adding button of node",
+              "nodelist-page-upd": "Updating button of node",
+              "nodelist-page-del": "Deleting button of node",
+              "ins": "Node has been added, id = ",
+              "upd": "Node has been updated, id = ",
+              "upd-warning": "You should select a node to edit",
+              "del": "The node has been deleted!",
+              "del-warning": "You should select a node to delete",
+              "del-question": "Delete node id =",
+              "groupIn": "Nodes are attached to the gateway!",
+              "groupIn-warning": "You should select a gateway to bind nodes",
+              "groupIn-warning2": "You should select the nodes to bind to the gateway",
+              "groupOut": "Nodes are untied from the gateway!",
+              "groupOut-warning": "You should select a nodes to decouple from the gateway",
+              "groupOut-question": "Untie the nodes from the gateway?"
+            }
+          },
+          "nodemap-page": {
+            "nodemap-page": "Nodes on map",
+            "move": "Move node",
+            "moved": "The position of the node / post has changed, id = ",
+            "move-question1": "Clear node coordinates (remove from map)?",
+            "move-question2": "Are you sure you want to change the coordinates of the node?",
+            "del": "Node removed from map, id = "
+          }
+        },
+        "gateway-page": {
+          "gateway-page": "Gateways",
+          "gateway-masterdetails-page": {
+            "gateway-masterdetails-page": "Gateways and their dependent objects",
+            "gatewaylist-page": {
+              "gatewaylist-page": "Gateway list",
+              "gatewaylist-page-ins": "Adding button of gateway",
+              "gatewaylist-page-upd": "Updating button of gateway",
+              "gatewaylist-page-del": "Deleting button of gateway",
+              "ins": "Gateway has been added, id = ",
+              "upd": "Gateway has been updated, id = ",
+              "upd-warning": "You should select a gateway to edit",
+              "del": "The gateway has been deleted!",
+              "del-warning": "You should select a gateway to delete",
+              "del-question": "Delete gateway id =",
+              "place": "",
+              "place-warning": "You should select a node to bind the gateways",
+              "pinDrop": "The gateway is untied from the node!",
+              "pinDrop-warning": "You should select a gateway to untie from the node",
+              "pinDrop-question": "Unlink gateway from node?"
+            }
+          },
+          "gatewaymap-page": {
+            "gatewaymap-page": "Gateways on the map",
+            "select": "Select gateway"
+          }
+        },
+        "sensor-page": {
+          "sensor-page": "Sensors",
+          "sensor-md-page": {
+            "sensor-md-page": "Датчики и их зависимые объекты",
+            "sensorlist-page": {
+              "sensorlist-page": "Sensor list",
+              "sensorlist-page-ins": "Adding button of sensor",
+              "sensorlist-page-upd": "Updating button of sensor",
+              "sensorlist-page-del": "Deleting button of sensor",
+              "ins": "Sensor has been added, id = ",
+              "upd": "Sensor has been updated, id = ",
+              "upd-warning": "You should select a sensor to edit",
+              "del": "The sensor has been deleted!",
+              "del-warning": "You should select a sensor to delete",
+              "del-question": "Delete sensor id =",
+              "place": "The sensor is attached to the node!",
+              "place-warning": "You should select a node to bind sensors",
+              "pinDrop": "The sensors are untied from the node!",
+              "pinDrop-warning": "You should select the sensors to untie from the node",
+              "pinDrop-question": "Unlink sensors from node?"
+            }
+          }
+        }
       },
       "dictionarys": {
         "dictionarys": "Dictionaries",
         "dictionarys-headline": "Select a dictionary to edit",
-
         "equipment-page": {
           "equipments": "Equipments",
           "fixturetype": {
             "fixturetypes": "Fixture types",
-            "fixturetypes-headline": "Dictionary of types of fixtures"
+            "fixturetypes-headline": "Dictionary of types of fixtures",
+            "ins": "Fixture type has been added, id = ",
+            "upd": "Fixture type has been updated, id = ",
+            "del": "Fixture type has been deleted!"
           },
           "nodetype": {
             "nodetypes": "Node types",
-            "nodetypes-headline": "Dictionary of types of nodes"
+            "nodetypes-headline": "Dictionary of types of nodes",
+            "ins": "Node type has been added, id = ",
+            "upd": "Node type has been updated, id = ",
+            "del": "Node type has been deleted!"
           },
           "gatewaytype": {
             "gatewaytypes": "Gateway types",
-            "gatewaytypes-headline": "Dictionary of types of internet gateways"
+            "gatewaytypes-headline": "Dictionary of types of internet gateways",
+            "ins": "Gateway type has been added, id = ",
+            "upd": "Gateway type has been updated, id = ",
+            "del": "Gateway type has been deleted!"
           },
           "sensortype": {
             "sensortypes": "Sensor types",
-            "sensortypes-headline": "Dictionary of types of sensors"
+            "sensortypes-headline": "Dictionary of types of sensors",
+            "ins": "Sensor type has been added, id = ",
+            "upd": "Sensor type has been updated, id = ",
+            "del": "Sensor type has been deleted!"
           }
         },
-
         "contragent-page": {
           "contragents": "Contragents",
           "company": {
             "companies": "Companies",
-            "companies-headline": "Dictionary of types of companies"
+            "companies-headline": "Dictionary of types of companies",
+            "ins": "Company has been added, id = ",
+            "upd": "Company has been updated, id = ",
+            "del": "Company has been deleted!"
           },
           "person": {
             "persons": "Persons",
-            "persons-headline": "Dictionary of types of persons"
+            "persons-headline": "Dictionary of types of persons",
+            "ins": "Person has been added, id = ",
+            "upd": "Person has been updated, id = ",
+            "del": "Person has been deleted!"
           },
           "substation": {
             "substations": "Substations",
-            "substations-headline": "Dictionary of types of substations"
+            "substations-headline": "Dictionary of types of substations",
+            "ins": "Substation has been added, id = ",
+            "upd": "Substation has been updated, id = ",
+            "del": "Substation has been deleted!"
           }
         },
-
         "contract-page": {
           "contracts": "Contracts",
           "contract": {
             "contracts": "Contracts",
-            "contracts-headline": "Dictionary of contracts"
+            "contracts-headline": "Dictionary of contracts",
+            "ins": "Сontract has been added, id = ",
+            "upd": "Сontract has been updated, id = ",
+            "del": "Сontract has been deleted!"
           },
           "contracttype": {
             "contracttypes": "Contract types",
-            "contracttypes-headline": "Dictionary of types of contracts"
+            "contracttypes-headline": "Dictionary of types of contracts",
+            "ins": "Type of contract has been added, id = ",
+            "upd": "The type of contract has been updated, id = ",
+            "del": "The type of contract has been deleted!"
           }
-        }
+        },
+        "upd-warning": "You should select a directory entry for editing",
+        "del-warning": "You should select a directory entry to delete",
+        "del-question": "Delete directory entry id = "
       },
       "administration": {
         "administration": "Administration",
@@ -91,13 +243,11 @@
           "right-demo": "Demonstration of Rights",
           "right-demo-comments": "You can see the rights settings on the example of the current user interface. Upon completion of editing rights, the current user rights settings go back.",
           "not-right": "No rights. Contact your administrator.",
-
           "roleright-page": {
             "roleright-page": "Right of role",
-            "roleright-ins": "Right granted, id =",
-            "roleright-del": "The right has been removed!"
+            "ins": "Right granted, id =",
+            "del": "The right has been removed!"
           },
-
           "user-page": {
             "user-page": "Users",
             "ins": "User has been added, id = ",
@@ -113,19 +263,35 @@
             "groupOut-warning": "You should choose a user to decouple from the role",
             "groupOut-question": "Unlink user from role?"
           },
-
           "role-page": {
-            "role-page": "Roles"
+            "role-page": "Roles",
+            "ins": "Role has been added, id = ",
+            "upd": "Role has been updated, id = ",
+            "upd-warning": "You should select a role to edit",
+            "del": "The role has been deleted!",
+            "del-warning": "You should select a role to delete",
+            "del-question": "Delete role id =",
+            "groupIn": "Roles added to the user!",
+            "groupIn-warning": "You should choose a user to bind roles to",
+            "groupIn-warning2": "You should select roles to bind to the user",
+            "groupOut": "Roles removed from the user!",
+            "groupOut-warning": "You should choose a role to decouple from the user",
+            "groupOut-question": "Unlink role from user?"
           },
-
           "component-page": {
-            "component-page": "Components"
+            "component-page": "Components",
+            "ins": "Component has been added, id = ",
+            "upd": "Component has been updated, id = ",
+            "upd-warning": "You should select a component to edit",
+            "del": "The component has been deleted!",
+            "del-warning": "You should select a component to delete",
+            "del-question": "Delete component id =",
+            "edit-code": "Fill in the component code"
           }
         }
       },
       "exit": "Exit"
     },
-
     "forms": {
       "editforms": {
         "edit": "Add/Edit",
@@ -138,13 +304,11 @@
         "withoutAddress": "without address"
       }
     },
-
     "grid": {
       "not-rows": "Записей нет",
       "columns": "Columns of table",
       "export": "Export",
       "print": "Print",
-
       "excel": "Export to Excel",
       "xml": "Export to XML",
       "csv": "Export to CSV",
@@ -153,11 +317,9 @@
       "json": "Export to JSON",
       "pdf": "Export to PDF"
     },
-
     "filter": {
       "filter": "Filter"
     },
-
     "button": {
       "ins": "Add",
       "upd": "Edit",
@@ -172,7 +334,6 @@
       "switchOn": "Add command ON groups of fixtures",
       "switchOff": "Add command OFF fixture groups"
     },
-
     "company": {
       "aboutUs": {
         "team": "Project team",
@@ -194,7 +355,6 @@
         "partners": "Partners"
       }
     },
-
     "products": {
       "projectLCS": "Control system of dynamic lighting of the road network",
       "problem": "Problem!",
@@ -203,15 +363,11 @@
       "decisionName": "Maximum light at the right time, in the right place.",
       "technology": "Technology!",
       "technologyName": "Light fixture, wireless communication, motion detection.",
-
       "projectGoals": "Project Goals",
       "projectGoalsName": "Dynamic lighting system provides improved energy efficiency and safety of street lighting networks. The system allows you to light with the required level of brightness necessary for safe movement of the road, creating  local light spot that accompanies a moving object.  The rest of the road is illuminated in the standby mode with reduced brightness. The system can be used in populated\n  points on the test sites. Control and management of lighting is carried out as part of a single automated system, which includes following items: lamps with adjustable luminous flux; a participant monitoring subsystem; luminaire mode control subsystem; subsystem monitoring the level of natural light; dispatch center.",
-
       "team": "Project team",
-
       "maproad": "Road map"
     },
-
     "footer": {
       "rights": "All rights reserved"
     }

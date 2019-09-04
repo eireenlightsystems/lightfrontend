@@ -9,11 +9,9 @@
   <div class="splitter-panel">
     <app-rolelist-page #rolelistPageComponent
                        [companies]="companies"
-
                        [heightGrid]="heightGridRoleright"
                        [isMasterGrid]="true"
                        [settingButtonPanel]="settingRoleButtonPanel"
-
                        (onRefreshChildGrid)="refreshChildSiteMap($event)"
     ></app-rolelist-page>
   </div>
@@ -30,7 +28,6 @@
             <!-- use a disabled button to provide padding for tree leaf -->
             <mat-checkbox style="margin-right: 5px" [(ngModel)]="!node.disabled"
                           (change)="changeRight($event, node)"></mat-checkbox>
-
             <button mat-button
                     appButtonMenuDirective [theme]="'light'"
                     (click)="onItemSelected(node)"
@@ -46,7 +43,6 @@
             <div class="mat-tree-node">
               <mat-checkbox style="margin-right: 5px" [(ngModel)]="!node.disabled"
                             (change)="changeRight($event, node)"></mat-checkbox>
-
               <button mat-button
                       appButtonMenuDirective [theme]="'light'"
                       (click)="onItemSelected(node)">

@@ -1,6 +1,9 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-
+import {isNull, isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
+// app interfaces
 import {
   CompanyDepartment, ContractType,
   OrgForm,
@@ -9,12 +12,13 @@ import {
   SourceForEditForm,
   SourceForJqxGrid
 } from '../../interfaces';
+// app services
+// app components
 import {EventWindowComponent} from '../event-window/event-window.component';
 import {EditFormComponent} from '../edit-form/edit-form.component';
 import {ButtonPanelComponent} from '../button-panel/button-panel.component';
 import {JqxgridComponent} from '../jqxgrid/jqxgrid.component';
-import {isNull, isUndefined} from 'util';
-import {TranslateService} from '@ngx-translate/core';
+
 
 @Component({
   selector: 'app-simple-dictionary',
@@ -23,25 +27,26 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class SimpleDictionaryComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() typeDictionary: string;
+  @Input() columnsGrid: any[];
+  @Input() listBoxSource: any[];
   @Input() sourceForJqxGrid: SourceForJqxGrid;
   @Input() settingWinForEditForm: SettingWinForEditForm;
   @Input() sourceForEditForm: SourceForEditForm[];
-
   @Input() orgForms: OrgForm[];
   @Input() companies: CompanyDepartment[];
   @Input() contractTypes: ContractType[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetSourceForJqxGrid = new EventEmitter<any>();
-  @Output() onSaveEditwinBtn = new EventEmitter<any>();
+  @Output() onSaveEditFormBtn = new EventEmitter<any>();
   @Output() onOkEvenwinBtn = new EventEmitter<any>();
 
   // define variables - link to view objects
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -49,19 +54,20 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
   loading = false;
   reloading = false;
   // main
-
   // grid
   selectItemId = 0;
   // filter
   // edit form
-  isEditFormVisible = false;
+  isEditFormInit = false;
   typeEditWindow = '';
   // link form
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(public translate: TranslateService) {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -125,8 +131,8 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
   }
 
@@ -156,17 +162,17 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormVisible = !this.isEditFormVisible;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormVisible = !this.isEditFormVisible;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать запись справочника для редактирования`;
+      this.warningEventWindow = this.translate.instant('site.menu.dictionarys.upd-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -175,10 +181,11 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить тип оборудования id = "${this.jqxgridComponent.myGrid.getrowid(this.jqxgridComponent.myGrid.getselectedrowindex())}"?`;
+      this.warningEventWindow = this.translate.instant('site.menu.dictionarys.del-question')
+        + this.jqxgridComponent.myGrid.getrowid(this.jqxgridComponent.myGrid.getselectedrowindex()) + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать запись справочника для удаления`;
+      this.warningEventWindow = this.translate.instant('site.menu.dictionarys.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -189,14 +196,14 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
 
   // FILTER
 
-
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     const saveEditwinObject = new Object();
     const selectObject = new Object();
     for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      selectObject[this.sourceForEditForm[i].nameField] = isNull(this.sourceForEditForm[i].selectCode) ? 0 : this.sourceForEditForm[i].selectCode;
+      selectObject[this.sourceForEditForm[i].nameField] =
+        isNull(this.sourceForEditForm[i].selectCode) ? 0 : this.sourceForEditForm[i].selectCode;
     }
     if (this.typeEditWindow === 'upd') {
       selectObject['id'] = this.jqxgridComponent.selectRow.id;
@@ -204,7 +211,7 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     saveEditwinObject['dictionaryType'] = this.typeDictionary;
     saveEditwinObject['typeEditWindow'] = this.typeEditWindow;
     saveEditwinObject['selectObject'] = selectObject;
-    this.onSaveEditwinBtn.emit(saveEditwinObject);
+    this.onSaveEditFormBtn.emit(saveEditwinObject);
   }
 
   getSourceForEditForm() {
@@ -337,8 +344,8 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM

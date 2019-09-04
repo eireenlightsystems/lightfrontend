@@ -1,15 +1,19 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
-
-import {Gateway, Node, Contract, EquipmentType, Geograph, Owner, SourceForLinkForm, ItemsLinkForm} from '../../../shared/interfaces';
+import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
+import {Gateway, Node, Contract, EquipmentType, Owner, SourceForLinkForm, ItemsLinkForm} from '../../../shared/interfaces';
+// app services
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
-import {MaterializeService} from '../../../shared/classes/materialize.service';
 import {NodeService} from '../../../shared/services/node/node.service';
+// app components
 import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {LinkFormComponent} from '../../../shared/components/link-form/link-form.component';
-import {isUndefined} from 'util';
 
 
 declare var ymaps: any;
@@ -22,53 +26,82 @@ declare var ymaps: any;
 })
 export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
-
-  @Input() nodeColumns: any[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
 
   // other variables
   myMap: any;
   nCoord = 60.0503;
   eCoord = 30.4269;
   zoom = 17;
-
+  draggableIcon = false;
+  nodeColumns: any[];
+  nodeColumnsEng: any[];
+  //
+  oSub: Subscription;
+  oSubGatewayGroups: Subscription;
+  oSubNodesInGroup: Subscription;
   gatewayGroups: Gateway[];
   nodeInGroups: Node[];
   selectGatewayId: number;
   selectNodeId: number;
   selectGatewayNodeId: number;
-  actionEventWindow = '';
-  warningEventWindow = '';
-  sourceForLinkForm: SourceForLinkForm;
-
-  oSub: Subscription;
-  oSubGatewayGroups: Subscription;
-  oSubNodesInGroup: Subscription;
+  // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
+  sourceForLinkForm: SourceForLinkForm;
+  sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
+  // event form
+  actionEventWindow = '';
+  warningEventWindow = '';
 
-  draggableIcon = false;
 
-
-  constructor(private zone: NgZone,
-              private gatewayService: GatewayService,
-              private nodeService: NodeService,
+  constructor(private _snackBar: MatSnackBar,
+              private zone: NgZone,
               public router: Router,
-              public route: ActivatedRoute) {
+              public route: ActivatedRoute,
+              // service
+              public translate: TranslateService,
+              private gatewayService: GatewayService,
+              private nodeService: NodeService) {
   }
 
   ngOnInit() {
-    // this.getGatewayGroups();
+    // definde columns
+    this.nodeColumns =
+      [
+        {text: 'nodeId', datafield: 'nodeId', width: 150},
+        {text: 'Договор', datafield: 'contractCode', width: 150},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
+        {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+        {text: 'Владелец', datafield: 'ownerCode', width: 150},
+        {text: 'Широта', datafield: 'n_coordinate', width: 150},
+        {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+        {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+        {text: 'Коментарий', datafield: 'comment', width: 150},
+      ];
+    this.nodeColumnsEng =
+      [
+        {text: 'nodeId', datafield: 'nodeId', width: 150},
+        {text: 'Contract', datafield: 'contractCode', width: 150},
+        {text: 'Address', datafield: 'geographFullName', width: 400},
+        {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
+        {text: 'Owner', datafield: 'ownerCode', width: 150},
+        {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+        {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+        {text: 'Serial number', datafield: 'serialNumber', width: 150},
+        {text: 'Comments', datafield: 'comment', width: 150},
+      ];
 
     // Definde filter
     this.sourceForLinkForm = {
@@ -76,7 +109,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         code: 'linkGatewayNodes',
         name: 'Выбрать узлы',
         theme: 'material',
-        autoOpen: false,
+        autoOpen: true,
         isModal: true,
         modalOpacity: 0.3,
         width: 1200,
@@ -98,7 +131,39 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
+        valueMember: 'nodeId',
+        sortcolumn: ['nodeId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
+    this.sourceForLinkFormEng = {
+      window: {
+        code: 'linkGatewayNodes',
+        name: 'Choose nodes',
+        theme: 'material',
+        autoOpen: true,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
 
+      },
+      grid: {
+        source: [],
+        columns: this.nodeColumnsEng,
+        theme: 'material',
+        width: 1186,
+        height: 485,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: 'checkbox',
         valueMember: 'nodeId',
         sortcolumn: ['nodeId'],
         sortdirection: 'desc',
@@ -176,12 +241,11 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   buttonsInit() {
     const ButtonLayout = ymaps.templateLayoutFactory.createClass([
         `<div class="fr">
-                  <Button id="linkNodesInGroup"
-                    class="btn btn-small waves-effect waves-orange white blue-text"
-
+                  <button id="linkNodesInGroup"
+                    class="btn btn-small waves-effect waves-yellow white blue-text"
                   >
                     <i class="material-icons">file_download</i>
-                  </Button>
+                  </button>
               </div>`
       ].join(''),
       {
@@ -189,7 +253,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           ButtonLayout.superclass.build.call(this);
           $('#linkNodesInGroup').bind('click', this.linkNodesInGroup(this.getData().properties));
         },
-
         linkNodesInGroup: (function () {
           const mapComponent: GatewaymapPageComponent = this;
           return function (properties: any) {
@@ -200,7 +263,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         }).call(this),
       },
       ),
-
       buttonIns = new ymaps.control.Button({
         data: {
           content: 'Жмак-жмак-жмак',
@@ -226,7 +288,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       // +
       // "<a id='my-listbox-header' class='dropdown-trigger' data-target='my-listbox'>{{data.title}}<i class='material-icons right'>arrow_drop_down</i></a>"
       // +
-      '<button id=\'gateway-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-orange white blue-text\' data-toggle=\'dropdown\'>' +
+      '<button id=\'gateway-listbox-header\' class=\'dropdown-toggle btn btn-small waves-effect waves-yellow white blue-text\' data-toggle=\'dropdown\'>' +
       '{{data.title}} <span class=\'caret\'></span>' +
       '</button>' +
       // Этот элемент будет служить контейнером для элементов списка.
@@ -241,7 +303,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // Вызываем метод build родительского класса перед выполнением
           // дополнительных действий.
           ListBoxLayout.superclass.build.call(this);
-
           this.childContainerElement = $('#gateway-listbox').get(0);
           // Генерируем специальное событие, оповещающее элемент управления
           // о смене контейнера дочерних элементов.
@@ -250,13 +311,11 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
             oldChildContainerElement: null
           });
         },
-
         // Переопределяем интерфейсный метод, возвращающий ссылку на
         // контейнер дочерних элементов.
         getChildContainerElement: function () {
           return this.childContainerElement;
         },
-
         clear: function () {
           // Заставим элемент управления перед очисткой макета
           // откреплять дочерние элементы от родительского.
@@ -272,20 +331,17 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           ListBoxLayout.superclass.clear.call(this);
         }
       }),
-
       // Также создадим макет для отдельного элемента списка.
       ListBoxItemLayout = ymaps.templateLayoutFactory.createClass(
-        '<li><a class=\'waves-effect waves-orange white blue-text\'><i class=\'material-icons\'>router</i> {{data.content}}</a></li>'
+        '<li><a class=\'waves-effect waves-yellow white blue-text\'><i class=\'material-icons\'>router</i> {{data.content}}</a></li>'
       ),
-
       // Создадим 2 пункта выпадающего списка
       listBoxItems = this.getlistBoxItemGroups(),
-
       // Теперь создадим список, содержащий 2 пункта.
       listBox = new ymaps.control.ListBox({
         items: listBoxItems,
         data: {
-          title: 'Выберите шлюз'
+          title: this.translate.instant('site.menu.operator.gateway-page.gatewaymap-page.select')
         },
         options: {
           // С помощью опций можно задать как макет непосредственно для списка,
@@ -296,7 +352,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           itemLayout: ListBoxItemLayout
         }
       });
-
     listBox.events.add('click',
       (function () {
         const mapComponent: GatewaymapPageComponent = this;
@@ -339,53 +394,65 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // place the object from the set "getAll()" on the map
   addItemsToMap() {
     const collection = new ymaps.GeoObjectCollection(null, {});
-
-    const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-      `<div class="fr">
-        <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                    [content]="'Удалить узел с карты'">
-          <Button id="visibilityItems"
-            class="btn btn-small waves-effect waves-orange white blue-text"
-            style="margin: 2px 2px 2px 2px;"
-          >
-            <i class="material-icons">pin_drop</i>
-          </Button>
-        </jqxTooltip>
-      </div>
-            
-      <table class="table table-sm">
-      <tbody>
-
-      <tr><th>ID узла</th><td>{{properties.nodeId}}</td></tr>
-      <tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>
-      <tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>
-
-      </tbody>
-      </table>`, {
-        build: function () {
-          BalloonContentLayout.superclass.build.call(this);
-          $('#visibilityItems').bind('click', this.visibilityItems(this.getData().properties));
-        },
-
-        clear: function () {
-          BalloonContentLayout.superclass.clear.call(this);
-        },
-
-        visibilityItems: (function () {
-          const mapComponent: GatewaymapPageComponent = this;
-          return function (properties: any) {
-            return function () {
-              mapComponent.selectNodeId = properties._data.nodeId;
-              mapComponent.eventWindow.okButtonDisabled(false);
-              mapComponent.warningEventWindow = 'Исключить узел из группы?';
-              mapComponent.actionEventWindow = 'visibility';
-              mapComponent.eventWindow.openEventWindow();
+    const BalloonContentLayout =
+      ymaps.templateLayoutFactory.createClass(
+        this.translate.currentLang === 'ru'
+          ?
+          `<div class="fr">
+            <button id="visibilityItems"
+              class="btn btn-small waves-effect waves-yellow white blue-text"
+              style="margin: 2px 2px 2px 2px;"
+            >
+              <i class="material-icons">pin_drop</i>
+            </button>
+          </div>
+          <table class="table table-sm">
+            <tbody>
+              <tr><th>ID узла</th><td>{{properties.nodeId}}</td></tr>
+              <tr><th>Широта</th><td>{{properties.n_coordinate}}</td></tr>
+              <tr><th>Долгота</th><td>{{properties.e_coordinate}}</td></tr>
+            </tbody>
+          </table>`
+          :
+          `<div class="fr">
+            <button id="visibilityItems"
+              class="btn btn-small waves-effect waves-yellow white blue-text"
+              style="margin: 2px 2px 2px 2px;"
+            >
+              <i class="material-icons">pin_drop</i>
+            </button>
+          </div>
+          <table class="table table-sm">
+            <tbody>
+              <tr><th>ID node</th><td>{{properties.nodeId}}</td></tr>
+              <tr><th>Latitude</th><td>{{properties.n_coordinate}}</td></tr>
+              <tr><th>Longitude</th><td>{{properties.e_coordinate}}</td></tr>
+            </tbody>
+          </table>`
+        ,
+        {
+          build: function () {
+            BalloonContentLayout.superclass.build.call(this);
+            $('#visibilityItems').bind('click', this.visibilityItems(this.getData().properties));
+          },
+          clear: function () {
+            BalloonContentLayout.superclass.clear.call(this);
+          },
+          visibilityItems: (function () {
+            const mapComponent: GatewaymapPageComponent = this;
+            return function (properties: any) {
+              return function () {
+                mapComponent.selectNodeId = properties._data.nodeId;
+                mapComponent.eventWindow.okButtonDisabled(false);
+                mapComponent.warningEventWindow =
+                  mapComponent.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupOut-question');
+                mapComponent.actionEventWindow = 'visibility';
+                mapComponent.eventWindow.openEventWindow();
+              };
             };
-          };
-        }).call(this),
-      }
-    );
-
+          }).call(this),
+        }
+      );
     this.myMap.geoObjects.removeAll();
     this.myMap.geoObjects.add(collection);
     for (const node of this.nodeInGroups) {
@@ -412,27 +479,22 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
           // icon move
           draggable: this.draggableIcon
         });
-
       collection.add(myGeoObject);
     }
   }
 
-  // event window
-  okEvenwinBtn() {
-    if (this.actionEventWindow === 'visibility') {
-      this.pinDropNode();
-    }
-  }
+  // LINK FORM
 
   pinDropNode() {
     const nodeIds = [];
     nodeIds[0] = this.selectNodeId;
     this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
       response => {
-        MaterializeService.toast('Узлы удалены из группы!');
+        this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupOut'),
+          this.translate.instant('site.forms.editforms.ok'));
       },
       error => {
-        MaterializeService.toast(error.error.message);
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
       },
       () => {
         // refresh map
@@ -443,26 +505,27 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   linkNodesInGroup() {
     if (this.selectGatewayId > 1) {
-      this.eventWindow.okButtonDisabled(false);
-      this.linkWindow.open();
+      this.isLinkFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для привязки узлов`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupIn-warning');
       this.eventWindow.openEventWindow();
     }
   }
 
-  saveLinkwinBtn(event: ItemsLinkForm) {
+  saveLinkFormBtn(event: ItemsLinkForm) {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
         response => {
-          MaterializeService.toast('Узлы добавлены в группу!');
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupIn'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
-          this.linkWindow.hide();
+          this.linkForm.closeDestroy();
           this.refreshMap();
         }
       );
@@ -473,11 +536,30 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.linkWindow.refreshGrid();
+        this.sourceForLinkFormEng.grid.source = response;
+        this.linkForm.refreshGrid();
       },
       error => {
-        MaterializeService.toast(error.error.message);
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
       }
     );
+  }
+
+  destroyLinkForm() {
+    this.isLinkFormInit = false;
+  }
+
+  // EVENT FORM
+
+  okEvenwinBtn() {
+    if (this.actionEventWindow === 'visibility') {
+      this.pinDropNode();
+    }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

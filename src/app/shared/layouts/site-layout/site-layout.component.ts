@@ -10,15 +10,7 @@ import {isUndefined} from 'util';
 // jqwidgets
 // app interfaces
 import {Components, NavItem, User} from '../../interfaces';
-// app services
-import {AuthService} from '../../services/auth.service';
-import {UserService} from '../../services/admin/user.service';
-import {ComponentService} from '../../services/admin/component.service';
-// app components
-import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
-
-
-/** Flat node with expandable and level information */
+// flat node with expandable and level information
 interface ExampleFlatNode {
   expandable: boolean;
   name: string;
@@ -27,6 +19,12 @@ interface ExampleFlatNode {
   route?: string;
   level: number;
 }
+// app services
+import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/admin/user.service';
+import {ComponentService} from '../../services/admin/component.service';
+// app components
+import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 
 
 @Component({
@@ -36,30 +34,34 @@ interface ExampleFlatNode {
 })
 export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  // variables from parent component
+
+  // determine the functions that need to be performed in the parent component
+
+  // define variables - link to view objects
   @ViewChild('snav', {static: false}) snav: MatSidenav;
   @ViewChild('matTtree', {static: false}) matTtree: MatTree<any>;
   @ViewChild('adminLayoutComponent', {static: false}) adminLayoutComponent: AdminLayoutComponent;
 
+  // other variables
+  language = 'ru';
   aSub: Subscription;
   userSub: Subscription;
   componentSub: Subscription;
-
   users: User[] = [];
   user: User = new User();
   components: Components[] = [];
   offset = 0;
   limit = 100000;
-
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
-  language = 'ru';
+  // sidenav param
   sidenavWidth = 70;
   sidenavWidthMin = 70;
   sidenavWidthMax = 230;
   sidenavContentMarginLeft = 0;
   isSidenavMax = false;
   tabsWidth = 99.9;
-
   // Left tree-menu in mat-sidenav
   siteMap: NavItem[];
   navItems: NavItem[];
@@ -68,7 +70,6 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   navItemsContragent: NavItem[];
   navItemsContract: NavItem[];
   navItemsAdmin: NavItem[];
-
   private transformer = (node: NavItem, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0 && node.expandable === true,
@@ -85,6 +86,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.transformer, node => node.level, node => node.expandable, node => node.children);
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   dataSourceOnMobile = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
 
   constructor(private router: Router,
               changeDetectorRef: ChangeDetectorRef,
@@ -121,7 +123,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
         route: '/operator',
         children: [
           {
-            displayName: 'site.menu.operator.fixture-page.fixtures',
+            displayName: 'site.menu.operator.fixture-page.fixture-page',
             rolerightId: 0,
             componentName: 'fixture-page',
             disabled: true,
@@ -224,7 +226,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             ]
           },
           {
-            displayName: 'site.menu.operator.node',
+            displayName: 'site.menu.operator.node-page.node-page',
             rolerightId: 0,
             componentName: 'node-page',
             disabled: true,
@@ -233,7 +235,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             children: []
           },
           {
-            displayName: 'site.menu.operator.gateway',
+            displayName: 'site.menu.operator.gateway-page.gateway-page',
             rolerightId: 0,
             componentName: 'gateway-page',
             disabled: true,
@@ -242,7 +244,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             children: []
           },
           {
-            displayName: 'site.menu.operator.sensor',
+            displayName: 'site.menu.operator.sensor-page.sensor-page',
             rolerightId: 0,
             componentName: 'sensor-page',
             disabled: true,
@@ -610,6 +612,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // get all components with rights of user
   getComponents() {
     const params = Object.assign({}, {
         offset: this.offset,

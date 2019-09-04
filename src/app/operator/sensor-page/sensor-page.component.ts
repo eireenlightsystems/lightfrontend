@@ -1,8 +1,11 @@
-// @ts-ignore
+// angular lib
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
-
-import {Contract, Geograph, Owner, EquipmentType, SettingButtonPanel} from '../../shared/interfaces';
-import {SensorlistPageComponent} from './sensor-md-page/sensorlist-page/sensorlist-page.component';
+// jqwidgets
+// app interfaces
+import {Contract, EquipmentType, NavItem, Owner} from '../../shared/interfaces';
+// app services
+// app components
+import {SensorMdPageComponent} from './sensor-md-page/sensor-md-page.component';
 
 
 @Component({
@@ -12,75 +15,26 @@ import {SensorlistPageComponent} from './sensor-md-page/sensorlist-page/sensorli
 })
 export class SensorPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() ownerSensors: Owner[];
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
+  // determine the functions that need to be performed in the parent component
+
   // define variables - link to view objects
-  @ViewChild('sensorlistPageComponent', {static: false}) sensorlistPageComponent: SensorlistPageComponent;
+  @ViewChild('sensorMdPageComponent', {static: false}) sensorMdPageComponent: SensorMdPageComponent;
 
   // other variables
-  settingSensorButtonPanel: SettingButtonPanel;
+
 
   constructor() {
   }
 
   ngOnInit() {
-    // init sensor button panel
-    this.settingSensorButtonPanel = {
-      add: {
-        visible: true,
-        disabled: false,
-      },
-      upd: {
-        visible: true,
-        disabled: false,
-      },
-      del: {
-        visible: true,
-        disabled: false,
-      },
-      refresh: {
-        visible: true,
-        disabled: false,
-      },
-      setting: {
-        visible: true,
-        disabled: false,
-      },
-      filterList: {
-        visible: true,
-        disabled: false,
-      },
-      place: {
-        visible: false,
-        disabled: false,
-      },
-      pinDrop: {
-        visible: false,
-        disabled: false,
-      },
-      groupIn: {
-        visible: false,
-        disabled: false,
-      },
-      groupOut: {
-        visible: false,
-        disabled: false,
-      },
-      switchOn: {
-        visible: false,
-        disabled: false,
-      },
-      switchOff: {
-        visible: false,
-        disabled: false,
-      }
-    };
   }
 
   ngOnDestroy() {
   }
-
 }

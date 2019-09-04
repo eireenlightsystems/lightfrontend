@@ -1,7 +1,10 @@
-// @ts-ignore
+// angular lib
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
-
-import {Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation, NavItem} from '../../shared/interfaces';
+// jqwidgets
+// app interfaces
+import {Contract, Owner, EquipmentType, HeightType, Installer, Substation, NavItem} from '../../shared/interfaces';
+// app services
+// app components
 import {NodeMasterdetailsPageComponent} from './node-masterdetails-page/node-masterdetails-page.component';
 import {NodemapPageComponent} from './nodemap-page/nodemap-page.component';
 
@@ -14,7 +17,7 @@ import {NodemapPageComponent} from './nodemap-page/nodemap-page.component';
 
 export class NodePageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
   // fixture source
@@ -37,50 +40,31 @@ export class NodePageComponent implements OnInit, OnDestroy {
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
 
+  // determine the functions that need to be performed in the parent component
+
   // define variables - link to view objects
   @ViewChild('nodeMasterdetailsPageComponent', {static: false}) nodeMasterdetailsPageComponent: NodeMasterdetailsPageComponent;
   @ViewChild('nodemapPageComponent', {static: false}) nodemapPageComponent: NodemapPageComponent;
 
-  isSourceChangeTab0: boolean;
-  isSourceChangeTab1: boolean;
+  // other variables
 
 
   constructor() {
   }
 
   ngOnInit() {
-    this.isSourceChangeTab0 = true;
-    this.isSourceChangeTab1 = false;
+
   }
 
   ngOnDestroy() {
-  }
 
-  selected(event: any): void {
-    if (event.args.item === 0 && this.isSourceChangeTab1) {
-      this.refreshTab0();
-    }
-    if (event.args.item === 1 && this.isSourceChangeTab0) {
-      this.refreshTab1();
-    }
-  }
-
-  refreshTab0() {
-    this.nodeMasterdetailsPageComponent.refreshGrid();
-    this.isSourceChangeTab1 = false;
-  }
-
-  refreshTab1() {
-    this.nodemapPageComponent.refreshMap();
-    this.isSourceChangeTab0 = false;
   }
 
   refreshGrid() {
-    this.isSourceChangeTab1 = true;
+
   }
 
   refreshMap() {
-    this.isSourceChangeTab0 = true;
-  }
 
+  }
 }

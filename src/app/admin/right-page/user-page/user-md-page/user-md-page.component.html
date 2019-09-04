@@ -19,27 +19,23 @@
   <div class="splitter-panel">
     <mat-tab-group #matTabGroup [selectedIndex]="0">
       <mat-tab label="{{'site.menu.administration.right-page.role-page.role-page' | translate}}">
-        <ng-template matTabContent>
-          <app-rolelist-page #rolelistPageComponent
-                             [siteMap]="siteMap"
-                             [selectUserId]="selectUserId"
-                             [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                             [selectionmode]="'checkbox'"
-                             [isMasterGrid]="false"
-                             [settingButtonPanel]="settingRoleButtonPanel"
-                             (onRefreshChildGrid)="refreshChildGrid($event)"
-          ></app-rolelist-page>
-        </ng-template>
+        <app-rolelist-page #rolelistPageComponent
+                           [siteMap]="siteMap"
+                           [selectUserId]="selectUserId"
+                           [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                           [selectionmode]="'checkbox'"
+                           [isMasterGrid]="false"
+                           [settingButtonPanel]="settingRoleButtonPanel"
+                           (onRefreshChildGrid)="refreshChildGrid($event)"
+        ></app-rolelist-page>
       </mat-tab>
       <mat-tab label="{{'site.menu.administration.right-page.component-page.component-page' | translate}}">
-        <ng-template matTabContent>
-          <app-componentlist-page #componentlistPageComponent
-                                  [siteMap]="siteMap"
-                                  [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                                  [isMasterGrid]="false"
-                                  [settingButtonPanel]="settingComponentButtonPanel"
-          ></app-componentlist-page>
-        </ng-template>
+        <app-componentlist-page #componentlistPageComponent
+                                [siteMap]="siteMap"
+                                [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                [isMasterGrid]="false"
+                                [settingButtonPanel]="settingComponentButtonPanel"
+        ></app-componentlist-page>
       </mat-tab>
     </mat-tab-group>
   </div>

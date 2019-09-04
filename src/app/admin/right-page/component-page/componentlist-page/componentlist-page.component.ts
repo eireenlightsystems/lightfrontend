@@ -1,11 +1,12 @@
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {isNull, isUndefined} from 'util';
 import {Subscription} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
 import {TranslateService} from '@ngx-translate/core';
-
+// jqwidgets
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
-
+// app interfaces
 import {
   ItemsLinkForm,
   NavItem,
@@ -14,13 +15,14 @@ import {
   SourceForFilter,
   SourceForJqxGrid, SourceForLinkForm, FilterComponent, Components
 } from '../../../../shared/interfaces';
-
+// app services
+import {ComponentService} from '../../../../shared/services/admin/component.service';
+// app components
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {ComponentService} from '../../../../shared/services/admin/component.service';
 
 
 const STEP = 1000000000000;
@@ -33,15 +35,12 @@ const STEP = 1000000000000;
 })
 export class ComponentlistPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
-
   @Input() selectRoleId: number;
-
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
-
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -51,8 +50,8 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -63,6 +62,8 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
+  columnsGridEng: any[];
+  listBoxSourceEng: any[];
   // main
   items: Components[] = [];
   // grid
@@ -75,17 +76,21 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     userId: '',
   };
   sourceForFilter: SourceForFilter[];
+  sourceForFilterEng: SourceForFilter[];
   isFilterVisible = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  isEditFormVisible = false;
+  sourceForEditFormEng: SourceForEditForm[];
+  isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
+  sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
@@ -103,45 +108,68 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     // }
 
     // COMPONENT
-    // define columns for table
-    if (this.isMasterGrid) {
-      this.columnsGrid =
-        [
-          {text: 'componentId', datafield: 'componentId', width: 50},
-          {text: 'Код', datafield: 'code', width: 250},
-          {text: 'Наименование', datafield: 'name', width: 350},
-          {text: 'Коментарий', datafield: 'comments', width: 350}
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'componentId', value: 'componentId', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ];
-    } else {
-      this.columnsGrid =
-        [
-          {text: 'componentId', datafield: 'componentId', width: 50},
-          {text: 'Код', datafield: 'code', width: 250},
-          {text: 'Наименование', datafield: 'name', width: 350},
-          {text: 'Коментарий', datafield: 'comments', width: 350}
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'componentId', value: 'componentId', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ];
-    }
+    // definde columns
+    this.columnsGrid =
+      [
+        {text: 'componentId', datafield: 'componentId', width: 50},
+        {text: 'Код', datafield: 'code', width: 250},
+        {text: 'Наименование', datafield: 'name', width: 350},
+        {text: 'Коментарий', datafield: 'comments', width: 350}
+      ];
+    this.listBoxSource =
+      [
+        {label: 'componentId', value: 'componentId', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'Наименование', value: 'name', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridEng =
+      [
+        {text: 'componentId', datafield: 'componentId', width: 50},
+        {text: 'Code', datafield: 'code', width: 250},
+        {text: 'Name', datafield: 'name', width: 350},
+        {text: 'Comments', datafield: 'comments', width: 350}
+      ];
+    this.listBoxSourceEng =
+      [
+        {label: 'componentId', value: 'componentId', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'Name', value: 'name', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
+
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        theme: 'material',
+        width: null,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+        valueMember: 'componentId',
+        sortcolumn: ['componentId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
 
     // definde filter
     this.sourceForFilter = [];
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormComponent',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -157,8 +185,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'code',
@@ -206,6 +232,53 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormEng = [
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'name',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
     this.sourceForLinkForm = {
@@ -213,7 +286,7 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         code: 'linkComponent',
         name: 'Выбрать компонент',
         theme: 'material',
-        autoOpen: false,
+        autoOpen: true,
         isModal: true,
         modalOpacity: 0.3,
         width: 1200,
@@ -235,38 +308,39 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'componentId',
         sortcolumn: ['componentId'],
         sortdirection: 'desc',
         selectId: []
       }
     };
-
-    // jqxgrid
-    this.sourceForJqxGrid = {
-      listbox: {
-        source: this.listBoxSource,
+    this.sourceForLinkFormEng = {
+      window: {
+        code: 'linkComponent',
+        name: 'Select component',
         theme: 'material',
-        width: 150,
-        height: this.heightGrid,
-        checkboxes: true,
-        filterable: true,
-        allowDrag: true
+        autoOpen: true,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
       },
       grid: {
-        source: this.items,
-        columns: this.columnsGrid,
+        source: [],
+        columns: this.columnsGridEng,
         theme: 'material',
-        width: null,
-        height: this.heightGrid,
+        width: 1186,
+        height: 485,
         columnsresize: true,
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: this.selectionmode,
-        isMasterGrid: this.isMasterGrid,
-
+        selectionmode: 'checkbox',
         valueMember: 'componentId',
         sortcolumn: ['componentId'],
         sortdirection: 'desc',
@@ -295,11 +369,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.linkForm) {
+      this.linkForm.destroy();
     }
     if (this.oSubForLinkWin) {
       this.oSubForLinkWin.unsubscribe();
@@ -411,17 +485,17 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormVisible = !this.isEditFormVisible;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormVisible = !this.isEditFormVisible;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать компонент для редактирования`;
+      this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.component-page.upd-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -430,10 +504,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить компонент id = "${this.jqxgridComponent.selectRow.componentId}"?`;
+      this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.component-page.del-question')
+        + this.jqxgridComponent.selectRow.componentId + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать компонент для удаления`;
+      this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.component-page.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -442,17 +517,12 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  filterNone() {
+  setting() {
     this.jqxgridComponent.openSettinWin();
   }
 
   filterList() {
-    if (this.filterTable.filtrWindow.isOpen()) {
-      this.filterTable.close();
-    } else {
-      this.initSourceFilter();
-      this.filterTable.open();
-    }
+
   }
 
   place() {
@@ -502,19 +572,19 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
 
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     const selectObject: Components = new Components();
 
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      switch (this.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'code':
-          selectObject.code = this.sourceForEditForm[i].selectCode;
+          selectObject.code = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'name':
-          selectObject.name = this.sourceForEditForm[i].selectCode;
+          selectObject.name = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comments':
-          selectObject.comments = this.sourceForEditForm[i].selectCode;
+          selectObject.comments = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -526,13 +596,14 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         this.oSub = this.componentService.ins(selectObject).subscribe(
           response => {
             selectObject.componentId = +response;
-            this.openSnackBar('Компонент был добавлен, id = ' + selectObject.componentId, 'OK');
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.ins')
+              + selectObject.componentId, this.translate.instant('site.forms.editforms.ok'));
           },
           error =>
-            this.openSnackBar(error.error.message, 'OK'),
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             // close edit window
-            this.editWindow.closeDestroy();
+            this.editForm.closeDestroy();
             // update data source
             this.jqxgridComponent.refresh_ins(
               selectObject.componentId, selectObject);
@@ -548,13 +619,14 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         // upd
         this.oSub = this.componentService.upd(this.jqxgridComponent.selectRow).subscribe(
           response => {
-            this.openSnackBar('Компонент был обновлен, id = ' + this.jqxgridComponent.selectRow.componentId, 'OK');
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.upd')
+              + this.jqxgridComponent.selectRow.componentId, this.translate.instant('site.forms.editforms.ok'));
           },
           error =>
-            this.openSnackBar(error.error.message, 'OK'),
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             // close edit window
-            this.editWindow.closeDestroy();
+            this.editForm.closeDestroy();
             // update data source
             this.jqxgridComponent.refresh_upd(
               this.jqxgridComponent.selectRow.componentId, this.jqxgridComponent.selectRow);
@@ -562,31 +634,40 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         );
       }
     } else {
-      this.openSnackBar('Заполните код компонента', 'OK');
+      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.edit-code')
+        + this.jqxgridComponent.selectRow.componentId, this.translate.instant('site.forms.editforms.ok'));
     }
   }
 
   getSourceForEditForm() {
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+    let sourceForEditForm: any[];
+    if (this.translate.currentLang === 'ru') {
+      sourceForEditForm = this.sourceForEditForm;
+    }
+    if (this.translate.currentLang === 'en') {
+      sourceForEditForm = this.sourceForEditFormEng;
+    }
+
+    for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
-        this.sourceForEditForm[i].selectedIndex = 0;
-        this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
+        sourceForEditForm[i].selectedIndex = 0;
+        sourceForEditForm[i].selectId = '1';
+        sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
-      switch (this.sourceForEditForm[i].nameField) {
+      switch (sourceForEditForm[i].nameField) {
         case 'code':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.code;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.code;
           }
           break;
         case 'name':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.name;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.name;
           }
           break;
         case 'comments':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comments;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comments;
           }
           break;
         default:
@@ -595,19 +676,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM
-
-  saveLinkwinBtn(event: ItemsLinkForm) {
-
-  }
-
-  getSourceForLinkForm() {
-
-  }
 
   // EVENT FORM
 
@@ -619,10 +692,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.componentService.del(+id).subscribe(
           response => {
-            this.openSnackBar('Компонент был удален!', 'OK');
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
           error =>
-            this.openSnackBar(error.error.message, 'OK'),
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -631,6 +705,8 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  // OTHER FUNC
+
   // mass load component from siteMap
   saveComponentsToDb(node: NavItem) {
     this.insComponentToDb(node);
@@ -638,8 +714,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       this.saveComponentsToDb(node.children[i]);
     }
   }
-
-  // OTHER FUNC
 
   // insert component to Db
   insComponentToDb(node: NavItem) {
@@ -651,10 +725,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     this.oSub = this.componentService.ins(selectObject).subscribe(
       response => {
         selectObject.componentId = +response;
-        this.openSnackBar('Компонент был добавлен, id = ' + selectObject.componentId, 'OK');
+        this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.ins')
+          + selectObject.componentId, this.translate.instant('site.forms.editforms.ok'));
       },
       error =>
-        this.openSnackBar(error.error.message, 'OK'),
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
       () => {
 
       }
@@ -666,5 +741,4 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       duration: 3000,
     });
   }
-
 }

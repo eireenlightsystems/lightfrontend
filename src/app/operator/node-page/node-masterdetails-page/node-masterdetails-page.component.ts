@@ -1,17 +1,19 @@
-// @ts-ignore
+// angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
-
+// jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
-
+// app interfaces
 import {
-  FixturelistPageComponent
-} from '../../fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
-import {
-  Contract, Geograph, Owner, EquipmentType, HeightType, Installer, Substation,
+  Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   FilterFixture, FilterGateway,
   FilterNode, FilterSensor, SettingButtonPanel, NavItem
 } from '../../../shared/interfaces';
+// app services
+// app components
+import {
+  FixturelistPageComponent
+} from '../../fixture-page/fixture-masterdetails-page/fixturelist-page/fixturelist-page.component';
 import {NodelistPageComponent} from './nodelist-page/nodelist-page.component';
 import {
   GatewaylistPageComponent
@@ -27,7 +29,7 @@ import {SensorlistPageComponent} from '../../sensor-page/sensor-md-page/sensorli
 
 export class NodeMasterdetailsPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   // node source
   @Input() ownerNodes: Owner[];
@@ -52,7 +54,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  // @ViewChild('selectNodeId', {static: false}) selectNodeId = 0;
   @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
   @ViewChild('fixturelistPageComponent', {static: false}) fixturelistPageComponent: FixturelistPageComponent;
   @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
@@ -65,7 +66,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   settingFixtureButtonPanel: SettingButtonPanel;
   settingGatewayButtonPanel: SettingButtonPanel;
   settingSensorButtonPanel: SettingButtonPanel;
-
   filterNode: FilterNode = {
     geographId: '',
     ownerId: '',
@@ -79,7 +79,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     fixtureTypeId: '',
     substationId: '',
     modeId: '',
-
     contractId: '',
     nodeId: ''
   };
@@ -97,7 +96,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     contractId: '',
     nodeId: ''
   };
-
   heightDeltaParentGrid = 55;
   heightDeltaChildGrid = 103;
   sizeParentSplitter: any;
@@ -108,8 +106,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.selectNodeId = 0;
-
     // init node button panel
     this.settingNodeButtonPanel = {
       add: {
@@ -161,7 +157,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
-
     // init fixture button panel
     this.settingFixtureButtonPanel = {
       add: {
@@ -213,7 +208,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
-
     // init gateway button panel
     this.settingGatewayButtonPanel = {
       add: {
@@ -265,7 +259,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
-
     // init sensor button panel
     this.settingSensorButtonPanel = {
       add: {
@@ -329,7 +322,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
     this.filterFixture.nodeId = id_node.toString();
     this.filterGateway.nodeId = id_node.toString();
     this.filterSensor.nodeId = id_node.toString();
-
     if (id_node === 0) {
       // fixture
       if (!isUndefined(this.fixturelistPageComponent)) {
@@ -368,18 +360,6 @@ export class NodeMasterdetailsPageComponent implements OnInit {
       if (!isUndefined(this.sensorlistPageComponent)) {
         this.sensorlistPageComponent.applyFilter(this.filterSensor);
       }
-    }
-  }
-
-  selected(event: any): void {
-    if (event.args.item === 0) {
-
-    }
-    if (event.args.item === 1) {
-
-    }
-    if (event.args.item === 2) {
-
     }
   }
 

@@ -23,7 +23,7 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // determine the functions that need to be performed in the parent component
   @Output() onSaveLinkFormBtn = new EventEmitter<ItemsLinkForm>();
-  @Output() onInitLinkForm = new EventEmitter();
+  @Output() onDestroyLinkForm = new EventEmitter();
   @Output() onGetSourceForLinkForm = new EventEmitter();
 
   // define variables - link to view objects
@@ -43,7 +43,7 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
 
-    // console.log('ngOnInit')
+    console.log('ngOnInit')
 
     this.source_jqxgrid =
       {
@@ -61,18 +61,18 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     if (this.sourceForLinkForm.window.autoOpen === true) {
-      this.open();
+      this.getAll();
     }
   }
 
   ngOnDestroy(): void {
-
-    // console.log('ngOnDestroy')
-
     this.destroy();
   }
 
   destroy() {
+
+    console.log('destroy');
+
     if (this.linkWindow) {
       this.linkWindow.destroy();
     }
@@ -81,21 +81,8 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  open() {
-    this.getAll();
-  }
-
-  close() {
-    this.linkWindow.close();
-  }
-
   closeDestroy() {
-    this.onInitLinkForm.emit();
-    this.destroy();
-  }
-
-  hide() {
-    this.linkWindow.hide();
+    this.onDestroyLinkForm.emit();
   }
 
   position(coord: any) {
@@ -127,7 +114,6 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   cancelBtn() {
-    // this.hide();
     this.closeDestroy();
   }
 }

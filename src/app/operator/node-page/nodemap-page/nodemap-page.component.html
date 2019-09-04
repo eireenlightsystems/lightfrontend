@@ -1,13 +1,20 @@
 <div id="node_yamaps"></div>
 
-<app-edit-form #editWindow
-               *ngIf="isEditFormVisible"
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
                [settingWinForEditForm]="settingWinForEditForm"
                [sourceForEditForm]="sourceForEditForm"
-
                (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onInitEditForm)="setEditFormVisible()"
-               (onSaveEditFormBtn)="saveEditwinBtn()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
+></app-edit-form>
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditFormEng"
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
 ></app-edit-form>
 
 <app-event-window #eventWindow

@@ -1,19 +1,18 @@
-@import "~materialize-css/dist/css/materialize.min.css";
-@import "theme/styles.min.css";
-/*@import "//api-maps.yandex.ru/2.1/?lang=ru_RU";*/
-/*@import "//yandex.st/jquery/2.2.3/jquery.min.js";*/
 /*Angular Material Theme*/
-/*@import "./theme/material/material-theme";*/
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 /*@import '@angular/material/prebuilt-themes/indigo-pink.css';*/
 /*@import '@angular/material/prebuilt-themes/pink-bluegrey.css';*/
 /*@import '@angular/material/prebuilt-themes/purple-green.css';*/
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
+/*jqwidgets Theme*/
 /*@import "~jqwidgets-scripts/jqwidgets/styles/jqx.base.css";*/
 /*@import "~jqwidgets-scripts/jqwidgets/styles/jqx.ui-lightness.css";*/
 /*@import "~jqwidgets-scripts/jqwidgets/styles/jqx.ui-sunny.css";*/
 
+/*Materialize Theme*/
+@import "~materialize-css/dist/css/materialize.min.css";
+@import "theme/styles.min.css";
 
 html, body {
   height: 100%;
@@ -23,6 +22,11 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+/* Main Tab */
+/*.mat-tab-header {*/
+/*  height: 38px;*/
+/*}*/
 
 .mat-tooltip.tooltip {
   /*background-color: #283593;*/

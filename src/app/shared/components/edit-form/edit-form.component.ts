@@ -22,7 +22,7 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // determine the functions that need to be performed in the parent component
   @Output() onSaveEditFormBtn = new EventEmitter();
-  @Output() onInitEditForm = new EventEmitter();
+  @Output() onDestroyEditForm = new EventEmitter();
   @Output() onGetSourceForEditForm = new EventEmitter();
 
   // define variables - link to view objects
@@ -38,6 +38,8 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
 
+    console.log('ngOnInit');
+
   }
 
   ngAfterViewInit() {
@@ -49,26 +51,16 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   destroy() {
+
+    console.log('destroy');
+
     if (this.editWindow) {
       this.editWindow.destroy();
     }
   }
 
-  open() {
-    this.editWindow.open();
-  }
-
-  close() {
-    this.editWindow.close();
-  }
-
   closeDestroy() {
-    this.onInitEditForm.emit();
-    this.destroy();
-  }
-
-  hide() {
-    this.editWindow.hide();
+    this.onDestroyEditForm.emit();
   }
 
   position(coord: any) {

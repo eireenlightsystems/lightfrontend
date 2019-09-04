@@ -1,7 +1,10 @@
+// angular lib
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {NgxDadataModule, DadataConfig, DadataType} from '@kolkov/ngx-dadata';
-import {SimpleDictionaryComponent} from '../simple-dictionary/simple-dictionary.component';
-import {MaterializeService} from '../../classes/materialize.service';
+import {DadataConfig, DadataType} from '@kolkov/ngx-dadata';
+// jqwidgets
+// app interfaces
+// app services
+// app components
 
 @Component({
   selector: 'app-ngx-suggestions',
@@ -10,7 +13,7 @@ import {MaterializeService} from '../../classes/materialize.service';
 })
 export class NgxSuggestionsComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() placeholder: string;
 
   // determine the functions that need to be performed in the parent component
@@ -24,8 +27,7 @@ export class NgxSuggestionsComponent implements OnInit {
   token = 'token 6197e3632a0d2b801da8e1ac9a92e48567c9ed92';
   configAddress: DadataConfig = {
     apiKey: this.token,
-    type: DadataType.address,
-
+    type: DadataType.address
   };
   currentAddress: any;
   // grid
@@ -35,11 +37,11 @@ export class NgxSuggestionsComponent implements OnInit {
   // event form
 
   constructor() {
+
   }
 
   ngOnInit() {
     localStorage.setItem('suggestions-token', this.token);
-
   }
 
   selectedAddress(event: any) {

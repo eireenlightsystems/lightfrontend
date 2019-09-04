@@ -6,13 +6,27 @@
   <div *ngIf="this.router.url ==='/dictionary/equipment/fixturetype'"
        class="table_border">
     <app-simple-dictionary #fixtureType
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryFixtureType"
+                           [columnsGrid]="columnsGridFixtureTypes"
+                           [listBoxSource]="listBoxSourceFixtureTypes"
                            [sourceForJqxGrid]="sourceForJqxGridFixtureType"
                            [settingWinForEditForm]="settingWinForEditFormFixtureType"
                            [sourceForEditForm]="sourceForEditFormFixtureType"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #fixtureType
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryFixtureType"
+                           [columnsGrid]="columnsGridFixtureTypesEng"
+                           [listBoxSource]="listBoxSourceFixtureTypesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridFixtureType"
+                           [settingWinForEditForm]="settingWinForEditFormFixtureType"
+                           [sourceForEditForm]="sourceForEditFormFixtureTypeEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -20,13 +34,27 @@
   <div *ngIf="this.router.url === '/dictionary/equipment/nodetype'"
        class="table_border">
     <app-simple-dictionary #nodeType
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryNodeType"
+                           [columnsGrid]="columnsGridNodeTypes"
+                           [listBoxSource]="listBoxSourceNodeTypes"
                            [sourceForJqxGrid]="sourceForJqxGridNodeType"
                            [settingWinForEditForm]="settingWinForEditFormNodeType"
                            [sourceForEditForm]="sourceForEditFormNodeType"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #nodeType
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryNodeType"
+                           [columnsGrid]="columnsGridNodeTypesEng"
+                           [listBoxSource]="listBoxSourceNodeTypesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridNodeType"
+                           [settingWinForEditForm]="settingWinForEditFormNodeType"
+                           [sourceForEditForm]="sourceForEditFormNodeTypeEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -34,13 +62,27 @@
   <div *ngIf="this.router.url === '/dictionary/equipment/gatewaytype'"
        class="table_border">
     <app-simple-dictionary #gatewayType
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryGatewayType"
+                           [columnsGrid]="columnsGridGatewayTypes"
+                           [listBoxSource]="listBoxSourceGatewayTypes"
                            [sourceForJqxGrid]="sourceForJqxGridGatewayType"
                            [settingWinForEditForm]="settingWinForEditFormGatewayType"
                            [sourceForEditForm]="sourceForEditFormGatewayType"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #gatewayType
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryGatewayType"
+                           [columnsGrid]="columnsGridGatewayTypesEng"
+                           [listBoxSource]="listBoxSourceGatewayTypesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridGatewayType"
+                           [settingWinForEditForm]="settingWinForEditFormGatewayType"
+                           [sourceForEditForm]="sourceForEditFormGatewayTypeEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -48,13 +90,27 @@
   <div *ngIf="this.router.url === '/dictionary/equipment/sensortype'"
        class="table_border">
     <app-simple-dictionary #sensorType
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionarySensorType"
+                           [columnsGrid]="columnsGridSensorTypes"
+                           [listBoxSource]="listBoxSourceSensorTypes"
                            [sourceForJqxGrid]="sourceForJqxGridSensorType"
                            [settingWinForEditForm]="settingWinForEditFormSensorType"
                            [sourceForEditForm]="sourceForEditFormSensorType"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #sensorType
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionarySensorType"
+                           [columnsGrid]="columnsGridSensorTypesEng"
+                           [listBoxSource]="listBoxSourceSensorTypesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridSensorType"
+                           [settingWinForEditForm]="settingWinForEditFormSensorType"
+                           [sourceForEditForm]="sourceForEditFormSensorTypeEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>

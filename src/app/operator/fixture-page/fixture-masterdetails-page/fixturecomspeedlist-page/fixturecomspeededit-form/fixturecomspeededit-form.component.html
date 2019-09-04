@@ -1,22 +1,19 @@
 <jqxWindow #editWindow
            [theme]="'material'"
-           [autoOpen]="false"
            [isModal]="true" [modalOpacity]="'0.3'"
            [width]="600" [maxWidth]="600" [minWidth]="600"
-           [height]="310" [maxHeight]="310" [minHeight]="310"
+           [height]="320" [maxHeight]="320" [minHeight]="320"
+           (onClose)="closeDestroy()"
 >
   <div #windowHeader>
     <div class="fr">
-      <!--<i class="material-icons">add</i>-->
-      <b>Сформировать команду</b>
+      <i class="material-icons">add</i>
     </div>
   </div>
-
   <div>
     <table>
-
       <tr>
-        <td align="right"><b>Дата/Время включения:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.time-on' | translate}}:</b></td>
         <td align="left">
           <div id="datebeg">
             <jqxDateTimeInput #datebeg
@@ -29,9 +26,8 @@
           </div>
         </td>
       </tr>
-
       <tr>
-        <td align="right"><b>Тип команды:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.command-type' | translate}}:</b></td>
         <td align="left">
           <jqxDropDownList #speedDirectionId
                            [theme]="'material'"
@@ -46,9 +42,8 @@
           </jqxDropDownList>
         </td>
       </tr>
-
       <tr>
-        <td align="right"><b>Время перехода, сек:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.time-transition' | translate}}:</b></td>
         <td align="left">
           <div class="fr">
             <input #speedLevel type="range" step="1" min="0" max="255"
@@ -58,7 +53,6 @@
         </td>
       </tr>
     </table>
-
     <div class="fr" style="margin-left: 180px">
       <div appButtonLink>
         <jqxButton #okButton
@@ -66,7 +60,7 @@
                    [width]="100"
                    (onClick)="saveBtn()"
         >
-          Сохранить
+          {{ 'site.forms.editforms.save' | translate }}
         </jqxButton>
       </div>
       <div appButtonLink>
@@ -75,11 +69,9 @@
                    [width]="100"
                    (onClick)="cancelBtn()"
         >
-          Отмена
+          {{ 'site.forms.editforms.cancel' | translate }}
         </jqxButton>
       </div>
     </div>
-
   </div>
-
 </jqxWindow>

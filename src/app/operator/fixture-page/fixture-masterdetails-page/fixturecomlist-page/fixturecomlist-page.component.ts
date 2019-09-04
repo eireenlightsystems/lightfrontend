@@ -1,26 +1,28 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
-import {MaterializeService} from '../../../../shared/classes/materialize.service';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
+// app interfaces
 import {
   CommandSwitch, CommandType, CommandStatus,
   FilterCommandSwitch, CommandSwitchDflt, SourceForFilter,
   SettingButtonPanel,
   SourceForJqxGrid,
-  SettingWinForEditForm, SourceForEditForm, NavItem
+  NavItem
 } from '../../../../shared/interfaces';
+// app services
 import {CommandSwitchService} from '../../../../shared/services/command/commandSwitch.service';
+// app components
 import {DateTimeFormat} from '../../../../shared/classes/DateTimeFormat';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
-import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {FixturecomeditFormComponent} from './fixturecomedit-form/fixturecomedit-form.component';
 import {FixturecomeditSwitchoffFormComponent} from './fixturecomedit-switchoff-form/fixturecomedit-switchoff-form.component';
-import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 
 
 const STEP = 1000000000000;
@@ -33,32 +35,26 @@ const STEP = 1000000000000;
 })
 export class FixturecomlistPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
-
   @Input() selectFixtureId: number;
-
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
-
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
 
   // define variables - link to view objects
-  @ViewChild('jqxgridComponent', { static: false }) jqxgridComponent: JqxgridComponent;
-  @ViewChild('buttonPanel', { static: false }) buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable', { static: false }) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', { static: false }) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', { static: false }) linkWindow: LinkFormComponent;
-  @ViewChild('eventWindow', { static: false }) eventWindow: EventWindowComponent;
-
-  @ViewChild('editSwitchOnWindow', {static: false}) editSwitchOnWindow: FixturecomeditFormComponent;
-  @ViewChild('editSwitchOffWindow', {static: false}) editSwitchOffWindow: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
+  @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
+  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('editFormSwitchOn', {static: false}) editFormSwitchOn: FixturecomeditFormComponent;
+  @ViewChild('editFormSwitchOff', {static: false}) editFormSwitchOff: FixturecomeditSwitchoffFormComponent;
+  @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
   offset = 0;
@@ -68,6 +64,8 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
+  columnsGridEng: any[];
+  listBoxSourceEng: any[];
   // main
   items: CommandSwitch[] = [];
   ids: number[] = [];
@@ -91,64 +89,87 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
   };
   sourceForFilter: SourceForFilter[];
+  sourceForFilterEng: SourceForFilter[];
   isFilterVisible = false;
   filterSelect = '';
   // edit form
-  settingWinForEditFormSwitchOff: SettingWinForEditForm;
-  sourceForEditFormSwitchOff: SourceForEditForm[];
-  isEditFormVisible = false;
+  isEditFormSwitchOnInit = false;
+  isEditFormSwitchOffInit = false;
   typeEditWindow = '';
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(private commandSwitchService: CommandSwitchService) {
+  constructor(private _snackBar: MatSnackBar,
+              // service
+              public translate: TranslateService,
+              private commandSwitchService: CommandSwitchService) {
   }
 
   ngOnInit() {
-    // define columns for table
-    if (this.isMasterGrid) {
-      this.columnsGrid =
-        [
-          {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-          {text: 'Время начала', datafield: 'startDateTime', width: 150},
+    // definde columns
+    this.columnsGrid =
+      [
+        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+        {text: 'Время начала', datafield: 'startDateTime', width: 150},
+        {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
+        {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
+        {text: 'Статус', datafield: 'statusName', width: 200},
 
-          {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
-          {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
-          {text: 'Статус', datafield: 'statusName', width: 200},
+      ];
+    this.listBoxSource =
+      [
+        {label: 'commandId', value: 'commandId', checked: false},
+        {label: 'Время начала', value: 'startDateTime', checked: true},
+        {label: 'Рабочий режим', value: 'workLevel', checked: true},
+        {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
+        {label: 'Статус', value: 'statusName', checked: true},
+      ];
+    this.columnsGridEng =
+      [
+        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+        {text: 'Start date / time', datafield: 'startDateTime', width: 150},
+        {text: 'Work level', datafield: 'workLevel', width: 150},
+        {text: 'Standby level', datafield: 'standbyLevel', width: 150},
+        {text: 'Status', datafield: 'statusName', width: 200},
 
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'commandId', value: 'commandId', checked: false},
-          {label: 'Время начала', value: 'startDateTime', checked: true},
+      ];
+    this.listBoxSourceEng =
+      [
+        {label: 'commandId', value: 'commandId', checked: false},
+        {label: 'Start date / time', value: 'startDateTime', checked: true},
+        {label: 'Work level', value: 'workLevel', checked: true},
+        {label: 'Standby level', value: 'standbyLevel', checked: true},
+        {label: 'Status', value: 'statusName', checked: true},
+      ];
 
-          {label: 'Рабочий режим', value: 'workLevel', checked: true},
-          {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
-          {label: 'Статус', value: 'statusName', checked: true},
-        ];
-    } else {
-      this.columnsGrid =
-        [
-          {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-          {text: 'Время начала', datafield: 'startDateTime', width: 150},
-
-          {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
-          {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
-          {text: 'Статус', datafield: 'statusName', width: 200},
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'commandId', value: 'commandId', checked: false},
-          {label: 'Время начала', value: 'startDateTime', checked: true},
-
-          {label: 'Рабочий режим', value: 'workLevel', checked: true},
-          {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
-          {label: 'Статус', value: 'statusName', checked: true},
-        ];
-    }
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        theme: 'material',
+        width: null,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+        valueMember: 'commandId',
+        sortcolumn: ['commandId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
 
     // define filter
     this.sourceForFilter = [
@@ -192,41 +213,49 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
       }
     ];
-
-    // define window edit form
+    this.sourceForFilterEng = [
+      {
+        name: 'commandStatuses',
+        type: 'jqxComboBox',
+        source: this.commandStatuses,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Status of command:',
+        displayMember: 'name',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'startDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Start date inter.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
+      },
+      {
+        name: 'endDateTime',
+        type: 'jqxDateTimeInput',
+        source: [],
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'End date inter.:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
+        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+      }
+    ];
 
     // define edit form
-
-    // jqxgrid
-    this.sourceForJqxGrid = {
-      listbox: {
-        source: this.listBoxSource,
-        theme: 'material',
-        width: 150,
-        height: this.heightGrid,
-        checkboxes: true,
-        filterable: true,
-        allowDrag: true
-      },
-      grid: {
-        source: this.items,
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: null,
-        height: this.heightGrid,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: this.selectionmode,
-        isMasterGrid: this.isMasterGrid,
-
-        valueMember: 'commandId',
-        sortcolumn: ['commandId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
@@ -249,17 +278,11 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editFormSwitchOn) {
+      this.editFormSwitchOn.destroy();
     }
-    if (this.editSwitchOnWindow) {
-      this.editSwitchOnWindow.destroyWindow();
-    }
-    if (this.editSwitchOffWindow) {
-      this.editSwitchOffWindow.destroyWindow();
-    }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.editFormSwitchOff) {
+      this.editFormSwitchOff.destroy();
     }
   }
 
@@ -277,7 +300,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
 
     // initialization source for filter
     setTimeout(() => {
-      this.initSourceFilter();
+      this.getSourceForFilter();
     }, 1000);
 
     // disabled/available buttons
@@ -309,7 +332,6 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         currentCommand.statusName = this.commandStatuses.find(
           (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
       });
-
       this.items = this.items.concat(commandSwitchesStatusName);
       this.noMoreItems = commandSwitches.length < STEP;
       this.loading = false;
@@ -380,17 +402,14 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         this.ids[i] = this.jqxgridComponent.source_jqxgrid.localdata[
           this.jqxgridComponent.myGrid.widgetObject.selectedrowindexes[i]].commandId;
       }
-
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      if (this.ids.length > 1) {
-        this.warningEventWindow = `Удалить команды?`;
-      } else {
-        this.warningEventWindow = `Удалить команду id = "${this.jqxgridComponent.selectRow.commandId}"?`;
-      }
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.del-question');
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать команду для удаления`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -399,7 +418,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  filterNone() {
+  setting() {
     this.jqxgridComponent.openSettinWin();
   }
 
@@ -407,7 +426,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     if (this.filterTable.filtrWindow.isOpen()) {
       this.filterTable.close();
     } else {
-      this.initSourceFilter();
+      this.getSourceForFilter();
       this.filterTable.open();
     }
   }
@@ -429,13 +448,11 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   }
 
   switchOn() {
-    this.editSwitchOnWindow.positionWindow({x: 600, y: 90});
-    this.editSwitchOnWindow.openWindow([this.selectFixtureId], 'ins');
+    this.isEditFormSwitchOnInit = true;
   }
 
   switchOff() {
-    this.editSwitchOffWindow.positionWindow({x: 600, y: 90});
-    this.editSwitchOffWindow.openWindow([this.selectFixtureId], 'ins');
+    this.isEditFormSwitchOffInit = true;
   }
 
   // FILTER
@@ -464,37 +481,63 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  initSourceFilter() {
+  getSourceForFilter() {
     if (!this.isFilterVisible
       && !isUndefined(this.commandStatuses)) {
       this.isFilterVisible = true;
-      for (let i = 0; i < this.sourceForFilter.length; i++) {
-        switch (this.sourceForFilter[i].name) {
-          case 'commandStatuses':
-            this.sourceForFilter[i].source = this.commandStatuses;
-            this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
-              (currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
-            this.sourceForFilter[i].selectId = this.commandSwitchDflt.statusId.toString();
-            break;
-          default:
-            break;
+      if (this.translate.currentLang === 'ru') {
+        for (let i = 0; i < this.sourceForFilter.length; i++) {
+          switch (this.sourceForFilter[i].name) {
+            case 'commandStatuses':
+              this.sourceForFilter[i].source = this.commandStatuses;
+              this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
+                (currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
+              this.sourceForFilter[i].selectId = this.commandSwitchDflt.statusId.toString();
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      if (this.translate.currentLang === 'en') {
+        for (let i = 0; i < this.sourceForFilterEng.length; i++) {
+          switch (this.sourceForFilterEng[i].name) {
+            case 'commandStatuses':
+              this.sourceForFilterEng[i].source = this.commandStatuses;
+              this.sourceForFilterEng[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
+                (currentStatus: CommandStatus) => currentStatus.id === this.commandSwitchDflt.statusId)).toString();
+              this.sourceForFilterEng[i].selectId = this.commandSwitchDflt.statusId.toString();
+              break;
+            default:
+              break;
+          }
         }
       }
     }
     // view select filter for user
-    this.filterSelect = this.filterTable.getFilterSelect();
+    if (this.isFilterVisible === true) {
+      this.filterSelect = this.filterTable.getFilterSelect();
+    }
   }
 
   // EDIT FORM
 
-  saveSwitchOnEditwinBtn() {
+  saveEditFormSwitchOnBtn() {
     // refresh table
     this.refreshGrid();
   }
 
-  saveEditSwitchOffwinBtn() {
+  saveEditFormSwitchOffBtn() {
     // refresh table
     this.refreshGrid();
+  }
+
+  destroyEditFormSwitchOn() {
+    this.isEditFormSwitchOnInit = false;
+  }
+
+  destroyEditFormSwitchOff() {
+    this.isEditFormSwitchOffInit = false;
   }
 
   // EVENT FORM
@@ -504,9 +547,11 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       if (this.ids.length >= 0) {
         this.commandSwitchService.del(this.ids).subscribe(
           response => {
-            MaterializeService.toast('Комманды удалены!');
+            this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
-          error => MaterializeService.toast(error.error.message),
+          error =>
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del(this.ids);
           }
@@ -515,4 +560,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
+  }
 }

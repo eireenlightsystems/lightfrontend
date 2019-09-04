@@ -1,16 +1,21 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
-
+import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import {jqxDateTimeInputComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxdatetimeinput';
 import {jqxComboBoxComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxcombobox';
-import {DateTimeFormat} from '../../../classes/DateTimeFormat';
 import {jqxTextAreaComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxtextarea';
 import {jqxNumberInputComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxnumberinput';
-import {Subscription} from 'rxjs';
-import {GeographService} from '../../../services/geograph/geograph.service';
+// app interfaces
 import {GeographFias} from '../../../interfaces';
-import {MaterializeService} from '../../../classes/materialize.service';
+import {DateTimeFormat} from '../../../classes/DateTimeFormat';
+// app services
+import {GeographService} from '../../../services/geograph/geograph.service';
+// app components
+
 
 @Component({
   selector: 'app-edit-form-item',
@@ -19,7 +24,7 @@ import {MaterializeService} from '../../../classes/materialize.service';
 })
 export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() itemEditForm;
 
   // determine the functions that need to be performed in the parent component
@@ -34,7 +39,9 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
   oSubGeographFias: Subscription;
 
   constructor(
+    private _snackBar: MatSnackBar,
     // service
+    public translate: TranslateService,
     private geographService: GeographService) {
   }
 
@@ -92,7 +99,6 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
     let geographFias: GeographFias = new GeographFias();
     let geographID: any;
 
-    // !isNullOrUndefined(fiasAddress.data.area_fias_id) ? fiasAddress.data.area_fias_id : 'null';
     geographFias.postalCode = fiasAddress.data.postal_code;
     geographFias.okato = fiasAddress.data.okato;
     geographFias.fiasLevel = fiasAddress.data.fias_level;
@@ -112,20 +118,26 @@ export class EditFormItemComponent implements OnInit, AfterViewInit, OnDestroy {
     geographFias.houseWithType = fiasAddress.data.house_type + ' ' + fiasAddress.data.house;
     geographFias.geoLat = fiasAddress.data.geo_lat;
     geographFias.geoLon = fiasAddress.data.geo_lon;
-    //+ ' ' + fiasAddress.data.block_type + ' ' + fiasAddress.data.block + ', ' + fiasAddress.data.flat_type + ' ' + fiasAddress.data.flat;
 
     // ins
     this.oSubGeographFias = this.geographService.insFias(geographFias).subscribe(
       response => {
-        MaterializeService.toast(`Географич. понятие id = ${+response} было добавлено.`);
+
         geographID = +response;
       },
-      error => MaterializeService.toast(error.error.message),
+      error =>
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
       () => {
         this.itemEditForm.selectId = !isUndefined(geographID) ? geographID : '1';
         this.itemEditForm.selectCode = !isUndefined(fiasAddress.data.fias_id) ? fiasAddress.data.fias_id : '';
         this.itemEditForm.selectName = !isUndefined(fiasAddress.value) ? fiasAddress.value : '';
       }
     );
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

@@ -1,3 +1,4 @@
+// angular lib
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -5,10 +6,12 @@ import {MatIcon, MatSnackBar, MatTree, MatTreeNestedDataSource} from '@angular/m
 import {NestedTreeControl} from '@angular/cdk/tree';
 import * as cloneDeep from 'lodash/cloneDeep';
 import {isUndefined} from 'util';
-
+// jqwidgets
+// app interfaces
 import {NavItem, SettingButtonPanel, Roleright, CompanyDepartment} from '../../../shared/interfaces';
-
+// app services
 import {RolerightService} from '../../../shared/services/admin/roleright.service';
+// app components
 import {RolelistPageComponent} from '../role-page/role-md-page/rolelist-page/rolelist-page.component';
 
 
@@ -19,14 +22,15 @@ import {RolelistPageComponent} from '../role-page/role-md-page/rolelist-page/rol
 })
 export class RolerightPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() roleSiteMap: NavItem[];
   @Input() companies: CompanyDepartment[];
   @Input() theme: string;
   @Input() heightSplitterRoleright: number;
   @Input() heightGridRoleright: number;
-
   @Input() selectRoleId: number;
+
+  // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
   @ViewChild('matTree', {static: false}) matTree: MatTree<any>;
@@ -109,10 +113,6 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroy();
-  }
-
-  destroy() {
     if (this.oSub) {
       this.oSub.unsubscribe();
     }
@@ -148,7 +148,6 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
 
   disabledElementsNode(node: NavItem, action: boolean) {
     node.disabled = action;
-
     // ins
     if (action === false) {
       const selectObject: Roleright = new Roleright();
@@ -157,10 +156,11 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
       this.oSub = this.rolerightService.ins(selectObject).subscribe(
         response => {
           selectObject.rolerightId = +response;
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.roleright-ins') + response, 'OK');
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.ins')
+            + response, this.translate.instant('site.forms.editforms.ok'));
         },
         error =>
-          this.openSnackBar(error.error.message, 'OK'),
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
 
         }
@@ -168,10 +168,11 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
     } else {
       this.rolerightService.del(node.rolerightId).subscribe(
         response => {
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.roleright-del'), 'OK');
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.del'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error =>
-          this.openSnackBar(error.error.message, 'OK'),
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
 
         }
@@ -244,5 +245,4 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
       duration: 3000,
     });
   }
-
 }

@@ -6,16 +6,31 @@
   <div *ngIf="(this.router.url === '/dictionary/contract/contracts')"
        class="table_border">
     <app-simple-dictionary #contract
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContracts"
+                           [columnsGrid]="columnsGridContracts"
+                           [listBoxSource]="listBoxSourceContracts"
                            [sourceForJqxGrid]="sourceForJqxGridContracts"
                            [settingWinForEditForm]="settingWinForEditFormContracts"
                            [sourceForEditForm]="sourceForEditFormContracts"
-
                            [companies]="companies"
                            [contractTypes]="this.sourceForJqxGridContractTypes.grid.source"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #contract
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryContracts"
+                           [columnsGrid]="columnsGridContractsEng"
+                           [listBoxSource]="listBoxSourceContractsEng"
+                           [sourceForJqxGrid]="sourceForJqxGridContracts"
+                           [settingWinForEditForm]="settingWinForEditFormContracts"
+                           [sourceForEditForm]="sourceForEditFormContractsEng"
+                           [companies]="companies"
+                           [contractTypes]="this.sourceForJqxGridContractTypes.grid.source"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -23,13 +38,27 @@
   <div *ngIf="(this.router.url === '/dictionary/contract/contracts-types')"
        class="table_border">
     <app-simple-dictionary #contractType
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContractTypes"
+                           [columnsGrid]="columnsGridContractTypes"
+                           [listBoxSource]="listBoxSourceContractTypes"
                            [sourceForJqxGrid]="sourceForJqxGridContractTypes"
                            [settingWinForEditForm]="settingWinForEditFormContractTypes"
                            [sourceForEditForm]="sourceForEditFormContractTypes"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #contractType
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryContractTypes"
+                           [columnsGrid]="columnsGridContractTypesEng"
+                           [listBoxSource]="listBoxSourceContractTypesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridContractTypes"
+                           [settingWinForEditForm]="settingWinForEditFormContractTypes"
+                           [sourceForEditForm]="sourceForEditFormContractTypesEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>

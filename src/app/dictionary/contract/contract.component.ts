@@ -1,19 +1,24 @@
-// @ts-ignore
+// angular lib
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
   CompanyDepartment,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
 } from '../../shared/interfaces';
-import {Subscription} from 'rxjs';
-import {SimpleDictionaryComponent} from '../../shared/components/simple-dictionary/simple-dictionary.component';
-import {MaterializeService} from '../../shared/classes/materialize.service';
-import {TranslateService} from '@ngx-translate/core';
+// app services
 import {CompanyService} from '../../shared/services/contragent/company.service';
 import {ContractService} from '../../shared/services/contract/contract.service';
 import {ContractTypeService} from '../../shared/services/contract/contractType.service';
+// app components
+import {SimpleDictionaryComponent} from '../../shared/components/simple-dictionary/simple-dictionary.component';
+
 
 @Component({
   selector: 'app-contract',
@@ -22,7 +27,7 @@ import {ContractTypeService} from '../../shared/services/contract/contractType.s
 })
 export class ContractComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() heightGrid: number;
 
   // determine the functions that need to be performed in the parent component
@@ -34,31 +39,36 @@ export class ContractComponent implements OnInit, OnDestroy {
   // other variables
   dictionaryContracts = 'contracts';
   dictionaryContractTypes = 'contractTypes';
-
   companies: CompanyDepartment[];
   oSubСompanies: Subscription;
-
   // main
-
   // grid
   oSubContracts: Subscription;
   oSubContractTypes: Subscription;
   sourceForJqxGridContracts: SourceForJqxGrid;
   sourceForJqxGridContractTypes: SourceForJqxGrid;
+  columnsGridContracts: any[];
+  listBoxSourceContracts: any[];
+  columnsGridContractsEng: any[];
+  listBoxSourceContractsEng: any[];
+  columnsGridContractTypes: any[];
+  listBoxSourceContractTypes: any[];
+  columnsGridContractTypesEng: any[];
+  listBoxSourceContractTypesEng: any[];
   // filter
-
   // edit form
   settingWinForEditFormContracts: SettingWinForEditForm;
   settingWinForEditFormContractTypes: SettingWinForEditForm;
   sourceForEditFormContracts: SourceForEditForm[];
   sourceForEditFormContractTypes: SourceForEditForm[];
-
+  sourceForEditFormContractsEng: SourceForEditForm[];
+  sourceForEditFormContractTypesEng: SourceForEditForm[];
   // link form
-
   // event form
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private _snackBar: MatSnackBar,
               // service
               public translate: TranslateService,
               private companyService: CompanyService,
@@ -68,22 +78,63 @@ export class ContractComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // CONTRACT
+    // definde columns
+    this.columnsGridContracts =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
+        {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
+        {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
+        {text: 'Тип контракта', datafield: 'contractTypeCode', width: 150},
+        {text: 'Отправитель', datafield: 'senderCode', width: 150},
+        {text: 'Получатель', datafield: 'recipientCode', width: 150},
+        {text: 'Код', datafield: 'code', width: 150},
+        {text: 'Наименование', datafield: 'name', width: 150},
+        {text: 'Коментарий', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceContracts =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'contractTypeId', value: 'contractTypeId', checked: false},
+        {label: 'senderId', value: 'senderId', checked: false},
+        {label: 'recipientId', value: 'recipientId', checked: false},
+        {label: 'Тип контракта', value: 'contractTypeCode', checked: true},
+        {label: 'Отправитель', value: 'senderCode', checked: true},
+        {label: 'Получатель', value: 'recipientCode', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'Наименование', value: 'name', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridContractsEng =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
+        {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
+        {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
+        {text: 'Contract type', datafield: 'contractTypeCode', width: 150},
+        {text: 'Sender', datafield: 'senderCode', width: 150},
+        {text: 'Recipient', datafield: 'recipientCode', width: 150},
+        {text: 'Code', datafield: 'code', width: 150},
+        {text: 'Name', datafield: 'name', width: 150},
+        {text: 'Comments', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceContractsEng =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'contractTypeId', value: 'contractTypeId', checked: false},
+        {label: 'senderId', value: 'senderId', checked: false},
+        {label: 'recipientId', value: 'recipientId', checked: false},
+        {label: 'Contract type', value: 'contractTypeCode', checked: true},
+        {label: 'Sender', value: 'senderCode', checked: true},
+        {label: 'Recipient', value: 'recipientCode', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'Name', value: 'name', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
 
     // jqxgrid
     this.sourceForJqxGridContracts = {
       listbox: {
-        source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'contractTypeId', value: 'contractTypeId', checked: false},
-          {label: 'senderId', value: 'senderId', checked: false},
-          {label: 'recipientId', value: 'recipientId', checked: false},
-          {label: 'Тип контракта', value: 'contractTypeCode', checked: true},
-          {label: 'Отправитель', value: 'senderCode', checked: true},
-          {label: 'Получатель', value: 'recipientCode', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ],
         theme: 'material',
         width: 150,
         height: this.heightGrid,
@@ -93,18 +144,6 @@ export class ContractComponent implements OnInit, OnDestroy {
       },
       grid: {
         source: [],
-        columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
-          {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
-          {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
-          {text: 'Тип контракта', datafield: 'contractTypeCode', width: 150},
-          {text: 'Отправитель', datafield: 'senderCode', width: 150},
-          {text: 'Получатель', datafield: 'recipientCode', width: 150},
-          {text: 'Код', datafield: 'code', width: 150},
-          {text: 'Наименование', datafield: 'name', width: 150},
-          {text: 'Коментарий', datafield: 'comments', width: 150}
-        ],
         theme: 'material',
         width: null,
         height: this.heightGrid,
@@ -114,7 +153,6 @@ export class ContractComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: 'singlerow',
         isMasterGrid: false,
-
         valueMember: 'id',
         sortcolumn: ['id'],
         sortdirection: 'asc',
@@ -124,7 +162,7 @@ export class ContractComponent implements OnInit, OnDestroy {
 
     // definde filter
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditFormContracts = {
       code: 'editFormContract',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -134,14 +172,12 @@ export class ContractComponent implements OnInit, OnDestroy {
       width: 450,
       maxWidth: 450,
       minWidth: 450,
-      height: 500,
-      maxHeight: 500,
-      minHeight: 500,
+      height: 510,
+      maxHeight: 510,
+      minHeight: 510,
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditFormContracts = [
       {
         nameField: 'contractTypes',
@@ -234,20 +270,135 @@ export class ContractComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormContractsEng = [
+      {
+        nameField: 'contractTypes',
+        type: 'jqxComboBox',
+        source: [],
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Contract type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'senders',
+        type: 'jqxComboBox',
+        source: this.companies,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Sender:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'recipients',
+        type: 'jqxComboBox',
+        source: this.companies,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Recipient:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'name',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
 
     // CONTRACTTYPE
+    // definde columns
+    this.columnsGridContractTypes =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'Код', datafield: 'code', width: 150},
+        {text: 'Наименование', datafield: 'name', width: 150},
+        {text: 'Коментарий', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceContractTypes =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'Наименование', value: 'name', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridContractTypesEng =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'Code', datafield: 'code', width: 150},
+        {text: 'Name', datafield: 'name', width: 150},
+        {text: 'Comments', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceContractTypesEng =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'Name', value: 'name', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
 
     // jqxgrid
     this.sourceForJqxGridContractTypes = {
       listbox: {
-        source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ],
         theme: 'material',
         width: 150,
         height: this.heightGrid,
@@ -257,12 +408,6 @@ export class ContractComponent implements OnInit, OnDestroy {
       },
       grid: {
         source: [],
-        columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'Код', datafield: 'code', width: 150},
-          {text: 'Наименование', datafield: 'name', width: 150},
-          {text: 'Коментарий', datafield: 'comments', width: 150}
-        ],
         theme: 'material',
         width: null,
         height: this.heightGrid,
@@ -272,7 +417,6 @@ export class ContractComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: 'singlerow',
         isMasterGrid: false,
-
         valueMember: 'id',
         sortcolumn: ['id'],
         sortdirection: 'asc',
@@ -282,7 +426,7 @@ export class ContractComponent implements OnInit, OnDestroy {
 
     // definde filter
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditFormContractTypes = {
       code: 'editFormContractType',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -292,14 +436,12 @@ export class ContractComponent implements OnInit, OnDestroy {
       width: 450,
       maxWidth: 450,
       minWidth: 450,
-      height: 340,
-      maxHeight: 340,
-      minHeight: 340,
+      height: 350,
+      maxHeight: 350,
+      minHeight: 350,
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditFormContractTypes = [
       {
         nameField: 'code',
@@ -339,6 +481,53 @@ export class ContractComponent implements OnInit, OnDestroy {
         width: '280',
         height: '100',
         placeHolder: 'Комментарий:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
+    this.sourceForEditFormContractTypesEng = [
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'name',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -415,28 +604,31 @@ export class ContractComponent implements OnInit, OnDestroy {
         break;
       default:
         headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');
+        break;
     }
     return headline;
   }
 
-  saveEditwinBtn(saveEditwinObject: any) {
+  // EDIT FORM
+
+  saveEditFormBtn(saveEditwinObject: any) {
     let selectObject: any;
     switch (saveEditwinObject.dictionaryType) {
       case 'contracts':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.sourceForEditFormContracts.length; i++) {
-          switch (this.sourceForEditFormContracts[i].nameField) {
+        for (let i = 0; i < this.contracts.editForm.sourceForEditForm.length; i++) {
+          switch (this.contracts.editForm.sourceForEditForm[i].nameField) {
             case 'contractTypes':
-              selectObject.contractTypeId = +this.sourceForEditFormContracts[i].selectId;
-              selectObject.contractTypeCode = this.sourceForEditFormContracts[i].selectCode;
+              selectObject.contractTypeId = +this.contracts.editForm.sourceForEditForm[i].selectId;
+              selectObject.contractTypeCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
               break;
             case 'senders':
-              selectObject.senderId = +this.sourceForEditFormContracts[i].selectId;
-              selectObject.senderCode = this.sourceForEditFormContracts[i].selectCode;
+              selectObject.senderId = +this.contracts.editForm.sourceForEditForm[i].selectId;
+              selectObject.senderCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
               break;
             case 'recipients':
-              selectObject.recipientId = +this.sourceForEditFormContracts[i].selectId;
-              selectObject.recipientCode = this.sourceForEditFormContracts[i].selectCode;
+              selectObject.recipientId = +this.contracts.editForm.sourceForEditForm[i].selectId;
+              selectObject.recipientCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
@@ -450,12 +642,14 @@ export class ContractComponent implements OnInit, OnDestroy {
           this.oSubContracts = this.contractService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterializeService.toast(`Контракт c id = ${selectObject.id} был добавлен.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.ins')
+                + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contracts.editWindow.closeDestroy();
+              this.contracts.editForm.closeDestroy();
               // update data source
               this.contracts.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
@@ -478,12 +672,14 @@ export class ContractComponent implements OnInit, OnDestroy {
           // upd
           this.oSubContracts = this.contractService.upd(selectObject).subscribe(
             response => {
-              MaterializeService.toast(`Контракт c id = ${selectObject.id} был обновлен.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.upd')
+                + this.contracts.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contracts.editWindow.closeDestroy();
+              this.contracts.editForm.closeDestroy();
               // update data source
               this.contracts.jqxgridComponent.refresh_upd(selectObject.id, this.contracts.jqxgridComponent.selectRow);
             }
@@ -499,12 +695,14 @@ export class ContractComponent implements OnInit, OnDestroy {
           this.oSubContractTypes = this.contractTypeService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterializeService.toast(`Тип контракта c id = ${selectObject.id} был добавлен.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.ins')
+                + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contractTypes.editWindow.closeDestroy();
+              this.contractTypes.editForm.closeDestroy();
               // update data source
               this.contractTypes.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
@@ -521,12 +719,14 @@ export class ContractComponent implements OnInit, OnDestroy {
           // upd
           this.oSubContractTypes = this.contractTypeService.upd(selectObject).subscribe(
             response => {
-              MaterializeService.toast(`Тип контракта c id = ${this.contractTypes.jqxgridComponent.selectRow.id} был обновлен.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.upd')
+                + this.contractTypes.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contractTypes.editWindow.closeDestroy();
+              this.contractTypes.editForm.closeDestroy();
               // update data source
               this.contractTypes.jqxgridComponent.refresh_upd(
                 this.contractTypes.jqxgridComponent.selectRow.id, this.contractTypes.jqxgridComponent.selectRow);
@@ -539,6 +739,10 @@ export class ContractComponent implements OnInit, OnDestroy {
     }
   }
 
+  // LINK FORM
+
+  // EVENT FORM
+
   okEvenwinBtn(okEvenwinObject: any) {
     switch (okEvenwinObject.dictionaryType) {
       case 'contracts':
@@ -546,9 +750,11 @@ export class ContractComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.contractService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterializeService.toast('Контракт был удален!');
+                this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.del'),
+                  this.translate.instant('site.forms.editforms.ok'));
               },
-              error => MaterializeService.toast(error.error.message),
+              error =>
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
                 this.contracts.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -563,9 +769,11 @@ export class ContractComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.contractTypeService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterializeService.toast('Тип контракта был удален!');
+                this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.del'),
+                  this.translate.instant('site.forms.editforms.ok'));
               },
-              error => MaterializeService.toast(error.error.message),
+              error =>
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
                 this.contractTypes.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -580,4 +788,9 @@ export class ContractComponent implements OnInit, OnDestroy {
     }
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
+  }
 }

@@ -1,6 +1,5 @@
+// angular lib
 import {
-  AfterContentChecked,
-  AfterViewChecked,
   AfterViewInit,
   Component,
   EventEmitter,
@@ -11,13 +10,12 @@ import {
   ViewChild
 } from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-
+// jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxwindow';
-import jqxButton = jqwidgets.jqxButton;
-
-import {CompanyDepartment, NavItem, Person} from '../../../../shared/interfaces';
-
-import {RolerightPageComponent} from '../roleright-page.component';
+// app interfaces
+import {CompanyDepartment, NavItem} from '../../../../shared/interfaces';
+// app services
+// app components
 
 
 @Component({
@@ -25,13 +23,9 @@ import {RolerightPageComponent} from '../roleright-page.component';
   templateUrl: './right-demo.component.html',
   styleUrls: ['./right-demo.component.css']
 })
-export class RightDemoComponent implements OnInit,
-  // AfterViewInit,
-  // AfterContentChecked,
-  // AfterViewChecked,
-  OnDestroy {
+export class RightDemoComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() roleSiteMap: NavItem[];
   @Input() companies: CompanyDepartment[];
   @Input() theme: string;
@@ -39,12 +33,10 @@ export class RightDemoComponent implements OnInit,
   @Input() heightGridRoleright: number;
 
   // determine the functions that need to be performed in the parent component
-  @Output() onCloseWindow = new EventEmitter();
+  @Output() onInitRightDemoForm = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('rolerightPageComponent', {static: false}) rolerightPageComponent: RolerightPageComponent;
-  @ViewChild('demoRightWindow', {static: false}) demoRightWindow: jqxWindowComponent;
-  @ViewChild('cancelButton', {static: false}) cancelButton: jqxButton;
+  @ViewChild('rightDemoForm', {static: false}) rightDemoForm: jqxWindowComponent;
 
   // other variables
 
@@ -55,70 +47,45 @@ export class RightDemoComponent implements OnInit,
   }
 
   ngOnInit() {
+
   }
 
-  // ngAfterViewInit() {
-  //
-  // }
-  //
-  // ngAfterContentChecked() {
-  //
-  // }
-  //
-  // ngAfterViewChecked() {
-  //   this.demoRightWindow.title(this.translate.instant('site.menu.administration.right-page.right-demo'));
-  //   this.cancelButton.val(this.translate.instant('site.forms.editforms.close'));
-  //   // this.jqxTabs.setTitleAt(1, this.translate.instant('site.menu.administration.right-page.role-page'));
-  // }
+  ngAfterViewInit() {
+
+  }
 
   ngOnDestroy() {
     this.destroy();
   }
 
-  close() {
-    this.onCloseWindow.emit();
-    this.demoRightWindow.close();
+  destroy() {
+    if (this.rightDemoForm) {
+      this.rightDemoForm.destroy();
+    }
   }
 
   open() {
-    this.demoRightWindow.open();
+    this.rightDemoForm.open();
   }
 
-  isOpen() {
-    return this.demoRightWindow.isOpen();
+  close() {
+    this.rightDemoForm.close();
   }
 
-  destroy() {
-    if (this.demoRightWindow) {
-      this.demoRightWindow.destroy();
-    }
-    if (this.rolerightPageComponent) {
-      this.rolerightPageComponent.destroy();
-    }
+  closeDestroy() {
+    this.onInitRightDemoForm.emit();
+    this.destroy();
   }
 
   hide() {
-    this.demoRightWindow.hide();
+    this.rightDemoForm.hide();
   }
 
   positionWindow(coord: any) {
-    this.demoRightWindow.position({x: coord.x, y: coord.y});
+    this.rightDemoForm.position({x: coord.x, y: coord.y});
   }
 
-  isRusLang(lang: string) {
-    if (lang === 'ru') {
-      return true;
-    } else {
-      return false;
-    }
+  isOpen() {
+    return this.rightDemoForm.isOpen();
   }
-
-  isEngLang(lang: string) {
-    if (lang === 'en') {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
 }

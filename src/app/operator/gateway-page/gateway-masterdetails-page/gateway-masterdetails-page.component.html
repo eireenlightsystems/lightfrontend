@@ -2,44 +2,37 @@
              [theme]="'material'"
              [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
              [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
-
              (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
              (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
              (onExpanded)="expanded()"
 >
   <div class="splitter-panel">
     <app-gatewaylist-page #gatewaylistPageComponent
+                          [siteMap]="siteMap"
                           [ownerGateways]="ownerGateways"
                           [gatewayTypes]="gatewayTypes"
                           [contractGateways]="contractGateways"
-
                           [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                           [isMasterGrid]="true"
                           [settingButtonPanel]="settingGatewayButtonPanel"
-
                           (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-gatewaylist-page>
   </div>
   <div class="splitter-panel">
-    <jqxTabs
-      [theme]="'material'"
-    >
-      <ul>
-        <li style="margin-left: 30px">Группа узлов шлюза</li>
-      </ul>
-      <div style="overflow: hidden">
+    <mat-tab-group #matTabGroup [selectedIndex]="0">
+      <mat-tab label="{{'site.menu.operator.node-page.node-page' | translate}}">
         <app-nodelist-page #nodelistPageComponent
+                           [siteMap]="siteMap"
                            [ownerNodes]="ownerNodes"
                            [nodeTypes]="nodeTypes"
                            [contractNodes]="contractNodes"
-
                            [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                            [selectGatewayId]="selectGatewayId"
                            [selectionmode]="'checkbox'"
                            [isMasterGrid]="false"
                            [settingButtonPanel]="settingNodeButtonPanel"
         ></app-nodelist-page>
-      </div>
-    </jqxTabs>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </jqxSplitter>

@@ -4,7 +4,7 @@
                   (onUpd)="upd()"
                   (onDel)="del()"
                   (onRefresh)="refresh()"
-                  (onSetting)="filterNone()"
+                  (onSetting)="setting()"
                   (onFilterList)="filterList()"
                   (onPlace)="place()"
                   (onPinDrop)="pinDrop()"
@@ -53,19 +53,36 @@
   <app-loader></app-loader>
 </ng-template>
 
-<app-edit-form #editWindow
-               *ngIf="isEditFormVisible"
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
                [settingWinForEditForm]="settingWinForEditForm"
                [sourceForEditForm]="sourceForEditForm"
                (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onInitEditForm)="setEditFormVisible()"
-               (onSaveEditFormBtn)="saveEditwinBtn()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
+></app-edit-form>
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditFormEng"
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
 ></app-edit-form>
 
-<app-link-form #linkWindow
+<app-link-form #linkForm
+               *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
                [sourceForLinkForm]="sourceForLinkForm"
                (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkwinBtn($event)"
+               (onDestroyLinkForm)="destroyLinkForm()"
+               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+></app-link-form>
+<app-link-form #linkForm
+               *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
+               [sourceForLinkForm]="sourceForLinkFormEng"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onDestroyLinkForm)="destroyLinkForm()"
+               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
 ></app-link-form>
 
 <app-event-window #eventWindow

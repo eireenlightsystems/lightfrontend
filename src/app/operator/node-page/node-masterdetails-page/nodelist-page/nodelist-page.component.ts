@@ -1,25 +1,28 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
-import {MaterializeService} from '../../../../shared/classes/materialize.service';
-
-import {NodeService} from '../../../../shared/services/node/node.service';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
   Node, Contract, EquipmentType, Owner,
   FilterNode, SourceForFilter,
   SettingButtonPanel,
   SourceForJqxGrid,
   SettingWinForEditForm, SourceForEditForm,
-  SourceForLinkForm, ItemsLinkForm
+  SourceForLinkForm, ItemsLinkForm, NavItem
 } from '../../../../shared/interfaces';
+// app services
+import {NodeService} from '../../../../shared/services/node/node.service';
+// app components
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -33,17 +36,15 @@ const STEP = 1000000000000;
 
 export class NodelistPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
-
   @Input() selectGatewayId: number;
-
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
-
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -53,8 +54,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -65,6 +66,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
+  columnsGridEng: any[];
+  listBoxSourceEng: any[];
   // main
   items: Node[] = [];
   // grid
@@ -80,86 +83,106 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     gatewayId: ''
   };
   sourceForFilter: SourceForFilter[];
+  sourceForFilterEng: SourceForFilter[];
   isFilterVisible = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  isEditFormVisible = false;
+  sourceForEditFormEng: SourceForEditForm[];
+  isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
+  sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(private nodeService: NodeService,
-              public translate: TranslateService) {
+
+  constructor(private _snackBar: MatSnackBar,
+              // service
+              public translate: TranslateService,
+              private nodeService: NodeService) {
   }
 
   ngOnInit() {
     // define columns for table
-    if (this.isMasterGrid) {
-      this.columnsGrid =
-        [
-          {text: 'nodeId', datafield: 'nodeId', width: 150},
-          {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
-          {text: 'Владелец', datafield: 'ownerCode', width: 150},
+    this.columnsGrid =
+      [
+        {text: 'nodeId', datafield: 'nodeId', width: 150},
+        {text: 'Договор', datafield: 'contractCode', width: 150},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
+        {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+        {text: 'Широта', datafield: 'n_coordinate', width: 150},
+        {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+        {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+        {text: 'Коментарий', datafield: 'comment', width: 150},
+      ];
+    this.listBoxSource =
+      [
+        {label: 'nodeId', value: 'nodeId', checked: true},
+        {label: 'Договор', value: 'contractCode', checked: true},
+        {label: 'Адрес', value: 'geographFullName', checked: true},
+        {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
+        {label: 'Широта', value: 'n_coordinate', checked: true},
+        {label: 'Долгота', value: 'e_coordinate', checked: true},
+        {label: 'Серийный номер', value: 'serialNumber', checked: true},
+        {label: 'Коментарий', value: 'comment', checked: true},
+      ];
+    this.columnsGridEng =
+      [
+        {text: 'nodeId', datafield: 'nodeId', width: 150},
+        {text: 'Contract', datafield: 'contractCode', width: 150},
+        {text: 'Address', datafield: 'geographFullName', width: 400},
+        {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
+        {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+        {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+        {text: 'Serial number', datafield: 'serialNumber', width: 150},
+        {text: 'Comments', datafield: 'comment', width: 150},
+      ];
+    this.listBoxSourceEng =
+      [
+        {label: 'nodeId', value: 'nodeId', checked: true},
+        {label: 'Contract', value: 'contractCode', checked: true},
+        {label: 'Address', value: 'geographFullName', checked: true},
+        {label: 'Node type', value: 'nodeTypeCode', checked: true},
+        {label: 'Latitude', value: 'n_coordinate', checked: true},
+        {label: 'Longitude', value: 'e_coordinate', checked: true},
+        {label: 'Serial number', value: 'serialNumber', checked: true},
+        {label: 'Comments', value: 'comment', checked: true},
+      ];
 
-          {text: 'Широта', datafield: 'n_coordinate', width: 150},
-          {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'nodeId', value: 'nodeId', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
-          {label: 'Владелец', value: 'ownerCode', checked: true},
-
-          {label: 'Широта', value: 'n_coordinate', checked: true},
-          {label: 'Долгота', value: 'e_coordinate', checked: true},
-
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-        ];
-    } else {
-      this.columnsGrid =
-        [
-          {text: 'nodeId', datafield: 'nodeId', width: 150},
-          {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
-
-          {text: 'Широта', datafield: 'n_coordinate', width: 150},
-          {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-        ];
-      // define a data source for filtering table columns
-      this.listBoxSource =
-        [
-          {label: 'nodeId', value: 'nodeId', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
-
-          {label: 'Широта', value: 'n_coordinate', checked: true},
-          {label: 'Долгота', value: 'e_coordinate', checked: true},
-
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-        ];
-    }
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        theme: 'material',
+        width: null,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+        valueMember: 'nodeId',
+        sortcolumn: ['nodeId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
 
     // definde filter
     this.sourceForFilter = [
@@ -203,11 +226,52 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         selectId: ''
       }
     ];
+    this.sourceForFilterEng = [
+      {
+        name: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerNodes',
+        type: 'jqxComboBox',
+        source: this.ownerNodes,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Owner:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'nodeTypes',
+        type: 'jqxComboBox',
+        source: this.nodeTypes,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Node type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormNode',
-      name: 'Добавить/редактировать узел',
+      name: 'Add/edit nodes',
       theme: 'material',
       isModal: true,
       modalOpacity: 0.3,
@@ -220,8 +284,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'geographs',
@@ -329,6 +391,113 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormEng = [
+      {
+        nameField: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '300',
+        height: '20',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'contractNodes',
+        type: 'jqxComboBox',
+        source: this.contractNodes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Contract:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nodeTypes',
+        type: 'jqxComboBox',
+        source: this.nodeTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Node type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'n_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Latitude:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'e_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Longitude:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Serial number:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
     this.sourceForLinkForm = {
@@ -336,7 +505,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         code: 'linkGatewayNodes',
         name: 'Выбрать узлы',
         theme: 'material',
-        autoOpen: false,
+        autoOpen: true,
         isModal: true,
         modalOpacity: 0.3,
         width: 1200,
@@ -345,7 +514,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         height: 500,
         maxHeight: 800,
         minHeight: 600
-
       },
       grid: {
         source: [],
@@ -358,38 +526,38 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'nodeId',
         sortcolumn: ['nodeId'],
         sortdirection: 'desc',
         selectId: []
       }
     };
-
-    // jqxgrid
-    this.sourceForJqxGrid = {
-      listbox: {
-        source: this.listBoxSource,
+    this.sourceForLinkFormEng = {
+      window: {
+        code: 'linkGatewayNodes',
+        name: 'Choose nodes',
         theme: 'material',
-        width: 150,
-        height: this.heightGrid,
-        checkboxes: true,
-        filterable: true,
-        allowDrag: true
+        autoOpen: true,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
       },
       grid: {
-        source: this.items,
-        columns: this.columnsGrid,
+        source: [],
+        columns: this.columnsGridEng,
         theme: 'material',
-        width: null,
-        height: this.heightGrid,
+        width: 1186,
+        height: 485,
         columnsresize: true,
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: this.selectionmode,
-        isMasterGrid: this.isMasterGrid,
-
+        selectionmode: 'checkbox',
         valueMember: 'nodeId',
         sortcolumn: ['nodeId'],
         sortdirection: 'desc',
@@ -418,11 +586,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.linkForm) {
+      this.linkForm.destroy();
     }
     if (this.oSubForLinkWin) {
       this.oSubForLinkWin.unsubscribe();
@@ -530,17 +698,18 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormVisible = !this.isEditFormVisible;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormVisible = !this.isEditFormVisible;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узел для редактирования`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.upd-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -549,10 +718,13 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить узел/столб id = "${this.jqxgridComponent.selectRow.nodeId}"?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del-question')
+        + this.jqxgridComponent.selectRow.nodeId + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узел/столб для удаления`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -561,7 +733,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  filterNone() {
+  setting() {
     this.jqxgridComponent.openSettinWin();
   }
 
@@ -584,10 +756,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   groupIn() {
     if (this.selectGatewayId > 1) {
-      this.linkWindow.open();
+      this.isLinkFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для привязки узлов`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupIn-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -596,10 +769,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'groupOut';
-      this.warningEventWindow = `Отвязать узлы от шлюза?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupOut-question');
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узлы для отвязки от шлюза`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupOut-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -649,9 +824,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
             break;
           case 'ownerNodes':
             this.sourceForFilter[i].source = this.ownerNodes;
+            this.sourceForFilterEng[i].source = this.ownerNodes;
             break;
           case 'nodeTypes':
             this.sourceForFilter[i].source = this.nodeTypes;
+            this.sourceForFilterEng[i].source = this.nodeTypes;
             break;
           default:
             break;
@@ -666,34 +843,33 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     const selectObject: Node = new Node();
-
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      switch (this.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'geographs':
-          selectObject.geographId = +this.sourceForEditForm[i].selectId;
-          selectObject.geographFullName = this.sourceForEditForm[i].selectName;
+          selectObject.geographId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.geographFullName = this.editForm.sourceForEditForm[i].selectName;
           break;
         case 'contractNodes':
-          selectObject.contractId = +this.sourceForEditForm[i].selectId;
-          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          selectObject.contractId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'nodeTypes':
-          selectObject.nodeTypeId = +this.sourceForEditForm[i].selectId;
-          selectObject.nodeTypeCode = this.sourceForEditForm[i].selectCode;
+          selectObject.nodeTypeId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.nodeTypeCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'n_coordinate':
-          selectObject.n_coordinate = +this.sourceForEditForm[i].selectCode;
+          selectObject.n_coordinate = +this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'e_coordinate':
-          selectObject.e_coordinate = +this.sourceForEditForm[i].selectCode;
+          selectObject.e_coordinate = +this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'serialNumber':
-          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          selectObject.serialNumber = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comment':
-          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          selectObject.comment = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -707,12 +883,14 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.nodeService.ins(selectObject).subscribe(
         response => {
           selectObject.nodeId = +response;
-          MaterializeService.toast(`Узел/столб c id = ${selectObject.nodeId} был добавлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.ins')
+            + selectObject.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_ins(selectObject.nodeId, selectObject);
         }
@@ -734,12 +912,14 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.nodeService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterializeService.toast(`Узел/столб c id = ${this.jqxgridComponent.selectRow.nodeId} был обновлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.upd')
+            + this.jqxgridComponent.selectRow.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_upd(this.jqxgridComponent.selectRow.nodeId, this.jqxgridComponent.selectRow);
         }
@@ -748,64 +928,72 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   getSourceForEditForm() {
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+    let sourceForEditForm: any[];
+    if (this.translate.currentLang === 'ru') {
+      sourceForEditForm = this.sourceForEditForm;
+    }
+    if (this.translate.currentLang === 'en') {
+      sourceForEditForm = this.sourceForEditFormEng;
+    }
+
+    for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
-        this.sourceForEditForm[i].selectedIndex = 0;
-        this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
+        sourceForEditForm[i].selectedIndex = 0;
+        sourceForEditForm[i].selectId = '1';
+        sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
-      switch (this.sourceForEditForm[i].nameField) {
+      switch (sourceForEditForm[i].nameField) {
         case 'geographs':
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = '1';
-            this.sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.withoutAddress');
+            sourceForEditForm[i].selectId = '1';
+            sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.withoutAddress');
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
-            this.sourceForEditForm[i].selectName = this.jqxgridComponent.selectRow.geographFullName;
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.geographId.toString();
+            sourceForEditForm[i].selectName = this.jqxgridComponent.selectRow.geographFullName;
           }
           break;
         case 'contractNodes':
-          this.sourceForEditForm[i].source = this.contractNodes;
+          sourceForEditForm[i].source = this.contractNodes;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.contractNodes[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.contractNodes.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.contractNodes.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.contractNodes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.contractNodes.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.contractNodes.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
-            this.sourceForEditForm[i].selectCode = this.contractNodes.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
+            sourceForEditForm[i].selectCode = this.contractNodes.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).code;
-            this.sourceForEditForm[i].selectName = this.contractNodes.find(
+            sourceForEditForm[i].selectName = this.contractNodes.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).name;
             for (let j = 0; j < this.contractNodes.length; j++) {
               if (+this.contractNodes[j].id === +this.jqxgridComponent.selectRow.contractId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
           }
           break;
         case 'nodeTypes':
-          this.sourceForEditForm[i].source = this.nodeTypes;
+          sourceForEditForm[i].source = this.nodeTypes;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.nodeTypeId.toString();
-            this.sourceForEditForm[i].selectCode = this.nodeTypes.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.nodeTypeId.toString();
+            sourceForEditForm[i].selectCode = this.nodeTypes.find(
               (oneType: EquipmentType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).code;
-            this.sourceForEditForm[i].selectName = this.nodeTypes.find(
+            sourceForEditForm[i].selectName = this.nodeTypes.find(
               (oneType: EquipmentType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).name;
             for (let j = 0; j < this.nodeTypes.length; j++) {
               if (+this.nodeTypes[j].id === +this.jqxgridComponent.selectRow.nodeTypeId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
@@ -813,26 +1001,26 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           break;
         case 'n_coordinate':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.n_coordinate;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.n_coordinate;
           } else {
-            this.sourceForEditForm[i].selectCode = '0';
+            sourceForEditForm[i].selectCode = '0';
           }
           break;
         case 'e_coordinate':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.e_coordinate;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.e_coordinate;
           } else {
-            this.sourceForEditForm[i].selectCode = '0';
+            sourceForEditForm[i].selectCode = '0';
           }
           break;
         case 'serialNumber':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
           }
           break;
         case 'comment':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
           }
           break;
         default:
@@ -841,27 +1029,35 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM
 
-  saveLinkwinBtn(event: ItemsLinkForm) {
-    if (event.code === this.sourceForLinkForm.window.code) {
-      this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
-        response => {
-          MaterializeService.toast('Узлы добавлены в группу!');
-        },
-        error => {
-          MaterializeService.toast(error.error.message);
-        },
-        () => {
-          this.linkWindow.hide();
-          // refresh table
-          this.refreshGrid();
-        }
-      );
+  saveLinkFormBtn(event: ItemsLinkForm) {
+    if (event.Ids.length > 0) {
+      if (event.code === this.sourceForLinkForm.window.code) {
+        this.oSubLink = this.nodeService.setNodeInGatewayGr(this.selectGatewayId, event.Ids).subscribe(
+          response => {
+            this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupIn'),
+              this.translate.instant('site.forms.editforms.ok'));
+          },
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          },
+          () => {
+            this.linkForm.closeDestroy();
+            // refresh table
+            this.refreshGrid();
+          }
+        );
+      }
+    } else {
+      this.eventWindow.okButtonDisabled(true);
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupIn-warning2');
+      this.eventWindow.openEventWindow();
     }
   }
 
@@ -869,12 +1065,17 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.linkWindow.refreshGrid();
+        this.sourceForLinkFormEng.grid.source = response;
+        this.linkForm.refreshGrid();
       },
       error => {
-        MaterializeService.toast(error.error.message);
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
       }
     );
+  }
+
+  destroyLinkForm() {
+    this.isLinkFormInit = false;
   }
 
   // EVENT FORM
@@ -892,9 +1093,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.nodeService.del(+id).subscribe(
           response => {
-            MaterializeService.toast('Узел/столб был удален!');
+            this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
-          error => MaterializeService.toast(error.error.message),
+          error =>
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -904,10 +1107,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.nodeService.delNodeInGatewayGr(this.selectGatewayId, nodeIds).subscribe(
         response => {
-          MaterializeService.toast('Узлы удалены из группы!');
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.groupOut'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
           // refresh table
@@ -915,5 +1119,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

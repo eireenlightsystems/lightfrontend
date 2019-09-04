@@ -1,10 +1,12 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
-import {MaterializeService} from '../../../shared/classes/materialize.service';
-
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
   Node,
   Fixture,
@@ -14,11 +16,12 @@ import {
   SettingWinForEditForm,
   SourceForEditForm
 } from '../../../shared/interfaces';
+// app services
 import {NodeService} from '../../../shared/services/node/node.service';
-import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
+// app components
+import {EventWindowComponent} from '../../../shared/components/event-window/event-window.component';
 import {EditFormComponent} from '../../../shared/components/edit-form/edit-form.component';
-import {isUndefined} from 'util';
 
 
 declare var ymaps: any;
@@ -32,7 +35,7 @@ declare var ymaps: any;
 
 export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
@@ -41,7 +44,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onRefreshGrid = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -49,7 +52,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   nCoord = 60.0503;
   eCoord = 30.4269;
   zoom = 17;
-
   nodes: Node[];
   saveNode: Node = new Node();
   selectNode: Node = new Node();
@@ -67,22 +69,25 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  isEditFormVisible = false;
+  sourceForEditFormEng: SourceForEditForm[];
+  isEditFormInit = false;
   typeEditWindow = '';
 
-  constructor(private zone: NgZone,
+  constructor(private _snackBar: MatSnackBar,
+              private zone: NgZone,
               public router: Router,
               public route: ActivatedRoute,
+              // service
+              public translate: TranslateService,
               private nodeService: NodeService,
-              private fixtureService: FixtureService,
-              public translate: TranslateService) {
+              private fixtureService: FixtureService) {
   }
 
   ngOnInit() {
-    // Definde window edit form
+    // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormNode',
-      name: 'Добавить/редактировать узел',
+      name: 'Add / edit node',
       theme: 'material',
       isModal: true,
       modalOpacity: 0.3,
@@ -95,8 +100,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // Definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'geographs',
@@ -135,7 +138,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         theme: 'material',
         width: '285',
         height: '20',
-        placeHolder: 'Тип датчика:',
+        placeHolder: 'Тип узла:',
         displayMember: 'code',
         valueMember: 'id',
         selectedIndex: null,
@@ -204,12 +207,121 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormEng = [
+      {
+        nameField: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '300',
+        height: '20',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'contractNodes',
+        type: 'jqxComboBox',
+        source: this.contractNodes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Contract:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nodeTypes',
+        type: 'jqxComboBox',
+        source: this.nodeTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Node type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'n_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Latitude:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'e_coordinate',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Longitude:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '0',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Serial number:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
-    this.mapInit();
+    // get all fixtures
+    this.getAll();
   }
 
   ngAfterViewInit() {
-
+    // init map
+    this.mapInit();
   }
 
   ngOnDestroy() {
@@ -222,8 +334,8 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.eventWindow) {
       this.eventWindow.destroyEventWindow();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
   }
 
@@ -235,10 +347,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: this.zoom,
         controls: ['zoomControl']
       });
-
-      // Refresh map
-      // this.getAll();
-
       // buttons on the map init
       this.buttonsInit();
     });
@@ -247,30 +355,55 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // buttons on the map init
   buttonsInit() {
     const ButtonLayout = ymaps.templateLayoutFactory.createClass([
-        `<div class="fr">
-                  <Button id="insItem"
-                    class="btn btn-small waves-effect waves-orange white blue-text"
-                    style="margin: 2px 2px 2px 2px;"
-                  >
-                    <i class="material-icons">add</i>
-                  </Button>
-                  <Button id="refreshMap"
-                    class="btn btn-small waves-effect waves-orange white blue-text"
-                    style="margin: 2px 2px 2px 2px;"
-                  >
-                    <i class="material-icons">refresh</i>
-                  </Button>
-                  <Button 
-                    class="btn btn-small waves-effect waves-orange white blue-text"
-                    style="margin: 2px 2px 2px 2px;"
-                  >
-                    <label class="blue-text">
-                      <input type="checkbox" id="moveIcons"/>
-                      <span>Двигать узлы</span>
-                    </label>
-                  </Button>
-        
-              </div>`
+        this.translate.currentLang === 'ru'
+          ?
+          `<div class="fr">
+          <button id="insItem"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">add</i>
+          </button>
+          <button id="refreshMap"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">refresh</i>
+          </button>
+          <button id="moveNode"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <label class="blue-text" >
+              <input type="checkbox" id="moveIcons"/>
+              <span>Двигать узлы</span>
+            </label>
+          </button>
+        </div>`
+          :
+          `<div class="fr">
+          <button id="insItem"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">add</i>
+          </button>
+          <button id="refreshMap"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">refresh</i>
+          </button>
+          <button id="moveNode"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <label class="blue-text" >
+              <input type="checkbox" id="moveIcons"/>
+              <span>Move node</span>
+            </label>
+          </button>
+        </div>`
       ].join(''),
       {
         build: function () {
@@ -279,7 +412,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           $('#refreshMap').bind('click', this.refreshMap(this.getData().properties));
           $('#moveIcons').bind('click', this.moveIcons(this.getData().properties));
         },
-
         insItem: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
@@ -288,7 +420,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
             };
           };
         }).call(this),
-
         refreshMap: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
@@ -297,7 +428,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
             };
           };
         }).call(this),
-
         moveIcons: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
@@ -311,7 +441,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         }).call(this)
       },
       ),
-
       buttonIns = new ymaps.control.Button({
         data: {
           content: 'Жмак-жмак-жмак',
@@ -323,7 +452,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           maxWidth: [170, 190, 220]
         }
       });
-
     this.myMap.controls.add(buttonIns, {
       right: 5,
       top: 5
@@ -337,6 +465,7 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!isUndefined(this.myMap)) {
         this.myMap.setCenter([nodes[0].n_coordinate, nodes[0].e_coordinate], this.zoom);
       }
+      // place the objects
       this.addItemsToMap();
     });
   }
@@ -349,64 +478,85 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // place the object from the set "getAll()" on the map
   addItemsToMap() {
     const collection = new ymaps.GeoObjectCollection(null, {});
-
     const BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-      `<div class="fr">
-        <jqxTooltip [position]="'bottom'" [name]="'updTooltip'"
-                    [content]="'Редактировать узел'">
-          <Button id="updItems"
-            class="btn btn-small waves-effect waves-orange white blue-text"
+      this.translate.currentLang === 'ru'
+        ?
+        `<div class="fr">
+          <button id="updItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
             style="margin: 2px 2px 2px 2px;"
           >
             <i class="material-icons">edit</i>
-          </Button>
-        </jqxTooltip>
-        
-        <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                    [content]="'Удалить узел'">
-          <Button id="delItems"
-            class="btn btn-small waves-effect waves-orange white blue-text"
+          </button>
+          <button id="delItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
             style="margin: 2px 2px 2px 2px;"
           >
             <i class="material-icons">delete</i>
-          </Button>
-        </jqxTooltip>
-        
-        <jqxTooltip [position]="'bottom'" [name]="'delTooltip'"
-                    [content]="'Удалить узел с карты'">
-          <Button id="visibilityItems"
-            class="btn btn-small waves-effect waves-orange white blue-text"
+          </button>
+          <button id="visibilityItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
             style="margin: 2px 2px 2px 25px;"
           >
             <i class="material-icons">pin_drop</i>
-          </Button>
-        </jqxTooltip>
-      </div>
-            
-      <table class="table table-sm">
-      <tbody>
-      <tr><th>Договор</th><td>{{properties.node.contractCode}}</td></tr>
-      <tr><th>Адрес</th><td>{{properties.node.geographFullName}}</td></tr>
-      <tr><th>Тип узла</th><td>{{properties.node.nodeTypeCode}}</td></tr>
-      <tr><th>Владелец</th><td>{{properties.node.ownerCode}}</td></tr>
-      <tr><th>Широта</th><td>{{properties.node.n_coordinate}}</td></tr>
-      <tr><th>Долгота</th><td>{{properties.node.e_coordinate}}</td></tr>
-      <tr><th>Серийный номер</th><td>{{properties.node.serialNumber}}</td></tr>
-      <tr><th>Коментарий</th><td>{{properties.node.comment}}</td></tr>
-      </tbody>
-      </table>`, {
+          </button>
+        </div>
+        <table class="table table-sm">
+          <tbody>
+            <tr><th>Договор</th><td>{{properties.node.contractCode}}</td></tr>
+            <tr><th>Адрес</th><td>{{properties.node.geographFullName}}</td></tr>
+            <tr><th>Тип узла</th><td>{{properties.node.nodeTypeCode}}</td></tr>
+            <tr><th>Владелец</th><td>{{properties.node.ownerCode}}</td></tr>
+            <tr><th>Широта</th><td>{{properties.node.n_coordinate}}</td></tr>
+            <tr><th>Долгота</th><td>{{properties.node.e_coordinate}}</td></tr>
+            <tr><th>Серийный номер</th><td>{{properties.node.serialNumber}}</td></tr>
+            <tr><th>Коментарий</th><td>{{properties.node.comment}}</td></tr>
+          </tbody>
+        </table>`
+        :
+        `<div class="fr">
+          <button id="updItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">edit</i>
+          </button>
+          <button id="delItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 2px;"
+          >
+            <i class="material-icons">delete</i>
+          </button>
+          <button id="visibilityItems"
+            class="btn btn-small waves-effect waves-yellow white blue-text"
+            style="margin: 2px 2px 2px 25px;"
+          >
+            <i class="material-icons">pin_drop</i>
+          </button>
+        </div>
+        <table class="table table-sm">
+          <tbody>
+            <tr><th>Contract</th><td>{{properties.node.contractCode}}</td></tr>
+            <tr><th>Address</th><td>{{properties.node.geographFullName}}</td></tr>
+            <tr><th>Node type</th><td>{{properties.node.nodeTypeCode}}</td></tr>
+            <tr><th>Owner</th><td>{{properties.node.ownerCode}}</td></tr>
+            <tr><th>Latitude</th><td>{{properties.node.n_coordinate}}</td></tr>
+            <tr><th>Longitude</th><td>{{properties.node.e_coordinate}}</td></tr>
+            <tr><th>Serial number</th><td>{{properties.node.serialNumber}}</td></tr>
+            <tr><th>Comments</th><td>{{properties.node.comment}}</td></tr>
+          </tbody>
+        </table>`
+      , {
         build: function () {
           BalloonContentLayout.superclass.build.call(this);
           $('#updItems').bind('click', this.updItems(this.getData().properties));
           $('#visibilityItems').bind('click', this.visibilityItems(this.getData().properties));
           $('#delItems').bind('click', this.delItems(this.getData().properties));
         },
-
         clear: function () {
           // $('#fixtureLightSwitcher').unbind('click', this.toggle);
           BalloonContentLayout.superclass.clear.call(this);
         },
-
         updItems: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
@@ -414,28 +564,29 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
               mapComponent.selectNode = properties._data.node;
               mapComponent.typeEditWindow = 'upd';
               mapComponent.getSourceForEditForm();
-              mapComponent.isEditFormVisible = !mapComponent.isEditFormVisible;
+              mapComponent.isEditFormInit = !mapComponent.isEditFormInit;
             };
           };
         }).call(this),
-
         visibilityItems: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.warningEventWindow = 'Очистить координаты узла (убрать с карты)?';
+              mapComponent.warningEventWindow =
+                mapComponent.translate.instant('site.menu.operator.node-page.nodemap-page.move-question1');
               mapComponent.actionEventWindow = 'visibility';
               mapComponent.eventWindow.openEventWindow();
               mapComponent.delNodeId = properties._data.node.nodeId;
             };
           };
         }).call(this),
-
         delItems: (function () {
           const mapComponent: NodemapPageComponent = this;
           return function (properties: any) {
             return function () {
-              mapComponent.warningEventWindow = 'Удалить узел?';
+              mapComponent.warningEventWindow =
+                mapComponent.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del-question')
+                + properties._data.node.nodeId + '?';
               mapComponent.actionEventWindow = 'del';
               mapComponent.eventWindow.openEventWindow();
               mapComponent.delNodeId = properties._data.node.nodeId;
@@ -444,7 +595,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
         }).call(this)
       }
     );
-
     this.myMap.geoObjects.removeAll();
     this.myMap.geoObjects.add(collection);
     for (const node of this.nodes) {
@@ -477,16 +627,14 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           mapComponent.moveNodeId = e.get('target').properties._data.node.nodeId;
           mapComponent.n_coord = cord[0];
           mapComponent.e_coord = cord[1];
-
-          mapComponent.warningEventWindow = 'Вы уверены, что требуется изменить координаты узла?';
+          mapComponent.warningEventWindow =
+            mapComponent.translate.instant('site.menu.operator.node-page.nodemap-page.move-question2');
           mapComponent.actionEventWindow = 'move';
           mapComponent.eventWindow.openEventWindow();
         };
       }(this);
-
       // event dragend - getting new coordinates
       myGeoObject.events.add('dragend', changeCoords);
-
       collection.add(myGeoObject);
     }
   }
@@ -499,8 +647,6 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   mapClickIns(event: any) {
     this.myMap.events.remove('click', this.mapClickIns, this);
     const coords = event.get('coords');
-
-    // this.saveNode.nodeId = 1;
     this.saveNode.contractId = 1;
     this.saveNode.nodeTypeId = 1;
     this.saveNode.geographId = 1;
@@ -508,13 +654,14 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     this.saveNode.e_coordinate = coords[1];
     this.saveNode.comment = this.translate.instant('site.forms.editforms.empty');
     this.saveNode.serialNumber = this.translate.instant('site.forms.editforms.empty');
-
     this.oSub = this.nodeService.ins(this.saveNode).subscribe(
       response => {
         this.saveNode.nodeId = +response;
-        MaterializeService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был добавлен.`);
+        this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.ins')
+          + this.saveNode.nodeId, this.translate.instant('site.forms.editforms.ok'));
       },
-      error => MaterializeService.toast(error.error.message),
+      error =>
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
       () => {
         // insert fixture
         this.mapClickInsFixture(this.saveNode.nodeId);
@@ -538,13 +685,14 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.saveFixture.nodeId = this.saveNode.nodeId;
       this.saveFixture.serialNumber = this.translate.instant('site.forms.editforms.empty');
       this.saveFixture.comment = this.translate.instant('site.forms.editforms.empty');
-
       this.oSub = this.fixtureService.ins(this.saveFixture).subscribe(
         response => {
           this.saveFixture.fixtureId = +response;
-          MaterializeService.toast(`Светильник c id = ${this.saveFixture.fixtureId} был добавлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.ins')
+            + this.saveFixture.fixtureId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
         }
       );
@@ -559,9 +707,11 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     node.e_coordinate = e_coord;
     this.oSub = this.nodeService.upd(node).subscribe(
       response => {
-        MaterializeService.toast(`Место положения узла/столба c id = ${node.nodeId} изменилось.`);
+        this.openSnackBar(this.translate.instant('site.menu.operator.node-page.nodemap-page.moved')
+          + node.nodeId, this.translate.instant('site.forms.editforms.ok'));
       },
-      error => MaterializeService.toast(error.error.message),
+      error =>
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
       () => {
         // refresh grid
         this.onRefreshGrid.emit();
@@ -575,12 +725,13 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       this.saveNode.nodeId = id;
       this.saveNode.n_coordinate = 0;
       this.saveNode.e_coordinate = 0;
-
       this.oSub = this.nodeService.upd(this.saveNode).subscribe(
         response => {
-          MaterializeService.toast(`Узел/столб c id = ${this.saveNode.nodeId} был убран с карты.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.nodemap-page.del')
+            + this.saveNode.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // hide event window
           this.eventWindow.hideEventWindow();
@@ -598,9 +749,11 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     if (+id >= 0) {
       this.nodeService.del(+id).subscribe(
         response => {
-          MaterializeService.toast('Узел/столб удален!');
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // hide event window
           this.eventWindow.hideEventWindow();
@@ -628,35 +781,34 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     let selectObject: Node = new Node();
     selectObject = this.selectNode;
-
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      switch (this.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'geographs':
-          selectObject.geographId = +this.sourceForEditForm[i].selectId;
-          selectObject.geographFullName = this.sourceForEditForm[i].selectName;
+          selectObject.geographId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.geographFullName = this.editForm.sourceForEditForm[i].selectName;
           break;
         case 'contractNodes':
-          selectObject.contractId = +this.sourceForEditForm[i].selectId;
-          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          selectObject.contractId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'nodeTypes':
-          selectObject.nodeTypeId = +this.sourceForEditForm[i].selectId;
-          selectObject.nodeTypeCode = this.sourceForEditForm[i].selectCode;
+          selectObject.nodeTypeId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.nodeTypeCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'n_coordinate':
-          selectObject.n_coordinate = +this.sourceForEditForm[i].selectCode;
+          selectObject.n_coordinate = +this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'e_coordinate':
-          selectObject.e_coordinate = +this.sourceForEditForm[i].selectCode;
+          selectObject.e_coordinate = +this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'serialNumber':
-          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          selectObject.serialNumber = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comment':
-          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          selectObject.comment = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -666,12 +818,14 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
       // upd
       this.oSub = this.nodeService.upd(selectObject).subscribe(
         response => {
-          MaterializeService.toast(`Узел/столб c id = ${selectObject.nodeId} был обновлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.upd')
+            + selectObject.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // refresh map
           this.refreshMap();
         }
@@ -680,44 +834,72 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getSourceForEditForm() {
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+    let sourceForEditForm: any[];
+    if (this.translate.currentLang === 'ru') {
+      sourceForEditForm = this.sourceForEditForm;
+    }
+    if (this.translate.currentLang === 'en') {
+      sourceForEditForm = this.sourceForEditFormEng;
+    }
+
+    for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
-        this.sourceForEditForm[i].selectedIndex = 0;
-        this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = 'пусто';
+        sourceForEditForm[i].selectedIndex = 0;
+        sourceForEditForm[i].selectId = '1';
+        sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
-      switch (this.sourceForEditForm[i].nameField) {
+      switch (sourceForEditForm[i].nameField) {
         case 'geographs':
-          this.sourceForEditForm[i].selectId = this.selectNode.geographId.toString();
-          this.sourceForEditForm[i].selectName = this.selectNode.geographFullName;
+          if (this.typeEditWindow === 'ins') {
+            sourceForEditForm[i].selectId = '1';
+            sourceForEditForm[i].selectName = this.translate.instant('site.forms.editforms.withoutAddress');
+          }
+          if (this.typeEditWindow === 'upd') {
+            sourceForEditForm[i].selectId = this.selectNode.geographId.toString();
+            sourceForEditForm[i].selectName = this.selectNode.geographFullName;
+          }
           break;
         case 'contractNodes':
-          this.sourceForEditForm[i].source = this.contractNodes;
+          sourceForEditForm[i].source = this.contractNodes;
+          if (this.typeEditWindow === 'ins') {
+            sourceForEditForm[i].selectId = this.contractNodes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.contractNodes.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.contractNodes.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.selectNode.contractId.toString();
-            this.sourceForEditForm[i].selectCode = this.contractNodes.find(
+            sourceForEditForm[i].selectId = this.selectNode.contractId.toString();
+            sourceForEditForm[i].selectCode = this.contractNodes.find(
               (contractOne: Contract) => contractOne.id === +this.selectNode.contractId).code;
-            this.sourceForEditForm[i].selectName = this.contractNodes.find(
+            sourceForEditForm[i].selectName = this.contractNodes.find(
               (contractOne: Contract) => contractOne.id === +this.selectNode.contractId).name;
             for (let j = 0; j < this.contractNodes.length; j++) {
               if (+this.contractNodes[j].id === +this.selectNode.contractId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
           }
           break;
         case 'nodeTypes':
-          this.sourceForEditForm[i].source = this.nodeTypes;
+          sourceForEditForm[i].source = this.nodeTypes;
+          if (this.typeEditWindow === 'ins') {
+            sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.nodeTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+          }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.selectNode.nodeTypeId.toString();
-            this.sourceForEditForm[i].selectCode = this.nodeTypes.find(
+            sourceForEditForm[i].selectId = this.selectNode.nodeTypeId.toString();
+            sourceForEditForm[i].selectCode = this.nodeTypes.find(
               (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).code;
-            this.sourceForEditForm[i].selectName = this.nodeTypes.find(
+            sourceForEditForm[i].selectName = this.nodeTypes.find(
               (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).name;
             for (let j = 0; j < this.nodeTypes.length; j++) {
               if (+this.nodeTypes[j].id === +this.selectNode.nodeTypeId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
@@ -725,26 +907,26 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           break;
         case 'n_coordinate':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.selectNode.n_coordinate.toString();
+            sourceForEditForm[i].selectCode = this.selectNode.n_coordinate;
           } else {
-            this.sourceForEditForm[i].selectCode = '0';
+            sourceForEditForm[i].selectCode = '0';
           }
           break;
         case 'e_coordinate':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.selectNode.e_coordinate.toString();
+            sourceForEditForm[i].selectCode = this.selectNode.e_coordinate;
           } else {
-            this.sourceForEditForm[i].selectCode = '0';
+            sourceForEditForm[i].selectCode = '0';
           }
           break;
         case 'serialNumber':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.selectNode.serialNumber;
+            sourceForEditForm[i].selectCode = this.selectNode.serialNumber;
           }
           break;
         case 'comment':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.selectNode.comment;
+            sourceForEditForm[i].selectCode = this.selectNode.comment;
           }
           break;
         default:
@@ -753,7 +935,13 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

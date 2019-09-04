@@ -3,6 +3,9 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {SharedModule} from '../../../shared.module';
+import {MaterialModule} from '../../../material-module';
+import {TranslateModule} from '@ngx-translate/core';
+import {ExtendedModule} from '@angular/flex-layout';
 import {OperatorRoutingModule} from './operator-routing.module';
 
 import {OperatorLayoutComponent} from './operator-layout.component';
@@ -70,7 +73,10 @@ import {SensorlistPageComponent} from '../../../../operator/sensor-page/sensor-m
     HttpClientModule,
 
     OperatorRoutingModule,
-    SharedModule
+    SharedModule,
+    MaterialModule,
+    TranslateModule,
+    ExtendedModule,
   ]
 })
 export class OperatorModule {

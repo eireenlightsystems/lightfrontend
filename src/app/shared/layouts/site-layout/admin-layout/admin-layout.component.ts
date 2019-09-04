@@ -1,9 +1,12 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-
+// jqwidgets
+// app interfaces
 import {NavItem} from '../../../interfaces';
+// app services
+// app components
 import {RightPageComponent} from '../../../../admin/right-page/right-page.component';
 
 
@@ -14,7 +17,7 @@ import {RightPageComponent} from '../../../../admin/right-page/right-page.compon
 })
 export class AdminLayoutComponent implements OnInit, AfterViewInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
 

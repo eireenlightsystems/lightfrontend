@@ -1,19 +1,23 @@
+// angular lib
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
+import {Subscription} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
 } from '../../shared/interfaces';
-import {Subscription} from 'rxjs';
-import {SimpleDictionaryComponent} from '../../shared/components/simple-dictionary/simple-dictionary.component';
-import {MaterializeService} from '../../shared/classes/materialize.service';
-import {TranslateService} from '@ngx-translate/core';
+// app services
 import {PersonService} from '../../shared/services/contragent/person.service';
 import {CompanyService} from '../../shared/services/contragent/company.service';
 import {SubstationService} from '../../shared/services/contragent/substation.service';
 import {GeographService} from '../../shared/services/geograph/geograph.service';
+// app components
+import {SimpleDictionaryComponent} from '../../shared/components/simple-dictionary/simple-dictionary.component';
 
 
 @Component({
@@ -23,7 +27,7 @@ import {GeographService} from '../../shared/services/geograph/geograph.service';
 })
 export class ContragentComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
   @Input() heightGrid: number;
 
   // determine the functions that need to be performed in the parent component
@@ -46,8 +50,19 @@ export class ContragentComponent implements OnInit, OnDestroy {
   sourceForJqxGridCompanies: SourceForJqxGrid;
   sourceForJqxGridPersons: SourceForJqxGrid;
   sourceForJqxGridSubstations: SourceForJqxGrid;
+  columnsGridCompanies: any[];
+  listBoxSourceCompanies: any[];
+  columnsGridCompaniesEng: any[];
+  listBoxSourceCompaniesEng: any[];
+  columnsGridPersons: any[];
+  listBoxSourcePersons: any[];
+  columnsGridPersonsEng: any[];
+  listBoxSourcePersonsEng: any[];
+  columnsGridSubstations: any[];
+  listBoxSourceSubstations: any[];
+  columnsGridSubstationsEng: any[];
+  listBoxSourceSubstationsEng: any[];
   // filter
-
   // edit form
   settingWinForEditFormCompanies: SettingWinForEditForm;
   settingWinForEditFormPersons: SettingWinForEditForm;
@@ -55,16 +70,19 @@ export class ContragentComponent implements OnInit, OnDestroy {
   sourceForEditFormCompanies: SourceForEditForm[];
   sourceForEditFormPersons: SourceForEditForm[];
   sourceForEditFormSubstations: SourceForEditForm[];
-
+  sourceForEditFormCompaniesEng: SourceForEditForm[];
+  sourceForEditFormPersonsEng: SourceForEditForm[];
+  sourceForEditFormSubstationsEng: SourceForEditForm[];
   // link form
-
   // event form
+
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private _snackBar: MatSnackBar,
               // service
-              private geographService: GeographService,
               public translate: TranslateService,
+              private geographService: GeographService,
               private companyService: CompanyService,
               private personService: PersonService,
               private substationService: SubstationService) {
@@ -74,38 +92,102 @@ export class ContragentComponent implements OnInit, OnDestroy {
     this.orgForms = [
       {
         id: 1,
-        code: this.translate.instant('site.forms.editforms.empty'),
-        name: this.translate.instant('site.forms.editforms.empty')
+        code: ' пусто',
+        name: ' пусто'
       },
       {
         id: 2,
         code: 'ООО',
         name: 'Общество с ограничеснной отвественностью'
-      }
-      ,
+      },
       {
         id: 3,
         code: 'АО',
         name: 'Акционерное общество'
+      },
+      {
+        id: 4,
+        code: 'ИП',
+        name: 'Индивидуальный предприниматель'
       }
     ];
+    // this.orgFormsEng = [
+    //   {
+    //     id: 1,
+    //     code: this.translate.instant('site.forms.editforms.empty'),
+    //     name: this.translate.instant('site.forms.editforms.empty')
+    //   },
+    //   {
+    //     id: 2,
+    //     code: 'LLC',
+    //     name: 'Limited liability company'
+    //   },
+    //   {
+    //     id: 3,
+    //     code: 'JSC',
+    //     name: 'Joint-Stock Company'
+    //   },
+    //   {
+    //     id: 4,
+    //     code: 'IE',
+    //     name: 'Individual entrepreneur'
+    //   }
+    // ];
 
     // COMPANY
+    // definde columns
+    this.columnsGridCompanies =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
+        {text: 'Код', datafield: 'code', width: 150},
+        {text: 'Наименование', datafield: 'name', width: 150},
+        {text: 'ИНН', datafield: 'inn', width: 150},
+        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+        {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
+        {text: 'Коментарий', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceCompanies =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Адрес', value: 'geographFullName', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'Наименование', value: 'name', checked: true},
+        {label: 'ИНН', value: 'inn', checked: true},
+        {label: 'orgFormId', value: 'orgFormId', checked: false},
+        {label: 'Организационная форма', value: 'orgFormCode', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridCompaniesEng =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Address', datafield: 'geographFullName', width: 400},
+        {text: 'Code', datafield: 'code', width: 150},
+        {text: 'Name', datafield: 'name', width: 150},
+        {text: 'INN', datafield: 'inn', width: 150},
+        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+        {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
+        {text: 'Comments', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceCompaniesEng =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Address', value: 'geographFullName', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'Name', value: 'name', checked: true},
+        {label: 'INN', value: 'inn', checked: true},
+        {label: 'orgFormId', value: 'orgFormId', checked: false},
+        {label: 'Organizational form', value: 'orgFormCode', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
 
     // jqxgrid
     this.sourceForJqxGridCompanies = {
       listbox: {
-        source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'geographId', value: 'geographId', checked: false},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'ИНН', value: 'inn', checked: true},
-          {label: 'orgFormId', value: 'orgFormId', checked: false},
-          {label: 'Организационная форма', value: 'orgFormCode', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ],
         theme: 'material',
         width: 150,
         height: this.heightGrid,
@@ -115,17 +197,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       },
       grid: {
         source: [],
-        columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Код', datafield: 'code', width: 150},
-          {text: 'Наименование', datafield: 'name', width: 150},
-          {text: 'ИНН', datafield: 'inn', width: 150},
-          {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-          {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
-          {text: 'Коментарий', datafield: 'comments', width: 150}
-        ],
         theme: 'material',
         width: null,
         height: this.heightGrid,
@@ -135,7 +206,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: 'singlerow',
         isMasterGrid: false,
-
         valueMember: 'id',
         sortcolumn: ['id'],
         sortdirection: 'asc',
@@ -145,7 +215,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
 
     // definde filter
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditFormCompanies = {
       code: 'editFormCompany',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -161,8 +231,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditFormCompanies = [
       {
         nameField: 'geographs',
@@ -256,25 +324,156 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormCompaniesEng = [
+      {
+        nameField: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '300',
+        height: '20',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: 'без адрес'
+      },
+
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '40',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'name',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '60',
+        placeHolder: 'Name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'inn',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'INN:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'orgForms',
+        type: 'jqxComboBox',
+        source: this.orgForms,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Organizational form:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
 
     // PERSON
+    // definde columns
+    this.columnsGridPersons =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
+        {text: 'Код', datafield: 'code', width: 150},
+        {text: 'ИНН', datafield: 'inn', width: 150},
+        {text: 'Имя', datafield: 'nameFirst', width: 150},
+        {text: 'Фамилия', datafield: 'nameSecond', width: 150},
+        {text: 'Отчество', datafield: 'nameThird', width: 150},
+        {text: 'Коментарий', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourcePersons =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Адрес', value: 'geographFullName', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'ИНН', value: 'inn', checked: true},
+        {label: 'Имя', value: 'nameFirst', checked: true},
+        {label: 'Фамилия', value: 'nameSecond', checked: true},
+        {label: 'Отчество', value: 'nameThird', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridPersonsEng =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Address', datafield: 'geographFullName', width: 400},
+        {text: 'Code', datafield: 'code', width: 150},
+        {text: 'INN', datafield: 'inn', width: 150},
+        {text: 'Second name', datafield: 'nameFirst', width: 150},
+        {text: 'Second name', datafield: 'nameSecond', width: 150},
+        {text: 'Third name', datafield: 'nameThird', width: 150},
+        {text: 'Comments', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourcePersonsEng =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Address', value: 'geographFullName', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'INN', value: 'inn', checked: true},
+        {label: 'First name', value: 'nameFirst', checked: true},
+        {label: 'Second name', value: 'nameSecond', checked: true},
+        {label: 'Third name', value: 'nameThird', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
 
     // jqxgrid
     this.sourceForJqxGridPersons = {
       listbox: {
-        source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'geographId', value: 'geographId', checked: false},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'ИНН', value: 'inn', checked: true},
-          {label: 'Имя', value: 'nameFirst', checked: true},
-          {label: 'Фамилия', value: 'nameSecond', checked: true},
-          {label: 'Отчество', value: 'nameThird', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ],
         theme: 'material',
         width: 150,
         height: this.heightGrid,
@@ -284,17 +483,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       },
       grid: {
         source: [],
-        columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Код', datafield: 'code', width: 150},
-          {text: 'ИНН', datafield: 'inn', width: 150},
-          {text: 'Имя', datafield: 'nameFirst', width: 150},
-          {text: 'Фамилия', datafield: 'nameSecond', width: 150},
-          {text: 'Отчество', datafield: 'nameThird', width: 150},
-          {text: 'Коментарий', datafield: 'comments', width: 150}
-        ],
         theme: 'material',
         width: null,
         height: this.heightGrid,
@@ -304,7 +492,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: 'singlerow',
         isMasterGrid: false,
-
         valueMember: 'id',
         sortcolumn: ['id'],
         sortdirection: 'asc',
@@ -314,7 +501,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
 
     // definde filter
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditFormPersons = {
       code: 'editFormPerson',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -330,8 +517,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditFormPersons = [
       {
         nameField: 'geographs',
@@ -439,27 +624,174 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormPersonsEng = [
+      {
+        nameField: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '300',
+        height: '20',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: 'найти адрес'
+      },
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'inn',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'INN:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nameFirst',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'First name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nameSecond',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Second name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nameThird',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Third name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
 
-
     // SUBSTATION
+    // definde columns
+    this.columnsGridSubstations =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Адрес', datafield: 'geographFullName', width: 400},
+        {text: 'Код', datafield: 'code', width: 150},
+        {text: 'Наименование', datafield: 'name', width: 150},
+        {text: 'ИНН', datafield: 'inn', width: 150},
+        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+        {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
+        {text: 'Мощность', datafield: 'power', width: 150},
+        {text: 'Коментарий', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceSubstations =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Адрес', value: 'geographFullName', checked: true},
+        {label: 'Код', value: 'code', checked: true},
+        {label: 'Наименование', value: 'name', checked: true},
+        {label: 'ИНН', value: 'inn', checked: true},
+        {label: 'orgFormId', value: 'orgFormId', checked: false},
+        {label: 'Организационная форма', value: 'orgFormCode', checked: true},
+        {label: 'Мощность', value: 'power', checked: true},
+        {label: 'Коментарий', value: 'comments', checked: true}
+      ];
+    this.columnsGridSubstationsEng =
+      [
+        {text: 'Id', datafield: 'id', width: 50},
+        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+        {text: 'Address', datafield: 'geographFullName', width: 400},
+        {text: 'Code', datafield: 'code', width: 150},
+        {text: 'Name', datafield: 'name', width: 150},
+        {text: 'INN', datafield: 'inn', width: 150},
+        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+        {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
+        {text: 'Power', datafield: 'power', width: 150},
+        {text: 'Comments', datafield: 'comments', width: 150}
+      ];
+    this.listBoxSourceSubstationsEng =
+      [
+        {label: 'Id', value: 'id', checked: true},
+        {label: 'geographId', value: 'geographId', checked: false},
+        {label: 'Address', value: 'geographFullName', checked: true},
+        {label: 'Code', value: 'code', checked: true},
+        {label: 'Name', value: 'name', checked: true},
+        {label: 'INN', value: 'inn', checked: true},
+        {label: 'orgFormId', value: 'orgFormId', checked: false},
+        {label: 'Organizational form', value: 'orgFormCode', checked: true},
+        {label: 'Power', value: 'power', checked: true},
+        {label: 'Comments', value: 'comments', checked: true}
+      ];
 
     // jqxgrid
     this.sourceForJqxGridSubstations = {
       listbox: {
-        source: [
-          {label: 'Id', value: 'id', checked: true},
-          {label: 'geographId', value: 'geographId', checked: false},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Код', value: 'code', checked: true},
-          {label: 'Наименование', value: 'name', checked: true},
-          {label: 'ИНН', value: 'inn', checked: true},
-          {label: 'orgFormId', value: 'orgFormId', checked: false},
-          {label: 'Организационная форма', value: 'orgFormCode', checked: true},
-          {label: 'Мощность', value: 'power', checked: true},
-          {label: 'Коментарий', value: 'comments', checked: true}
-        ],
         theme: 'material',
         width: 150,
         height: this.heightGrid,
@@ -469,18 +801,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       },
       grid: {
         source: [],
-        columns: [
-          {text: 'Id', datafield: 'id', width: 50},
-          {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Код', datafield: 'code', width: 150},
-          {text: 'Наименование', datafield: 'name', width: 150},
-          {text: 'ИНН', datafield: 'inn', width: 150},
-          {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-          {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
-          {text: 'Мощность', datafield: 'power', width: 150},
-          {text: 'Коментарий', datafield: 'comments', width: 150}
-        ],
         theme: 'material',
         width: null,
         height: this.heightGrid,
@@ -490,7 +810,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: 'singlerow',
         isMasterGrid: false,
-
         valueMember: 'id',
         sortcolumn: ['id'],
         sortdirection: 'asc',
@@ -500,7 +819,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
 
     // definde filter
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditFormSubstations = {
       code: 'editFormSubstation',
       name: this.translate.instant('site.forms.editforms.edit'),
@@ -516,8 +835,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditFormSubstations = [
       {
         nameField: 'geographs',
@@ -625,6 +942,113 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormSubstationsEng = [
+      {
+        nameField: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '300',
+        height: '20',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: 'найти адрес'
+      },
+      {
+        nameField: 'code',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '40',
+        placeHolder: 'Code:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'name',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '60',
+        placeHolder: 'Name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'inn',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'INN:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'orgForms',
+        type: 'jqxComboBox',
+        source: this.orgForms,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Organizational form:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'power',
+        type: 'jqxNumberInput',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Power:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comments',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
 
@@ -699,49 +1123,51 @@ export class ContragentComponent implements OnInit, OnDestroy {
         break;
       default:
         headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');
+        break;
     }
     return headline;
   }
 
-  saveEditwinBtn(saveEditwinObject: any) {
+  // EDIT FORM
+
+  saveEditFormBtn(saveEditwinObject: any) {
     let selectObject: any;
     switch (saveEditwinObject.dictionaryType) {
       case 'companies':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.sourceForEditFormCompanies.length; i++) {
-          switch (this.sourceForEditFormCompanies[i].nameField) {
+        for (let i = 0; i < this.companies.editForm.sourceForEditForm.length; i++) {
+          switch (this.companies.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.sourceForEditFormCompanies[i].selectId;
-              selectObject.geographFullName = this.sourceForEditFormCompanies[i].selectName;
+              selectObject.geographId = +this.companies.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.companies.editForm.sourceForEditForm[i].selectName;
               break;
             case 'orgForms':
-              selectObject.orgFormId = +this.sourceForEditFormCompanies[i].selectId;
-              selectObject.orgFormCode = this.sourceForEditFormCompanies[i].selectCode;
+              selectObject.orgFormId = +this.companies.editForm.sourceForEditForm[i].selectId;
+              selectObject.orgFormCode = this.companies.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
           }
         }
-
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
-
           // ins
           this.oSubCompanies = this.companyService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterializeService.toast(`Юридическое лицо c id = ${selectObject.id} было добавлено.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.ins')
+                + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.companies.editWindow.closeDestroy();
+              this.companies.editForm.closeDestroy();
               // update data source
               this.companies.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
             }
           );
         }
-
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
           this.companies.jqxgridComponent.selectRow.geographId = selectObject.geographId;
@@ -752,16 +1178,17 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.companies.jqxgridComponent.selectRow.name = selectObject.name;
           this.companies.jqxgridComponent.selectRow.inn = selectObject.inn;
           this.companies.jqxgridComponent.selectRow.comments = selectObject.comments;
-
           // upd
           this.oSubCompanies = this.companyService.upd(selectObject).subscribe(
             response => {
-              MaterializeService.toast(`Юридическое лицо c id = ${selectObject.id} было обновлено.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.upd')
+                + this.companies.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.companies.editWindow.closeDestroy();
+              this.companies.editForm.closeDestroy();
               // update data source
               this.companies.jqxgridComponent.refresh_upd(selectObject.id, this.companies.jqxgridComponent.selectRow);
             }
@@ -770,36 +1197,35 @@ export class ContragentComponent implements OnInit, OnDestroy {
         break;
       case 'persons':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.sourceForEditFormPersons.length; i++) {
-          switch (this.sourceForEditFormPersons[i].nameField) {
+        for (let i = 0; i < this.persons.editForm.sourceForEditForm.length; i++) {
+          switch (this.persons.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.sourceForEditFormPersons[i].selectId;
-              selectObject.geographFullName = this.sourceForEditFormPersons[i].selectName;
+              selectObject.geographId = +this.persons.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.persons.editForm.sourceForEditForm[i].selectName;
               break;
             default:
               break;
           }
         }
-
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
-
           // ins
           this.oSubPersons = this.personService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterializeService.toast(`Физическое лицо c id = ${selectObject.id} было добавлено.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.ins')
+                + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.persons.editWindow.closeDestroy();
+              this.persons.editForm.closeDestroy();
               // update data source
               this.persons.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
             }
           );
         }
-
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
           this.persons.jqxgridComponent.selectRow.geographId = selectObject.geographId;
@@ -810,16 +1236,17 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.persons.jqxgridComponent.selectRow.nameThird = selectObject.nameThird;
           this.persons.jqxgridComponent.selectRow.inn = selectObject.inn;
           this.persons.jqxgridComponent.selectRow.comments = selectObject.comments;
-
           // upd
           this.oSubPersons = this.personService.upd(selectObject).subscribe(
             response => {
-              MaterializeService.toast(`Физическое лицо c id = ${this.persons.jqxgridComponent.selectRow.id} было обновлено.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.upd')
+                + this.persons.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.persons.editWindow.closeDestroy();
+              this.persons.editForm.closeDestroy();
               // update data source
               this.persons.jqxgridComponent.refresh_upd(
                 this.persons.jqxgridComponent.selectRow.id, this.persons.jqxgridComponent.selectRow);
@@ -829,40 +1256,39 @@ export class ContragentComponent implements OnInit, OnDestroy {
         break;
       case 'substations':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.sourceForEditFormSubstations.length; i++) {
-          switch (this.sourceForEditFormSubstations[i].nameField) {
+        for (let i = 0; i < this.substations.editForm.sourceForEditForm.length; i++) {
+          switch (this.substations.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.sourceForEditFormSubstations[i].selectId;
-              selectObject.geographFullName = this.sourceForEditFormSubstations[i].selectName;
+              selectObject.geographId = +this.substations.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.substations.editForm.sourceForEditForm[i].selectName;
               break;
             case 'orgForms':
-              selectObject.orgFormId = +this.sourceForEditFormSubstations[i].selectId;
-              selectObject.orgFormCode = this.sourceForEditFormSubstations[i].selectCode;
+              selectObject.orgFormId = +this.substations.editForm.sourceForEditForm[i].selectId;
+              selectObject.orgFormCode = this.substations.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
           }
         }
-
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
-
           // ins
           this.oSubSubstations = this.substationService.ins(selectObject).subscribe(
             response => {
               selectObject.id = +response;
-              MaterializeService.toast(`Электростанция c id = ${selectObject.id} была добавлена.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.ins')
+                + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.substations.editWindow.closeDestroy();
+              this.substations.editForm.closeDestroy();
               // update data source
               this.substations.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
             }
           );
         }
-
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
           this.substations.jqxgridComponent.selectRow.geographId = selectObject.geographId;
@@ -874,16 +1300,17 @@ export class ContragentComponent implements OnInit, OnDestroy {
           this.substations.jqxgridComponent.selectRow.inn = selectObject.inn;
           this.substations.jqxgridComponent.selectRow.comments = selectObject.comments;
           this.substations.jqxgridComponent.selectRow.power = selectObject.power;
-
           // upd
           this.oSubSubstations = this.substationService.upd(selectObject).subscribe(
             response => {
-              MaterializeService.toast(`Электростанция c id = ${this.substations.jqxgridComponent.selectRow.id} была обновлена.`);
+              this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.upd')
+                + this.substations.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error => MaterializeService.toast(error.error.message),
+            error =>
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.substations.editWindow.closeDestroy();
+              this.substations.editForm.closeDestroy();
               // update data source
               this.substations.jqxgridComponent.refresh_upd(
                 this.substations.jqxgridComponent.selectRow.id, this.substations.jqxgridComponent.selectRow);
@@ -896,6 +1323,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
     }
   }
 
+  // LINK FORM
+
+  // EVENT FORM
+
   okEvenwinBtn(okEvenwinObject: any) {
     switch (okEvenwinObject.dictionaryType) {
       case 'companies':
@@ -903,9 +1334,11 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.companyService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterializeService.toast('Юридическое лицо было удалено!');
+                this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.del'),
+                  this.translate.instant('site.forms.editforms.ok'));
               },
-              error => MaterializeService.toast(error.error.message),
+              error =>
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
                 this.companies.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
               }
@@ -918,9 +1351,11 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.personService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterializeService.toast('Физическое лицо было удалено!');
+                this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.del'),
+                  this.translate.instant('site.forms.editforms.ok'));
               },
-              error => MaterializeService.toast(error.error.message),
+              error =>
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
                 this.persons.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
               }
@@ -933,9 +1368,11 @@ export class ContragentComponent implements OnInit, OnDestroy {
           if (+okEvenwinObject.id >= 0) {
             this.substationService.del(+okEvenwinObject.id).subscribe(
               response => {
-                MaterializeService.toast('Электростанция была удалена!');
+                this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.del'),
+                  this.translate.instant('site.forms.editforms.ok'));
               },
-              error => MaterializeService.toast(error.error.message),
+              error =>
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
                 this.substations.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
               }
@@ -946,5 +1383,11 @@ export class ContragentComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

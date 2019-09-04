@@ -1,9 +1,18 @@
 <div id="gateway_yamaps"></div>
 
-<app-link-form #linkWindow
+<app-link-form #linkForm
+               *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
                [sourceForLinkForm]="sourceForLinkForm"
                (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkwinBtn($event)"
+               (onDestroyLinkForm)="destroyLinkForm()"
+               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+></app-link-form>
+<app-link-form #linkForm
+               *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
+               [sourceForLinkForm]="sourceForLinkFormEng"
+               (onGetSourceForLinkForm)="getSourceForLinkForm()"
+               (onDestroyLinkForm)="destroyLinkForm()"
+               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
 ></app-link-form>
 
 <app-event-window #eventWindow

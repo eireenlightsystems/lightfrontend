@@ -1,38 +1,26 @@
-<jqxTabs
-  [theme]="'material'"
-  [width]="tabsWidth + '%'"
-  (onSelected)="selected($event)"
->
-  <ul>
-    <li style="margin-left: 30px">Шлюзы</li>
-    <li>Карта</li>
-  </ul>
-  <div style="overflow: hidden">
-    <app-gateway-masterdetails-page #gatewayMasterdetailsPageComponent
-                                    [ownerGateways]="ownerGateways"
-                                    [gatewayTypes]="gatewayTypes"
-                                    [contractGateways]="contractGateways"
-
-                                    [ownerNodes]="ownerNodes"
-                                    [nodeTypes]="nodeTypes"
-                                    [contractNodes]="contractNodes"
-
-                                    [nodeSortcolumn]="nodeSortcolumn"
-                                    [nodeColumns]="nodeColumns"
-                                    [nodeListBoxSource]="nodeListBoxSource"
-
-                                    (onRefreshMap)="refreshMap()"
-    ></app-gateway-masterdetails-page>
-  </div>
-  <div style="overflow: hidden">
-    <app-gatewaymap-page #gatewaymapPageComponent
-                         [ownerGateways]="ownerGateways"
-                         [gatewayTypes]="gatewayTypes"
-                         [contractGateways]="contractGateways"
-
-                         [nodeColumns]="nodeColumns"
-
-                         (onRefreshGrid)="refreshGrid()"
-    ></app-gatewaymap-page>
-  </div>
-</jqxTabs>
+<mat-tab-group #matTabGroup [selectedIndex]="0">
+  <mat-tab label="{{'site.menu.operator.gateway-page.gateway-page' | translate}}">
+    <div [style.width]="tabsWidth + '%'">
+      <app-gateway-masterdetails-page #gatewayMasterdetailsPageComponent
+                                      [siteMap]="siteMap"
+                                      [ownerGateways]="ownerGateways"
+                                      [gatewayTypes]="gatewayTypes"
+                                      [contractGateways]="contractGateways"
+                                      [ownerNodes]="ownerNodes"
+                                      [nodeTypes]="nodeTypes"
+                                      [contractNodes]="contractNodes"
+                                      (onRefreshMap)="refreshMap()"
+      ></app-gateway-masterdetails-page>
+    </div>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.operator.gateway-page.gatewaymap-page.gatewaymap-page' | translate}}">
+    <ng-template matTabContent>
+      <app-gatewaymap-page #gatewaymapPageComponent
+                           [ownerGateways]="ownerGateways"
+                           [gatewayTypes]="gatewayTypes"
+                           [contractGateways]="contractGateways"
+                           (onRefreshGrid)="refreshGrid()"
+      ></app-gatewaymap-page>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

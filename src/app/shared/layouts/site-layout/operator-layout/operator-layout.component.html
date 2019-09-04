@@ -1,61 +1,49 @@
-<!--<router-outlet></router-outlet>-->
-
 <div>
   <div [hidden]="isFixtureVisible()">
     <app-fixture-page
       [siteMap]="siteMap"
       [tabsWidth]="tabsWidth"
-
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"
       [contractFixtures]="contractFixtures"
       [installers]="installers"
       [heightTypes]="heightTypes"
-
       [fixtureGroupTypes]="fixtureGroupTypes"
       [fixtureGroupOwners]="fixtureGroupOwners"
-
       [commandTypes]="commandTypes"
       [commandStatuses]="commandStatuses"
       [speedDirectiones]="speedDirectiones"
-
     ></app-fixture-page>
   </div>
   <div [hidden]="isNodeVisible()">
     <app-node-page
       [siteMap]="siteMap"
       [tabsWidth]="tabsWidth"
-
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"
       [contractFixtures]="contractFixtures"
       [installers]="installers"
       [heightTypes]="heightTypes"
-
       [ownerNodes]="ownerNodes"
       [nodeTypes]="nodeTypes"
       [contractNodes]="contractNodes"
-
       [ownerGateways]="ownerGateways"
       [gatewayTypes]="gatewayTypes"
       [contractGateways]="contractGateways"
-
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"
       [contractSensors]="contractSensors"
-
     ></app-node-page>
   </div>
   <div [hidden]="isGatewayVisible()">
     <app-gateway-page
+      [siteMap]="siteMap"
       [tabsWidth]="tabsWidth"
-
       [ownerNodes]="ownerNodes"
       [nodeTypes]="nodeTypes"
       [contractNodes]="contractNodes"
-
       [ownerGateways]="ownerGateways"
       [gatewayTypes]="gatewayTypes"
       [contractGateways]="contractGateways"
@@ -65,6 +53,7 @@
        [style.width]="tabsWidth + '%'"
   >
     <app-sensor-page
+      [siteMap]="siteMap"
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"
       [contractSensors]="contractSensors"

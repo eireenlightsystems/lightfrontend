@@ -1,83 +1,40 @@
-<div *ngIf="isRusLang(this.translate.currentLang)">
-  <jqxWindow #demoRightWindow
-             [theme]=theme
-             [autoOpen]="true"
-             [isModal]="false"
-             [modalOpacity]="0.3"
-             [width]="1000"
-             [maxWidth]="1500"
-             [minWidth]="1000"
-             [height]="600"
-             [maxHeight]="600"
-             [minHeight]="600"
-             [cancelButton]="'.cancel'"
-             [showCloseButton]="false"
-             [showCollapseButton]="true"
-             [keyboardCloseKey]="''"
-  >
-    <div>
-      <b #windowHeader>Демонстрация прав</b>
-    </div>
+<jqxWindow #rightDemoForm
+           [theme]=theme
+           [autoOpen]="true"
+           [isModal]="false"
+           [modalOpacity]="0.3"
+           [width]="1000"
+           [maxWidth]="1500"
+           [minWidth]="1000"
+           [height]="610"
+           [maxHeight]="610"
+           [minHeight]="610"
+           [showCloseButton]="false"
+           [showCollapseButton]="true"
+           [keyboardCloseKey]="''"
+>
+  <div>
+    <i class="material-icons">thumb_up</i>
+  </div>
 
-    <div>
-      <app-roleright-page #rolerightPageComponent
-                          [roleSiteMap]="roleSiteMap"
-                          [heightSplitterRoleright]="heightSplitterRoleright"
-                          [heightGridRoleright]="heightGridRoleright"
-                          [companies]="companies"
-                          [theme]="theme"
-      ></app-roleright-page>
+  <div>
+    <app-roleright-page #rolerightPageComponent
+                        [roleSiteMap]="roleSiteMap"
+                        [heightSplitterRoleright]="heightSplitterRoleright"
+                        [heightGridRoleright]="heightGridRoleright"
+                        [companies]="companies"
+                        [theme]="theme"
+    ></app-roleright-page>
 
-      <jqxButton #cancelButton class="cancel"
-                 [theme]="theme"
-                 [width]="100"
-                 style="margin: 5px 5px 5px 5px"
-                 (onClick)="close()"
-      >
-        Закрыть
-      </jqxButton>
-    </div>
-  </jqxWindow>
-</div>
-<div *ngIf="isEngLang(this.translate.currentLang)">
-  <jqxWindow #demoRightWindow
-             [theme]=theme
-             [autoOpen]="true"
-             [isModal]="false"
-             [modalOpacity]="0.3"
-             [width]="1000"
-             [maxWidth]="1500"
-             [minWidth]="1000"
-             [height]="600"
-             [maxHeight]="600"
-             [minHeight]="600"
-             [cancelButton]="'.cancel'"
-             [showCloseButton]="false"
-             [keyboardCloseKey]="''"
-  >
-    <div>
-      <b #windowHeader>Demonstration of Rights</b>
-    </div>
-
-    <div>
-      <app-roleright-page #rolerightPageComponent
-                          [roleSiteMap]="roleSiteMap"
-                          [heightSplitterRoleright]="heightSplitterRoleright"
-                          [heightGridRoleright]="heightGridRoleright"
-                          [companies]="companies"
-                          [theme]="theme"
-      ></app-roleright-page>
-
-      <jqxButton #cancelButton class="cancel"
-                 [theme]="theme"
-                 [width]="100"
-                 style="margin: 5px 5px 5px 5px"
-                 (onClick)="close()"
-      >
-        Close
-      </jqxButton>
-    </div>
-  </jqxWindow>
-</div>
+    <jqxButton #closeButton
+               [theme]="theme"
+               [width]="100"
+               style="margin: 5px 5px 5px 5px"
+               (onClick)="closeDestroy()"
+    >
+      {{ 'site.forms.editforms.close' | translate }}
+    </jqxButton>
+  </div>
+</jqxWindow>
 
 

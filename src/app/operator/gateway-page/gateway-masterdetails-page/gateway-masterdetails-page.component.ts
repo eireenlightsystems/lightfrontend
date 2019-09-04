@@ -1,10 +1,12 @@
-// @ts-ignore
+// angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
-
+// jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
-
-import {Contract, Geograph, Owner, EquipmentType, FilterGateway, FilterNode, SettingButtonPanel} from '../../../shared/interfaces';
+// app interfaces
+import {Contract, Owner, EquipmentType, FilterGateway, FilterNode, SettingButtonPanel, NavItem} from '../../../shared/interfaces';
+// app services
+// app components
 import {GatewaylistPageComponent} from './gatewaylist-page/gatewaylist-page.component';
 import {NodelistPageComponent} from '../../node-page/node-masterdetails-page/nodelist-page/nodelist-page.component';
 
@@ -16,27 +18,20 @@ import {NodelistPageComponent} from '../../node-page/node-masterdetails-page/nod
 })
 export class GatewayMasterdetailsPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
+  @Input() siteMap: NavItem[];
   // gateway source
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
-
   // node source
   @Input() ownerNodes: Owner[];
   @Input() nodeTypes: EquipmentType[];
   @Input() contractNodes: Contract[];
-  @Input() nodeSortcolumn: any[];
-  @Input() nodeColumns: any[];
-  @Input() nodeListBoxSource: any[];
-
-  settingNodeButtonPanel: SettingButtonPanel;
-  settingGatewayButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
-  // @ViewChild('selectGatewayId', {static: false}) selectGatewayId = 0;
   @ViewChild('gatewaylistPageComponent', {static: false}) gatewaylistPageComponent: GatewaylistPageComponent;
   @ViewChild('nodelistPageComponent', {static: false}) nodelistPageComponent: NodelistPageComponent;
   @ViewChild('mainSplitter', {static: false}) mainSplitter: jqxSplitterComponent;
@@ -57,19 +52,17 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
     contractId: '',
     gatewayId: '',
   };
-
   heightDeltaParentGrid = 55;
   heightDeltaChildGrid = 103;
   sizeParentSplitter: any;
   sizeChildSplitter: any;
-
+  settingNodeButtonPanel: SettingButtonPanel;
+  settingGatewayButtonPanel: SettingButtonPanel;
 
   constructor() {
   }
 
   ngOnInit() {
-    // this.selectGatewayId = 0;
-
     // init gateway button panel
     this.settingGatewayButtonPanel = {
       add: {
@@ -121,7 +114,6 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
-
     // init fixture button panel
     this.settingNodeButtonPanel = {
       add: {
@@ -183,7 +175,6 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   refreshChildGrid(gatewayId: number) {
     this.selectGatewayId = gatewayId;
     this.filterNode.gatewayId = gatewayId.toString();
-
     if (gatewayId === 0) {
       if (!isUndefined(this.nodelistPageComponent)) {
         this.nodelistPageComponent.items = [];
@@ -202,10 +193,8 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   resize(sizeParent: any, sizeChild: any) {
     const sizeParentGrid = sizeParent - this.heightDeltaParentGrid;
     const sizeChildGrid = sizeChild - this.heightDeltaChildGrid;
-
     this.gatewaylistPageComponent.jqxgridComponent.myGrid.height(sizeParentGrid);
     this.gatewaylistPageComponent.sourceForJqxGrid.grid.height = sizeParentGrid;
-
     if (!isUndefined(this.nodelistPageComponent)) {
       this.nodelistPageComponent.jqxgridComponent.myGrid.height(sizeChildGrid);
       this.nodelistPageComponent.sourceForJqxGrid.grid.height = sizeChildGrid;
@@ -215,7 +204,6 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   collapsed(sizeParent: any, sizeChild: any) {
     this.sizeParentSplitter = sizeParent;
     this.sizeChildSplitter = sizeChild;
-
     this.mainSplitter.attrPanels[0].size = this.getHeightSplitter();
   }
 
@@ -227,6 +215,4 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   getHeightSplitter() {
     return 790;
   }
-
-
 }

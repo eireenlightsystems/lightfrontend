@@ -1,13 +1,15 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
-
+// jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
-
+// app interfaces
 import {
-  Fixture, Contract, EquipmentType, Geograph, HeightType, Installer, Owner, Substation, CommandType, CommandStatus,
+  Fixture, Contract, EquipmentType, HeightType, Installer, Owner, Substation, CommandType, CommandStatus,
   SettingButtonPanel, NavItem
 } from '../../../shared/interfaces';
+// app services
+// app components
 import {FixturecomlistPageComponent} from './fixturecomlist-page/fixturecomlist-page.component';
 import {FixturelistPageComponent} from './fixturelist-page/fixturelist-page.component';
 import {FixturecomspeedlistPageComponent} from './fixturecomspeedlist-page/fixturecomspeedlist-page.component';
@@ -20,14 +22,11 @@ import {FixturecomspeedlistPageComponent} from './fixturecomspeedlist-page/fixtu
 })
 export class FixtureMasterdetailsPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() widthGrid: number;
   @Input() fixtureGroupId: string;
   @Input() selectionmode: number;
-
-  // node source
-
   // fixture source
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: EquipmentType[];
@@ -35,12 +34,10 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
-
   // command source
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
   @Input() speedDirectiones: CommandType[];
-
   @Input() settingFixtureButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -65,8 +62,6 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.selectFixtureId = 0;
-
     // init fixture button panel
     if (isUndefined(this.settingFixtureButtonPanel)) {
       this.settingFixtureButtonPanel = {
@@ -120,6 +115,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
         }
       };
     }
+    // init fixturecom button panel
     this.settingFixtureComButtonPanel = {
       add: {
         visible: false,
@@ -170,6 +166,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
         disabled: false,
       }
     };
+    // init fixturespeed button panel
     this.settingFixtureSpeedButtonPanel = {
       add: {
         visible: true,
@@ -261,19 +258,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
     }
   }
 
-  selected(event: any): void {
-    if (event.args.item === 0) {
-
-    }
-    if (event.args.item === 1) {
-
-    }
-  }
-
   resize(sizeParent: any, sizeChild: any) {
-
-    // console.log('resize = ' + sizeParent);
-
     const sizeParentGrid = sizeParent - this.heightDeltaParentGrid;
     const sizeChildGrid = sizeChild - this.heightDeltaChildGrid;
 
@@ -292,19 +277,12 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   collapsed(sizeParent: any, sizeChild: any) {
-
-    // console.log('collapsed = ' + sizeParent);
-
     this.sizeParentSplitter = sizeParent;
     this.sizeChildSplitter = sizeChild;
-
     this.mainSplitter.attrPanels[0].size = this.getHeightSplitter();
   }
 
   expanded() {
-
-    // console.log('expanded = ' + this.sizeParentSplitter);
-
     this.mainSplitter.attrPanels[0].size = this.sizeParentSplitter;
     this.mainSplitter.attrPanels[1].size = this.sizeChildSplitter;
   }

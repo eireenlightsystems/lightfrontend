@@ -10,7 +10,7 @@
       (onUpd)="upd()"
       (onDel)="del()"
       (onRefresh)="refresh()"
-      (onSetting)="filterNone()"
+      (onSetting)="setting()"
       (onFilterList)="filterList()"
       (onSwitchOn)="switchOn()"
       (onSwitchOff)="switchOff()"
@@ -19,13 +19,11 @@
                              [fixtures]="fixtures"
                              [fixtureGroupTypes]="fixtureGroupTypes"
                              [fixtureGroupOwners]="fixtureGroupOwners"
-
                              [widthGrid]="'100%'"
                              [heightGrid]="this.getHeightSplitter() - this.heightDeltaGrid"
                              [isMasterGrid]="true"
                              [isButtonPanelVisible] = "isButtonPanelVisible"
                              [settingButtonPanel]="settingFixtureGrButtonPanel"
-
                              (onRefreshChildGrid)="refreshChildGrid($event)"
                              (onFeedback)="feedback($event)"
     ></app-fixture-grlist-page>
@@ -34,22 +32,18 @@
     <app-fixture-masterdetails-page #fixtureMasterdetailsPageComponentFgr
                                     *ngIf="siteMap[0].children[0].children[0].disabled === false"
                                     [siteMap]="siteMap"
-
                                     [ownerFixtures]="ownerFixtures"
                                     [fixtureTypes]="fixtureTypes"
                                     [substations]="substations"
                                     [contractFixtures]="contractFixtures"
                                     [installers]="installers"
                                     [heightTypes]="heightTypes"
-
                                     [commandTypes]="commandTypes"
                                     [commandStatuses]="commandStatuses"
                                     [speedDirectiones]="speedDirectiones"
                                     [selectionmode]=""
                                     [settingFixtureButtonPanel]="settingFixtureButtonPanel"
-
                                     [fixtureGroupId]="0"
     ></app-fixture-masterdetails-page>
   </div>
-<!--  *ngIf="siteMap[0].children[0].children[0].disabled === false"-->
 </jqxSplitter>

@@ -6,15 +6,29 @@
   <div *ngIf="this.router.url === '/dictionary/contragent/companies'"
        class="table_border">
     <app-simple-dictionary #companies
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryCompanies"
+                           [columnsGrid]="columnsGridCompanies"
+                           [listBoxSource]="listBoxSourceCompanies"
                            [sourceForJqxGrid]="sourceForJqxGridCompanies"
                            [settingWinForEditForm]="settingWinForEditFormCompanies"
                            [sourceForEditForm]="sourceForEditFormCompanies"
-
                            [orgForms]="orgForms"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #companies
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryCompanies"
+                           [columnsGrid]="columnsGridCompaniesEng"
+                           [listBoxSource]="listBoxSourceCompaniesEng"
+                           [sourceForJqxGrid]="sourceForJqxGridCompanies"
+                           [settingWinForEditForm]="settingWinForEditFormCompanies"
+                           [sourceForEditForm]="sourceForEditFormCompaniesEng"
+                           [orgForms]="orgForms"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -22,13 +36,27 @@
   <div *ngIf="this.router.url === '/dictionary/contragent/persons'"
        class="table_border">
     <app-simple-dictionary #persons
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryPersons"
+                           [columnsGrid]="columnsGridPersons"
+                           [listBoxSource]="listBoxSourcePersons"
                            [sourceForJqxGrid]="sourceForJqxGridPersons"
                            [settingWinForEditForm]="settingWinForEditFormPersons"
                            [sourceForEditForm]="sourceForEditFormPersons"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #persons
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionaryPersons"
+                           [columnsGrid]="columnsGridPersonsEng"
+                           [listBoxSource]="listBoxSourcePersonsEng"
+                           [sourceForJqxGrid]="sourceForJqxGridPersons"
+                           [settingWinForEditForm]="settingWinForEditFormPersons"
+                           [sourceForEditForm]="sourceForEditFormPersonsEng"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>
@@ -36,15 +64,29 @@
   <div *ngIf="this.router.url === '/dictionary/contragent/substations'"
        class="table_border">
     <app-simple-dictionary #substations
+                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionarySubstations"
+                           [columnsGrid]="columnsGridSubstations"
+                           [listBoxSource]="listBoxSourceSubstations"
                            [sourceForJqxGrid]="sourceForJqxGridSubstations"
                            [settingWinForEditForm]="settingWinForEditFormSubstations"
                            [sourceForEditForm]="sourceForEditFormSubstations"
-
                            [orgForms]="orgForms"
-
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditwinBtn)="saveEditwinBtn($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
+                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
+    ></app-simple-dictionary>
+    <app-simple-dictionary #substations
+                           *ngIf="this.translate.currentLang === 'en'"
+                           [typeDictionary]="dictionarySubstations"
+                           [columnsGrid]="columnsGridSubstationsEng"
+                           [listBoxSource]="listBoxSourceSubstationsEng"
+                           [sourceForJqxGrid]="sourceForJqxGridSubstations"
+                           [settingWinForEditForm]="settingWinForEditFormSubstations"
+                           [sourceForEditForm]="sourceForEditFormSubstationsEng"
+                           [orgForms]="orgForms"
+                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
+                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
   </div>

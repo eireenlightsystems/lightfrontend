@@ -1,26 +1,25 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {MaterializeService} from '../../../../shared/classes/materialize.service';
 import {isUndefined} from 'util';
-
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
-  Geograph,
-  Contract,
-  Owner,
-  FilterSensor,
-  EquipmentType,
-  Sensor,
-  SourceForFilter, SettingButtonPanel, SettingWinForEditForm, SourceForEditForm, SourceForLinkForm, ItemsLinkForm, SourceForJqxGrid
+  Contract, Owner, FilterSensor, EquipmentType, Sensor,
+  SourceForFilter, SettingButtonPanel, SettingWinForEditForm, SourceForEditForm, SourceForLinkForm, ItemsLinkForm, SourceForJqxGrid, NavItem
 } from '../../../../shared/interfaces';
+// app services
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
+// app components
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
-import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -33,17 +32,15 @@ const STEP = 1000000000000;
 })
 export class SensorlistPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() ownerSensors: Owner[];
   @Input() sensorTypes: EquipmentType[];
   @Input() contractSensors: Contract[];
-
   @Input() selectNodeId: number;
-
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
-
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -53,8 +50,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -65,6 +62,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
+  columnsGridEng: any[];
+  listBoxSourceEng: any[];
   // main
   items: Sensor[] = [];
   // grid
@@ -80,28 +79,34 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     nodeId: ''
   };
   sourceForFilter: SourceForFilter[];
+  sourceForFilterEng: SourceForFilter[];
   isFilterVisible = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  isEditFormVisible = false;
+  sourceForEditFormEng: SourceForEditForm[];
+  isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
+  sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
 
 
-  constructor(private sensorService: SensorService,
-              public translate: TranslateService) {
+  constructor(private _snackBar: MatSnackBar,
+              // service
+              public translate: TranslateService,
+              private sensorService: SensorService) {
   }
 
   ngOnInit() {
-    // define columns for table
+    // define columns
     if (this.isMasterGrid) {
       this.columnsGrid =
         [
@@ -110,14 +115,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
-
           {text: 'Широта', datafield: 'n_coordinate', width: 150},
           {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-
           {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
           {text: 'Коментарий', datafield: 'comment', width: 150},
         ];
-      // define a data source for filtering table columns
       this.listBoxSource =
         [
           {label: 'sensorId', value: 'sensorId', checked: true},
@@ -125,12 +127,34 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
-
           {label: 'Широта', value: 'n_coordinate', checked: true},
           {label: 'Долгота', value: 'e_coordinate', checked: true},
-
           {label: 'Серийный номер', value: 'serialNumber', checked: true},
           {label: 'Коментарий', value: 'comment', checked: true},
+        ];
+      this.columnsGridEng =
+        [
+          {text: 'sensorId', datafield: 'sensorId', width: 150},
+          {text: 'Contract', datafield: 'contractCode', width: 150},
+          {text: 'Address', datafield: 'geographFullName', width: 400},
+          {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
+          {text: 'Owner', datafield: 'ownerCode', width: 150},
+          {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+          {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+          {text: 'Serial number', datafield: 'serialNumber', width: 150},
+          {text: 'Comments', datafield: 'comment', width: 150},
+        ];
+      this.listBoxSourceEng =
+        [
+          {label: 'sensorId', value: 'sensorId', checked: true},
+          {label: 'Contract', value: 'contractCode', checked: true},
+          {label: 'Address', value: 'geographFullName', checked: true},
+          {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
+          {label: 'Owner', value: 'ownerCode', checked: true},
+          {label: 'Latitude', value: 'n_coordinate', checked: true},
+          {label: 'Longitude', value: 'e_coordinate', checked: true},
+          {label: 'Serial number', value: 'serialNumber', checked: true},
+          {label: 'Comments', value: 'comment', checked: true},
         ];
     } else {
       this.columnsGrid =
@@ -141,7 +165,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
           {text: 'Коментарий', datafield: 'comment', width: 150},
         ];
-      // define a data source for filtering table columns
       this.listBoxSource =
         [
           {label: 'sensorId', value: 'sensorId', checked: true},
@@ -150,7 +173,51 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {label: 'Серийный номер', value: 'serialNumber', checked: true},
           {label: 'Коментарий', value: 'comment', checked: true},
         ];
+      this.columnsGridEng =
+        [
+          {text: 'sensorId', datafield: 'sensorId', width: 150},
+          {text: 'Contract', datafield: 'contractCode', width: 150},
+          {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
+          {text: 'Serial number', datafield: 'serialNumber', width: 150},
+          {text: 'Comments', datafield: 'comment', width: 150},
+        ];
+      this.listBoxSourceEng =
+        [
+          {label: 'sensorId', value: 'sensorId', checked: true},
+          {label: 'Contract', value: 'contractCode', checked: true},
+          {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
+          {label: 'Serial number', value: 'serialNumber', checked: true},
+          {label: 'Comments', value: 'comment', checked: true},
+        ];
     }
+
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        theme: 'material',
+        width: null,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+        valueMember: 'sensorId',
+        sortcolumn: ['sensorId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
 
     // definde filter
     this.sourceForFilter = [
@@ -194,11 +261,52 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         selectId: ''
       }
     ];
+    this.sourceForFilterEng = [
+      {
+        name: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerSensors',
+        type: 'jqxComboBox',
+        source: this.ownerSensors,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Owner:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'sensorTypes',
+        type: 'jqxComboBox',
+        source: this.sensorTypes,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Sensor type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormSensor',
-      name: 'Добавить/редактировать датчик',
+      name: 'Add/edit sensor',
       theme: 'material',
       isModal: true,
       modalOpacity: 0.3,
@@ -211,8 +319,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'contractSensors',
@@ -275,6 +381,68 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormEng = [
+      {
+        nameField: 'contractSensors',
+        type: 'jqxComboBox',
+        source: this.contractSensors,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Contract:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'sensorTypes',
+        type: 'jqxComboBox',
+        source: this.sensorTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Sensor type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Serial number:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
     this.sourceForLinkForm = {
@@ -282,7 +450,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         code: 'linkSensor',
         name: 'Выбрать датчик',
         theme: 'material',
-        autoOpen: false,
+        autoOpen: true,
         isModal: true,
         modalOpacity: 0.3,
         width: 1200,
@@ -303,38 +471,38 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'sensorId',
         sortcolumn: ['sensorId'],
         sortdirection: 'desc',
         selectId: []
       }
     };
-
-    // jqxgrid
-    this.sourceForJqxGrid = {
-      listbox: {
-        source: this.listBoxSource,
+    this.sourceForLinkFormEng = {
+      window: {
+        code: 'linkSensor',
+        name: 'Choose sensors',
         theme: 'material',
-        width: 150,
-        height: this.heightGrid,
-        checkboxes: true,
-        filterable: true,
-        allowDrag: true
+        autoOpen: true,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
       },
       grid: {
-        source: this.items,
-        columns: this.columnsGrid,
+        source: [],
+        columns: this.columnsGridEng,
         theme: 'material',
-        width: null,
-        height: this.heightGrid,
+        width: 1186,
+        height: 485,
         columnsresize: true,
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: this.selectionmode,
-        isMasterGrid: this.isMasterGrid,
-
+        selectionmode: 'checkbox',
         valueMember: 'sensorId',
         sortcolumn: ['sensorId'],
         sortdirection: 'desc',
@@ -363,11 +531,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.linkForm) {
+      this.linkForm.destroy();
     }
     if (this.oSubForLinkWin) {
       this.oSubForLinkWin.unsubscribe();
@@ -475,17 +643,18 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormVisible = !this.isEditFormVisible;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormVisible = !this.isEditFormVisible;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать датчик для редактирования`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.upd-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -494,10 +663,13 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить датчик id = "${this.jqxgridComponent.selectRow.sensorId}"?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.del-question')
+        + this.jqxgridComponent.selectRow.sensorId + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать датчик для удаления`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -506,7 +678,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  filterNone() {
+  setting() {
     this.jqxgridComponent.openSettinWin();
   }
 
@@ -521,10 +693,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   place() {
     if (this.selectNodeId > 1) {
-      this.linkWindow.open();
+      this.isLinkFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узел для привязки датчиков`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.place-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -533,10 +706,12 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
-      this.warningEventWindow = `Отвязать датчик от узла?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.pinDrop-question');
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать датчик для отвязки от узла`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.pinDrop-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -594,9 +769,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
             break;
           case 'ownerSensors':
             this.sourceForFilter[i].source = this.ownerSensors;
+            this.sourceForFilterEng[i].source = this.ownerSensors;
             break;
           case 'sensorTypes':
             this.sourceForFilter[i].source = this.sensorTypes;
+            this.sourceForFilterEng[i].source = this.sensorTypes;
             break;
           default:
             break;
@@ -611,24 +788,23 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     const selectObject: Sensor = new Sensor();
-
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      switch (this.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'contractSensors':
-          selectObject.contractId = +this.sourceForEditForm[i].selectId;
-          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          selectObject.contractId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'sensorTypes':
-          selectObject.sensorTypeId = +this.sourceForEditForm[i].selectId;
-          selectObject.sensorTypeCode = this.sourceForEditForm[i].selectCode;
+          selectObject.sensorTypeId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.sensorTypeCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'serialNumber':
-          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          selectObject.serialNumber = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comment':
-          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          selectObject.comment = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -647,12 +823,14 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.sensorService.ins(selectObject).subscribe(
         response => {
           selectObject.sensorId = +response;
-          MaterializeService.toast(`Датчик c id = ${selectObject.sensorId} был добавлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.ins')
+            + selectObject.sensorId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_ins(
             selectObject.sensorId, selectObject);
@@ -671,12 +849,14 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.sensorService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterializeService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.sensorId} был обновлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.upd')
+            + this.jqxgridComponent.selectRow.sensorId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_upd(
             this.jqxgridComponent.selectRow.sensorId, this.jqxgridComponent.selectRow);
@@ -686,54 +866,62 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   getSourceForEditForm() {
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+    let sourceForEditForm: any[];
+    if (this.translate.currentLang === 'ru') {
+      sourceForEditForm = this.sourceForEditForm;
+    }
+    if (this.translate.currentLang === 'en') {
+      sourceForEditForm = this.sourceForEditFormEng;
+    }
+
+    for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
-        this.sourceForEditForm[i].selectedIndex = 0;
-        this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
+        sourceForEditForm[i].selectedIndex = 0;
+        sourceForEditForm[i].selectId = '1';
+        sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
-      switch (this.sourceForEditForm[i].nameField) {
+      switch (sourceForEditForm[i].nameField) {
         case 'contractSensors':
-          this.sourceForEditForm[i].source = this.contractSensors;
+          sourceForEditForm[i].source = this.contractSensors;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.contractSensors[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.contractSensors.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.contractSensors.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.contractSensors[0].id.toString();
+            sourceForEditForm[i].selectCode = this.contractSensors.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.contractSensors.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
-            this.sourceForEditForm[i].selectCode = this.contractSensors.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
+            sourceForEditForm[i].selectCode = this.contractSensors.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).code;
-            this.sourceForEditForm[i].selectName = this.contractSensors.find(
+            sourceForEditForm[i].selectName = this.contractSensors.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).name;
             for (let j = 0; j < this.contractSensors.length; j++) {
               if (+this.contractSensors[j].id === +this.jqxgridComponent.selectRow.contractId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
           }
           break;
         case 'sensorTypes':
-          this.sourceForEditForm[i].source = this.sensorTypes;
+          sourceForEditForm[i].source = this.sensorTypes;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.sensorTypes[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.sensorTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.sensorTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.sensorTypes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.sensorTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.sensorTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.sensorTypeId.toString();
-            this.sourceForEditForm[i].selectCode = this.sensorTypes.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.sensorTypeId.toString();
+            sourceForEditForm[i].selectCode = this.sensorTypes.find(
               (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).code;
-            this.sourceForEditForm[i].selectName = this.sensorTypes.find(
+            sourceForEditForm[i].selectName = this.sensorTypes.find(
               (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).name;
             for (let j = 0; j < this.sensorTypes.length; j++) {
               if (+this.sensorTypes[j].id === +this.jqxgridComponent.selectRow.sensorTypeId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
@@ -741,12 +929,12 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           break;
         case 'serialNumber':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
           }
           break;
         case 'comment':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
           }
           break;
         default:
@@ -755,23 +943,23 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM
 
-  saveLinkwinBtn(event: ItemsLinkForm) {
+  saveLinkFormBtn(event: ItemsLinkForm) {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.sensorService.setNodeId(this.selectNodeId, event.Ids).subscribe(
         response => {
-          MaterializeService.toast('Выбранные елементы привязаны!');
+
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
-          this.linkWindow.hide();
+          this.linkForm.closeDestroy();
           // refresh table
           this.refreshGrid();
         }
@@ -783,12 +971,17 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.sensorService.getSensorNotInGroup().subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.linkWindow.refreshGrid();
+        this.sourceForLinkFormEng.grid.source = response;
+        this.linkForm.refreshGrid();
       },
       error => {
-        MaterializeService.toast(error.error.message);
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
       }
     );
+  }
+
+  destroyLinkForm() {
+    this.isLinkFormInit = false;
   }
 
   // EVENT FORM
@@ -797,13 +990,14 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'del') {
       const selectedrowindex = this.jqxgridComponent.myGrid.getselectedrowindex();
       const id = this.jqxgridComponent.myGrid.getrowid(selectedrowindex);
-
       if (+id >= 0) {
         this.sensorService.del(+id).subscribe(
           response => {
-            MaterializeService.toast('Датчик был удален!');
+            this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
-          error => MaterializeService.toast(error.error.message),
+          error =>
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -818,10 +1012,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       }
       this.oSub = this.sensorService.delNodeId(this.selectNodeId, sensorIds).subscribe(
         response => {
-          MaterializeService.toast('Датчики отвязаны от узла!');
+          this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.pinDrop'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
           // refresh table
@@ -831,4 +1026,9 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
+  }
 }

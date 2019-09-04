@@ -1,25 +1,28 @@
-// @ts-ignore
+// angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
-
+import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+// jqwidgets
+// app interfaces
 import {
   Gateway, Geograph, Contract, Owner, EquipmentType,
   FilterGateway, SourceForFilter,
   SettingButtonPanel,
   SourceForJqxGrid,
   SettingWinForEditForm, SourceForEditForm,
-  SourceForLinkForm, ItemsLinkForm
+  SourceForLinkForm, ItemsLinkForm, NavItem
 } from '../../../../shared/interfaces';
+// app services
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
+// app components
 import {JqxgridComponent} from '../../../../shared/components/jqxgrid/jqxgrid.component';
 import {ButtonPanelComponent} from '../../../../shared/components/button-panel/button-panel.component';
 import {FilterTableComponent} from '../../../../shared/components/filter-table/filter-table.component';
 import {EditFormComponent} from '../../../../shared/components/edit-form/edit-form.component';
 import {LinkFormComponent} from '../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../shared/components/event-window/event-window.component';
-import {MaterializeService} from '../../../../shared/classes/materialize.service';
-import {isUndefined} from 'util';
-import {TranslateService} from '@ngx-translate/core';
 
 
 const STEP = 1000000000000;
@@ -32,18 +35,16 @@ const STEP = 1000000000000;
 })
 export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
-  // variables from master component
+  // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() geographs: Geograph[];
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
-
   @Input() selectNodeId: number;
-
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
-
   @Input() settingButtonPanel: SettingButtonPanel;
 
   // determine the functions that need to be performed in the parent component
@@ -53,8 +54,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -65,6 +66,8 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
+  columnsGridEng: any[];
+  listBoxSourceEng: any[];
   // main
   items: Gateway[] = [];
   // grid
@@ -80,27 +83,33 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     nodeId: ''
   };
   sourceForFilter: SourceForFilter[];
+  sourceForFilterEng: SourceForFilter[];
   isFilterVisible = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  isEditFormVisible = false;
+  sourceForEditFormEng: SourceForEditForm[];
+  isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
+  sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
 
-  constructor(private gatewayService: GatewayService,
-              public translate: TranslateService) {
+  constructor(private _snackBar: MatSnackBar,
+              // service
+              public translate: TranslateService,
+              private gatewayService: GatewayService) {
   }
 
   ngOnInit() {
-    // define columns for table
+    // define columns
     if (this.isMasterGrid) {
       this.columnsGrid =
         [
@@ -108,30 +117,51 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
           {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Тип шлюза', datafield: 'gatewayTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
-
           {text: 'Широта', datafield: 'n_coordinate', width: 150},
           {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-
           {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
           {text: 'Коментарий', datafield: 'comment', width: 150},
         ];
-      // define a data source for filtering table columns
       this.listBoxSource =
         [
           {label: 'gatewayId', value: 'gatewayId', checked: true},
           {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
           {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
+          {label: 'Тип шлюза', value: 'gatewayTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
-
           {label: 'Широта', value: 'n_coordinate', checked: true},
           {label: 'Долгота', value: 'e_coordinate', checked: true},
-
           {label: 'Серийный номер', value: 'serialNumber', checked: true},
           {label: 'Коментарий', value: 'comment', checked: true},
+        ];
+      this.columnsGridEng =
+        [
+          {text: 'gatewayId', datafield: 'gatewayId', width: 150},
+          {text: 'Node group name', datafield: 'nodeGroupName', width: 150},
+          {text: 'Contract', datafield: 'contractCode', width: 150},
+          {text: 'Address', datafield: 'geographFullName', width: 400},
+          {text: 'Gateway type', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Owner', datafield: 'ownerCode', width: 150},
+          {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+          {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+          {text: 'Serial number', datafield: 'serialNumber', width: 150},
+          {text: 'Comments', datafield: 'comment', width: 150},
+        ];
+      this.listBoxSourceEng =
+        [
+          {label: 'gatewayId', value: 'gatewayId', checked: true},
+          {label: 'Node group name', value: 'nodeGroupName', checked: true},
+          {label: 'Contract', value: 'contractCode', checked: true},
+          {label: 'Address', value: 'geographFullName', checked: true},
+          {label: 'Gateway type', value: 'gatewayTypeCode', checked: true},
+          {label: 'Owner', value: 'ownerCode', checked: true},
+          {label: 'Latitude', value: 'n_coordinate', checked: true},
+          {label: 'Longitude', value: 'e_coordinate', checked: true},
+          {label: 'Serial number', value: 'serialNumber', checked: true},
+          {label: 'Comments', value: 'comment', checked: true},
         ];
     } else {
       this.columnsGrid =
@@ -139,21 +169,66 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           {text: 'gatewayId', datafield: 'gatewayId', width: 150},
           {text: 'Наимен. гр. столбов', datafield: 'nodeGroupName', width: 150},
           {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Тип узла', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Тип шлюза', datafield: 'gatewayTypeCode', width: 150},
           {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
           {text: 'Коментарий', datafield: 'comment', width: 150},
         ];
-      // define a data source for filtering table columns
       this.listBoxSource =
         [
           {label: 'gatewayId', value: 'gatewayId', checked: true},
           {label: 'Наимен. гр. столбов', value: 'nodeGroupName', checked: true},
           {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Тип узла', value: 'gatewayTypeCode', checked: true},
+          {label: 'Тип шлюза', value: 'gatewayTypeCode', checked: true},
           {label: 'Серийный номер', value: 'serialNumber', checked: true},
           {label: 'Коментарий', value: 'comment', checked: true},
         ];
+      this.columnsGridEng =
+        [
+          {text: 'gatewayId', datafield: 'gatewayId', width: 150},
+          {text: 'Node group name', datafield: 'nodeGroupName', width: 150},
+          {text: 'Contract', datafield: 'contractCode', width: 150},
+          {text: 'Gateway type', datafield: 'gatewayTypeCode', width: 150},
+          {text: 'Serial number', datafield: 'serialNumber', width: 150},
+          {text: 'Comments', datafield: 'comment', width: 150},
+        ];
+      this.listBoxSourceEng =
+        [
+          {label: 'gatewayId', value: 'gatewayId', checked: true},
+          {label: 'Node group name', value: 'nodeGroupName', checked: true},
+          {label: 'Contract', value: 'contractCode', checked: true},
+          {label: 'Gateway type', value: 'gatewayTypeCode', checked: true},
+          {label: 'Serial number', value: 'serialNumber', checked: true},
+          {label: 'Comments', value: 'comment', checked: true},
+        ];
     }
+
+    // jqxgrid
+    this.sourceForJqxGrid = {
+      listbox: {
+        theme: 'material',
+        width: 150,
+        height: this.heightGrid,
+        checkboxes: true,
+        filterable: true,
+        allowDrag: true
+      },
+      grid: {
+        source: this.items,
+        theme: 'material',
+        width: null,
+        height: this.heightGrid,
+        columnsresize: true,
+        sortable: true,
+        filterable: true,
+        altrows: true,
+        selectionmode: this.selectionmode,
+        isMasterGrid: this.isMasterGrid,
+        valueMember: 'gatewayId',
+        sortcolumn: ['gatewayId'],
+        sortdirection: 'desc',
+        selectId: []
+      }
+    };
 
     // definde filter
     this.sourceForFilter = [
@@ -197,25 +272,64 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         selectId: ''
       }
     ];
+    this.sourceForFilterEng = [
+      {
+        name: 'geographs',
+        type: 'ngxSuggestionAddress',
+        source: [],
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Address:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'ownerGateways',
+        type: 'jqxComboBox',
+        source: this.ownerGateways,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Owner:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      },
+      {
+        name: 'gatewayTypes',
+        type: 'jqxComboBox',
+        source: this.gatewayTypes,
+        theme: 'material',
+        width: '380',
+        height: '45',
+        placeHolder: 'Gateway type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
-    // definde window edit form
+    // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormGateway',
-      name: 'Добавить/редактировать шлюз',
+      name: 'Add/edit gateway',
       theme: 'material',
       isModal: true,
       modalOpacity: 0.3,
       width: 450,
       maxWidth: 500,
       minWidth: 460,
-      height: 440,
-      maxHeight: 500,
-      minHeight: 440,
+      height: 450,
+      maxHeight: 450,
+      minHeight: 450,
       coordX: 500,
       coordY: 65
     };
-
-    // definde edit form
     this.sourceForEditForm = [
       {
         nameField: 'contractGateways',
@@ -293,6 +407,83 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         selectName: ''
       }
     ];
+    this.sourceForEditFormEng = [
+      {
+        nameField: 'contractGateways',
+        type: 'jqxComboBox',
+        source: this.contractGateways,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Contract:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'gatewayTypes',
+        type: 'jqxComboBox',
+        source: this.gatewayTypes,
+        theme: 'material',
+        width: '285',
+        height: '20',
+        placeHolder: 'Gateway type:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'nodeGroupName',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Node group name:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'serialNumber',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '20',
+        placeHolder: 'Serial number:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      },
+      {
+        nameField: 'comment',
+        type: 'jqxTextArea',
+        source: [],
+        theme: 'material',
+        width: '280',
+        height: '100',
+        placeHolder: 'Comments:',
+        displayMember: 'code',
+        valueMember: 'id',
+        selectedIndex: null,
+        selectId: '',
+        selectCode: '',
+        selectName: ''
+      }
+    ];
 
     // definde link form
     this.sourceForLinkForm = {
@@ -300,7 +491,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         code: 'linkGateway',
         name: 'Выбрать шлюз',
         theme: 'material',
-        autoOpen: false,
+        autoOpen: true,
         isModal: true,
         modalOpacity: 0.3,
         width: 1200,
@@ -322,38 +513,39 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'gatewayId',
         sortcolumn: ['gatewayId'],
         sortdirection: 'desc',
         selectId: []
       }
     };
-
-    // jqxgrid
-    this.sourceForJqxGrid = {
-      listbox: {
-        source: this.listBoxSource,
+    this.sourceForLinkFormEng = {
+      window: {
+        code: 'linkGateway',
+        name: 'Choose gateway',
         theme: 'material',
-        width: 150,
-        height: this.heightGrid,
-        checkboxes: true,
-        filterable: true,
-        allowDrag: true
+        autoOpen: true,
+        isModal: true,
+        modalOpacity: 0.3,
+        width: 1200,
+        maxWidth: 1200,
+        minWidth: 500,
+        height: 500,
+        maxHeight: 800,
+        minHeight: 600
+
       },
       grid: {
-        source: this.items,
-        columns: this.columnsGrid,
+        source: [],
+        columns: this.columnsGridEng,
         theme: 'material',
-        width: null,
-        height: this.heightGrid,
+        width: 1186,
+        height: 485,
         columnsresize: true,
         sortable: true,
         filterable: true,
         altrows: true,
-        selectionmode: this.selectionmode,
-        isMasterGrid: this.isMasterGrid,
-
+        selectionmode: 'checkbox',
         valueMember: 'gatewayId',
         sortcolumn: ['gatewayId'],
         sortdirection: 'desc',
@@ -382,11 +574,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.linkForm) {
+      this.linkForm.destroy();
     }
     if (this.oSubForLinkWin) {
       this.oSubForLinkWin.unsubscribe();
@@ -494,17 +686,18 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormVisible = !this.isEditFormVisible;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormVisible = !this.isEditFormVisible;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для редактирования`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.upd-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -513,10 +706,13 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = `Удалить шлюз id = "${this.jqxgridComponent.selectRow.gatewayId}"?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.del-question')
+        + this.jqxgridComponent.selectRow.gatewayId + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для удаления`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.del-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -525,7 +721,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  filterNone() {
+  setting() {
     this.jqxgridComponent.openSettinWin();
   }
 
@@ -540,10 +736,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   place() {
     if (this.selectNodeId > 1) {
-      this.linkWindow.open();
+      this.isLinkFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать узел для привязки шлюзов`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.place-warning');
       this.eventWindow.openEventWindow();
     }
   }
@@ -552,10 +749,12 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'pin_drop';
-      this.warningEventWindow = `Отвязать шлюз от узла?`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.pinDrop-question');
     } else {
       this.eventWindow.okButtonDisabled(true);
-      this.warningEventWindow = `Вам следует выбрать шлюз для отвязки от узла`;
+      this.warningEventWindow =
+        this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.pinDrop-warning');
     }
     this.eventWindow.openEventWindow();
   }
@@ -613,9 +812,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
             break;
           case 'ownerGateways':
             this.sourceForFilter[i].source = this.ownerGateways;
+            this.sourceForFilterEng[i].source = this.ownerGateways;
             break;
           case 'gatewayTypes':
             this.sourceForFilter[i].source = this.gatewayTypes;
+            this.sourceForFilterEng[i].source = this.gatewayTypes;
             break;
           default:
             break;
@@ -630,27 +831,27 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
 
   // EDIT FORM
 
-  saveEditwinBtn() {
+  saveEditFormBtn() {
     const selectObject: Gateway = new Gateway();
 
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
-      switch (this.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'contractGateways':
-          selectObject.contractId = +this.sourceForEditForm[i].selectId;
-          selectObject.contractCode = this.sourceForEditForm[i].selectCode;
+          selectObject.contractId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.contractCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'gatewayTypes':
-          selectObject.gatewayTypeId = +this.sourceForEditForm[i].selectId;
-          selectObject.gatewayTypeCode = this.sourceForEditForm[i].selectCode;
+          selectObject.gatewayTypeId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.gatewayTypeCode = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'nodeGroupName':
-          selectObject.nodeGroupName = this.sourceForEditForm[i].selectCode;
+          selectObject.nodeGroupName = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'serialNumber':
-          selectObject.serialNumber = this.sourceForEditForm[i].selectCode;
+          selectObject.serialNumber = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comment':
-          selectObject.comment = this.sourceForEditForm[i].selectCode;
+          selectObject.comment = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -669,12 +870,14 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.gatewayService.ins(selectObject).subscribe(
         response => {
           selectObject.gatewayId = +response;
-          MaterializeService.toast(`Датчик c id = ${selectObject.gatewayId} был добавлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.ins')
+            + selectObject.gatewayId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_ins(
             selectObject.gatewayId, selectObject);
@@ -694,12 +897,14 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.gatewayService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          MaterializeService.toast(`Датчик c id = ${this.jqxgridComponent.selectRow.gatewayId} был обновлен.`);
+          this.openSnackBar(this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.upd')
+            + this.jqxgridComponent.selectRow.gatewayId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error => MaterializeService.toast(error.error.message),
+        error =>
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_upd(
             this.jqxgridComponent.selectRow.gatewayId, this.jqxgridComponent.selectRow);
@@ -709,54 +914,62 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   }
 
   getSourceForEditForm() {
-    for (let i = 0; i < this.sourceForEditForm.length; i++) {
+    let sourceForEditForm: any[];
+    if (this.translate.currentLang === 'ru') {
+      sourceForEditForm = this.sourceForEditForm;
+    }
+    if (this.translate.currentLang === 'en') {
+      sourceForEditForm = this.sourceForEditFormEng;
+    }
+
+    for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
-        this.sourceForEditForm[i].selectedIndex = 0;
-        this.sourceForEditForm[i].selectId = '1';
-        this.sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
+        sourceForEditForm[i].selectedIndex = 0;
+        sourceForEditForm[i].selectId = '1';
+        sourceForEditForm[i].selectCode = this.translate.instant('site.forms.editforms.empty');
       }
-      switch (this.sourceForEditForm[i].nameField) {
+      switch (sourceForEditForm[i].nameField) {
         case 'contractGateways':
-          this.sourceForEditForm[i].source = this.contractGateways;
+          sourceForEditForm[i].source = this.contractGateways;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.contractGateways[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.contractGateways.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.contractGateways.find(
-              (one: Contract) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.contractGateways[0].id.toString();
+            sourceForEditForm[i].selectCode = this.contractGateways.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.contractGateways.find(
+              (one: Contract) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
-            this.sourceForEditForm[i].selectCode = this.contractGateways.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.contractId.toString();
+            sourceForEditForm[i].selectCode = this.contractGateways.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).code;
-            this.sourceForEditForm[i].selectName = this.contractGateways.find(
+            sourceForEditForm[i].selectName = this.contractGateways.find(
               (contractOne: Contract) => contractOne.id === +this.jqxgridComponent.selectRow.contractId).name;
             for (let j = 0; j < this.contractGateways.length; j++) {
               if (+this.contractGateways[j].id === +this.jqxgridComponent.selectRow.contractId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
           }
           break;
         case 'gatewayTypes':
-          this.sourceForEditForm[i].source = this.gatewayTypes;
+          sourceForEditForm[i].source = this.gatewayTypes;
           if (this.typeEditWindow === 'ins') {
-            this.sourceForEditForm[i].selectId = this.gatewayTypes[0].id.toString();
-            this.sourceForEditForm[i].selectCode = this.gatewayTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).code;
-            this.sourceForEditForm[i].selectName = this.gatewayTypes.find(
-              (one: EquipmentType) => one.id === +this.sourceForEditForm[i].selectId).name;
+            sourceForEditForm[i].selectId = this.gatewayTypes[0].id.toString();
+            sourceForEditForm[i].selectCode = this.gatewayTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+            sourceForEditForm[i].selectName = this.gatewayTypes.find(
+              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.gatewayTypeId.toString();
-            this.sourceForEditForm[i].selectCode = this.gatewayTypes.find(
+            sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.gatewayTypeId.toString();
+            sourceForEditForm[i].selectCode = this.gatewayTypes.find(
               (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).code;
-            this.sourceForEditForm[i].selectName = this.gatewayTypes.find(
+            sourceForEditForm[i].selectName = this.gatewayTypes.find(
               (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).name;
             for (let j = 0; j < this.gatewayTypes.length; j++) {
               if (+this.gatewayTypes[j].id === +this.jqxgridComponent.selectRow.gatewayTypeId) {
-                this.sourceForEditForm[i].selectedIndex = j;
+                sourceForEditForm[i].selectedIndex = j;
                 break;
               }
             }
@@ -764,17 +977,17 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           break;
         case 'nodeGroupName':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.nodeGroupName;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.nodeGroupName;
           }
           break;
         case 'serialNumber':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.serialNumber;
           }
           break;
         case 'comment':
           if (this.typeEditWindow === 'upd') {
-            this.sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
+            sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.comment;
           }
           break;
         default:
@@ -783,23 +996,23 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  setEditFormVisible() {
-    this.isEditFormVisible = !this.isEditFormVisible;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM
 
-  saveLinkwinBtn(event: ItemsLinkForm) {
+  saveLinkFormBtn(event: ItemsLinkForm) {
     if (event.code === this.sourceForLinkForm.window.code) {
       this.oSubLink = this.gatewayService.setNodeId(this.selectNodeId, event.Ids).subscribe(
         response => {
-          MaterializeService.toast('Выбранные елементы привязаны!');
+
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
-          this.linkWindow.hide();
+          this.linkForm.closeDestroy();
           // refresh table
           this.refreshGrid();
         }
@@ -811,12 +1024,17 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.gatewayService.getGatewayNotInGroup().subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.linkWindow.refreshGrid();
+        this.sourceForLinkFormEng.grid.source = response;
+        this.linkForm.refreshGrid();
       },
       error => {
-        MaterializeService.toast(error.error.message);
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
       }
     );
+  }
+
+  destroyLinkForm() {
+    this.isLinkFormInit = false;
   }
 
   // EVENT FORM
@@ -829,9 +1047,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.gatewayService.del(+id).subscribe(
           response => {
-            MaterializeService.toast('Шлюз был удален!');
+            this.openSnackBar(this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
-          error => MaterializeService.toast(error.error.message),
+          error =>
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -846,10 +1066,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
       }
       this.oSub = this.gatewayService.delNodeId(this.selectNodeId, gatewayIds).subscribe(
         response => {
-          MaterializeService.toast('Шлюз отвязаны от узла!');
+          this.openSnackBar(this.translate.instant('site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.pinDrop'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error => {
-          MaterializeService.toast(error.error.message);
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
           // refresh table
@@ -857,5 +1078,11 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

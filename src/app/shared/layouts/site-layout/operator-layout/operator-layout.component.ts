@@ -1,25 +1,23 @@
-// @ts-ignore
+// angular lib
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MaterializeService} from '../../../classes/materialize.service';
-
+// jqwidgets
+// app interfaces
 import {
   CommandStatus,
   CommandType,
   Contract,
   EquipmentType,
   FixtureGroupType,
-  Geograph,
   HeightType,
   Installer, NavItem,
   Owner,
   Substation
 } from '../../../interfaces';
-import {GeographService} from '../../../services/geograph/geograph.service';
-
+// app services
 import {OwnerFixtureService} from '../../../services/fixture/ownerFixture.service';
-import {FixtureTypeService} from '../../../services/fixture/fixtureType.service';
 import {SubstationService} from '../../../services/fixture/substation.service';
 import {ContractFixtureService} from '../../../services/fixture/contractFixture.service';
 import {InstallerFixtureService} from '../../../services/fixture/installerFixture.service';
@@ -29,22 +27,19 @@ import {CommandSwitchTypeService} from '../../../services/command/commandSwitchT
 import {CommandSpeedTypeService} from '../../../services/command/commandSpeedType.service';
 import {CommandStatusService} from '../../../services/command/commandStatus.service';
 import {SpeedDirectionService} from '../../../services/command/speedDirection';
-
 import {OwnerNodeService} from '../../../services/node/ownerNode';
-import {NodeTypeService} from '../../../services/node/nodeType.service';
 import {ContractNodeService} from '../../../services/node/contractNode.service';
-
 import {OwnerGatewayService} from '../../../services/gateway/ownerGateway';
 import {GatewayTypeService} from '../../../services/gateway/gatewayType.service';
 import {ContractGatewayService} from '../../../services/gateway/contractGateway.service';
-
 import {OwnerSensorService} from '../../../services/sensor/ownerSensor';
-import {SensorTypeService} from '../../../services/sensor/sensorType.service';
 import {ContractSensorService} from '../../../services/sensor/contractSensor.service';
 import {NodeService} from '../../../services/node/node.service';
 import {SensorService} from '../../../services/sensor/sensor.service';
 import {GatewayService} from '../../../services/gateway/gateway.service';
 import {FixtureService} from '../../../services/fixture/fixture.service';
+
+// app components
 
 
 @Component({
@@ -54,11 +49,16 @@ import {FixtureService} from '../../../services/fixture/fixture.service';
 })
 export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
 
+  // determine the functions that need to be performed in the parent component
+
+  // define variables - link to view objects
   @ViewChild('floating', {static: false}) floatingRef: ElementRef;
 
+  // other variables
   // subscription
   // geographSub: Subscription;
   // fixture subscription
@@ -117,15 +117,14 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   sensorTypes: EquipmentType[];
   contractSensors: Contract[];
 
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     // service
-    // private geographService: GeographService,
     // fixture service
     private fixtureService: FixtureService,
     private ownerFixtureService: OwnerFixtureService,
-    // private fixtureTypeService: FixtureTypeService,
     private substationService: SubstationService,
     private contractFixtureService: ContractFixtureService,
     private installerService: InstallerFixtureService,
@@ -163,7 +162,6 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy(): void {
     // subscription
-    // this.geographSub.unsubscribe();
     // fixture subscription
     this.ownerFixtureSub.unsubscribe();
     this.fixtureTypeSub.unsubscribe();
@@ -179,7 +177,6 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     this.commandStatusSub.unsubscribe();
     this.speedDirectionSub.unsubscribe();
     // node subscription
-    // this.geographSub.unsubscribe();
     this.ownerSub.unsubscribe();
     this.nodeTypeSub.unsubscribe();
     this.contractSub.unsubscribe();
@@ -195,7 +192,6 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
 
   fetch_refbook() {
     // refbook
-    // this.fetch_geograph();
 
     // fixture refbook
     this.ownerFixtureSub = this.ownerFixtureService.fetch().subscribe(owners => this.ownerFixtures = owners);
@@ -230,10 +226,6 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     this.ownerSensorSub = this.ownerSensorService.fetch().subscribe(owners => this.ownerSensors = owners);
     this.sensorTypeSub = this.sensorService.getSensorTypes().subscribe(sensorTypes => this.sensorTypes = sensorTypes);
     this.contractSensorSub = this.contractSensorService.fetch().subscribe(contracts => this.contractSensors = contracts);
-  }
-
-  fetch_geograph() {
-    // this.geographSub = this.geographService.fetch().subscribe(geographs => this.geographs = geographs);
   }
 
   isFixtureVisible() {

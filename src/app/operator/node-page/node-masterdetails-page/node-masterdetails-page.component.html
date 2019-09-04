@@ -2,7 +2,6 @@
              [theme]="'material'"
              [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
              [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
-
              (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
              (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
              (onExpanded)="expanded()"
@@ -12,74 +11,58 @@
                        [ownerNodes]="ownerNodes"
                        [nodeTypes]="nodeTypes"
                        [contractNodes]="contractNodes"
-
                        [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                        [isMasterGrid]="true"
                        [settingButtonPanel]="settingNodeButtonPanel"
-
                        (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-nodelist-page>
   </div>
   <div class="splitter-panel">
-    <jqxTabs
-      [theme]="'material'"
-      (onSelected)="selected($event)"
-    >
-      <ul>
-        <li style="margin-left: 30px">Светильники</li>
-        <li>Шлюзы</li>
-        <li>Сенсоры</li>
-      </ul>
-      <div style="overflow: hidden">
+    <mat-tab-group #matTabGroup [selectedIndex]="0">
+      <mat-tab label="{{'site.menu.operator.fixture-page.fixture-page' | translate}}">
         <app-fixturelist-page #fixturelistPageComponent
                               [siteMap]="siteMap"
                               *ngIf="siteMap[0].children[0].children[0].children[0].disabled === false"
-
                               [ownerFixtures]="ownerFixtures"
                               [fixtureTypes]="fixtureTypes"
                               [substations]="substations"
                               [contractFixtures]="contractFixtures"
                               [installers]="installers"
                               [heightTypes]="heightTypes"
-
                               [selectContractId]="''"
                               [selectNodeId]="selectNodeId"
                               [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                               [selectionmode]="'checkbox'"
-
                               [settingButtonPanel]="settingFixtureButtonPanel"
         ></app-fixturelist-page>
-
-      </div>
-      <div style="overflow: hidden">
+      </mat-tab>
+      <mat-tab label="{{'site.menu.operator.gateway-page.gateway-page' | translate}}">
         <app-gatewaylist-page #gatewaylistPageComponent
+                              [siteMap]="siteMap"
                               [ownerGateways]="ownerGateways"
                               [gatewayTypes]="gatewayTypes"
                               [contractGateways]="contractGateways"
-
                               [selectNodeId]="selectNodeId"
                               [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                               [isMasterGrid]="false"
                               [selectionmode]="'checkbox'"
-
                               [settingButtonPanel]="settingGatewayButtonPanel"
         ></app-gatewaylist-page>
-      </div>
-      <div style="overflow: hidden">
+      </mat-tab>
+      <mat-tab label="{{'site.menu.operator.sensor-page.sensor-page' | translate}}">
         <app-sensorlist-page #sensorlistPageComponent
+                             [siteMap]="siteMap"
                              [ownerSensors]="ownerSensors"
                              [sensorTypes]="sensorTypes"
                              [contractSensors]="contractSensors"
-
                              [selectNodeId]="selectNodeId"
                              [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                              [isMasterGrid]="false"
                              [selectionmode]="'checkbox'"
-
                              [settingButtonPanel]="settingSensorButtonPanel"
         ></app-sensorlist-page>
-      </div>
-    </jqxTabs>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </jqxSplitter>
 

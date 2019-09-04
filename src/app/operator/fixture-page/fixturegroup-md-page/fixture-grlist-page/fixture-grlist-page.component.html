@@ -5,7 +5,7 @@
                   (onUpd)="upd()"
                   (onDel)="del()"
                   (onRefresh)="refresh()"
-                  (onSetting)="filterNone()"
+                  (onSetting)="setting()"
                   (onFilterList)="filterList()"
                   (onPlace)="place()"
                   (onPinDrop)="pinDrop()"
@@ -16,19 +16,39 @@
 ></app-button-panel>
 
 <app-filter-table #filterTable
+                  *ngIf="this.translate.currentLang === 'ru'"
                   [sourceForFilter]="sourceForFilter"
                   [isMasterGrid]="isMasterGrid"
                   [coordinateX]="null"
                   [coordinateY]="null"
                   (onFilter)="applyFilterFromFilter($event)"
 ></app-filter-table>
+<app-filter-table #filterTable
+                  *ngIf="this.translate.currentLang === 'en'"
+                  [sourceForFilter]="sourceForFilterEng"
+                  [isMasterGrid]="isMasterGrid"
+                  [coordinateX]="null"
+                  [coordinateY]="null"
+                  (onFilter)="applyFilterFromFilter($event)"
+></app-filter-table>
 
-<label><b>Фильтр: </b>{{filterSelect}}</label>
+<label><b>{{'site.filter.filter' | translate}}: </b>{{filterSelect}}</label>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="fixtures.length > 0; else empty"-->
   <div>
     <app-jqxgrid #jqxgridComponent
+                 *ngIf="this.translate.currentLang === 'ru'"
+                 [columnsGrid]="columnsGrid"
+                 [listBoxSource]="listBoxSource"
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 *ngIf="this.translate.currentLang === 'en'"
+                 [columnsGrid]="columnsGridEng"
+                 [listBoxSource]="listBoxSourceEng"
                  [sourceForJqxGrid]="sourceForJqxGrid"
                  (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
                  (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -37,20 +57,13 @@
       class="center mb2"
       *ngIf="!noMoreItems; else "
     >
-      <!--<button-->
-      <!--class="btn waves-effect grey darken-1 btn-small"-->
-      <!--(click)="loadMore()"-->
-      <!--*ngIf="!loading; else loader"-->
-      <!--&gt;-->
-      <!--Загрузить еще-->
-      <!--</button>-->
       <ng-template #loader>
         <app-loader></app-loader>
       </ng-template>
     </div>
   </div>
   <ng-template #empty>
-    <div class="center">Групп светильников пока нет</div>
+    <div class="center">{{'site.grid.not-rows' | translate}}</div>
   </ng-template>
 </div>
 
@@ -58,22 +71,35 @@
   <app-loader></app-loader>
 </ng-template>
 
-<app-edit-form #editWindow
-               *ngIf="isEditFormVisible"
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
                [settingWinForEditForm]="settingWinForEditForm"
                [sourceForEditForm]="sourceForEditForm"
-
                (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onInitEditForm)="setEditFormVisible()"
-               (onSaveEditFormBtn)="saveEditwinBtn()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
+></app-edit-form>
+<app-edit-form #editForm
+               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
+               [settingWinForEditForm]="settingWinForEditForm"
+               [sourceForEditForm]="sourceForEditFormEng"
+               (onGetSourceForEditForm)="getSourceForEditForm()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
 ></app-edit-form>
 
-<app-fixturecom-form #editSwitchOnWindow
-                     (onSaveSwitchOnEditwinBtn)="saveSwitchOnEditwinBtn()"
+<app-fixturecom-form #editFormSwitchOn
+                     *ngIf="isEditFormSwitchOnInit"
+                     [fixtureIds] = "fixtureIds"
+                     (onDestroyEditFormSwitchOn)="destroyEditFormSwitchOn()"
+                     (onSaveEditFormSwitchOnBtn)="saveEditFormSwitchOnBtn()"
 ></app-fixturecom-form>
 
-<app-fixturecomedit-switchoff-form #editSwitchOffWindow
-                                   (onSaveEditSwitchOffwinBtn)="saveEditSwitchOffwinBtn()"
+<app-fixturecomedit-switchoff-form #editFormSwitchOff
+                                   *ngIf="isEditFormSwitchOffInit"
+                                   [fixtureIds] = "fixtureIds"
+                                   (onDestroyEditFormSwitchOff)="destroyEditFormSwitchOff()"
+                                   (onSaveEditFormSwitchOffBtn)="saveEditFormSwitchOffBtn()"
 ></app-fixturecomedit-switchoff-form>
 
 <app-event-window #eventWindow

@@ -70,8 +70,8 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
   @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
-  @ViewChild('editWindow', {static: false}) editWindow: EditFormComponent;
-  @ViewChild('linkWindow', {static: false}) linkWindow: LinkFormComponent;
+  @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
+  @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
   // other variables
@@ -105,13 +105,13 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   sourceForEditForm: SourceForEditForm[];
   sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
-  isLinkFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
   sourceForLinkFormEng: SourceForLinkForm;
+  isLinkFormInit = false;
   // event form
   warningEventWindow = '';
   actionEventWindow = '';
@@ -125,7 +125,6 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // USER
-
     // definde columns
     this.columnsGrid =
       [
@@ -193,13 +192,44 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
         altrows: true,
         selectionmode: this.selectionmode,
         isMasterGrid: this.isMasterGrid,
-
         valueMember: 'userId',
         sortcolumn: ['userId'],
         sortdirection: 'desc',
         selectId: []
       }
     };
+
+    // definde filter
+    this.sourceForFilter = [
+      {
+        name: 'persons',
+        type: 'jqxComboBox',
+        source: this.persons,
+        theme: 'material',
+        width: '380',
+        height: '40',
+        placeHolder: 'Контрагент:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
+    this.sourceForFilterEng = [
+      {
+        name: 'persons',
+        type: 'jqxComboBox',
+        source: this.persons,
+        theme: 'material',
+        width: '380',
+        height: '40',
+        placeHolder: 'Contractor:',
+        displayMember: 'code',
+        valueMember: 'id',
+        defaultValue: '',
+        selectId: ''
+      }
+    ];
 
     // definde edit form
     this.settingWinForEditForm = {
@@ -342,38 +372,6 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // definde filter
-    this.sourceForFilter = [
-      {
-        name: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '380',
-        height: '40',
-        placeHolder: 'Контрагент:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '380',
-        height: '40',
-        placeHolder: 'Contractor:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-
     // definde link form
     this.sourceForLinkForm = {
       window: {
@@ -402,7 +400,6 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'userId',
         sortcolumn: ['userId'],
         sortdirection: 'desc',
@@ -436,7 +433,6 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
         filterable: true,
         altrows: true,
         selectionmode: 'checkbox',
-
         valueMember: 'userId',
         sortcolumn: ['userId'],
         sortdirection: 'desc',
@@ -465,11 +461,11 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
     }
-    if (this.editWindow) {
-      this.editWindow.destroy();
+    if (this.editForm) {
+      this.editForm.destroy();
     }
-    if (this.linkWindow) {
-      this.linkWindow.destroy();
+    if (this.linkForm) {
+      this.linkForm.destroy();
     }
     if (this.oSubForLinkWin) {
       this.oSubForLinkWin.unsubscribe();
@@ -577,14 +573,14 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   ins() {
     this.typeEditWindow = 'ins';
     this.getSourceForEditForm();
-    this.isEditFormInit = !this.isEditFormInit;
+    this.isEditFormInit = true;
   }
 
   upd() {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.typeEditWindow = 'upd';
       this.getSourceForEditForm();
-      this.isEditFormInit = !this.isEditFormInit;
+      this.isEditFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.upd-warning');
@@ -596,7 +592,8 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.jqxgridComponent.selectRow)) {
       this.eventWindow.okButtonDisabled(false);
       this.actionEventWindow = 'del';
-      this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.del-question') + this.jqxgridComponent.selectRow.userId + '?';
+      this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.del-question')
+        + this.jqxgridComponent.selectRow.userId + '?';
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.del-warning');
@@ -631,8 +628,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
 
   groupIn() {
     if (this.selectRoleId > 1) {
-      // this.linkWindow.open();
-      this.isLinkFormInit = !this.isLinkFormInit;
+      this.isLinkFormInit = true;
     } else {
       this.eventWindow.okButtonDisabled(true);
       this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.groupIn-warning');
@@ -683,16 +679,34 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   getSourceForFilter() {
     if (this.isFilterVisible === false && !isUndefined(this.persons)) {
       this.isFilterVisible = true;
-      for (let i = 0; i < this.sourceForFilter.length; i++) {
-        switch (this.sourceForFilter[i].name) {
-          case 'roles':
-            break;
-          case 'persons':
-            this.sourceForFilter[i].source = this.persons;
-            this.sourceForFilterEng[i].source = this.persons;
-            break;
-          default:
-            break;
+
+      // if (this.translate.currentLang === 'ru') {
+      //
+      // }
+      // if (this.translate.currentLang === 'en') {
+      //
+      // }
+
+      if (this.translate.currentLang === 'ru') {
+        for (let i = 0; i < this.sourceForFilter.length; i++) {
+          switch (this.sourceForFilter[i].name) {
+            case 'persons':
+              this.sourceForFilter[i].source = this.persons;
+              break;
+            default:
+              break;
+          }
+        }
+      }
+      if (this.translate.currentLang === 'en') {
+        for (let i = 0; i < this.sourceForFilterEng.length; i++) {
+          switch (this.sourceForFilterEng[i].name) {
+            case 'persons':
+              this.sourceForFilterEng[i].source = this.persons;
+              break;
+            default:
+              break;
+          }
         }
       }
     }
@@ -707,21 +721,21 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   saveEditFormBtn() {
     const selectObject: User = new User();
 
-    for (let i = 0; i < this.editWindow.sourceForEditForm.length; i++) {
-      switch (this.editWindow.sourceForEditForm[i].nameField) {
+    for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
+      switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'persons':
-          selectObject.contragentId = +this.editWindow.sourceForEditForm[i].selectId;
-          selectObject.contragentCode = this.editWindow.sourceForEditForm[i].selectCode;
-          selectObject.contragentName = this.editWindow.sourceForEditForm[i].selectName;
+          selectObject.contragentId = +this.editForm.sourceForEditForm[i].selectId;
+          selectObject.contragentCode = this.editForm.sourceForEditForm[i].selectCode;
+          selectObject.contragentName = this.editForm.sourceForEditForm[i].selectName;
           break;
         case 'login':
-          selectObject.login = this.editWindow.sourceForEditForm[i].selectCode;
+          selectObject.login = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'password':
-          selectObject.password = this.editWindow.sourceForEditForm[i].selectCode;
+          selectObject.password = this.editForm.sourceForEditForm[i].selectCode;
           break;
         case 'comments':
-          selectObject.comments = this.editWindow.sourceForEditForm[i].selectCode;
+          selectObject.comments = this.editForm.sourceForEditForm[i].selectCode;
           break;
         default:
           break;
@@ -733,13 +747,14 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       this.oSub = this.userService.ins(selectObject).subscribe(
         response => {
           selectObject.userId = +response;
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins') + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins')
+            + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
         },
         error =>
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_ins(
             selectObject.userId, selectObject);
@@ -758,13 +773,14 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       // upd
       this.oSub = this.userService.upd(this.jqxgridComponent.selectRow).subscribe(
         response => {
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.upd') + this.jqxgridComponent.selectRow.userId, this.translate.instant('site.forms.editforms.ok'));
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.upd')
+            + this.jqxgridComponent.selectRow.userId, this.translate.instant('site.forms.editforms.ok'));
         },
         error =>
-          this.openSnackBar(error.error.message, 'OK'),
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
         () => {
           // close edit window
-          this.editWindow.closeDestroy();
+          this.editForm.closeDestroy();
           // update data source
           this.jqxgridComponent.refresh_upd(
             this.jqxgridComponent.selectRow.userId, this.jqxgridComponent.selectRow);
@@ -828,8 +844,8 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  initEditForm() {
-    this.isEditFormInit = !this.isEditFormInit;
+  destroyEditForm() {
+    this.isEditFormInit = false;
   }
 
   // LINK FORM
@@ -839,14 +855,15 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       if (event.code === this.sourceForLinkForm.window.code) {
         this.oSubLink = this.roleService.setUserInRole(+this.selectRoleId, event.Ids).subscribe(
           response => {
-            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.groupIn'), this.translate.instant('site.forms.editforms.ok'));
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.groupIn'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
           error => {
-            this.openSnackBar(error.error.message, 'OK');
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
           },
           () => {
-            // this.linkWindow.hide();
-            this.linkWindow.closeDestroy();
+            // this.linkForm.hide();
+            this.linkForm.closeDestroy();
             // refresh table
             this.refreshGrid();
           }
@@ -874,18 +891,20 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       this.oSubForLinkWin = this.userService.getAll(params).subscribe(
         response => {
           this.sourceForLinkForm.grid.source = response;
+          // ???
           this.sourceForLinkFormEng.grid.source = response;
-          this.linkWindow.refreshGrid();
+
+          this.linkForm.refreshGrid();
         },
         error => {
-          this.openSnackBar(error.error.message, 'OK');
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         }
       );
     }
   }
 
-  initLinkForm() {
-    this.isLinkFormInit = !this.isLinkFormInit;
+  destroyLinkForm() {
+    this.isLinkFormInit = false;
   }
 
   // EVENT FORM
@@ -904,10 +923,11 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       if (+id >= 0) {
         this.userService.del(+id).subscribe(
           response => {
-            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.del'), this.translate.instant('site.forms.editforms.ok'));
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.del'),
+              this.translate.instant('site.forms.editforms.ok'));
           },
           error =>
-            this.openSnackBar(error.error.message, 'OK'),
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -917,10 +937,11 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     if (this.actionEventWindow === 'groupOut') {
       this.oSub = this.roleService.delUserInRole(+this.selectRoleId, userIds).subscribe(
         response => {
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.groupOut'), this.translate.instant('site.forms.editforms.ok'));
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.groupOut'),
+            this.translate.instant('site.forms.editforms.ok'));
         },
         error => {
-          this.openSnackBar(error.error.message, 'OK');
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
         },
         () => {
           // refresh table

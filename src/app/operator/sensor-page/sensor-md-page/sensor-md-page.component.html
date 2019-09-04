@@ -1,3 +1,9 @@
-<p>
-  sensor-md-page works!
-</p>
+<app-sensorlist-page #sensorlistPageComponent
+                     [ownerSensors]="ownerSensors"
+                     [sensorTypes]="sensorTypes"
+                     [contractSensors]="contractSensors"
+                     [selectNodeId]="1"
+                     [heightGrid]="767"
+                     [isMasterGrid]="true"
+                     [settingButtonPanel]="settingSensorButtonPanel"
+></app-sensorlist-page>

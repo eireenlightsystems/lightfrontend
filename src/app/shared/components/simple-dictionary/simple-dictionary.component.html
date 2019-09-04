@@ -7,23 +7,16 @@
 ></app-button-panel>
 
 <div *ngIf="!reloading; else reloadingBlock">
-  <!--*ngIf="nodes.length > 0; else empty"-->
   <div>
     <app-jqxgrid #jqxgridComponent
+                 [columnsGrid]="columnsGrid"
+                 [listBoxSource]="listBoxSource"
                  [sourceForJqxGrid]="sourceForJqxGrid"
                  (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
     ></app-jqxgrid>
-<!--    <div-->
-<!--      class="center mb2"-->
-<!--      *ngIf="!noMoreItems; else "-->
-<!--    >-->
-<!--      <ng-template #loader>-->
-<!--        <app-loader></app-loader>-->
-<!--      </ng-template>-->
-<!--    </div>-->
   </div>
   <ng-template #empty>
-    <div class="center">Элеменов пока нет</div>
+    <div class="center">{{'site.grid.not-rows' | translate}}</div>
   </ng-template>
 </div>
 
@@ -31,14 +24,13 @@
   <app-loader></app-loader>
 </ng-template>
 
-<app-edit-form #editWindow
-               *ngIf="isEditFormVisible"
+<app-edit-form #editForm
+               *ngIf="isEditFormInit"
                [settingWinForEditForm]="settingWinForEditForm"
                [sourceForEditForm]="sourceForEditForm"
-
                (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onInitEditForm)="setEditFormVisible()"
-               (onSaveEditFormBtn)="saveEditwinBtn()"
+               (onDestroyEditForm)="destroyEditForm()"
+               (onSaveEditFormBtn)="saveEditFormBtn()"
 ></app-edit-form>
 
 <app-event-window #eventWindow

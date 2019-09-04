@@ -42,7 +42,6 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('rolerightPageComponent', {static: false}) rolerightPageComponent: RolerightPageComponent;
   @ViewChild('rightDemoComponent', {static: false}) rightDemoComponent: RightDemoComponent;
-  @ViewChild('matTabGroup', {static: false}) matTabGroup;
 
   // other variables
   roleSiteMap: NavItem[] = [];
@@ -50,7 +49,7 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
   companies: CompanyDepartment[];
   oSubPersons: Subscription;
   oSubCompanies: Subscription;
-  isOpenRightDemoComponent = false;
+  isRightDemoFormInit = false;
 
 
   constructor(
@@ -90,12 +89,12 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  openDemoRaightwinBtn() {
-    this.isOpenRightDemoComponent = true;
+  initRightDemoFormOpen() {
+    this.isRightDemoFormInit = true;
   }
 
-  closeDemoRaightwinBtn() {
-    this.isOpenRightDemoComponent = false;
+  initRightDemoFormClose() {
+    this.isRightDemoFormInit = false;
     this.onUpdRights.emit();
   }
 

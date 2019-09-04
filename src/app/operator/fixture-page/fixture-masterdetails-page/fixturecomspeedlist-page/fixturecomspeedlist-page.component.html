@@ -4,7 +4,7 @@
                   (onUpd)="upd()"
                   (onDel)="del()"
                   (onRefresh)="refresh()"
-                  (onSetting)="filterNone()"
+                  (onSetting)="setting()"
                   (onFilterList)="filterList()"
                   (onPlace)="place()"
                   (onPinDrop)="pinDrop()"
@@ -15,22 +15,39 @@
 ></app-button-panel>
 
 <app-filter-table #filterTable
-
+                  *ngIf="this.translate.currentLang === 'ru'"
                   [sourceForFilter]="sourceForFilter"
-
                   [isMasterGrid]="isMasterGrid"
                   [coordinateX]="null"
                   [coordinateY]="null"
-
+                  (onFilter)="applyFilterFromFilter($event)"
+></app-filter-table>
+<app-filter-table #filterTable
+                  *ngIf="this.translate.currentLang === 'en'"
+                  [sourceForFilter]="sourceForFilterEng"
+                  [isMasterGrid]="isMasterGrid"
+                  [coordinateX]="null"
+                  [coordinateY]="null"
                   (onFilter)="applyFilterFromFilter($event)"
 ></app-filter-table>
 
-<label><b>Фильтр: </b>{{filterSelect}}</label>
+<label><b>{{'site.filter.filter' | translate}}: </b>{{filterSelect}}</label>
 
 <div *ngIf="!reloading; else reloadingBlock">
   <!--*ngIf="nodes.length > 0; else empty"-->
   <div>
     <app-jqxgrid #jqxgridComponent
+                 *ngIf="this.translate.currentLang === 'ru'"
+                 [columnsGrid]="columnsGrid"
+                 [listBoxSource]="listBoxSource"
+                 [sourceForJqxGrid]="sourceForJqxGrid"
+                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                 (onRefreshChildGrid)="refreshChildGrid($event)"
+    ></app-jqxgrid>
+    <app-jqxgrid #jqxgridComponent
+                 *ngIf="this.translate.currentLang === 'en'"
+                 [columnsGrid]="columnsGridEng"
+                 [listBoxSource]="listBoxSourceEng"
                  [sourceForJqxGrid]="sourceForJqxGrid"
                  (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
                  (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -45,7 +62,7 @@
     </div>
   </div>
   <ng-template #empty>
-    <div class="center">Комманд пока нет</div>
+    <div class="center">{{'site.grid.not-rows' | translate}}</div>
   </ng-template>
 </div>
 
@@ -53,10 +70,12 @@
   <app-loader></app-loader>
 </ng-template>
 
-<app-fixturecomspeededit-form #editSpeedComWindow
+<app-fixturecomspeededit-form #editFormSpeed
+                              *ngIf="isEditFormSpeedInit"
                               [speedDirectiones]="speedDirectiones"
-
-                              (onSaveEditwinBtn)="saveSpeedEditwinBtn()"
+                              [fixtureIds] = "[this.selectFixtureId]"
+                              (onDestroyEditFormSpeed)="destroyEditFormSpeed()"
+                              (onSaveEditFormSpeedBtn)="saveEditFormSpeedBtn()"
 ></app-fixturecomspeededit-form>
 
 <app-event-window #eventWindow

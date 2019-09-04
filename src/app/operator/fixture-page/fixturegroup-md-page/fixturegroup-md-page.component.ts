@@ -1,17 +1,19 @@
-// @ts-ignore
+// angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-
+import {isUndefined} from 'util';
+// jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
-
+// app interfaces
 import {
-  Fixture, Geograph, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
+  Fixture, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   CommandStatus, CommandType,
   FixtureGroupType,
   SettingButtonPanel, NavItem
 } from '../../../shared/interfaces';
+// app services
+// app components
 import {FixtureGrlistPageComponent} from './fixture-grlist-page/fixture-grlist-page.component';
 import {FixtureMasterdetailsPageComponent} from '../fixture-masterdetails-page/fixture-masterdetails-page.component';
-import {isUndefined} from 'util';
 
 
 @Component({
@@ -21,13 +23,10 @@ import {isUndefined} from 'util';
 })
 export class FixturegroupMdPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() fixtureGroupTypes: FixtureGroupType[];
   @Input() fixtureGroupOwners: Owner[];
-
-  // node source
-
   // fixture source
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: EquipmentType[];
@@ -35,7 +34,6 @@ export class FixturegroupMdPageComponent implements OnInit {
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
-
   // command source
   @Input() commandTypes: CommandType[];
   @Input() commandStatuses: CommandStatus[];
@@ -164,7 +162,8 @@ export class FixturegroupMdPageComponent implements OnInit {
   }
 
   refreshChildGrid(fixtureGroupId: number) {
-    if (!isUndefined(this.fixtureMasterdetailsPageComponentFgr) && !isUndefined(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent)) {
+    if (!isUndefined(this.fixtureMasterdetailsPageComponentFgr)
+      && !isUndefined(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent)) {
       if (fixtureGroupId === 0) {
         this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.items = [];
         if (!isUndefined(this.fixtureMasterdetailsPageComponentFgr.fixturelistPageComponent.jqxgridComponent)) {
@@ -194,8 +193,8 @@ export class FixturegroupMdPageComponent implements OnInit {
     this.fixtureGrlistPageComponent.refresh();
   }
 
-  filterNone() {
-    this.fixtureGrlistPageComponent.filterNone();
+  setting() {
+    this.fixtureGrlistPageComponent.setting();
   }
 
   filterList() {

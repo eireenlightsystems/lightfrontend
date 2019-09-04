@@ -2,7 +2,7 @@
 <!--    <ng-template matTabContent>-->
 <!--    </ng-template>-->
 
-<mat-tab-group #matTabGroup [selectedIndex]="1">
+<mat-tab-group #matTabGroup [selectedIndex]="0">
   <mat-tab label="{{'site.menu.administration.right-page.roleright-page.roleright-page' | translate}}">
     <div [style.width]="99.7 + '%'"
          *ngIf="siteMap[2].children[0].children[0].disabled === false; else notRightComponent">
@@ -12,7 +12,7 @@
                   appYellowWavesDirective
                   matTooltip="{{'site.menu.administration.right-page.right-demo-comments' | translate}}"
                   matTooltipClass="tooltip"
-                  (click)="openDemoRaightwinBtn()"
+                  (click)="initRightDemoFormOpen()"
         >
           {{'site.menu.administration.right-page.right-demo' | translate}}
         </mat-chip>
@@ -54,14 +54,14 @@
   </mat-tab>
 </mat-tab-group>
 
-<div *ngIf="isOpenRightDemoComponent">
+<div *ngIf="isRightDemoFormInit">
   <app-right-demo #rightDemoComponent
                   [roleSiteMap]="siteMap"
                   [heightSplitterRoleright]="515"
                   [heightGridRoleright]="460"
                   [companies]="companies"
                   [theme]="theme"
-                  (onCloseWindow)="closeDemoRaightwinBtn()"
+                  (onInitRightDemoForm)="initRightDemoFormClose()"
   >
   </app-right-demo>
 </div>

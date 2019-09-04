@@ -1,22 +1,19 @@
 <jqxWindow #editWindow
            [theme]="'material'"
-           [autoOpen]="false"
            [isModal]="true" [modalOpacity]="'0.3'"
            [width]="500" [maxWidth]="500" [minWidth]="500"
            [height]="470" [maxHeight]="470" [minHeight]="470"
+           (onClose)="closeDestroy()"
 >
   <div #windowHeader>
     <div class="fr">
-      <!--<i class="material-icons">add</i>-->
-      <b>Сформировать команду</b>
+      <i class="material-icons" style="color: orange">highlight</i>
     </div>
   </div>
-
   <div>
     <table>
-
       <tr>
-        <td align="right"><b>Дата/Время включения:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-on' | translate}}:</b></td>
         <td align="left">
           <div id="datebeg">
             <jqxDateTimeInput #datebeg
@@ -29,7 +26,6 @@
           </div>
         </td>
       </tr>
-
       <tr>
         <td align="right">
           <jqxCheckBox
@@ -37,16 +33,15 @@
             [checked]="false"
             [(ngModel)]="flg_dateend"
             (click)="onClicCheckBox()"
-          >Команда на выключение
+          >{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.command-off' | translate}}
           </jqxCheckBox>
         </td>
         <td align="left">
         </td>
       </tr>
-      <!--*ngIf="flg_dateend"-->
       <tr>
         <td align="right">
-          <b>Дата/Время выключения:</b>
+          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-off' | translate}}:</b>
         </td>
         <td align="left">
           <div id="dateend">
@@ -60,9 +55,8 @@
           </div>
         </td>
       </tr>
-
       <tr>
-        <td align="right"><b>Рабочий режим:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.work-mode' | translate}}:</b></td>
         <td align="left">
           <div class="fr">
             <input #workLevel type="range" step="5" min="0" max="100"
@@ -71,9 +65,8 @@
           </div>
         </td>
       </tr>
-
       <tr>
-        <td align="right"><b>Дежурный режим:</b></td>
+        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.standby-mode' | translate}}:</b></td>
         <td align="left">
           <div class="fr">
            <input #standbyLevel type="range" step="5" min="0" max="100"
@@ -83,7 +76,6 @@
         </td>
       </tr>
     </table>
-
     <div class="fr" style="margin-left: 150px">
       <div appButtonLink>
         <jqxButton #okButton
@@ -91,7 +83,7 @@
                    [width]="100"
                    (onClick)="saveBtn()"
         >
-          Сохранить
+          {{ 'site.forms.editforms.save' | translate }}
         </jqxButton>
       </div>
       <div appButtonLink>
@@ -100,11 +92,9 @@
                    [width]="100"
                    (onClick)="cancelBtn()"
         >
-          Отмена
+          {{ 'site.forms.editforms.cancel' | translate }}
         </jqxButton>
       </div>
     </div>
-
   </div>
-
 </jqxWindow>
