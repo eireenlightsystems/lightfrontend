@@ -523,7 +523,7 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {

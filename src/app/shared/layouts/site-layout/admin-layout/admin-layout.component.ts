@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
-import {NavItem} from '../../../interfaces';
+import {CompanyDepartment, NavItem, Person} from '../../../interfaces';
 // app services
 // app components
 import {RightPageComponent} from '../../../../admin/right-page/right-page.component';
@@ -20,6 +20,8 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
+  @Input() companies: CompanyDepartment[];
+  @Input() persons: Person[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onUpdRights = new EventEmitter();

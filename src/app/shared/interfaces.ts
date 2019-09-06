@@ -70,9 +70,9 @@ export class Roleright {
   rights: string;
 }
 
-export interface FilterRoleright {
-  roleId: string;
-}
+// export interface FilterRoleright {
+//   roleId: string;
+// }
 
 export interface Message {
   message: string;
@@ -437,6 +437,15 @@ export interface FilterNode {
   contractId: string;
 
   gatewayId: string;
+}
+
+export class NodeType {
+  id: number;
+  code: string;
+  name: string;
+  model: string;
+  height: number;
+  comments: string;
 }
 
 // export class NodeGateway {

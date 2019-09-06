@@ -42,9 +42,6 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-
-    console.log('ngOnInit')
-
     this.source_jqxgrid =
       {
         datatype: 'array',
@@ -70,9 +67,6 @@ export class LinkFormComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   destroy() {
-
-    console.log('destroy');
-
     if (this.linkWindow) {
       this.linkWindow.destroy();
     }

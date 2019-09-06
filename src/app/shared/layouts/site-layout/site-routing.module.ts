@@ -34,32 +34,6 @@ const routes: Routes = [
     path: '', component: SiteLayoutComponent, canActivate: [AuthGuard], children: [
       {path: '', redirectTo: 'operator', pathMatch: 'full'},
       {
-        path: 'dictionary', component: DictionaryLayoutComponent, canActivate: [AuthGuard], children: [
-          {path: '', redirectTo: 'equipment', pathMatch: 'full'},
-          {
-            path: 'equipment', component: EquipmentTypeComponent, canActivate: [AuthGuard], children: [
-              {path: 'fixturetype', component: EquipmentTypeComponent},
-              {path: 'nodetype', component: EquipmentTypeComponent},
-              {path: 'gatewaytype', component: EquipmentTypeComponent},
-              {path: 'sensortype', component: EquipmentTypeComponent},
-            ]
-          },
-          {
-            path: 'contragent', component: ContragentComponent, canActivate: [AuthGuard], children: [
-              {path: 'companies', component: ContragentComponent},
-              {path: 'persons', component: ContragentComponent},
-              {path: 'substations', component: ContragentComponent},
-            ]
-          },
-          {
-            path: 'contract', component: ContractComponent, canActivate: [AuthGuard], children: [
-              {path: 'contracts', component: ContractComponent},
-              {path: 'contracts-types', component: ContractComponent},
-            ]
-          }
-        ]
-      },
-      {
         // path: 'operator', component: OperatorLayoutComponent, children: []
         path: 'operator', component: OperatorLayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'fixture', pathMatch: 'full'},
@@ -93,6 +67,35 @@ const routes: Routes = [
 
         ]
       },
+      {
+        path: 'dictionary', component: DictionaryLayoutComponent, canActivate: [AuthGuard], children: [
+          {path: '', redirectTo: 'equipment', pathMatch: 'full'},
+          {
+            path: 'equipment', component: EquipmentTypeComponent, canActivate: [AuthGuard], children: [
+              {path: 'fixturetype', component: EquipmentTypeComponent},
+              {path: 'nodetype', component: EquipmentTypeComponent},
+              {path: 'gatewaytype', component: EquipmentTypeComponent},
+              {path: 'sensortype', component: EquipmentTypeComponent},
+            ]
+          },
+          {
+            path: 'contragent', component: ContragentComponent, canActivate: [AuthGuard], children: [
+              {path: 'companies', component: ContragentComponent},
+              {path: 'persons', component: ContragentComponent},
+              {path: 'substations', component: ContragentComponent},
+            ]
+          },
+          {
+            path: 'contract', component: ContractComponent, canActivate: [AuthGuard], children: [
+              {path: 'contracts', component: ContractComponent},
+              {path: 'contracts-types', component: ContractComponent},
+            ]
+          }
+        ]
+      },
+      // {
+      //   path: 'dictionary', loadChildren: './dictionary-layout/dictionary.module#DictionaryModule'
+      // },
       {
         path: 'admin', component: AdminLayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'right', pathMatch: 'full'},

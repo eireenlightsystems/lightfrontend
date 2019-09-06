@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {
   CommandStatus,
   CommandType,
-  Contract, Owner, FixtureGroupType, EquipmentType, HeightType, Installer, Substation, NavItem
+  Contract, Owner, FixtureGroupType, EquipmentType, HeightType, Installer, Substation, NavItem, FixtureType
 } from '../../shared/interfaces';
 // app services
 // app components
@@ -25,7 +25,7 @@ export class FixturePageComponent implements OnInit, OnDestroy {
   @Input() tabsWidth: number;
   // fixture source
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];

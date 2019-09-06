@@ -6,8 +6,8 @@
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"
-      [contractFixtures]="contractFixtures"
-      [installers]="installers"
+      [contractFixtures]="contracts"
+      [installers]="companies"
       [heightTypes]="heightTypes"
       [fixtureGroupTypes]="fixtureGroupTypes"
       [fixtureGroupOwners]="fixtureGroupOwners"
@@ -23,18 +23,18 @@
       [ownerFixtures]="ownerFixtures"
       [fixtureTypes]="fixtureTypes"
       [substations]="substations"
-      [contractFixtures]="contractFixtures"
-      [installers]="installers"
+      [contractFixtures]="contracts"
+      [installers]="companies"
       [heightTypes]="heightTypes"
       [ownerNodes]="ownerNodes"
       [nodeTypes]="nodeTypes"
-      [contractNodes]="contractNodes"
+      [contractNodes]="contracts"
       [ownerGateways]="ownerGateways"
       [gatewayTypes]="gatewayTypes"
-      [contractGateways]="contractGateways"
+      [contractGateways]="contracts"
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"
-      [contractSensors]="contractSensors"
+      [contractSensors]="contracts"
     ></app-node-page>
   </div>
   <div [hidden]="isGatewayVisible()">
@@ -43,10 +43,10 @@
       [tabsWidth]="tabsWidth"
       [ownerNodes]="ownerNodes"
       [nodeTypes]="nodeTypes"
-      [contractNodes]="contractNodes"
+      [contractNodes]="contracts"
       [ownerGateways]="ownerGateways"
       [gatewayTypes]="gatewayTypes"
-      [contractGateways]="contractGateways"
+      [contractGateways]="contracts"
     ></app-gateway-page>
   </div>
   <div [hidden]="isSensorVisible()"
@@ -56,7 +56,7 @@
       [siteMap]="siteMap"
       [ownerSensors]="ownerSensors"
       [sensorTypes]="sensorTypes"
-      [contractSensors]="contractSensors"
+      [contractSensors]="contracts"
     ></app-sensor-page>
   </div>
 </div>

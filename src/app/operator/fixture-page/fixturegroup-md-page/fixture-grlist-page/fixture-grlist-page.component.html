@@ -15,20 +15,22 @@
                   (onSwitchOff)="switchOff([])"
 ></app-button-panel>
 
-<app-filter-table #filterTable
-                  *ngIf="this.translate.currentLang === 'ru'"
+<app-filter-table #filterForm
+                  *ngIf="isFilterFormInit && this.translate.currentLang === 'ru'"
                   [sourceForFilter]="sourceForFilter"
                   [isMasterGrid]="isMasterGrid"
                   [coordinateX]="null"
                   [coordinateY]="null"
+                  (onDestroyFilterForm)="destroyFilterForm()"
                   (onFilter)="applyFilterFromFilter($event)"
 ></app-filter-table>
-<app-filter-table #filterTable
-                  *ngIf="this.translate.currentLang === 'en'"
+<app-filter-table #filterForm
+                  *ngIf="isFilterFormInit && this.translate.currentLang === 'en'"
                   [sourceForFilter]="sourceForFilterEng"
                   [isMasterGrid]="isMasterGrid"
                   [coordinateX]="null"
                   [coordinateY]="null"
+                  (onDestroyFilterForm)="destroyFilterForm()"
                   (onFilter)="applyFilterFromFilter($event)"
 ></app-filter-table>
 

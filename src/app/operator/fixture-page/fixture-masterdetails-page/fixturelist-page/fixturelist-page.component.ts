@@ -66,7 +66,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('filterForm', {static: false}) filterForm: FilterTableComponent;
   @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
   @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('linkFormGrFix', {static: false}) linkFormGrFix: LinkFormComponent;
@@ -100,7 +100,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   };
   sourceForFilter: SourceForFilter[];
   sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   modes = [
     {
@@ -798,8 +798,8 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    if (this.filterTable) {
-      this.filterTable.destroy();
+    if (this.filterForm) {
+      this.filterForm.destroy();
     }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
@@ -832,7 +832,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
     // initialization source for filter
     setTimeout(() => {
-      this.initSourceFilter();
+      this.getSourceForFilter();
     }, 1000);
 
     // disabled/available buttons
@@ -959,16 +959,12 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {
-    if (this.filterTable.filtrWindow.isOpen()) {
-      this.filterTable.close();
-    } else {
-      this.initSourceFilter();
-      this.filterTable.open();
-    }
+    this.isFilterFormInit = true;
+    this.getSourceForFilter();
   }
 
   place() {
@@ -1058,43 +1054,46 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
+    this.filterSelect = this.filterForm.getFilterSelect();
     this.refreshGrid();
   }
 
-  initSourceFilter() {
-    if (this.isFilterVisible === false
-      && !isUndefined(this.ownerFixtures)
+  getSourceForFilter() {
+    if (!isUndefined(this.ownerFixtures)
       && !isUndefined(this.fixtureTypes)
       && !isUndefined(this.substations)) {
-      this.isFilterVisible = true;
-      for (let i = 0; i < this.sourceForFilter.length; i++) {
-        switch (this.sourceForFilter[i].name) {
+      let sourceForFilter: any[];
+      if (this.translate.currentLang === 'ru') {
+        sourceForFilter = this.sourceForFilter;
+      }
+      if (this.translate.currentLang === 'en') {
+        sourceForFilter = this.sourceForFilterEng;
+      }
+      for (let i = 0; i < sourceForFilter.length; i++) {
+        switch (sourceForFilter[i].name) {
           case 'ownerFixtures':
-            this.sourceForFilter[i].source = this.ownerFixtures;
-            this.sourceForFilterEng[i].source = this.ownerFixtures;
+            sourceForFilter[i].source = this.ownerFixtures;
             break;
           case 'fixtureTypes':
-            this.sourceForFilter[i].source = this.fixtureTypes;
-            this.sourceForFilterEng[i].source = this.fixtureTypes;
+            sourceForFilter[i].source = this.fixtureTypes;
             break;
           case 'substations':
-            this.sourceForFilter[i].source = this.substations;
-            this.sourceForFilterEng[i].source = this.substations;
+            sourceForFilter[i].source = this.substations;
             break;
           default:
             break;
         }
       }
     }
-    // view select filter for user
-    if (this.isFilterVisible === true) {
-      this.filterSelect = this.filterTable.getFilterSelect();
-    }
   }
 
   applyFilterFixtureInGroup(fixtureGroupId: string) {
     this.fixtureGroupId = fixtureGroupId;
     this.refreshGrid();
+  }
+
+  destroyFilterForm() {
+    this.isFilterFormInit = false;
   }
 
   // EDIT FORM

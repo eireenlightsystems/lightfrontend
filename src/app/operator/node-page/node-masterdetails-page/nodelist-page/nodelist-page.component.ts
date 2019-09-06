@@ -53,7 +53,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('filterForm', {static: false}) filterForm: FilterTableComponent;
   @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
   @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
@@ -84,7 +84,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   };
   sourceForFilter: SourceForFilter[];
   sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
@@ -580,8 +580,8 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    if (this.filterTable) {
-      this.filterTable.destroy();
+    if (this.filterForm) {
+      this.filterForm.destroy();
     }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
@@ -614,7 +614,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
     // initialization source for filter
     setTimeout(() => {
-      this.initSourceFilter();
+      this.getSourceForFilter();
     }, 1000);
 
     // disabled/available buttons
@@ -734,16 +734,12 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {
-    if (this.filterTable.filtrWindow.isOpen()) {
-      this.filterTable.close();
-    } else {
-      this.initSourceFilter();
-      this.filterTable.open();
-    }
+    this.isFilterFormInit = true;
+    this.getSourceForFilter();
   }
 
   place() {
@@ -810,35 +806,39 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
+    this.filterSelect = this.filterForm.getFilterSelect();
     this.refreshGrid();
   }
 
-  initSourceFilter() {
-    if (this.isFilterVisible === false
-      && !isUndefined(this.ownerNodes)
+  getSourceForFilter() {
+    if (!isUndefined(this.ownerNodes)
       && !isUndefined(this.nodeTypes)) {
-      this.isFilterVisible = true;
-      for (let i = 0; i < this.sourceForFilter.length; i++) {
-        switch (this.sourceForFilter[i].name) {
+      let sourceForFilter: any[];
+      if (this.translate.currentLang === 'ru') {
+        sourceForFilter = this.sourceForFilter;
+      }
+      if (this.translate.currentLang === 'en') {
+        sourceForFilter = this.sourceForFilterEng;
+      }
+      for (let i = 0; i < sourceForFilter.length; i++) {
+        switch (sourceForFilter[i].name) {
           case 'geographs':
             break;
           case 'ownerNodes':
-            this.sourceForFilter[i].source = this.ownerNodes;
-            this.sourceForFilterEng[i].source = this.ownerNodes;
+            sourceForFilter[i].source = this.ownerNodes;
             break;
           case 'nodeTypes':
-            this.sourceForFilter[i].source = this.nodeTypes;
-            this.sourceForFilterEng[i].source = this.nodeTypes;
+            sourceForFilter[i].source = this.nodeTypes;
             break;
           default:
             break;
         }
       }
     }
-    // view select filter for user
-    if (this.isFilterVisible === true) {
-      this.filterSelect = this.filterTable.getFilterSelect();
-    }
+  }
+
+  destroyFilterForm() {
+    this.isFilterFormInit = false;
   }
 
   // EDIT FORM

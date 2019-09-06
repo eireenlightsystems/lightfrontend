@@ -1,21 +1,37 @@
 <div [style.width]="tabsWidth + '%'">
-<!--*ngIf="(this.router.url.substring(0, 21) === '/dictionary/equipment')"-->
   <div [hidden]="!(this.router.url.substring(0, 21) === '/dictionary/equipment')">
-    <app-equipment-type
-      [heightGrid]="780"
+    <app-equipment-type #equipmentTypeComponent
+                        [heightGrid]="780"
+                        [fixtureTypes]="fixtureTypes"
+                        [nodeTypes]="nodeTypes"
+                        [gatewayTypes]="gatewayTypes"
+                        [sensorTypes]="sensorTypes"
+                        (onGetFixtureTypes)="getFixtureTypes()"
+                        (onGetNodeTypes)="getNodeTypes()"
+                        (onGetGatewayTypes)="getGatewayTypes()"
+                        (onGetSensorTypes)="getSensorTypes()"
     ></app-equipment-type>
   </div>
-<!--*ngIf="(this.router.url.substring(0, 22) === '/dictionary/contragent')"-->
   <div [hidden]="!(this.router.url.substring(0, 22) === '/dictionary/contragent')">
-    <app-contragent
-      [heightGrid]="780"
+    <app-contragent #contragentComponent
+                    [heightGrid]="780"
+                    [companies]="companies"
+                    [persons]="persons"
+                    [substations]="substations"
+                    (onGetCompanies)="getCompanies()"
+                    (onGetPersons)="getPersons()"
+                    (onGetSubstations)="getSubstations()"
     >
     </app-contragent>
   </div>
-<!-- *ngIf="(this.router.url.substring(0, 20) === '/dictionary/contract')"-->
   <div [hidden]="!(this.router.url.substring(0, 20) === '/dictionary/contract')">
-    <app-contract
-      [heightGrid]="780"
+    <app-contract #contractComponent
+                  [heightGrid]="780"
+                  [contracts]="contracts"
+                  [contractTypes]="contractTypes"
+                  [companies]="companies"
+                  (onGetContracts)="getContracts()"
+                  (onGetContractTypes)="getContractTypes()"
     >
     </app-contract>
   </div>

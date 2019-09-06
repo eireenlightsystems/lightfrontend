@@ -24,6 +24,7 @@ export class FilterTableComponent implements OnInit, OnDestroy {
 
   // determine the functions that need to be performed in the parent component
   @Output() onFilter = new EventEmitter<any>();
+  @Output() onDestroyFilterForm = new EventEmitter();
 
   // define variables - link to view objects
   @ViewChild('filtrWindow', {static: false}) filtrWindow: jqxWindowComponent;
@@ -51,6 +52,10 @@ export class FilterTableComponent implements OnInit, OnDestroy {
     if (this.filtrWindow) {
       this.filtrWindow.destroy();
     }
+  }
+
+  closeDestroy() {
+    this.onDestroyFilterForm.emit();
   }
 
   open() {
@@ -99,7 +104,6 @@ export class FilterTableComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.sourceForFilter.length; i++) {
       if (this.sourceForFilter[i].selectId !== '') {
         let selectValue: any;
-
         switch (this.sourceForFilter[i].type) {
           case 'jqxComboBox':
             if (!isUndefined(this.sourceForFilter[i].source[0].code)) {
@@ -123,7 +127,6 @@ export class FilterTableComponent implements OnInit, OnDestroy {
           default:
             break;
         }
-
         if (filterSelect !== '') {
           filterSelect = filterSelect + ' > ' + this.sourceForFilter[i].placeHolder + ' ' + selectValue;
         } else {

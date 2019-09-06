@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {isNull, isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
@@ -25,7 +25,7 @@ import {JqxgridComponent} from '../jqxgrid/jqxgrid.component';
   templateUrl: './simple-dictionary.component.html',
   styleUrls: ['./simple-dictionary.component.css']
 })
-export class SimpleDictionaryComponent implements OnInit, OnDestroy {
+export class SimpleDictionaryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from parent component
   @Input() typeDictionary: string;
@@ -124,6 +124,10 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     };
   }
 
+  ngAfterViewInit() {
+
+  }
+
   ngOnDestroy() {
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
@@ -146,17 +150,11 @@ export class SimpleDictionaryComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.getAll();
     this.selectItemId = 0;
-
-    // initialization source for filter
-
-    // disabled/available buttons
-
-    // if it is master grid, then we need refresh child grid
-
   }
 
   getAll() {
     this.onGetSourceForJqxGrid.emit(this.typeDictionary);
+    this.jqxgridComponent.refresh_jqxgGrid();
   }
 
   ins() {

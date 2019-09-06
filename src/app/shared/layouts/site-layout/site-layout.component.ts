@@ -9,7 +9,20 @@ import {TranslateService} from '@ngx-translate/core';
 import {isUndefined} from 'util';
 // jqwidgets
 // app interfaces
-import {Components, NavItem, User} from '../../interfaces';
+import {
+  CompanyDepartment,
+  Components,
+  Contract,
+  ContractType,
+  FixtureType,
+  GatewayType,
+  NavItem,
+  NodeType,
+  Person,
+  SensorType, Substation,
+  User
+} from '../../interfaces';
+
 // flat node with expandable and level information
 interface ExampleFlatNode {
   expandable: boolean;
@@ -19,12 +32,23 @@ interface ExampleFlatNode {
   route?: string;
   level: number;
 }
+
 // app services
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/admin/user.service';
 import {ComponentService} from '../../services/admin/component.service';
+import {ContractService} from '../../services/contract/contract.service';
+import {ContractTypeService} from '../../services/contract/contractType.service';
+import {FixtureTypeService} from '../../services/fixture/fixtureType.service';
+import {NodeTypeService} from '../../services/node/nodeType.service';
+import {GatewayTypeService} from '../../services/gateway/gatewayType.service';
+import {SensorTypeService} from '../../services/sensor/sensorType.service';
+import {CompanyService} from '../../services/contragent/company.service';
+import {PersonService} from '../../services/contragent/person.service';
+import {SubstationService} from '../../services/contragent/substation.service';
 // app components
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
+import {DictionaryLayoutComponent} from './dictionary-layout/dictionary-layout.component';
 
 
 @Component({
@@ -42,19 +66,41 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('snav', {static: false}) snav: MatSidenav;
   @ViewChild('matTtree', {static: false}) matTtree: MatTree<any>;
   @ViewChild('adminLayoutComponent', {static: false}) adminLayoutComponent: AdminLayoutComponent;
+  @ViewChild('dictionaryLayout', {static: false}) dictionaryLayout: DictionaryLayoutComponent;
 
   // other variables
   language = 'ru';
   aSub: Subscription;
-  userSub: Subscription;
-  componentSub: Subscription;
-  users: User[] = [];
-  user: User = new User();
-  components: Components[] = [];
   offset = 0;
   limit = 100000;
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
+  // dictionary
+  userSub: Subscription;
+  componentSub: Subscription;
+  oSubContracts: Subscription;
+  oSubContractTypes: Subscription;
+  oSubFixtureType: Subscription;
+  oSubNodeType: Subscription;
+  oSubGatewayType: Subscription;
+  oSubSensorType: Subscription;
+  oSubCompanies: Subscription;
+  oSubPersons: Subscription;
+  oSubSubstations: Subscription;
+
+  users: User[] = [];
+  user: User = new User();
+  components: Components[] = [];
+  contracts: Contract[] = [];
+  contractTypes: ContractType[] = [];
+  fixtureTypes: FixtureType[] = [];
+  nodeTypes: NodeType[] = [];
+  gatewayTypes: GatewayType[] = [];
+  sensorTypes: SensorType[] = [];
+  companies: CompanyDepartment[] = [];
+  persons: Person[] = [];
+  substations: Substation[] = [];
+
   // sidenav param
   sidenavWidth = 70;
   sidenavWidthMin = 70;
@@ -94,8 +140,20 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               // service
               private auth: AuthService,
               public translate: TranslateService,
+              // get rights info
               private userService: UserService,
-              private componentService: ComponentService) {
+              private componentService: ComponentService,
+              // get dictionary
+              private contractService: ContractService,
+              private contractTypeService: ContractTypeService,
+              private fixtureTypeService: FixtureTypeService,
+              private nodeTypeService: NodeTypeService,
+              private gatewayTypeService: GatewayTypeService,
+              private sensorTypeService: SensorTypeService,
+              private companyService: CompanyService,
+              private personService: PersonService,
+              private substationService: SubstationService
+  ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this.mobileQueryListener);
@@ -451,6 +509,17 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // choose items for sidenav
     this.navItems = this.navItemsOperator;
+
+    //
+    this.getContracts();
+    this.getContractTypes();
+    this.getFixtureTypes();
+    this.getNodeTypes();
+    this.getGatewayTypes();
+    this.getSensorTypes();
+    this.getCompanies();
+    this.getPersons();
+    this.getSubstations();
   }
 
   ngAfterViewInit() {
@@ -468,6 +537,25 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.componentSub) {
       this.componentSub.unsubscribe();
     }
+    //
+    if (this.oSubContracts) {
+      this.oSubContracts.unsubscribe();
+    }
+    if (this.oSubContractTypes) {
+      this.oSubContractTypes.unsubscribe();
+    }
+    if (this.oSubFixtureType) {
+      this.oSubFixtureType.unsubscribe();
+    }
+    if (this.oSubNodeType) {
+      this.oSubNodeType.unsubscribe();
+    }
+    if (this.oSubGatewayType) {
+      this.oSubGatewayType.unsubscribe();
+    }
+    if (this.oSubSensorType) {
+      this.oSubSensorType.unsubscribe();
+    }
   }
 
   switchLanguage() {
@@ -479,7 +567,6 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.translate.use(this.language);
     }
   }
-
 
   logout(event: Event) {
     event.preventDefault();
@@ -645,5 +732,85 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     for (let i = 0; i < node.children.length; i++) {
       this.updRightSiteMap(node.children[i]);
     }
+  }
+
+  // GET DICTIONARY
+
+  getContracts() {
+    this.oSubContracts = this.contractService.getAll().subscribe(items => {
+      this.contracts = items;
+      // if (!isUndefined(this.dictionaryLayout)
+      //   && !isUndefined(this.dictionaryLayout.contractComponent)
+      //   && !isUndefined(this.dictionaryLayout.contractComponent.contractSimpleDictionary)) {
+      //   this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
+      //   this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      // }
+      this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
+      this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getContractTypes() {
+    this.oSubContractTypes = this.contractTypeService.getAll().subscribe(items => {
+      this.contractTypes = items;
+      this.dictionaryLayout.contractComponent.sourceForJqxGridContractTypes.grid.source = items;
+      this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getFixtureTypes() {
+    this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
+      this.fixtureTypes = items;
+      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridFixtureType.grid.source = items;
+      this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getNodeTypes() {
+    this.oSubNodeType = this.nodeTypeService.getAll().subscribe(items => {
+      this.nodeTypes = items;
+      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridNodeType.grid.source = items;
+      this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getGatewayTypes() {
+    this.oSubGatewayType = this.gatewayTypeService.getAll().subscribe(items => {
+      this.gatewayTypes = items;
+      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridGatewayType.grid.source = items;
+      this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getSensorTypes() {
+    this.oSubSensorType = this.sensorTypeService.getAll().subscribe(items => {
+      this.sensorTypes = items;
+      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridSensorType.grid.source = items;
+      this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getCompanies() {
+    this.oSubCompanies = this.companyService.getAll().subscribe(items => {
+      this.companies = items;
+      this.dictionaryLayout.contragentComponent.sourceForJqxGridCompanies.grid.source = items;
+      this.dictionaryLayout.contragentComponent.companiesSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getPersons() {
+    this.oSubPersons = this.personService.getAll().subscribe(items => {
+      this.persons = items;
+      this.dictionaryLayout.contragentComponent.sourceForJqxGridPersons.grid.source = items;
+      this.dictionaryLayout.contragentComponent.personsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
+  }
+
+  getSubstations() {
+    this.oSubSubstations = this.substationService.getAll().subscribe(items => {
+      this.substations = items;
+      this.dictionaryLayout.contragentComponent.sourceForJqxGridSubstations.grid.source = items;
+      this.dictionaryLayout.contragentComponent.substationsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+    });
   }
 }

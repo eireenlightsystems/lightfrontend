@@ -2,7 +2,17 @@
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 // jqwidgets
 // app interfaces
-import {Contract, Owner, EquipmentType, HeightType, Installer, Substation, NavItem} from '../../shared/interfaces';
+import {
+  Contract,
+  Owner,
+  HeightType,
+  Installer,
+  Substation,
+  NavItem,
+  FixtureType,
+  NodeType,
+  GatewayType, SensorType
+} from '../../shared/interfaces';
 // app services
 // app components
 import {NodeMasterdetailsPageComponent} from './node-masterdetails-page/node-masterdetails-page.component';
@@ -22,22 +32,22 @@ export class NodePageComponent implements OnInit, OnDestroy {
   @Input() tabsWidth: number;
   // fixture source
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   // node source
   @Input() ownerNodes: Owner[];
-  @Input() nodeTypes: EquipmentType[];
+  @Input() nodeTypes: NodeType[];
   @Input() contractNodes: Contract[];
   // gateway source
   @Input() ownerGateways: Owner[];
-  @Input() gatewayTypes: EquipmentType[];
+  @Input() gatewayTypes: GatewayType[];
   @Input() contractGateways: Contract[];
   // sensor source
   @Input() ownerSensors: Owner[];
-  @Input() sensorTypes: EquipmentType[];
+  @Input() sensorTypes: SensorType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component

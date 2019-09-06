@@ -17,8 +17,6 @@ import {TranslateService} from '@ngx-translate/core';
 // app interfaces
 import {CompanyDepartment, NavItem, Person} from '../../shared/interfaces';
 // app services
-import {PersonService} from '../../shared/services/contragent/person.service';
-import {CompanyService} from '../../shared/services/contragent/company.service';
 // app components
 import {RolerightPageComponent} from './roleright-page/roleright-page.component';
 import {RightDemoComponent} from './roleright-page/right-demo/right-demo.component';
@@ -32,9 +30,11 @@ import {RightDemoComponent} from './roleright-page/right-demo/right-demo.compone
 export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from master component
+  @Input() theme: string;
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
-  @Input() theme: string;
+  @Input() companies: CompanyDepartment[];
+  @Input() persons: Person[];
 
   // determine the functions that need to be performed in the parent component
   @Output() onUpdRights = new EventEmitter();
@@ -45,23 +45,16 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // other variables
   roleSiteMap: NavItem[] = [];
-  persons: Person[];
-  companies: CompanyDepartment[];
-  oSubPersons: Subscription;
-  oSubCompanies: Subscription;
   isRightDemoFormInit = false;
 
 
   constructor(
     private router: Router,
     // service
-    public translate: TranslateService,
-    private personService: PersonService,
-    private companyService: CompanyService) {
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
-    this.fetch_refbook();
     this.roleSiteMap = cloneDeep(this.siteMap);
   }
 
@@ -70,23 +63,7 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.oSubPersons) {
-      this.oSubPersons.unsubscribe();
-    }
-    if (this.oSubCompanies) {
-      this.oSubCompanies.unsubscribe();
-    }
-  }
 
-  fetch_refbook() {
-    // refbook
-    this.oSubPersons = this.personService.getAll().subscribe(persons => this.persons = persons);
-    this.oSubCompanies = this.companyService.getAll().subscribe(
-      companies => {
-        this.companies = companies;
-
-      }
-    );
   }
 
   initRightDemoFormOpen() {

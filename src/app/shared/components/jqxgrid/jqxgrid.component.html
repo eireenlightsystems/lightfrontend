@@ -13,9 +13,10 @@
 >
 </jqxGrid>
 
-<jqxWindow #settingWindow
+<jqxWindow #settingForm
+           *ngIf="isSettingFormInit"
            [theme]="this.sourceForJqxGrid.grid.theme"
-           [autoOpen]="false"
+           [autoOpen]="true"
            [isModal]="true"
            [modalOpacity]="0.3"
            [width]="500"
@@ -24,6 +25,7 @@
            [height]="500"
            [maxHeight]="700"
            [minHeight]="300"
+           (onClose)="closeDestroy()"
 >
   <div>
     <i class="material-icons">settings</i>

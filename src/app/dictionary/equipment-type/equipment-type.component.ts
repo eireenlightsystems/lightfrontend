@@ -1,5 +1,5 @@
 // angular lib
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -7,6 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
+  FixtureType, GatewayType, NodeType, SensorType,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
@@ -29,14 +30,22 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
 
   // variables from parent component
   @Input() heightGrid: number;
+  @Input() fixtureTypes: FixtureType[];
+  @Input() nodeTypes: NodeType[];
+  @Input() gatewayTypes: GatewayType[];
+  @Input() sensorTypes: SensorType[];
 
   // determine the functions that need to be performed in the parent component
+  @Output() onGetFixtureTypes = new EventEmitter();
+  @Output() onGetNodeTypes = new EventEmitter();
+  @Output() onGetGatewayTypes = new EventEmitter();
+  @Output() onGetSensorTypes = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('fixtureType', {static: false}) fixtureType: SimpleDictionaryComponent;
-  @ViewChild('nodeType', {static: false}) nodeType: SimpleDictionaryComponent;
-  @ViewChild('gatewayType', {static: false}) gatewayType: SimpleDictionaryComponent;
-  @ViewChild('sensorType', {static: false}) sensorType: SimpleDictionaryComponent;
+  @ViewChild('fixtureTypeSimpleDictionary', {static: false}) fixtureTypeSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('nodeTypeSimpleDictionary', {static: false}) nodeTypeSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('gatewayTypeSimpleDictionary', {static: false}) gatewayTypeSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('sensorTypeSimpleDictionary', {static: false}) sensorTypeSimpleDictionary: SimpleDictionaryComponent;
 
   // other variables
   dictionaryFixtureType = 'fixtureType';
@@ -1339,8 +1348,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     ];
 
     // definde link form
-
-    this.getAll();
   }
 
   ngOnDestroy() {
@@ -1360,50 +1367,27 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
 
   // GRID
 
-  getAll() {
-    this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
-      this.sourceForJqxGridFixtureType.grid.source = items;
-    });
-    this.oSubNodeType = this.nodeTypeService.getAll().subscribe(items => {
-      this.sourceForJqxGridNodeType.grid.source = items;
-    });
-    this.oSubGatewayType = this.gatewayTypeService.getAll().subscribe(items => {
-      this.sourceForJqxGridGatewayType.grid.source = items;
-    });
-    this.oSubSensorType = this.sensorTypeService.getAll().subscribe(items => {
-      this.sourceForJqxGridSensorType.grid.source = items;
-    });
-  }
-
   getSourceForJqxGrid(dictionaryType: any) {
     switch (dictionaryType) {
       case 'fixtureType':
-        this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
-          this.sourceForJqxGridFixtureType.grid.source = items;
-          this.fixtureType.loading = false;
-          this.fixtureType.reloading = false;
-        });
+        this.onGetFixtureTypes.emit();
+        this.fixtureTypeSimpleDictionary.loading = false;
+        this.fixtureTypeSimpleDictionary.reloading = false;
         break;
       case 'nodeType':
-        this.oSubNodeType = this.nodeTypeService.getAll().subscribe(items => {
-          this.sourceForJqxGridNodeType.grid.source = items;
-          this.nodeType.loading = false;
-          this.nodeType.reloading = false;
-        });
+        this.onGetNodeTypes.emit();
+        this.nodeTypeSimpleDictionary.loading = false;
+        this.nodeTypeSimpleDictionary.reloading = false;
         break;
       case 'gatewayType':
-        this.oSubGatewayType = this.gatewayTypeService.getAll().subscribe(items => {
-          this.sourceForJqxGridGatewayType.grid.source = items;
-          this.gatewayType.loading = false;
-          this.gatewayType.reloading = false;
-        });
+        this.onGetGatewayTypes.emit();
+        this.gatewayTypeSimpleDictionary.loading = false;
+        this.gatewayTypeSimpleDictionary.reloading = false;
         break;
       case 'sensorType':
-        this.oSubSensorType = this.sensorTypeService.getAll().subscribe(items => {
-          this.sourceForJqxGridSensorType.grid.source = items;
-          this.sensorType.loading = false;
-          this.sensorType.reloading = false;
-        });
+        this.onGetSensorTypes.emit();
+        this.sensorTypeSimpleDictionary.loading = false;
+        this.sensorTypeSimpleDictionary.reloading = false;
         break;
       default:
         break;
@@ -1452,9 +1436,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.fixtureType.editForm.closeDestroy();
+              this.fixtureTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.fixtureType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -1462,32 +1446,33 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.fixtureType.jqxgridComponent.selectRow.code = selectObject.code;
-          this.fixtureType.jqxgridComponent.selectRow.name = selectObject.name;
-          this.fixtureType.jqxgridComponent.selectRow.model = selectObject.model;
-          this.fixtureType.jqxgridComponent.selectRow.comments = selectObject.comments;
-          this.fixtureType.jqxgridComponent.selectRow.height = selectObject.height;
-          this.fixtureType.jqxgridComponent.selectRow.width = selectObject.width;
-          this.fixtureType.jqxgridComponent.selectRow.length = selectObject.length;
-          this.fixtureType.jqxgridComponent.selectRow.weight = selectObject.weight;
-          this.fixtureType.jqxgridComponent.selectRow.countlamp = selectObject.countlamp;
-          this.fixtureType.jqxgridComponent.selectRow.power = selectObject.power;
-          this.fixtureType.jqxgridComponent.selectRow.cos = selectObject.cos;
-          this.fixtureType.jqxgridComponent.selectRow.ip = selectObject.ip;
-          this.fixtureType.jqxgridComponent.selectRow.efficiency = selectObject.efficiency;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.model = selectObject.model;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.height = selectObject.height;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.width = selectObject.width;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.length = selectObject.length;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.weight = selectObject.weight;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.countlamp = selectObject.countlamp;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.power = selectObject.power;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.cos = selectObject.cos;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.ip = selectObject.ip;
+          this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.efficiency = selectObject.efficiency;
           // upd
           this.oSubFixtureType = this.fixtureTypeService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.upd')
-                + this.fixtureType.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.fixtureType.editForm.closeDestroy();
+              this.fixtureTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.fixtureType.jqxgridComponent.refresh_upd(selectObject.id, this.fixtureType.jqxgridComponent.selectRow);
+              this.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_upd(
+                selectObject.id, this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -1507,9 +1492,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.nodeType.editForm.closeDestroy();
+              this.nodeTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.nodeType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.nodeTypeSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -1517,25 +1502,25 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.nodeType.jqxgridComponent.selectRow.code = selectObject.code;
-          this.nodeType.jqxgridComponent.selectRow.name = selectObject.name;
-          this.nodeType.jqxgridComponent.selectRow.model = selectObject.model;
-          this.nodeType.jqxgridComponent.selectRow.comments = selectObject.comments;
-          this.nodeType.jqxgridComponent.selectRow.height = selectObject.height;
+          this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.model = selectObject.model;
+          this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.height = selectObject.height;
           // upd
           this.oSubNodeType = this.nodeTypeService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.upd')
-                + this.nodeType.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.nodeType.editForm.closeDestroy();
+              this.nodeTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.nodeType.jqxgridComponent.refresh_upd(
-                this.nodeType.jqxgridComponent.selectRow.id, this.nodeType.jqxgridComponent.selectRow);
+              this.nodeTypeSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -1555,9 +1540,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.gatewayType.editForm.closeDestroy();
+              this.gatewayTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.gatewayType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -1565,25 +1550,26 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.gatewayType.jqxgridComponent.selectRow.code = selectObject.code;
-          this.gatewayType.jqxgridComponent.selectRow.name = selectObject.name;
-          this.gatewayType.jqxgridComponent.selectRow.model = selectObject.model;
-          this.gatewayType.jqxgridComponent.selectRow.comments = selectObject.comments;
-          this.gatewayType.jqxgridComponent.selectRow.communicationStandard = selectObject.communicationStandard;
+          this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.model = selectObject.model;
+          this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.communicationStandard = selectObject.communicationStandard;
           // upd
           this.oSubGatewayType = this.gatewayTypeService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.upd')
-                + this.gatewayType.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.gatewayType.editForm.closeDestroy();
+              this.gatewayTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.gatewayType.jqxgridComponent.refresh_upd(
-                this.gatewayType.jqxgridComponent.selectRow.id, this.gatewayType.jqxgridComponent.selectRow);
+              this.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.id,
+                this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -1604,9 +1590,9 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.sensorType.editForm.closeDestroy();
+              this.sensorTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.sensorType.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.sensorTypeSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -1614,25 +1600,25 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.sensorType.jqxgridComponent.selectRow.code = selectObject.code;
-          this.sensorType.jqxgridComponent.selectRow.name = selectObject.name;
-          this.sensorType.jqxgridComponent.selectRow.model = selectObject.model;
-          this.sensorType.jqxgridComponent.selectRow.comments = selectObject.comments;
-          this.sensorType.jqxgridComponent.selectRow.detectionRange = selectObject.detectionRange;
+          this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.model = selectObject.model;
+          this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.detectionRange = selectObject.detectionRange;
           // upd
           this.oSubSensorType = this.sensorTypeService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.upd')
-                + this.sensorType.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.sensorType.editForm.closeDestroy();
+              this.sensorTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.sensorType.jqxgridComponent.refresh_upd(
-                this.sensorType.jqxgridComponent.selectRow.id, this.sensorType.jqxgridComponent.selectRow);
+              this.sensorTypeSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -1659,7 +1645,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.fixtureType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
@@ -1678,7 +1664,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.nodeType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.nodeTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
@@ -1697,7 +1683,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.gatewayType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
@@ -1716,7 +1702,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.sensorType.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.sensorTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }

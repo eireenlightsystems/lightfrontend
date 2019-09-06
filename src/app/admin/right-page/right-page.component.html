@@ -18,11 +18,11 @@
         </mat-chip>
       </mat-chip-list>
       <app-roleright-page #rolerightPageComponent
+                          [theme]="theme"
                           [roleSiteMap]="roleSiteMap"
                           [heightSplitterRoleright]="745"
                           [heightGridRoleright]="690"
                           [companies]="companies"
-                          [theme]="theme"
       ></app-roleright-page>
     </div>
   </mat-tab>
@@ -56,11 +56,11 @@
 
 <div *ngIf="isRightDemoFormInit">
   <app-right-demo #rightDemoComponent
+                  [theme]="theme"
                   [roleSiteMap]="siteMap"
                   [heightSplitterRoleright]="515"
                   [heightGridRoleright]="460"
                   [companies]="companies"
-                  [theme]="theme"
                   (onInitRightDemoForm)="initRightDemoFormClose()"
   >
   </app-right-demo>

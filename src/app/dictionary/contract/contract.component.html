@@ -3,9 +3,9 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="(this.router.url === '/dictionary/contract/contracts')"
+  <div [hidden]="!(this.router.url === '/dictionary/contract/contracts')"
        class="table_border">
-    <app-simple-dictionary #contract
+    <app-simple-dictionary #contractSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContracts"
                            [columnsGrid]="columnsGridContracts"
@@ -19,7 +19,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #contract
+    <app-simple-dictionary #contractSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryContracts"
                            [columnsGrid]="columnsGridContractsEng"
@@ -35,9 +35,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="(this.router.url === '/dictionary/contract/contracts-types')"
+  <div [hidden]="!(this.router.url === '/dictionary/contract/contracts-types')"
        class="table_border">
-    <app-simple-dictionary #contractType
+    <app-simple-dictionary #contractTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContractTypes"
                            [columnsGrid]="columnsGridContractTypes"
@@ -49,7 +49,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #contractType
+    <app-simple-dictionary #contractTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryContractTypes"
                            [columnsGrid]="columnsGridContractTypesEng"

@@ -1,5 +1,5 @@
 // angular lib
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
-  CompanyDepartment,
+  CompanyDepartment, Contract, ContractType,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
@@ -25,22 +25,25 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
   templateUrl: './contract.component.html',
   styleUrls: ['./contract.component.css']
 })
-export class ContractComponent implements OnInit, OnDestroy {
+export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from parent component
   @Input() heightGrid: number;
+  @Input() contracts: Contract[];
+  @Input() contractTypes: ContractType[];
+  @Input() companies: CompanyDepartment[];
 
   // determine the functions that need to be performed in the parent component
+  @Output() onGetContracts = new EventEmitter();
+  @Output() onGetContractTypes = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('contract', {static: false}) contracts: SimpleDictionaryComponent;
-  @ViewChild('contractType', {static: false}) contractTypes: SimpleDictionaryComponent;
+  @ViewChild('contractSimpleDictionary', {static: false}) contractSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('contractTypeSimpleDictionary', {static: false}) contractTypeSimpleDictionary: SimpleDictionaryComponent;
 
   // other variables
   dictionaryContracts = 'contracts';
   dictionaryContractTypes = 'contractTypes';
-  companies: CompanyDepartment[];
-  oSubСompanies: Subscription;
   // main
   // grid
   oSubContracts: Subscription;
@@ -65,6 +68,7 @@ export class ContractComponent implements OnInit, OnDestroy {
   sourceForEditFormContractTypesEng: SourceForEditForm[];
   // link form
   // event form
+
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -538,10 +542,10 @@ export class ContractComponent implements OnInit, OnDestroy {
     ];
 
     // definde link form
+  }
 
-    this.getAll();
+  ngAfterViewInit() {
 
-    this.fetch_refbook();
   }
 
   ngOnDestroy() {
@@ -551,42 +555,21 @@ export class ContractComponent implements OnInit, OnDestroy {
     if (this.oSubContractTypes) {
       this.oSubContractTypes.unsubscribe();
     }
-    if (this.oSubСompanies) {
-      this.oSubСompanies.unsubscribe();
-    }
   }
 
   // GRID
 
-  getAll() {
-    this.oSubContracts = this.contractService.getAll().subscribe(items => {
-      this.sourceForJqxGridContracts.grid.source = items;
-    });
-    this.oSubContractTypes = this.contractTypeService.getAll().subscribe(items => {
-      this.sourceForJqxGridContractTypes.grid.source = items;
-    });
-  }
-
-  fetch_refbook() {
-    // refbook
-    this.oSubСompanies = this.companyService.getAll().subscribe(companies => this.companies = companies);
-  }
-
   getSourceForJqxGrid(dictionaryType: any) {
     switch (dictionaryType) {
       case 'contracts':
-        this.oSubContracts = this.contractService.getAll().subscribe(items => {
-          this.sourceForJqxGridContracts.grid.source = items;
-          this.contracts.loading = false;
-          this.contracts.reloading = false;
-        });
+        this.onGetContracts.emit();
+        this.contractSimpleDictionary.loading = false;
+        this.contractSimpleDictionary.reloading = false;
         break;
       case 'contractTypes':
-        this.oSubContractTypes = this.contractTypeService.getAll().subscribe(items => {
-          this.sourceForJqxGridContractTypes.grid.source = items;
-          this.contractTypes.loading = false;
-          this.contractTypes.reloading = false;
-        });
+        this.onGetContractTypes.emit();
+        this.contractTypeSimpleDictionary.loading = false;
+        this.contractTypeSimpleDictionary.reloading = false;
         break;
       default:
         break;
@@ -616,28 +599,26 @@ export class ContractComponent implements OnInit, OnDestroy {
     switch (saveEditwinObject.dictionaryType) {
       case 'contracts':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.contracts.editForm.sourceForEditForm.length; i++) {
-          switch (this.contracts.editForm.sourceForEditForm[i].nameField) {
+        for (let i = 0; i < this.contractSimpleDictionary.editForm.sourceForEditForm.length; i++) {
+          switch (this.contractSimpleDictionary.editForm.sourceForEditForm[i].nameField) {
             case 'contractTypes':
-              selectObject.contractTypeId = +this.contracts.editForm.sourceForEditForm[i].selectId;
-              selectObject.contractTypeCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
+              selectObject.contractTypeId = +this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.contractTypeCode = this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectCode;
               break;
             case 'senders':
-              selectObject.senderId = +this.contracts.editForm.sourceForEditForm[i].selectId;
-              selectObject.senderCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
+              selectObject.senderId = +this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.senderCode = this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectCode;
               break;
             case 'recipients':
-              selectObject.recipientId = +this.contracts.editForm.sourceForEditForm[i].selectId;
-              selectObject.recipientCode = this.contracts.editForm.sourceForEditForm[i].selectCode;
+              selectObject.recipientId = +this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.recipientCode = this.contractSimpleDictionary.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
           }
         }
-
         if (saveEditwinObject.typeEditWindow === 'ins') {
           // definde param before ins
-
           // ins
           this.oSubContracts = this.contractService.ins(selectObject).subscribe(
             response => {
@@ -649,9 +630,9 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contracts.editForm.closeDestroy();
+              this.contractSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.contracts.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.contractSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -659,29 +640,30 @@ export class ContractComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.contracts.jqxgridComponent.selectRow.contractTypeId = selectObject.contractTypeId;
-          this.contracts.jqxgridComponent.selectRow.contractTypeCode = selectObject.contractTypeCode;
-          this.contracts.jqxgridComponent.selectRow.senderId = selectObject.senderId;
-          this.contracts.jqxgridComponent.selectRow.senderCode = selectObject.senderCode;
-          this.contracts.jqxgridComponent.selectRow.recipientId = selectObject.recipientId;
-          this.contracts.jqxgridComponent.selectRow.recipientCode = selectObject.recipientCode;
-          this.contracts.jqxgridComponent.selectRow.code = selectObject.code;
-          this.contracts.jqxgridComponent.selectRow.name = selectObject.name;
-          this.contracts.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.contractTypeId = selectObject.contractTypeId;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.contractTypeCode = selectObject.contractTypeCode;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.senderId = selectObject.senderId;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.senderCode = selectObject.senderCode;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.recipientId = selectObject.recipientId;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.recipientCode = selectObject.recipientCode;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.contractSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
 
           // upd
           this.oSubContracts = this.contractService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.upd')
-                + this.contracts.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.contractSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contracts.editForm.closeDestroy();
+              this.contractSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.contracts.jqxgridComponent.refresh_upd(selectObject.id, this.contracts.jqxgridComponent.selectRow);
+              this.contractSimpleDictionary.jqxgridComponent.refresh_upd(selectObject.id,
+                this.contractSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -702,9 +684,9 @@ export class ContractComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contractTypes.editForm.closeDestroy();
+              this.contractTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.contractTypes.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.contractTypeSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
               // refresh temp
               this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
@@ -712,24 +694,25 @@ export class ContractComponent implements OnInit, OnDestroy {
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.contractTypes.jqxgridComponent.selectRow.code = selectObject.code;
-          this.contractTypes.jqxgridComponent.selectRow.name = selectObject.name;
-          this.contractTypes.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
 
           // upd
           this.oSubContractTypes = this.contractTypeService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.upd')
-                + this.contractTypes.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.contractTypes.editForm.closeDestroy();
+              this.contractTypeSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.contractTypes.jqxgridComponent.refresh_upd(
-                this.contractTypes.jqxgridComponent.selectRow.id, this.contractTypes.jqxgridComponent.selectRow);
+              this.contractTypeSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.id,
+                this.contractTypeSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -756,7 +739,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.contracts.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.contractSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
@@ -775,7 +758,7 @@ export class ContractComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.contractTypes.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.contractTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
                 this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }

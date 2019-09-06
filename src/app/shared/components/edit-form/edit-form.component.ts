@@ -38,8 +38,6 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
 
-    console.log('ngOnInit');
-
   }
 
   ngAfterViewInit() {
@@ -51,9 +49,6 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   destroy() {
-
-    console.log('destroy');
-
     if (this.editWindow) {
       this.editWindow.destroy();
     }

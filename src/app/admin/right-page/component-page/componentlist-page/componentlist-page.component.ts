@@ -518,7 +518,7 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {

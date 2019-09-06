@@ -3,7 +3,7 @@ import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
-import {Contract, EquipmentType, Owner, NavItem} from '../../shared/interfaces';
+import {Contract, EquipmentType, Owner, NavItem, NodeType, GatewayType} from '../../shared/interfaces';
 // app services
 // app components
 import {GatewayMasterdetailsPageComponent} from './gateway-masterdetails-page/gateway-masterdetails-page.component';
@@ -22,11 +22,11 @@ export class GatewayPageComponent implements OnInit, OnDestroy {
   @Input() tabsWidth: number;
   // node source
   @Input() ownerNodes: Owner[];
-  @Input() nodeTypes: EquipmentType[];
+  @Input() nodeTypes: NodeType[];
   @Input() contractNodes: Contract[];
   // gateway source
   @Input() ownerGateways: Owner[];
-  @Input() gatewayTypes: EquipmentType[];
+  @Input() gatewayTypes: GatewayType[];
   @Input() contractGateways: Contract[];
 
   // determine the functions that need to be performed in the parent component

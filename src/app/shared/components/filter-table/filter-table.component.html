@@ -1,10 +1,11 @@
 <jqxWindow #filtrWindow
            [theme]="sourceForFilter[0].theme"
-           [autoOpen]="false"
+           [autoOpen]="true"
            [isModal]="false"
            [position]="{ x: getCoordinateX(), y: getCoordinateY() }"
            [width]="400"
            [height]="getHeight()"
+           (onClose)="closeDestroy()"
 >
   <div>
     <i class="material-icons">filter_list</i>

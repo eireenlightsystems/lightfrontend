@@ -2,7 +2,7 @@
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
 // jqwidgets
 // app interfaces
-import {Contract, EquipmentType, NavItem, Owner} from '../../shared/interfaces';
+import {Contract, NavItem, Owner, SensorType} from '../../shared/interfaces';
 // app services
 // app components
 import {SensorMdPageComponent} from './sensor-md-page/sensor-md-page.component';
@@ -18,7 +18,7 @@ export class SensorPageComponent implements OnInit, OnDestroy {
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerSensors: Owner[];
-  @Input() sensorTypes: EquipmentType[];
+  @Input() sensorTypes: SensorType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component

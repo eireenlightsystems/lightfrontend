@@ -3,9 +3,9 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="this.router.url ==='/dictionary/equipment/fixturetype'"
+  <div [hidden]="!(this.router.url ==='/dictionary/equipment/fixturetype')"
        class="table_border">
-    <app-simple-dictionary #fixtureType
+    <app-simple-dictionary #fixtureTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryFixtureType"
                            [columnsGrid]="columnsGridFixtureTypes"
@@ -17,7 +17,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #fixtureType
+    <app-simple-dictionary #fixtureTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryFixtureType"
                            [columnsGrid]="columnsGridFixtureTypesEng"
@@ -31,9 +31,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="this.router.url === '/dictionary/equipment/nodetype'"
+  <div [hidden]="!(this.router.url === '/dictionary/equipment/nodetype')"
        class="table_border">
-    <app-simple-dictionary #nodeType
+    <app-simple-dictionary #nodeTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryNodeType"
                            [columnsGrid]="columnsGridNodeTypes"
@@ -45,7 +45,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #nodeType
+    <app-simple-dictionary #nodeTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryNodeType"
                            [columnsGrid]="columnsGridNodeTypesEng"
@@ -59,9 +59,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="this.router.url === '/dictionary/equipment/gatewaytype'"
+  <div [hidden]="!(this.router.url === '/dictionary/equipment/gatewaytype')"
        class="table_border">
-    <app-simple-dictionary #gatewayType
+    <app-simple-dictionary #gatewayTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryGatewayType"
                            [columnsGrid]="columnsGridGatewayTypes"
@@ -73,7 +73,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #gatewayType
+    <app-simple-dictionary #gatewayTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryGatewayType"
                            [columnsGrid]="columnsGridGatewayTypesEng"
@@ -87,9 +87,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="this.router.url === '/dictionary/equipment/sensortype'"
+  <div [hidden]="!(this.router.url === '/dictionary/equipment/sensortype')"
        class="table_border">
-    <app-simple-dictionary #sensorType
+    <app-simple-dictionary #sensorTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionarySensorType"
                            [columnsGrid]="columnsGridSensorTypes"
@@ -101,7 +101,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #sensorType
+    <app-simple-dictionary #sensorTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionarySensorType"
                            [columnsGrid]="columnsGridSensorTypesEng"

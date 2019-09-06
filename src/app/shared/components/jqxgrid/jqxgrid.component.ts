@@ -33,13 +33,14 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
   // define variables - link to view objects
   @ViewChild('myListBox', {static: false}) myListBox: jqxListBoxComponent;
   @ViewChild('myGrid', {static: true}) myGrid: jqxGridComponent;
-  @ViewChild('settingWindow', {static: false}) settingWindow: jqxWindowComponent;
+  @ViewChild('settingForm', {static: false}) settingForm: jqxWindowComponent;
   @ViewChild('matTabGroup', {static: false}) matTabGroup: MatTabsModule;
 
   // other variables
   selectRow: any;
   widthDefined: any;
   heightDefined: any;
+  isSettingFormInit = false;
 
   // define the data source for the table
   source_jqxgrid: any;
@@ -79,8 +80,8 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.myGrid) {
       this.myGrid.destroy();
     }
-    if (this.settingWindow) {
-      this.settingWindow.destroy();
+    if (this.settingForm) {
+      this.settingForm.destroy();
     }
   }
 
@@ -142,8 +143,14 @@ export class JqxgridComponent implements OnInit, OnDestroy, AfterViewInit {
     this.myGrid.endupdate();
   }
 
-  openSettinWin() {
-    this.settingWindow.open();
+  // SETTING FORM
+
+  initSettingForm() {
+    this.isSettingFormInit = true;
+  }
+
+  closeDestroy() {
+    this.isSettingFormInit = false;
   }
 
   excelBtnOnClick() {

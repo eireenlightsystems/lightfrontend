@@ -69,7 +69,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('filterForm', {static: false}) filterForm: FilterTableComponent;
   @ViewChild('editForm', {static: false}) editForm: EditFormComponent;
   @ViewChild('linkForm', {static: false}) linkForm: LinkFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
@@ -98,7 +98,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   };
   sourceForFilter: SourceForFilter[];
   sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
@@ -455,8 +455,8 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    if (this.filterTable) {
-      this.filterTable.destroy();
+    if (this.filterForm) {
+      this.filterForm.destroy();
     }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
@@ -606,16 +606,12 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {
-    if (this.filterTable.filtrWindow.isOpen()) {
-      this.filterTable.close();
-    } else {
-      this.getSourceForFilter();
-      this.filterTable.open();
-    }
+    this.isFilterFormInit = true;
+    this.getSourceForFilter();
   }
 
   place() {
@@ -673,47 +669,33 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
+    this.filterSelect = this.filterForm.getFilterSelect();
     this.refreshGrid();
   }
 
   getSourceForFilter() {
-    if (this.isFilterVisible === false && !isUndefined(this.persons)) {
-      this.isFilterVisible = true;
-
-      // if (this.translate.currentLang === 'ru') {
-      //
-      // }
-      // if (this.translate.currentLang === 'en') {
-      //
-      // }
-
+    if (!isUndefined(this.persons)) {
+      let sourceForFilter: any[];
       if (this.translate.currentLang === 'ru') {
-        for (let i = 0; i < this.sourceForFilter.length; i++) {
-          switch (this.sourceForFilter[i].name) {
-            case 'persons':
-              this.sourceForFilter[i].source = this.persons;
-              break;
-            default:
-              break;
-          }
-        }
+        sourceForFilter = this.sourceForFilter;
       }
       if (this.translate.currentLang === 'en') {
-        for (let i = 0; i < this.sourceForFilterEng.length; i++) {
-          switch (this.sourceForFilterEng[i].name) {
-            case 'persons':
-              this.sourceForFilterEng[i].source = this.persons;
-              break;
-            default:
-              break;
-          }
+        sourceForFilter = this.sourceForFilterEng;
+      }
+      for (let i = 0; i < sourceForFilter.length; i++) {
+        switch (sourceForFilter[i].name) {
+          case 'persons':
+            sourceForFilter[i].source = this.persons;
+            break;
+          default:
+            break;
         }
       }
     }
-    // view select filter for user
-    if (this.isFilterVisible === true) {
-      this.filterSelect = this.filterTable.getFilterSelect();
-    }
+  }
+
+  destroyFilterForm() {
+    this.isFilterFormInit = false;
   }
 
   // EDIT FORM

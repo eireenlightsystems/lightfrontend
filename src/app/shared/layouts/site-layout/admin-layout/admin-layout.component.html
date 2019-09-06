@@ -5,10 +5,11 @@
      style="margin-left: 5px"
 >
   <app-right-page #rightPageComponent
+                  [theme]="'material'"
                   [siteMap]="siteMap"
                   [tabsWidth]="tabsWidth"
-                  [theme]="'material'"
-
+                  [companies]="companies"
+                  [persons]="persons"
                   (onUpdRights)="updRights()"
   ></app-right-page>
 </div>

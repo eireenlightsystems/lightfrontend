@@ -128,7 +128,6 @@
   <mat-sidenav-container class="example-sidenav-container"
                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
                          (backdropClick)="snav.close()">
-
     <mat-sidenav #snav
                  [ngStyle]="{ 'width.px': sidenavWidth }"
                  class="example-sidenav"
@@ -156,7 +155,7 @@
                   matTooltipClass="tooltip"
                   [matTooltipPosition]="'right'"
                   appButtonMenuDirective [theme]="'light'"
-                   (click)="mobileQuery.matches ? snav.close() : ''"
+                  (click)="mobileQuery.matches ? snav.close() : ''"
           >
             <mat-icon class="routeIcon">{{navitem.iconName}}</mat-icon>
           </button>
@@ -173,51 +172,70 @@
       </button>
 
     </mat-sidenav>
-
     <mat-sidenav-content
       class="example-sidenav-content"
     >
-
-<!--      *ngIf="(this.router.url.substring(0,5) === '/oper')"-->
       <div [hidden]="!(this.router.url.substring(0,5) === '/oper')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
       >
         <app-operator-layout
           [siteMap]="siteMap"
           [tabsWidth]="tabsWidth"
+          [contracts]="contracts"
+          [fixtureTypes]="fixtureTypes"
+          [nodeTypes]="nodeTypes"
+          [gatewayTypes]="gatewayTypes"
+          [sensorTypes]="sensorTypes"
+          [companies]="companies"
+          [persons]="persons"
+          [substations]="substations"
         ></app-operator-layout>
       </div>
-<!--      *ngIf="(this.router.url.substring(0,5) === '/dict')"-->
       <div [hidden]="!(this.router.url.substring(0,5) === '/dict')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft}"
       >
-        <app-dictionary-layout
-          [siteMap]="siteMap"
-          [tabsWidth]="tabsWidth"
+        <app-dictionary-layout #dictionaryLayout
+                               [siteMap]="siteMap"
+                               [tabsWidth]="tabsWidth"
+                               [contracts]="contracts"
+                               [contractTypes]="contractTypes"
+                               [fixtureTypes]="fixtureTypes"
+                               [nodeTypes]="nodeTypes"
+                               [gatewayTypes]="gatewayTypes"
+                               [sensorTypes]="sensorTypes"
+                               [companies]="companies"
+                               [persons]="persons"
+                               [substations]="substations"
+                               (onGetContracts)="getContracts()"
+                               (onGetContractTypes)="getContractTypes()"
+                               (onGetFixtureTypes)="getFixtureTypes()"
+                               (onGetNodeTypes)="getNodeTypes()"
+                               (onGetGatewayTypes)="getGatewayTypes()"
+                               (onGetSensorTypes)="getSensorTypes()"
+                               (onGetCompanies)="getCompanies()"
+                               (onGetPersons)="getPersons()"
+                               (onGetSubstations)="getSubstations()"
         ></app-dictionary-layout>
       </div>
-<!--      *ngIf="(this.router.url.substring(0,5) === '/admi')"-->
       <div [hidden]="!(this.router.url.substring(0,5) === '/admi')"
            [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
       >
         <app-admin-layout #adminLayoutComponent
                           [siteMap]="siteMap"
                           [tabsWidth]="tabsWidth"
-
+                          [companies]="companies"
+                          [persons]="persons"
                           (onUpdRights)="updRights()"
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>
-
   </mat-sidenav-container>
-
 </div>
 
 <!--For Mobile-->
 <div *ngIf="mobileQuery.matches === true"
      class="example-container"
      [class.example-is-mobile]="mobileQuery.matches">
-
   <mat-toolbar appBackgroundLightredDirective class="example-header example-toolbar">
     <mat-toolbar-row>
       <div [hidden]="mobileQuery.matches ? false : false">
@@ -267,11 +285,9 @@
       </mat-menu>
     </mat-toolbar-row>
   </mat-toolbar>
-
   <mat-sidenav-container class="example-sidenav-container"
                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
                          (backdropClick)="snavonmobile.close()">
-
     <mat-sidenav #snavonmobile
                  class="example-sidenav"
                  [mode]="'over'"
@@ -323,31 +339,58 @@
         </mat-tree-node>
       </mat-tree>
     </mat-sidenav>
-
     <mat-sidenav-content
       class="example-sidenav-content"
     >
-      <div *ngIf="(this.router.url.substring(0,5) === '/oper')"
+      <div [hidden]="!(this.router.url.substring(0,5) === '/oper')"
       >
         <app-operator-layout
           [siteMap]="siteMap"
           [tabsWidth]="tabsWidth"
+          [contracts]="contracts"
+          [fixtureTypes]="fixtureTypes"
+          [nodeTypes]="nodeTypes"
+          [gatewayTypes]="gatewayTypes"
+          [sensorTypes]="sensorTypes"
+          [companies]="companies"
+          [persons]="persons"
+          [substations]="substations"
         ></app-operator-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/dict')"
+      <div [hidden]="!(this.router.url.substring(0,5) === '/dict')"
       >
-        <app-dictionary-layout
+        <app-dictionary-layout #dictionaryLayout
+                               [siteMap]="siteMap"
+                               [tabsWidth]="tabsWidth"
+                               [contracts]="contracts"
+                               [contractTypes]="contractTypes"
+                               [fixtureTypes]="fixtureTypes"
+                               [nodeTypes]="nodeTypes"
+                               [gatewayTypes]="gatewayTypes"
+                               [sensorTypes]="sensorTypes"
+                               [companies]="companies"
+                               [persons]="persons"
+                               [substations]="substations"
+                               (onGetContracts)="getContracts()"
+                               (onGetContractTypes)="getContractTypes()"
+                               (onGetFixtureTypes)="getFixtureTypes()"
+                               (onGetNodeTypes)="getNodeTypes()"
+                               (onGetGatewayTypes)="getGatewayTypes()"
+                               (onGetSensorTypes)="getSensorTypes()"
+                               (onGetCompanies)="getCompanies()"
+                               (onGetPersons)="getPersons()"
+                               (onGetSubstations)="getSubstations()"
         ></app-dictionary-layout>
       </div>
-      <div *ngIf="(this.router.url.substring(0,5) === '/admi')"
+      <div [hidden]="!(this.router.url.substring(0,5) === '/admi')"
       >
         <app-admin-layout
           [siteMap]="siteMap"
           [tabsWidth]="tabsWidth"
+          [companies]="companies"
+          [persons]="persons"
         ></app-admin-layout>
       </div>
     </mat-sidenav-content>
-
   </mat-sidenav-container>
-
 </div>

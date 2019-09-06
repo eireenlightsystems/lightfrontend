@@ -3,9 +3,9 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div *ngIf="this.router.url === '/dictionary/contragent/companies'"
+  <div [hidden]="!(this.router.url === '/dictionary/contragent/companies')"
        class="table_border">
-    <app-simple-dictionary #companies
+    <app-simple-dictionary #companiesSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryCompanies"
                            [columnsGrid]="columnsGridCompanies"
@@ -18,7 +18,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #companies
+    <app-simple-dictionary #companiesSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryCompanies"
                            [columnsGrid]="columnsGridCompaniesEng"
@@ -33,9 +33,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="this.router.url === '/dictionary/contragent/persons'"
+  <div [hidden]="!(this.router.url === '/dictionary/contragent/persons')"
        class="table_border">
-    <app-simple-dictionary #persons
+    <app-simple-dictionary #personsSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryPersons"
                            [columnsGrid]="columnsGridPersons"
@@ -47,7 +47,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #persons
+    <app-simple-dictionary #personsSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionaryPersons"
                            [columnsGrid]="columnsGridPersonsEng"
@@ -61,9 +61,9 @@
     ></app-simple-dictionary>
   </div>
 
-  <div *ngIf="this.router.url === '/dictionary/contragent/substations'"
+  <div [hidden]="!(this.router.url === '/dictionary/contragent/substations')"
        class="table_border">
-    <app-simple-dictionary #substations
+    <app-simple-dictionary #substationsSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionarySubstations"
                            [columnsGrid]="columnsGridSubstations"
@@ -76,7 +76,7 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #substations
+    <app-simple-dictionary #substationsSimpleDictionary
                            *ngIf="this.translate.currentLang === 'en'"
                            [typeDictionary]="dictionarySubstations"
                            [columnsGrid]="columnsGridSubstationsEng"

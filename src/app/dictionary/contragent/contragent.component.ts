@@ -1,5 +1,5 @@
 // angular lib
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -7,9 +7,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
+  CompanyDepartment, Person,
   SettingWinForEditForm,
   SourceForEditForm,
-  SourceForJqxGrid
+  SourceForJqxGrid, Substation
 } from '../../shared/interfaces';
 // app services
 import {PersonService} from '../../shared/services/contragent/person.service';
@@ -29,13 +30,19 @@ export class ContragentComponent implements OnInit, OnDestroy {
 
   // variables from parent component
   @Input() heightGrid: number;
+  @Input() companies: CompanyDepartment[];
+  @Input() persons: Person[];
+  @Input() substations: Substation[];
 
   // determine the functions that need to be performed in the parent component
+  @Output() onGetCompanies = new EventEmitter();
+  @Output() onGetPersons = new EventEmitter();
+  @Output() onGetSubstations = new EventEmitter();
 
   // define variables - link to view objects
-  @ViewChild('companies', {static: false}) companies: SimpleDictionaryComponent;
-  @ViewChild('persons', {static: false}) persons: SimpleDictionaryComponent;
-  @ViewChild('substations', {static: false}) substations: SimpleDictionaryComponent;
+  @ViewChild('companiesSimpleDictionary', {static: false}) companiesSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('personsSimpleDictionary', {static: false}) personsSimpleDictionary: SimpleDictionaryComponent;
+  @ViewChild('substationsSimpleDictionary', {static: false}) substationsSimpleDictionary: SimpleDictionaryComponent;
 
   // other variables
   dictionaryCompanies = 'companies';
@@ -1051,8 +1058,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
     ];
 
     // definde link form
-
-    this.getAll();
   }
 
   ngOnDestroy() {
@@ -1069,40 +1074,22 @@ export class ContragentComponent implements OnInit, OnDestroy {
 
   // GRID
 
-  getAll() {
-    this.oSubCompanies = this.companyService.getAll().subscribe(items => {
-      this.sourceForJqxGridCompanies.grid.source = items;
-    });
-    this.oSubPersons = this.personService.getAll().subscribe(items => {
-      this.sourceForJqxGridPersons.grid.source = items;
-    });
-    this.oSubSubstations = this.substationService.getAll().subscribe(items => {
-      this.sourceForJqxGridSubstations.grid.source = items;
-    });
-  }
-
   getSourceForJqxGrid(dictionaryType: any) {
     switch (dictionaryType) {
       case 'companies':
-        this.oSubCompanies = this.companyService.getAll().subscribe(items => {
-          this.sourceForJqxGridCompanies.grid.source = items;
-          this.companies.loading = false;
-          this.companies.reloading = false;
-        });
+        this.onGetCompanies.emit();
+        this.companiesSimpleDictionary.loading = false;
+        this.companiesSimpleDictionary.reloading = false;
         break;
       case 'persons':
-        this.oSubPersons = this.personService.getAll().subscribe(items => {
-          this.sourceForJqxGridPersons.grid.source = items;
-          this.persons.loading = false;
-          this.persons.reloading = false;
-        });
+        this.onGetPersons.emit();
+        this.personsSimpleDictionary.loading = false;
+        this.personsSimpleDictionary.reloading = false;
         break;
       case 'substations':
-        this.oSubSubstations = this.substationService.getAll().subscribe(items => {
-          this.sourceForJqxGridSubstations.grid.source = items;
-          this.substations.loading = false;
-          this.substations.reloading = false;
-        });
+        this.onGetSubstations.emit();
+        this.substationsSimpleDictionary.loading = false;
+        this.substationsSimpleDictionary.reloading = false;
         break;
       default:
         break;
@@ -1135,15 +1122,15 @@ export class ContragentComponent implements OnInit, OnDestroy {
     switch (saveEditwinObject.dictionaryType) {
       case 'companies':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.companies.editForm.sourceForEditForm.length; i++) {
-          switch (this.companies.editForm.sourceForEditForm[i].nameField) {
+        for (let i = 0; i < this.companiesSimpleDictionary.editForm.sourceForEditForm.length; i++) {
+          switch (this.companiesSimpleDictionary.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.companies.editForm.sourceForEditForm[i].selectId;
-              selectObject.geographFullName = this.companies.editForm.sourceForEditForm[i].selectName;
+              selectObject.geographId = +this.companiesSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.companiesSimpleDictionary.editForm.sourceForEditForm[i].selectName;
               break;
             case 'orgForms':
-              selectObject.orgFormId = +this.companies.editForm.sourceForEditForm[i].selectId;
-              selectObject.orgFormCode = this.companies.editForm.sourceForEditForm[i].selectCode;
+              selectObject.orgFormId = +this.companiesSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.orgFormCode = this.companiesSimpleDictionary.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
@@ -1162,46 +1149,49 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.companies.editForm.closeDestroy();
+              this.companiesSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.companies.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.companiesSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.companies.jqxgridComponent.selectRow.geographId = selectObject.geographId;
-          this.companies.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
-          this.companies.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
-          this.companies.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
-          this.companies.jqxgridComponent.selectRow.code = selectObject.code;
-          this.companies.jqxgridComponent.selectRow.name = selectObject.name;
-          this.companies.jqxgridComponent.selectRow.inn = selectObject.inn;
-          this.companies.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.inn = selectObject.inn;
+          this.companiesSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
           // upd
           this.oSubCompanies = this.companyService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.upd')
-                + this.companies.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.companiesSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.companies.editForm.closeDestroy();
+              this.companiesSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.companies.jqxgridComponent.refresh_upd(selectObject.id, this.companies.jqxgridComponent.selectRow);
+              this.companiesSimpleDictionary.jqxgridComponent.refresh_upd(selectObject.id,
+                this.companiesSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
         break;
       case 'persons':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.persons.editForm.sourceForEditForm.length; i++) {
-          switch (this.persons.editForm.sourceForEditForm[i].nameField) {
+        for (let i = 0; i < this.personsSimpleDictionary.editForm.sourceForEditForm.length; i++) {
+          switch (this.personsSimpleDictionary.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.persons.editForm.sourceForEditForm[i].selectId;
-              selectObject.geographFullName = this.persons.editForm.sourceForEditForm[i].selectName;
+              selectObject.geographId = +this.personsSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.personsSimpleDictionary.editForm.sourceForEditForm[i].selectName;
               break;
             default:
               break;
@@ -1220,51 +1210,53 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.persons.editForm.closeDestroy();
+              this.personsSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.persons.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.personsSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.persons.jqxgridComponent.selectRow.geographId = selectObject.geographId;
-          this.persons.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
-          this.persons.jqxgridComponent.selectRow.code = selectObject.code;
-          this.persons.jqxgridComponent.selectRow.nameFirst = selectObject.nameFirst;
-          this.persons.jqxgridComponent.selectRow.nameSecond = selectObject.nameSecond;
-          this.persons.jqxgridComponent.selectRow.nameThird = selectObject.nameThird;
-          this.persons.jqxgridComponent.selectRow.inn = selectObject.inn;
-          this.persons.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.nameFirst = selectObject.nameFirst;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.nameSecond = selectObject.nameSecond;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.nameThird = selectObject.nameThird;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.inn = selectObject.inn;
+          this.personsSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
           // upd
           this.oSubPersons = this.personService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.upd')
-                + this.persons.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.personsSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.persons.editForm.closeDestroy();
+              this.personsSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.persons.jqxgridComponent.refresh_upd(
-                this.persons.jqxgridComponent.selectRow.id, this.persons.jqxgridComponent.selectRow);
+              this.personsSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.personsSimpleDictionary.jqxgridComponent.selectRow.id, this.personsSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
         break;
       case 'substations':
         selectObject = saveEditwinObject.selectObject;
-        for (let i = 0; i < this.substations.editForm.sourceForEditForm.length; i++) {
-          switch (this.substations.editForm.sourceForEditForm[i].nameField) {
+        for (let i = 0; i < this.substationsSimpleDictionary.editForm.sourceForEditForm.length; i++) {
+          switch (this.substationsSimpleDictionary.editForm.sourceForEditForm[i].nameField) {
             case 'geographs':
-              selectObject.geographId = +this.substations.editForm.sourceForEditForm[i].selectId;
-              selectObject.geographFullName = this.substations.editForm.sourceForEditForm[i].selectName;
+              selectObject.geographId = +this.substationsSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.geographFullName = this.substationsSimpleDictionary.editForm.sourceForEditForm[i].selectName;
               break;
             case 'orgForms':
-              selectObject.orgFormId = +this.substations.editForm.sourceForEditForm[i].selectId;
-              selectObject.orgFormCode = this.substations.editForm.sourceForEditForm[i].selectCode;
+              selectObject.orgFormId = +this.substationsSimpleDictionary.editForm.sourceForEditForm[i].selectId;
+              selectObject.orgFormCode = this.substationsSimpleDictionary.editForm.sourceForEditForm[i].selectCode;
               break;
             default:
               break;
@@ -1283,37 +1275,40 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.substations.editForm.closeDestroy();
+              this.substationsSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.substations.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              this.substationsSimpleDictionary.jqxgridComponent.refresh_ins(selectObject.id, selectObject);
+              // refresh temp
+              this.getSourceForJqxGrid(saveEditwinObject.dictionaryType);
             }
           );
         }
         if (saveEditwinObject.typeEditWindow === 'upd') {
           // definde param befor upd
-          this.substations.jqxgridComponent.selectRow.geographId = selectObject.geographId;
-          this.substations.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
-          this.substations.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
-          this.substations.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
-          this.substations.jqxgridComponent.selectRow.code = selectObject.code;
-          this.substations.jqxgridComponent.selectRow.name = selectObject.name;
-          this.substations.jqxgridComponent.selectRow.inn = selectObject.inn;
-          this.substations.jqxgridComponent.selectRow.comments = selectObject.comments;
-          this.substations.jqxgridComponent.selectRow.power = selectObject.power;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.geographId = selectObject.geographId;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.geographFullName = selectObject.geographFullName;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.orgFormId = selectObject.orgFormId;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.orgFormCode = selectObject.orgFormCode;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.code = selectObject.code;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.name = selectObject.name;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.inn = selectObject.inn;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.comments = selectObject.comments;
+          this.substationsSimpleDictionary.jqxgridComponent.selectRow.power = selectObject.power;
           // upd
           this.oSubSubstations = this.substationService.upd(selectObject).subscribe(
             response => {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.upd')
-                + this.substations.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
+                + this.substationsSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
             error =>
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
             () => {
               // close edit window
-              this.substations.editForm.closeDestroy();
+              this.substationsSimpleDictionary.editForm.closeDestroy();
               // update data source
-              this.substations.jqxgridComponent.refresh_upd(
-                this.substations.jqxgridComponent.selectRow.id, this.substations.jqxgridComponent.selectRow);
+              this.substationsSimpleDictionary.jqxgridComponent.refresh_upd(
+                this.substationsSimpleDictionary.jqxgridComponent.selectRow.id,
+                this.substationsSimpleDictionary.jqxgridComponent.selectRow);
             }
           );
         }
@@ -1340,7 +1335,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.companies.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.companiesSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -1357,7 +1354,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.persons.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.personsSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }
@@ -1374,7 +1373,9 @@ export class ContragentComponent implements OnInit, OnDestroy {
               error =>
                 this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
               () => {
-                this.substations.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                this.substationsSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
+                // refresh temp
+                this.getSourceForJqxGrid(okEvenwinObject.dictionaryType);
               }
             );
           }

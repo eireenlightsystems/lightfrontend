@@ -51,7 +51,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   // define variables - link to view objects
   @ViewChild('jqxgridComponent', {static: false}) jqxgridComponent: JqxgridComponent;
   @ViewChild('buttonPanel', {static: false}) buttonPanel: ButtonPanelComponent;
-  @ViewChild('filterTable', {static: false}) filterTable: FilterTableComponent;
+  @ViewChild('filterForm', {static: false}) filterForm: FilterTableComponent;
   @ViewChild('editFormSpeed', {static: false}) editFormSpeed: FixturecomspeededitFormComponent;
   @ViewChild('eventWindow', {static: false}) eventWindow: EventWindowComponent;
 
@@ -90,7 +90,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   };
   sourceForFilter: SourceForFilter[];
   sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   // edit form
   isEditFormSpeedInit: any;
@@ -296,8 +296,8 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     if (this.jqxgridComponent) {
       this.jqxgridComponent.destroyGrid();
     }
-    if (this.filterTable) {
-      this.filterTable.destroy();
+    if (this.filterForm) {
+      this.filterForm.destroy();
     }
     if (this.buttonPanel) {
       this.buttonPanel.destroy();
@@ -321,7 +321,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
 
     // initialization source for filter
     setTimeout(() => {
-      this.initSourceFilter();
+      this.getSourceForFilter();
     }, 1000);
 
     // disabled/available buttons
@@ -444,16 +444,12 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   setting() {
-    this.jqxgridComponent.openSettinWin();
+    this.jqxgridComponent.initSettingForm();
   }
 
   filterList() {
-    if (this.filterTable.filtrWindow.isOpen()) {
-      this.filterTable.close();
-    } else {
-      this.initSourceFilter();
-      this.filterTable.open();
-    }
+    this.isFilterFormInit = true;
+    this.getSourceForFilter();
   }
 
   place() {
@@ -506,52 +502,39 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
+    this.filterSelect = this.filterForm.getFilterSelect();
     this.refreshGrid();
   }
 
-  initSourceFilter() {
-    if (!this.isFilterVisible
-      && !isUndefined(this.commandStatuses)) {
-      this.isFilterVisible = true;
+  getSourceForFilter() {
+    if (!!isUndefined(this.commandStatuses)) {
+      let sourceForFilter: any[];
       if (this.translate.currentLang === 'ru') {
-        for (let i = 0; i < this.sourceForFilter.length; i++) {
-          switch (this.sourceForFilter[i].name) {
-            case 'commandStatuses':
-              this.sourceForFilter[i].source = this.commandStatuses;
-              this.sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
-                (currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
-              this.sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
-              break;
-            case 'speedDirectiones':
-              this.sourceForFilter[i].source = this.speedDirectiones;
-              break;
-            default:
-              break;
-          }
-        }
+        sourceForFilter = this.sourceForFilter;
       }
       if (this.translate.currentLang === 'en') {
-        for (let i = 0; i < this.sourceForFilterEng.length; i++) {
-          switch (this.sourceForFilterEng[i].name) {
-            case 'commandStatuses':
-              this.sourceForFilterEng[i].source = this.commandStatuses;
-              this.sourceForFilterEng[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
-                (currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
-              this.sourceForFilterEng[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
-              break;
-            case 'speedDirectiones':
-              this.sourceForFilterEng[i].source = this.speedDirectiones;
-              break;
-            default:
-              break;
-          }
+        sourceForFilter = this.sourceForFilterEng;
+      }
+      for (let i = 0; i < sourceForFilter.length; i++) {
+        switch (sourceForFilter[i].name) {
+          case 'commandStatuses':
+            sourceForFilter[i].source = this.commandStatuses;
+            sourceForFilter[i].defaultValue = this.commandStatuses.indexOf(this.commandStatuses.find(
+              (currentStatus: CommandStatus) => currentStatus.id === this.commandSpeedSwitchDflt.statusId)).toString();
+            sourceForFilter[i].selectId = this.commandSpeedSwitchDflt.statusId.toString();
+            break;
+          case 'speedDirectiones':
+            sourceForFilter[i].source = this.speedDirectiones;
+            break;
+          default:
+            break;
         }
       }
     }
-    // view select filter for user
-    if (this.isFilterVisible === true) {
-      this.filterSelect = this.filterTable.getFilterSelect();
-    }
+  }
+
+  destroyFilterForm() {
+    this.isFilterFormInit = false;
   }
 
   // EDIT FORM
