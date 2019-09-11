@@ -10,7 +10,7 @@ import {
   Contract,
   EquipmentType,
   FilterFixture,
-  Fixture,
+  Fixture, FixtureType,
   HeightType,
   Installer,
   ItemsLinkForm, NavItem,
@@ -47,13 +47,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   @Input() selectContractId: string;
-  @Input() selectNodeId: string;
+  @Input() selectNodeId: number;
   @Input() fixtureGroupId: string;
   @Input() heightGrid: number;
   @Input() isMasterGrid: boolean;
@@ -899,9 +899,9 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   getEnabledButtons() {
     if (!isUndefined(this.settingButtonPanel)) {
-      this.settingButtonPanel.add.disabled = this.siteMap[0].children[0].children[0].children[0].children[0].disabled;
-      this.settingButtonPanel.upd.disabled = this.siteMap[0].children[0].children[0].children[0].children[1].disabled;
-      this.settingButtonPanel.del.disabled = this.siteMap[0].children[0].children[0].children[0].children[2].disabled;
+      this.settingButtonPanel.add.disabled = false;
+      this.settingButtonPanel.upd.disabled = false;
+      this.settingButtonPanel.del.disabled = false;
       this.settingButtonPanel.refresh.disabled = false;
       this.settingButtonPanel.setting.disabled = false;
       this.settingButtonPanel.filterList.disabled = false;
@@ -1240,16 +1240,16 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.fixtureTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.fixtureTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: FixtureType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.fixtureTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: FixtureType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.fixtureTypeId.toString();
             sourceForEditForm[i].selectCode = this.fixtureTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.fixtureTypeId).code;
+              (sensorType: FixtureType) => sensorType.id === +this.jqxgridComponent.selectRow.fixtureTypeId).code;
             sourceForEditForm[i].selectName = this.fixtureTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.fixtureTypeId).name;
+              (sensorType: FixtureType) => sensorType.id === +this.jqxgridComponent.selectRow.fixtureTypeId).name;
             for (let j = 0; j < this.fixtureTypes.length; j++) {
               if (+this.fixtureTypes[j].id === +this.jqxgridComponent.selectRow.fixtureTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

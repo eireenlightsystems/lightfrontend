@@ -1,5 +1,6 @@
 // angular lib
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
 import {Contract, NavItem, Owner, SensorType} from '../../shared/interfaces';
@@ -29,7 +30,9 @@ export class SensorPageComponent implements OnInit, OnDestroy {
   // other variables
 
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

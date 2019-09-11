@@ -1,68 +1,76 @@
-<jqxSplitter #mainSplitter
-             [theme]="'material'"
-             [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
-             [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
-             (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
-             (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
-             (onExpanded)="expanded()"
->
-  <div class="splitter-panel">
-    <app-nodelist-page #nodelistPageComponent
-                       [ownerNodes]="ownerNodes"
-                       [nodeTypes]="nodeTypes"
-                       [contractNodes]="contractNodes"
-                       [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
-                       [isMasterGrid]="true"
-                       [settingButtonPanel]="settingNodeButtonPanel"
-                       (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-nodelist-page>
-  </div>
-  <div class="splitter-panel">
-    <mat-tab-group #matTabGroup [selectedIndex]="0">
-      <mat-tab label="{{'site.menu.operator.fixture-page.fixture-page' | translate}}">
-        <app-fixturelist-page #fixturelistPageComponent
-                              [siteMap]="siteMap"
-                              *ngIf="siteMap[0].children[0].children[0].children[0].disabled === false"
-                              [ownerFixtures]="ownerFixtures"
-                              [fixtureTypes]="fixtureTypes"
-                              [substations]="substations"
-                              [contractFixtures]="contractFixtures"
-                              [installers]="installers"
-                              [heightTypes]="heightTypes"
-                              [selectContractId]="''"
-                              [selectNodeId]="selectNodeId"
-                              [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                              [selectionmode]="'checkbox'"
-                              [settingButtonPanel]="settingFixtureButtonPanel"
-        ></app-fixturelist-page>
-      </mat-tab>
-      <mat-tab label="{{'site.menu.operator.gateway-page.gateway-page' | translate}}">
-        <app-gatewaylist-page #gatewaylistPageComponent
-                              [siteMap]="siteMap"
-                              [ownerGateways]="ownerGateways"
-                              [gatewayTypes]="gatewayTypes"
-                              [contractGateways]="contractGateways"
-                              [selectNodeId]="selectNodeId"
-                              [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                              [isMasterGrid]="false"
-                              [selectionmode]="'checkbox'"
-                              [settingButtonPanel]="settingGatewayButtonPanel"
-        ></app-gatewaylist-page>
-      </mat-tab>
-      <mat-tab label="{{'site.menu.operator.sensor-page.sensor-page' | translate}}">
-        <app-sensorlist-page #sensorlistPageComponent
-                             [siteMap]="siteMap"
-                             [ownerSensors]="ownerSensors"
-                             [sensorTypes]="sensorTypes"
-                             [contractSensors]="contractSensors"
-                             [selectNodeId]="selectNodeId"
-                             [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                             [isMasterGrid]="false"
-                             [selectionmode]="'checkbox'"
-                             [settingButtonPanel]="settingSensorButtonPanel"
-        ></app-sensorlist-page>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-</jqxSplitter>
+<div *ngIf="siteMap[0].children[1].children[0].disabled === false; else notRightComponent">
+  <jqxSplitter #mainSplitter
+               [theme]="'material'"
+               [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+               [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
+               (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+               (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+               (onExpanded)="expanded()"
+  >
+    <div class="splitter-panel">
+      <app-nodelist-page #nodelistPageComponent
+                         [siteMap]="siteMap"
+                         [ownerNodes]="ownerNodes"
+                         [nodeTypes]="nodeTypes"
+                         [contractNodes]="contractNodes"
+                         [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
+                         [isMasterGrid]="true"
+                         [settingButtonPanel]="settingNodeButtonPanel"
+                         (onRefreshChildGrid)="refreshChildGrid($event)"
+      ></app-nodelist-page>
+    </div>
+    <div class="splitter-panel">
+      <mat-tab-group #matTabGroup [selectedIndex]="0">
+        <mat-tab label="{{'site.menu.operator.fixture-page.fixture-page' | translate}}">
+          <app-fixturelist-page #fixturelistPageComponent
+                                [siteMap]="siteMap"
+                                [ownerFixtures]="ownerFixtures"
+                                [fixtureTypes]="fixtureTypes"
+                                [substations]="substations"
+                                [contractFixtures]="contractFixtures"
+                                [installers]="installers"
+                                [heightTypes]="heightTypes"
+                                [selectContractId]="''"
+                                [selectNodeId]="selectNodeId"
+                                [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                [selectionmode]="'checkbox'"
+                                [settingButtonPanel]="settingFixtureButtonPanel"
+          ></app-fixturelist-page>
+        </mat-tab>
+        <mat-tab label="{{'site.menu.operator.gateway-page.gateway-page' | translate}}">
+          <app-gatewaylist-page #gatewaylistPageComponent
+                                [siteMap]="siteMap"
+                                [ownerGateways]="ownerGateways"
+                                [gatewayTypes]="gatewayTypes"
+                                [contractGateways]="contractGateways"
+                                [selectNodeId]="selectNodeId"
+                                [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                [isMasterGrid]="false"
+                                [selectionmode]="'checkbox'"
+                                [settingButtonPanel]="settingGatewayButtonPanel"
+          ></app-gatewaylist-page>
+        </mat-tab>
+        <mat-tab label="{{'site.menu.operator.sensor-page.sensor-page' | translate}}">
+          <app-sensorlist-page #sensorlistPageComponent
+                               [siteMap]="siteMap"
+                               [ownerSensors]="ownerSensors"
+                               [sensorTypes]="sensorTypes"
+                               [contractSensors]="contractSensors"
+                               [selectNodeId]="selectNodeId"
+                               [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                               [isMasterGrid]="false"
+                               [selectionmode]="'checkbox'"
+                               [settingButtonPanel]="settingSensorButtonPanel"
+          ></app-sensorlist-page>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </jqxSplitter>
+</div>
 
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.node-page.node-masterdetails-page.node-masterdetails-page')"
+  >
+  </app-not-right>
+</ng-template>

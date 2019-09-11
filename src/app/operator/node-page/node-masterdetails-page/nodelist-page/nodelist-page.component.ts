@@ -12,7 +12,7 @@ import {
   SettingButtonPanel,
   SourceForJqxGrid,
   SettingWinForEditForm, SourceForEditForm,
-  SourceForLinkForm, ItemsLinkForm, NavItem
+  SourceForLinkForm, ItemsLinkForm, NavItem, NodeType
 } from '../../../../shared/interfaces';
 // app services
 import {NodeService} from '../../../../shared/services/node/node.service';
@@ -39,7 +39,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerNodes: Owner[];
-  @Input() nodeTypes: EquipmentType[];
+  @Input() nodeTypes: NodeType[];
   @Input() contractNodes: Contract[];
   @Input() selectGatewayId: number;
   @Input() heightGrid: number;
@@ -981,16 +981,16 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: NodeType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: NodeType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.nodeTypeId.toString();
             sourceForEditForm[i].selectCode = this.nodeTypes.find(
-              (oneType: EquipmentType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).code;
+              (oneType: NodeType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).code;
             sourceForEditForm[i].selectName = this.nodeTypes.find(
-              (oneType: EquipmentType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).name;
+              (oneType: NodeType) => oneType.id === +this.jqxgridComponent.selectRow.nodeTypeId).name;
             for (let j = 0; j < this.nodeTypes.length; j++) {
               if (+this.nodeTypes[j].id === +this.jqxgridComponent.selectRow.nodeTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

@@ -1,42 +1,46 @@
-<div id="fixture_yamaps"></div>
+<div *ngIf="siteMap[0].children[0].children[2].disabled === false; else notRightComponent">
+  <div id="fixture_yamaps"></div>
 
-<app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
-               [settingWinForEditForm]="settingWinForEditForm"
-               [sourceForEditForm]="sourceForEditForm"
-               (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onDestroyEditForm)="destroyEditForm()"
-               (onSaveEditFormBtn)="saveEditFormBtn()"
-></app-edit-form>
-<app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
-               [settingWinForEditForm]="settingWinForEditForm"
-               [sourceForEditForm]="sourceForEditFormEng"
-               (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onDestroyEditForm)="destroyEditForm()"
-               (onSaveEditFormBtn)="saveEditFormBtn()"
-></app-edit-form>
+  <app-edit-form #editForm
+                 *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
+                 [settingWinForEditForm]="settingWinForEditForm"
+                 [sourceForEditForm]="sourceForEditForm"
+                 (onGetSourceForEditForm)="getSourceForEditForm()"
+                 (onDestroyEditForm)="destroyEditForm()"
+                 (onSaveEditFormBtn)="saveEditFormBtn()"
+  ></app-edit-form>
+  <app-edit-form #editForm
+                 *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
+                 [settingWinForEditForm]="settingWinForEditForm"
+                 [sourceForEditForm]="sourceForEditFormEng"
+                 (onGetSourceForEditForm)="getSourceForEditForm()"
+                 (onDestroyEditForm)="destroyEditForm()"
+                 (onSaveEditFormBtn)="saveEditFormBtn()"
+  ></app-edit-form>
 
-<app-fixturecom-form #editFormSwitchOn
-                     *ngIf="isEditFormSwitchOnInit"
-                     [fixtureIds]="fixtureIds"
-                     (onDestroyEditFormSwitchOn)="destroyEditFormSwitchOn()"
-                     (onSaveEditFormSwitchOnBtn)="saveEditFormSwitchOnBtn()"
-></app-fixturecom-form>
+  <app-fixturecom-form #editFormSwitchOn
+                       *ngIf="isEditFormSwitchOnInit"
+                       [fixtureIds]="fixtureIds"
+                       (onDestroyEditFormSwitchOn)="destroyEditFormSwitchOn()"
+                       (onSaveEditFormSwitchOnBtn)="saveEditFormSwitchOnBtn()"
+  ></app-fixturecom-form>
 
-<app-fixturecomedit-switchoff-form #editFormSwitchOff
-                                   *ngIf="isEditFormSwitchOffInit"
-                                   [fixtureIds]="fixtureIds"
-                                   (onDestroyEditFormSwitchOff)="destroyEditFormSwitchOff()"
-                                   (onSaveEditFormSwitchOffBtn)="saveEditFormSwitchOffBtn()"
-></app-fixturecomedit-switchoff-form>
+  <app-fixturecomedit-switchoff-form #editFormSwitchOff
+                                     *ngIf="isEditFormSwitchOffInit"
+                                     [fixtureIds]="fixtureIds"
+                                     (onDestroyEditFormSwitchOff)="destroyEditFormSwitchOff()"
+                                     (onSaveEditFormSwitchOffBtn)="saveEditFormSwitchOffBtn()"
+  ></app-fixturecomedit-switchoff-form>
 
-<app-event-window #eventWindow
-                  [warning]="warningEventWindow"
-                  (onOkEvenwinBtn)="okEvenwinBtn()"
-></app-event-window>
+  <app-event-window #eventWindow
+                    [warning]="warningEventWindow"
+                    (onOkEvenwinBtn)="okEvenwinBtn()"
+  ></app-event-window>
+</div>
 
 <ng-template #notRightComponent>
-  <app-not-right>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.fixture-page.fixturemap-page.fixturemap-page')"
+  >
   </app-not-right>
 </ng-template>

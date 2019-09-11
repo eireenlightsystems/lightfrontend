@@ -12,6 +12,6 @@
   align-items: center;
 }
 
-h4 {
+h4, h5 {
   color: red;
 }

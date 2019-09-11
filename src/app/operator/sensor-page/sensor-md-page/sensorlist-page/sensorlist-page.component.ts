@@ -8,8 +8,20 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
-  Contract, Owner, FilterSensor, EquipmentType, Sensor,
-  SourceForFilter, SettingButtonPanel, SettingWinForEditForm, SourceForEditForm, SourceForLinkForm, ItemsLinkForm, SourceForJqxGrid, NavItem
+  Contract,
+  Owner,
+  FilterSensor,
+  EquipmentType,
+  Sensor,
+  SourceForFilter,
+  SettingButtonPanel,
+  SettingWinForEditForm,
+  SourceForEditForm,
+  SourceForLinkForm,
+  ItemsLinkForm,
+  SourceForJqxGrid,
+  NavItem,
+  SensorType
 } from '../../../../shared/interfaces';
 // app services
 import {SensorService} from '../../../../shared/services/sensor/sensor.service';
@@ -35,7 +47,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerSensors: Owner[];
-  @Input() sensorTypes: EquipmentType[];
+  @Input() sensorTypes: SensorType[];
   @Input() contractSensors: Contract[];
   @Input() selectNodeId: number;
   @Input() heightGrid: number;
@@ -909,16 +921,16 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.sensorTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.sensorTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: SensorType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.sensorTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: SensorType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.sensorTypeId.toString();
             sourceForEditForm[i].selectCode = this.sensorTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).code;
+              (sensorType: SensorType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).code;
             sourceForEditForm[i].selectName = this.sensorTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).name;
+              (sensorType: SensorType) => sensorType.id === +this.jqxgridComponent.selectRow.sensorTypeId).name;
             for (let j = 0; j < this.sensorTypes.length; j++) {
               if (+this.sensorTypes[j].id === +this.jqxgridComponent.selectRow.sensorTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

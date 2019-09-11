@@ -3,7 +3,8 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div [hidden]="!(this.router.url === '/dictionary/contract/contracts')"
+  <div *ngIf="siteMap[1].children[2].children[0].disabled === false"
+       [hidden]="!(this.router.url === '/dictionary/contract/contracts')"
        class="table_border">
     <app-simple-dictionary #contractSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
@@ -35,7 +36,8 @@
     ></app-simple-dictionary>
   </div>
 
-  <div [hidden]="!(this.router.url === '/dictionary/contract/contracts-types')"
+  <div *ngIf="siteMap[1].children[2].children[1].disabled === false"
+       [hidden]="!(this.router.url === '/dictionary/contract/contracts-types')"
        class="table_border">
     <app-simple-dictionary #contractTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"

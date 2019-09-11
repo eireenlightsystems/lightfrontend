@@ -1,49 +1,64 @@
-<jqxSplitter #mainSplitter
-             [theme]="'material'"
-             [width]="'100%'" [height]="getHeightSplitter()"
-             [panels]="[{ size: '50%'}]"
->
-  <div class="splitter-panel">
-    <app-button-panel
-      [settingButtonPanel]="settingFixtureGrButtonPanel"
-      (onIns)="ins()"
-      (onUpd)="upd()"
-      (onDel)="del()"
-      (onRefresh)="refresh()"
-      (onSetting)="setting()"
-      (onFilterList)="filterList()"
-      (onSwitchOn)="switchOn()"
-      (onSwitchOff)="switchOff()"
-    ></app-button-panel>
-    <app-fixture-grlist-page #fixtureGrlistPageComponent
-                             [fixtures]="fixtures"
-                             [fixtureGroupTypes]="fixtureGroupTypes"
-                             [fixtureGroupOwners]="fixtureGroupOwners"
-                             [widthGrid]="'100%'"
-                             [heightGrid]="this.getHeightSplitter() - this.heightDeltaGrid"
-                             [isMasterGrid]="true"
-                             [isButtonPanelVisible] = "isButtonPanelVisible"
-                             [settingButtonPanel]="settingFixtureGrButtonPanel"
-                             (onRefreshChildGrid)="refreshChildGrid($event)"
-                             (onFeedback)="feedback($event)"
-    ></app-fixture-grlist-page>
-  </div>
-  <div class="splitter-panel">
-    <app-fixture-masterdetails-page #fixtureMasterdetailsPageComponentFgr
-                                    *ngIf="siteMap[0].children[0].children[0].disabled === false"
-                                    [siteMap]="siteMap"
-                                    [ownerFixtures]="ownerFixtures"
-                                    [fixtureTypes]="fixtureTypes"
-                                    [substations]="substations"
-                                    [contractFixtures]="contractFixtures"
-                                    [installers]="installers"
-                                    [heightTypes]="heightTypes"
-                                    [commandTypes]="commandTypes"
-                                    [commandStatuses]="commandStatuses"
-                                    [speedDirectiones]="speedDirectiones"
-                                    [selectionmode]=""
-                                    [settingFixtureButtonPanel]="settingFixtureButtonPanel"
-                                    [fixtureGroupId]="0"
-    ></app-fixture-masterdetails-page>
-  </div>
-</jqxSplitter>
+<div *ngIf="siteMap[0].children[0].children[1].disabled === false; else notRightComponent">
+  <jqxSplitter #mainSplitter
+               [theme]="'material'"
+               [width]="'100%'" [height]="getHeightSplitter()"
+               [panels]="[{ size: '50%'}]"
+  >
+    <div class="splitter-panel">
+      <app-button-panel
+        *ngIf="siteMap[0].children[0].children[1].children[0].disabled === false"
+        [settingButtonPanel]="settingFixtureGrButtonPanel"
+        (onIns)="ins()"
+        (onUpd)="upd()"
+        (onDel)="del()"
+        (onRefresh)="refresh()"
+        (onSetting)="setting()"
+        (onFilterList)="filterList()"
+        (onSwitchOn)="switchOn()"
+        (onSwitchOff)="switchOff()"
+        [insDisabled]="siteMap[0].children[0].children[1].children[0].children[0].disabled"
+        [updDisabled]="siteMap[0].children[0].children[1].children[0].children[1].disabled"
+        [delDisabled]="siteMap[0].children[0].children[1].children[0].children[2].disabled"
+        [switchOnDisabled]="siteMap[0].children[0].children[1].children[0].children[3].disabled"
+        [switchOffDisabled]="siteMap[0].children[0].children[1].children[0].children[4].disabled"
+      ></app-button-panel>
+      <app-fixture-grlist-page #fixtureGrlistPageComponent
+                               [siteMap]="siteMap"
+                               [fixtures]="fixtures"
+                               [fixtureGroupTypes]="fixtureGroupTypes"
+                               [fixtureGroupOwners]="fixtureGroupOwners"
+                               [widthGrid]="'100%'"
+                               [heightGrid]="this.getHeightSplitter() - this.heightDeltaGrid"
+                               [isMasterGrid]="true"
+                               [isButtonPanelVisible]="isButtonPanelVisible"
+                               [settingButtonPanel]="settingFixtureGrButtonPanel"
+                               (onRefreshChildGrid)="refreshChildGrid($event)"
+                               (onFeedback)="feedback($event)"
+      ></app-fixture-grlist-page>
+    </div>
+    <div class="splitter-panel">
+      <app-fixture-masterdetails-page #fixtureMasterdetailsPageComponentFgr
+                                      [siteMap]="siteMap"
+                                      [ownerFixtures]="ownerFixtures"
+                                      [fixtureTypes]="fixtureTypes"
+                                      [substations]="substations"
+                                      [contractFixtures]="contractFixtures"
+                                      [installers]="installers"
+                                      [heightTypes]="heightTypes"
+                                      [commandTypes]="commandTypes"
+                                      [commandStatuses]="commandStatuses"
+                                      [speedDirectiones]="speedDirectiones"
+                                      [selectionmode]=""
+                                      [settingFixtureButtonPanel]="settingFixtureButtonPanel"
+                                      [fixtureGroupId]="0"
+      ></app-fixture-masterdetails-page>
+    </div>
+  </jqxSplitter>
+</div>
+
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.fixture-page.fixturegroup-md-page.fixturegroup-md-page')"
+  >
+  </app-not-right>
+</ng-template>

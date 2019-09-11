@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
-  CompanyDepartment, Person,
+  CompanyDepartment, NavItem, Person,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid, Substation
@@ -29,6 +29,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
 export class ContragentComponent implements OnInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() heightGrid: number;
   @Input() companies: CompanyDepartment[];
   @Input() persons: Person[];
@@ -1100,13 +1101,25 @@ export class ContragentComponent implements OnInit, OnDestroy {
     let headline: any;
     switch (this.router.url) {
       case '/dictionary/contragent/companies':
-        headline = this.translate.instant('site.menu.dictionarys.contragent-page.company.companies-headline');
-        break;
-      case '/dictionary/contragent/persons':
-        headline = this.translate.instant('site.menu.dictionarys.contragent-page.person.persons-headline');
+        if (this.siteMap[1].children[1].children[0].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.contragent-page.company.companies-headline');
+        }
         break;
       case '/dictionary/contragent/substations':
-        headline = this.translate.instant('site.menu.dictionarys.contragent-page.substation.substations-headline');
+        if (this.siteMap[1].children[1].children[1].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.contragent-page.substation.substations-headline');
+        }
+        break;
+      case '/dictionary/contragent/persons':
+        if (this.siteMap[1].children[1].children[2].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.contragent-page.person.persons-headline');
+        }
         break;
       default:
         headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');

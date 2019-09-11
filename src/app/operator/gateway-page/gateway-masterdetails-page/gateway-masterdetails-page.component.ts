@@ -1,6 +1,7 @@
 // angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 // app interfaces
@@ -59,7 +60,9 @@ export class GatewayMasterdetailsPageComponent implements OnInit {
   settingNodeButtonPanel: SettingButtonPanel;
   settingGatewayButtonPanel: SettingButtonPanel;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

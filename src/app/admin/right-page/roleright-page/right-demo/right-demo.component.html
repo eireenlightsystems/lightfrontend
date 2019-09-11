@@ -19,11 +19,12 @@
 
   <div>
     <app-roleright-page #rolerightPageComponent
+                        [theme]="theme"
+                        [siteMap]="siteMap"
                         [roleSiteMap]="roleSiteMap"
                         [heightSplitterRoleright]="heightSplitterRoleright"
                         [heightGridRoleright]="heightGridRoleright"
                         [companies]="companies"
-                        [theme]="theme"
     ></app-roleright-page>
 
     <jqxButton #closeButton

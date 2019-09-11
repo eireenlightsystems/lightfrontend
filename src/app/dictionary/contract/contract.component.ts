@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
-  CompanyDepartment, Contract, ContractType,
+  CompanyDepartment, Contract, ContractType, NavItem,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
@@ -28,6 +28,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
 export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() heightGrid: number;
   @Input() contracts: Contract[];
   @Input() contractTypes: ContractType[];
@@ -580,10 +581,18 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
     let headline: any;
     switch (this.router.url) {
       case '/dictionary/contract/contracts':
-        headline = this.translate.instant('site.menu.dictionarys.contract-page.contract.contracts-headline');
+        if (this.siteMap[1].children[2].children[0].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.contract-page.contract.contracts-headline');
+        }
         break;
       case '/dictionary/contract/contracts-types':
-        headline = this.translate.instant('site.menu.dictionarys.contract-page.contracttype.contracttypes-headline');
+        if (this.siteMap[1].children[2].children[1].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.contract-page.contracttype.contracttypes-headline');
+        }
         break;
       default:
         headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');

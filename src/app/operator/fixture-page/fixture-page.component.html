@@ -1,59 +1,60 @@
-<mat-tab-group #matTabGroup [selectedIndex]="0">
-  <mat-tab label="{{'site.menu.operator.fixture-page.fixture-page' | translate}}">
-    <div [style.width]="tabsWidth + '%'">
-      <app-fixture-masterdetails-page
-        *ngIf="siteMap[0].children[0].children[0].disabled === false; else notRightComponent"
-        [siteMap]="siteMap"
-        [ownerFixtures]="ownerFixtures"
-        [fixtureTypes]="fixtureTypes"
-        [substations]="substations"
-        [contractFixtures]="contractFixtures"
-        [installers]="installers"
-        [heightTypes]="heightTypes"
-        [commandTypes]="commandTypes"
-        [commandStatuses]="commandStatuses"
-        [speedDirectiones]="speedDirectiones"
-        [selectionmode]=""
-        [fixtureGroupId]=""
-      ></app-fixture-masterdetails-page>
-    </div>
-  </mat-tab>
-  <mat-tab
-    label="{{'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page' | translate}}">
-    <div [style.width]="tabsWidth + '%'">
-      <app-fixturegroup-md-page
-        *ngIf="siteMap[0].children[0].children[1].disabled === false; else notRightComponent"
-        [siteMap]="siteMap"
-        [ownerFixtures]="ownerFixtures"
-        [fixtureTypes]="fixtureTypes"
-        [substations]="substations"
-        [contractFixtures]="contractFixtures"
-        [installers]="installers"
-        [heightTypes]="heightTypes"
-        [fixtureGroupTypes]="fixtureGroupTypes"
-        [fixtureGroupOwners]="fixtureGroupOwners"
-        [commandTypes]="commandTypes"
-        [commandStatuses]="commandStatuses"
-        [speedDirectiones]="speedDirectiones"
-      ></app-fixturegroup-md-page>
-    </div>
-  </mat-tab>
-  <mat-tab label="{{'site.menu.operator.fixture-page.fixturemap-page.fixturemap-page' | translate}}">
-    <ng-template matTabContent>
-      <app-fixturemap-page #fixturemapPageComponent
-                           *ngIf="siteMap[0].children[0].children[2].disabled === false; else notRightComponent"
-                           [siteMap]="siteMap"
-                           [fixtureTypes]="fixtureTypes"
-                           [substations]="substations"
-                           [contractFixtures]="contractFixtures"
-                           [installers]="installers"
-                           [heightTypes]="heightTypes"
-      ></app-fixturemap-page>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<div *ngIf="siteMap[0].children[0].disabled === false; else notRightComponent">
+  <mat-tab-group #matTabGroup [selectedIndex]="0">
+    <mat-tab label="{{'site.menu.operator.fixture-page.fixture-page' | translate}}">
+      <div [style.width]="tabsWidth + '%'">
+        <app-fixture-masterdetails-page
+          [siteMap]="siteMap"
+          [ownerFixtures]="ownerFixtures"
+          [fixtureTypes]="fixtureTypes"
+          [substations]="substations"
+          [contractFixtures]="contractFixtures"
+          [installers]="installers"
+          [heightTypes]="heightTypes"
+          [commandTypes]="commandTypes"
+          [commandStatuses]="commandStatuses"
+          [speedDirectiones]="speedDirectiones"
+          [selectionmode]=""
+          [fixtureGroupId]=""
+        ></app-fixture-masterdetails-page>
+      </div>
+    </mat-tab>
+    <mat-tab
+      label="{{'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page' | translate}}">
+      <div [style.width]="tabsWidth + '%'">
+        <app-fixturegroup-md-page
+          [siteMap]="siteMap"
+          [ownerFixtures]="ownerFixtures"
+          [fixtureTypes]="fixtureTypes"
+          [substations]="substations"
+          [contractFixtures]="contractFixtures"
+          [installers]="installers"
+          [heightTypes]="heightTypes"
+          [fixtureGroupTypes]="fixtureGroupTypes"
+          [fixtureGroupOwners]="fixtureGroupOwners"
+          [commandTypes]="commandTypes"
+          [commandStatuses]="commandStatuses"
+          [speedDirectiones]="speedDirectiones"
+        ></app-fixturegroup-md-page>
+      </div>
+    </mat-tab>
+    <mat-tab label="{{'site.menu.operator.fixture-page.fixturemap-page.fixturemap-page' | translate}}">
+      <ng-template matTabContent>
+        <app-fixturemap-page #fixturemapPageComponent
+                             [siteMap]="siteMap"
+                             [fixtureTypes]="fixtureTypes"
+                             [substations]="substations"
+                             [contractFixtures]="contractFixtures"
+                             [installers]="installers"
+                             [heightTypes]="heightTypes"
+        ></app-fixturemap-page>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
 <ng-template #notRightComponent>
-  <app-not-right>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.fixture-page.fixture-page')"
+  >
   </app-not-right>
 </ng-template>

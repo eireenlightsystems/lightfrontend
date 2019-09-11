@@ -1,6 +1,5 @@
 {
   "site": {
-    "namecompany": "Eireen Light Systems Lmt.",
     "menu": {
       "operator": {
         "operation": "Operation",
@@ -13,6 +12,10 @@
               "fixturelist-page-ins": "Adding button of fixture",
               "fixturelist-page-upd": "Updating button of fixture",
               "fixturelist-page-del": "Deleting button of fixture",
+              "fixturelist-page-groupIn": "Button for adding fixtures to a group",
+              "fixturelist-page-groupOut": "Button to exclude fixtures from the group",
+              "fixturelist-page-place": "Button to bind the fixture to the node",
+              "fixturelist-page-pinDrop": "Button to untie the fixture from the node",
               "ins": "Fixture has been added, id = ",
               "upd": "Fixture has been updated, id = ",
               "upd-warning": "You should select a fixture to edit",
@@ -33,6 +36,9 @@
             },
             "fixturecomlist-page": {
               "fixturecomlist-page": "Lighting mode commands",
+              "fixturecomlist-page-del": "Delete command button",
+              "fixturecomlist-page-switchOn": "Lighting button",
+              "fixturecomlist-page-switchOff": "Fixtures off button",
               "time-on": "Date / Time on",
               "time-off": "Date / Time Off",
               "command-off": "Shutdown command",
@@ -46,6 +52,8 @@
             },
             "fixturecomspeedlist-page": {
               "fixturecomspeedlist-page": "Fire/attenuation commands",
+              "fixturecomspeedlist-page-ins": "Add button to change the fire / attenuation rate command",
+              "fixturecomspeedlist-page-del": "Delete command button",
               "time-on": "Date / Time on",
               "command-type": "Command type",
               "time-transition": "Transition time, sec",
@@ -55,19 +63,21 @@
             }
           },
           "fixturegroup-md-page": {
+            "fixturegroup-md-page": "Fixture groups whith child elements on masterdetails page",
             "fixture-grlist-page": {
               "fixture-grlist-page": "Groups of fixtures",
               "fixture-grlist-page-ins": "Adding button of fixture group",
               "fixture-grlist-page-upd": "Updating button of fixture group",
               "fixture-grlist-page-del": "Deleting button of fixture group",
+              "fixture-grlist-page-switchOn": "Lighting button",
+              "fixture-grlist-page-switchOff": "Fixtures off button",
               "ins": "Fixture group has been added, id = ",
               "upd": "Fixture group has been updated, id = ",
               "upd-warning": "You should select a fixture group to edit",
               "del": "The fixture group has been deleted!",
               "del-warning": "You should select a fixture group to delete",
               "del-question": "Delete fixture group id ="
-            },
-            "fixturegroup-md-page": "Fixture groups whith child elements on masterdetails page"
+            }
           },
           "fixturemap-page": {
             "fixturemap-page": "Fixtures on map",
@@ -83,6 +93,8 @@
               "nodelist-page-ins": "Adding button of node",
               "nodelist-page-upd": "Updating button of node",
               "nodelist-page-del": "Deleting button of node",
+              "nodelist-page-groupIn": "Button for adding nodes to a group",
+              "nodelist-page-groupOut": "Button to exclude nodes from the group",
               "ins": "Node has been added, id = ",
               "upd": "Node has been updated, id = ",
               "upd-warning": "You should select a node to edit",
@@ -115,6 +127,8 @@
               "gatewaylist-page-ins": "Adding button of gateway",
               "gatewaylist-page-upd": "Updating button of gateway",
               "gatewaylist-page-del": "Deleting button of gateway",
+              "gatewaylist-page-place": "Button to bind the gateway to the node",
+              "gatewaylist-page-pinDrop": "Button to untie the gateway from the node",
               "ins": "Gateway has been added, id = ",
               "upd": "Gateway has been updated, id = ",
               "upd-warning": "You should select a gateway to edit",
@@ -142,6 +156,8 @@
               "sensorlist-page-ins": "Adding button of sensor",
               "sensorlist-page-upd": "Updating button of sensor",
               "sensorlist-page-del": "Deleting button of sensor",
+              "sensorlist-page-place": "Button to bind the sensor to the node",
+              "sensorlist-page-pinDrop": "Button to untie the sensor from the node",
               "ins": "Sensor has been added, id = ",
               "upd": "Sensor has been updated, id = ",
               "upd-warning": "You should select a sensor to edit",
@@ -251,6 +267,7 @@
           "user-page": {
             "user-page": "Users",
             "ins": "User has been added, id = ",
+            "ins-check": "You must correctly enter the username and password",
             "upd": "User has been updated, id = ",
             "upd-warning": "You should select a user to edit",
             "del": "The user has been deleted!",
@@ -335,6 +352,7 @@
       "switchOff": "Add command OFF fixture groups"
     },
     "company": {
+      "namecompany": "Eireen Light Systems Lmt.",
       "aboutUs": {
         "team": "Project team",
         "aboutUs": "About Us"

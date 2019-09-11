@@ -49,11 +49,9 @@ import {ButtonSettinggridDirective} from './directives/button-settinggrid.direct
 import {ButtonSimpleStyleDirective} from './directives/button-simple-style.directive';
 import {InputFilterStyleDirective} from './directives/input-filter-style.directive';
 import {ComboboxFilterDirective} from './directives/combobox-filter.directive';
-import {ButtonFilterDirective} from './directives/button-filter.directive';
-import {ButtonLinkDirective} from './directives/button-link.directive';
 import {BackgroundLightorangeDirective} from './directives/background-lightorange.directive';
 import {BackgroundLightredDirective} from './directives/background-lightred.directive';
-import {YellowWavesDirectiveDirective} from './directives/yellow-waves-directive.directive';
+import {WavesDirectiveDirective} from './directives/waves-directive.directive';
 import {ButtonMenuDirective} from './directives/button-menu.directive';
 import {TextFontweightDirective} from './directives/text-fontweight.directive';
 import {ObjectPosition2Directive} from './directives/object-position2.directive';
@@ -103,11 +101,9 @@ import {MaterialModule} from './material-module';
     ButtonSimpleStyleDirective,
     InputFilterStyleDirective,
     ComboboxFilterDirective,
-    ButtonFilterDirective,
-    ButtonLinkDirective,
     BackgroundLightorangeDirective,
     BackgroundLightredDirective,
-    YellowWavesDirectiveDirective,
+    WavesDirectiveDirective,
     ButtonMenuDirective,
     TextFontweightDirective,
     ObjectPosition2Directive,
@@ -173,11 +169,9 @@ import {MaterialModule} from './material-module';
     ButtonSimpleStyleDirective,
     InputFilterStyleDirective,
     ComboboxFilterDirective,
-    ButtonFilterDirective,
-    ButtonLinkDirective,
     BackgroundLightorangeDirective,
     BackgroundLightredDirective,
-    YellowWavesDirectiveDirective,
+    WavesDirectiveDirective,
     ButtonMenuDirective,
     TextFontweightDirective,
     ObjectPosition2Directive,

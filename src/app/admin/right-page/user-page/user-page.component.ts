@@ -1,7 +1,11 @@
+// angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
-
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
+// app interfaces
 import {NavItem, Person} from '../../../shared/interfaces';
-
+// app services
+// app components
 import {UserMdPageComponent} from './user-md-page/user-md-page.component';
 
 @Component({
@@ -31,7 +35,9 @@ export class UserPageComponent implements OnInit {
 
   // other variables
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

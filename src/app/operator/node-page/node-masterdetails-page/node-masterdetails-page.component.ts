@@ -1,13 +1,14 @@
 // angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 // app interfaces
 import {
   Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   FilterFixture, FilterGateway,
-  FilterNode, FilterSensor, SettingButtonPanel, NavItem
+  FilterNode, FilterSensor, SettingButtonPanel, NavItem, NodeType, FixtureType, GatewayType, SensorType
 } from '../../../shared/interfaces';
 // app services
 // app components
@@ -33,22 +34,22 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   @Input() siteMap: NavItem[];
   // node source
   @Input() ownerNodes: Owner[];
-  @Input() nodeTypes: EquipmentType[];
+  @Input() nodeTypes: NodeType[];
   @Input() contractNodes: Contract[];
   // fixture source
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
   // gateway source
   @Input() ownerGateways: Owner[];
-  @Input() gatewayTypes: EquipmentType[];
+  @Input() gatewayTypes: GatewayType[];
   @Input() contractGateways: Contract[];
   // sensor source
   @Input() ownerSensors: Owner[];
-  @Input() sensorTypes: EquipmentType[];
+  @Input() sensorTypes: SensorType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component
@@ -102,7 +103,8 @@ export class NodeMasterdetailsPageComponent implements OnInit {
   sizeChildSplitter: any;
 
 
-  constructor() {
+  constructor(// service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

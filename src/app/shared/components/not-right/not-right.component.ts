@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
+import {NavItem} from '../../interfaces';
 
 @Component({
   selector: 'app-not-right',
@@ -7,6 +8,9 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./not-right.component.css']
 })
 export class NotRightComponent implements OnInit {
+
+  // variables from parent component
+  @Input() message: NavItem[];
 
   constructor(
     // service

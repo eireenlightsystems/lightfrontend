@@ -7,7 +7,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
-import {Gateway, Node, Contract, EquipmentType, Owner, SourceForLinkForm, ItemsLinkForm} from '../../../shared/interfaces';
+import {Gateway, Node, Contract, EquipmentType, Owner, SourceForLinkForm, ItemsLinkForm, NavItem} from '../../../shared/interfaces';
 // app services
 import {GatewayService} from '../../../shared/services/gateway/gateway.service';
 import {NodeService} from '../../../shared/services/node/node.service';
@@ -27,6 +27,7 @@ declare var ymaps: any;
 export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];

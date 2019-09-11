@@ -1,35 +1,45 @@
-<mat-tab-group #matTabGroup [selectedIndex]="0">
-  <mat-tab label="{{'site.menu.operator.node-page.node-page' | translate}}">
-    <div [style.width]="tabsWidth + '%'">
-      <app-node-masterdetails-page #nodeMasterdetailsPageComponent
-                                   [siteMap]="siteMap"
-                                   [ownerNodes]="ownerNodes"
-                                   [nodeTypes]="nodeTypes"
-                                   [contractNodes]="contractNodes"
-                                   [ownerFixtures]="ownerFixtures"
-                                   [fixtureTypes]="fixtureTypes"
-                                   [substations]="substations"
-                                   [contractFixtures]="contractFixtures"
-                                   [installers]="installers"
-                                   [heightTypes]="heightTypes"
-                                   [ownerGateways]="ownerGateways"
-                                   [gatewayTypes]="gatewayTypes"
-                                   [contractGateways]="contractGateways"
-                                   [ownerSensors]="ownerSensors"
-                                   [sensorTypes]="sensorTypes"
-                                   [contractSensors]="contractSensors"
-                                   (onRefreshMap)="refreshMap()"
-      ></app-node-masterdetails-page>
-    </div>
-  </mat-tab>
-  <mat-tab label="{{'site.menu.operator.node-page.nodemap-page.nodemap-page' | translate}}">
-    <ng-template matTabContent>
-      <app-nodemap-page #nodemapPageComponent
-                        [ownerNodes]="ownerNodes"
-                        [nodeTypes]="nodeTypes"
-                        [contractNodes]="contractNodes"
-                        (onRefreshGrid)="refreshGrid()"
-      ></app-nodemap-page>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<div *ngIf="siteMap[0].children[1].disabled === false; else notRightComponent">
+  <mat-tab-group #matTabGroup [selectedIndex]="0">
+    <mat-tab label="{{'site.menu.operator.node-page.node-page' | translate}}">
+      <div [style.width]="tabsWidth + '%'">
+        <app-node-masterdetails-page #nodeMasterdetailsPageComponent
+                                     [siteMap]="siteMap"
+                                     [ownerNodes]="ownerNodes"
+                                     [nodeTypes]="nodeTypes"
+                                     [contractNodes]="contractNodes"
+                                     [ownerFixtures]="ownerFixtures"
+                                     [fixtureTypes]="fixtureTypes"
+                                     [substations]="substations"
+                                     [contractFixtures]="contractFixtures"
+                                     [installers]="installers"
+                                     [heightTypes]="heightTypes"
+                                     [ownerGateways]="ownerGateways"
+                                     [gatewayTypes]="gatewayTypes"
+                                     [contractGateways]="contractGateways"
+                                     [ownerSensors]="ownerSensors"
+                                     [sensorTypes]="sensorTypes"
+                                     [contractSensors]="contractSensors"
+                                     (onRefreshMap)="refreshMap()"
+        ></app-node-masterdetails-page>
+      </div>
+    </mat-tab>
+    <mat-tab label="{{'site.menu.operator.node-page.nodemap-page.nodemap-page' | translate}}">
+      <ng-template matTabContent>
+        <app-nodemap-page #nodemapPageComponent
+                          [siteMap]="siteMap"
+                          [ownerNodes]="ownerNodes"
+                          [nodeTypes]="nodeTypes"
+                          [contractNodes]="contractNodes"
+                          (onRefreshGrid)="refreshGrid()"
+        ></app-nodemap-page>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.node-page.node-page')"
+  >
+  </app-not-right>
+</ng-template>

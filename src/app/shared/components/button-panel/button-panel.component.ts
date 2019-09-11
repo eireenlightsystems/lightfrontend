@@ -3,8 +3,9 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} fr
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import jqxTooltip = jqwidgets.jqxTooltip;
+import jqxButton = jqwidgets.jqxButton;
 // app interfaces
-import {SettingButtonPanel} from '../../interfaces';
+import {NavItem, SettingButtonPanel} from '../../interfaces';
 // app services
 // app components
 
@@ -17,7 +18,20 @@ import {SettingButtonPanel} from '../../interfaces';
 export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   // variables from parent component
+  // @Input() siteMap: NavItem[];
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() insDisabled = false;
+  @Input() updDisabled = false;
+  @Input() delDisabled = false;
+  @Input() refreshDisabled = false;
+  @Input() settingDisabled = false;
+  @Input() filterListDisabled = false;
+  @Input() placeDisabled = false;
+  @Input() pinDropDisabled = false;
+  @Input() groupInDisabled = false;
+  @Input() groupOutDisabled = false;
+  @Input() switchOnDisabled = false;
+  @Input() switchOffDisabled = false;
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetSourceForButtonPanel = new EventEmitter();

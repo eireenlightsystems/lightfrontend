@@ -3,7 +3,8 @@
 >{{getHeadline()}}</h6>
 
 <div>
-  <div [hidden]="!(this.router.url ==='/dictionary/equipment/fixturetype')"
+  <div *ngIf="siteMap[1].children[0].children[0].disabled === false"
+       [hidden]="!(this.router.url ==='/dictionary/equipment/fixturetype')"
        class="table_border">
     <app-simple-dictionary #fixtureTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
@@ -31,7 +32,8 @@
     ></app-simple-dictionary>
   </div>
 
-  <div [hidden]="!(this.router.url === '/dictionary/equipment/nodetype')"
+  <div *ngIf="siteMap[1].children[0].children[1].disabled === false"
+       [hidden]="!(this.router.url === '/dictionary/equipment/nodetype')"
        class="table_border">
     <app-simple-dictionary #nodeTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
@@ -59,7 +61,8 @@
     ></app-simple-dictionary>
   </div>
 
-  <div [hidden]="!(this.router.url === '/dictionary/equipment/gatewaytype')"
+  <div *ngIf="siteMap[1].children[0].children[2].disabled === false"
+       [hidden]="!(this.router.url === '/dictionary/equipment/gatewaytype')"
        class="table_border">
     <app-simple-dictionary #gatewayTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"
@@ -87,7 +90,8 @@
     ></app-simple-dictionary>
   </div>
 
-  <div [hidden]="!(this.router.url === '/dictionary/equipment/sensortype')"
+  <div *ngIf="siteMap[1].children[0].children[3].disabled === false"
+       [hidden]="!(this.router.url === '/dictionary/equipment/sensortype')"
        class="table_border">
     <app-simple-dictionary #sensorTypeSimpleDictionary
                            *ngIf="this.translate.currentLang === 'ru'"

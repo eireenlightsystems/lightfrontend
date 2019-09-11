@@ -179,9 +179,9 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       width: 450,
       maxWidth: 500,
       minWidth: 460,
-      height: 350,
-      maxHeight: 350,
-      minHeight: 350,
+      height: 400,
+      maxHeight: 400,
+      minHeight: 400,
       coordX: 500,
       coordY: 65
     };
@@ -207,7 +207,7 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
         source: [],
         theme: 'material',
         width: '280',
-        height: '20',
+        height: '70',
         placeHolder: 'Наименование:',
         displayMember: 'code',
         valueMember: 'id',

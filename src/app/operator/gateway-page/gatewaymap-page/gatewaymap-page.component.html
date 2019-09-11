@@ -1,22 +1,30 @@
-<div id="gateway_yamaps"></div>
+<div *ngIf="siteMap[0].children[2].children[1].disabled === false; else notRightComponent">
+  <div id="gateway_yamaps"></div>
 
-<app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
-               [sourceForLinkForm]="sourceForLinkForm"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onDestroyLinkForm)="destroyLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
-></app-link-form>
-<app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
-               [sourceForLinkForm]="sourceForLinkFormEng"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onDestroyLinkForm)="destroyLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
-></app-link-form>
+  <app-link-form #linkForm
+                 *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
+                 [sourceForLinkForm]="sourceForLinkForm"
+                 (onGetSourceForLinkForm)="getSourceForLinkForm()"
+                 (onDestroyLinkForm)="destroyLinkForm()"
+                 (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+  ></app-link-form>
+  <app-link-form #linkForm
+                 *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
+                 [sourceForLinkForm]="sourceForLinkFormEng"
+                 (onGetSourceForLinkForm)="getSourceForLinkForm()"
+                 (onDestroyLinkForm)="destroyLinkForm()"
+                 (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+  ></app-link-form>
 
-<app-event-window #eventWindow
-                  [warning]="warningEventWindow"
-                  (onOkEvenwinBtn)="okEvenwinBtn()"
-></app-event-window>
+  <app-event-window #eventWindow
+                    [warning]="warningEventWindow"
+                    (onOkEvenwinBtn)="okEvenwinBtn()"
+  ></app-event-window>
+</div>
 
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.gateway-page.gatewaymap-page.gatewaymap-page')"
+  >
+  </app-not-right>
+</ng-template>

@@ -6,13 +6,14 @@ import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 // app interfaces
 import {
   Fixture, Contract, EquipmentType, HeightType, Installer, Owner, Substation, CommandType, CommandStatus,
-  SettingButtonPanel, NavItem
+  SettingButtonPanel, NavItem, FixtureType
 } from '../../../shared/interfaces';
 // app services
 // app components
 import {FixturecomlistPageComponent} from './fixturecomlist-page/fixturecomlist-page.component';
 import {FixturelistPageComponent} from './fixturelist-page/fixturelist-page.component';
 import {FixturecomspeedlistPageComponent} from './fixturecomspeedlist-page/fixturecomspeedlist-page.component';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() selectionmode: number;
   // fixture source
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
@@ -58,7 +59,9 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   sizeParentSplitter: any;
   sizeChildSplitter: any;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

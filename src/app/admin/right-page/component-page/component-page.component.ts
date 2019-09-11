@@ -1,5 +1,12 @@
+// angular lib
 import {Component, Input, OnInit} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
+// app interfaces
 import {NavItem, SettingButtonPanel} from '../../../shared/interfaces';
+// app services
+// app components
+
 
 @Component({
   selector: 'app-component-page',
@@ -8,8 +15,10 @@ import {NavItem, SettingButtonPanel} from '../../../shared/interfaces';
 })
 export class ComponentPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
+
+  // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
 
@@ -17,7 +26,9 @@ export class ComponentPageComponent implements OnInit {
   settingComponentButtonPanel: SettingButtonPanel;
 
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

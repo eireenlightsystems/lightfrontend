@@ -1,9 +1,19 @@
-<app-sensorlist-page #sensorlistPageComponent
-                     [ownerSensors]="ownerSensors"
-                     [sensorTypes]="sensorTypes"
-                     [contractSensors]="contractSensors"
-                     [selectNodeId]="1"
-                     [heightGrid]="767"
-                     [isMasterGrid]="true"
-                     [settingButtonPanel]="settingSensorButtonPanel"
-></app-sensorlist-page>
+<div *ngIf="siteMap[0].children[3].children[0].disabled === false; else notRightComponent">
+  <app-sensorlist-page #sensorlistPageComponent
+                       [siteMap]="siteMap"
+                       [ownerSensors]="ownerSensors"
+                       [sensorTypes]="sensorTypes"
+                       [contractSensors]="contractSensors"
+                       [selectNodeId]="1"
+                       [heightGrid]="767"
+                       [isMasterGrid]="true"
+                       [settingButtonPanel]="settingSensorButtonPanel"
+  ></app-sensorlist-page>
+</div>
+
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensor-md-page')"
+  >
+  </app-not-right>
+</ng-template>

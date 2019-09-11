@@ -14,7 +14,7 @@ import {
   Owner,
   EquipmentType,
   SettingWinForEditForm,
-  SourceForEditForm
+  SourceForEditForm, NodeType, NavItem
 } from '../../../shared/interfaces';
 // app services
 import {NodeService} from '../../../shared/services/node/node.service';
@@ -36,8 +36,9 @@ declare var ymaps: any;
 export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() ownerNodes: Owner[];
-  @Input() nodeTypes: EquipmentType[];
+  @Input() nodeTypes: NodeType[];
   @Input() contractNodes: Contract[];
 
   // determine the functions that need to be performed in the parent component
@@ -887,16 +888,16 @@ export class NodemapPageComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.nodeTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: NodeType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.nodeTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: NodeType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.selectNode.nodeTypeId.toString();
             sourceForEditForm[i].selectCode = this.nodeTypes.find(
-              (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).code;
+              (oneType: NodeType) => oneType.id === +this.selectNode.nodeTypeId).code;
             sourceForEditForm[i].selectName = this.nodeTypes.find(
-              (oneType: EquipmentType) => oneType.id === +this.selectNode.nodeTypeId).name;
+              (oneType: NodeType) => oneType.id === +this.selectNode.nodeTypeId).name;
             for (let j = 0; j < this.nodeTypes.length; j++) {
               if (+this.nodeTypes[j].id === +this.selectNode.nodeTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

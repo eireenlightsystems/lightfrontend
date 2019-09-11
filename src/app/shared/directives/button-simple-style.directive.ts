@@ -13,11 +13,10 @@ export class ButtonSimpleStyleDirective implements OnInit {
 
     this.renderer.setStyle(nativeElement, 'margin', '2px 2px 2px 2px');
     this.renderer.setStyle(nativeElement, 'text-align', 'center');
+    // this.renderer.setStyle(nativeElement, 'vertical-align', 'middle');
 
     this.renderer.addClass(nativeElement, 'btn');
     this.renderer.addClass(nativeElement, 'btn-small');
-    this.renderer.addClass(nativeElement, 'waves-effect');
-    this.renderer.addClass(nativeElement, 'waves-orange');
     this.renderer.addClass(nativeElement, 'white');
     this.renderer.addClass(nativeElement, 'blue-text');
   }

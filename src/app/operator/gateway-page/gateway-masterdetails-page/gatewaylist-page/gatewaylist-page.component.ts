@@ -12,7 +12,7 @@ import {
   SettingButtonPanel,
   SourceForJqxGrid,
   SettingWinForEditForm, SourceForEditForm,
-  SourceForLinkForm, ItemsLinkForm, NavItem
+  SourceForLinkForm, ItemsLinkForm, NavItem, GatewayType
 } from '../../../../shared/interfaces';
 // app services
 import {GatewayService} from '../../../../shared/services/gateway/gateway.service';
@@ -39,7 +39,7 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
   @Input() siteMap: NavItem[];
   @Input() geographs: Geograph[];
   @Input() ownerGateways: Owner[];
-  @Input() gatewayTypes: EquipmentType[];
+  @Input() gatewayTypes: GatewayType[];
   @Input() contractGateways: Contract[];
   @Input() selectNodeId: number;
   @Input() heightGrid: number;
@@ -957,16 +957,16 @@ export class GatewaylistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.gatewayTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.gatewayTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: GatewayType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.gatewayTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: GatewayType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.jqxgridComponent.selectRow.gatewayTypeId.toString();
             sourceForEditForm[i].selectCode = this.gatewayTypes.find(
-              (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).code;
+              (gatewayType: GatewayType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).code;
             sourceForEditForm[i].selectName = this.gatewayTypes.find(
-              (gatewayType: EquipmentType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).name;
+              (gatewayType: GatewayType) => gatewayType.id === +this.jqxgridComponent.selectRow.gatewayTypeId).name;
             for (let j = 0; j < this.gatewayTypes.length; j++) {
               if (+this.gatewayTypes[j].id === +this.jqxgridComponent.selectRow.gatewayTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

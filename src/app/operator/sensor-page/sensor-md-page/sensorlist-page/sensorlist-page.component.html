@@ -1,110 +1,124 @@
-<app-button-panel #buttonPanel
-                  [settingButtonPanel]="settingButtonPanel"
-                  (onIns)="ins()"
-                  (onUpd)="upd()"
-                  (onDel)="del()"
-                  (onRefresh)="refresh()"
-                  (onSetting)="setting()"
-                  (onFilterList)="filterList()"
-                  (onPlace)="place()"
-                  (onPinDrop)="pinDrop()"
-                  (onGroupIn)="groupIn()"
-                  (onGroupOut)="groupOut()"
-                  (onSwitchOn)="switchOn()"
-                  (onSwitchOff)="switchOff()"
-></app-button-panel>
+<div *ngIf="siteMap[0].children[3].children[0].children[0].disabled === false; else notRightComponent">
+  <app-button-panel #buttonPanel
+                    [settingButtonPanel]="settingButtonPanel"
+                    (onIns)="ins()"
+                    (onUpd)="upd()"
+                    (onDel)="del()"
+                    (onRefresh)="refresh()"
+                    (onSetting)="setting()"
+                    (onFilterList)="filterList()"
+                    (onPlace)="place()"
+                    (onPinDrop)="pinDrop()"
+                    (onGroupIn)="groupIn()"
+                    (onGroupOut)="groupOut()"
+                    (onSwitchOn)="switchOn()"
+                    (onSwitchOff)="switchOff()"
+                    [insDisabled]="siteMap[0].children[3].children[0].children[0].children[0].disabled"
+                    [updDisabled]="siteMap[0].children[3].children[0].children[0].children[1].disabled"
+                    [delDisabled]="siteMap[0].children[3].children[0].children[0].children[2].disabled"
+                    [placeDisabled]="siteMap[0].children[3].children[0].children[0].children[3].disabled"
+                    [pinDropDisabled]="siteMap[0].children[3].children[0].children[0].children[4].disabled"
+  ></app-button-panel>
 
-<app-filter-table #filterForm
-                  *ngIf="isFilterFormInit && this.translate.currentLang === 'ru'"
-                  [sourceForFilter]="sourceForFilter"
-                  [isMasterGrid]="isMasterGrid"
-                  [coordinateX]="null"
-                  [coordinateY]="null"
-                  (onDestroyFilterForm)="destroyFilterForm()"
-                  (onFilter)="applyFilterFromFilter($event)"
-></app-filter-table>
-<app-filter-table #filterForm
-                  *ngIf="isFilterFormInit && this.translate.currentLang === 'en'"
-                  [sourceForFilter]="sourceForFilterEng"
-                  [isMasterGrid]="isMasterGrid"
-                  [coordinateX]="null"
-                  [coordinateY]="null"
-                  (onDestroyFilterForm)="destroyFilterForm()"
-                  (onFilter)="applyFilterFromFilter($event)"
-></app-filter-table>
+  <app-filter-table #filterForm
+                    *ngIf="isFilterFormInit && this.translate.currentLang === 'ru'"
+                    [sourceForFilter]="sourceForFilter"
+                    [isMasterGrid]="isMasterGrid"
+                    [coordinateX]="null"
+                    [coordinateY]="null"
+                    (onDestroyFilterForm)="destroyFilterForm()"
+                    (onFilter)="applyFilterFromFilter($event)"
+  ></app-filter-table>
+  <app-filter-table #filterForm
+                    *ngIf="isFilterFormInit && this.translate.currentLang === 'en'"
+                    [sourceForFilter]="sourceForFilterEng"
+                    [isMasterGrid]="isMasterGrid"
+                    [coordinateX]="null"
+                    [coordinateY]="null"
+                    (onDestroyFilterForm)="destroyFilterForm()"
+                    (onFilter)="applyFilterFromFilter($event)"
+  ></app-filter-table>
 
-<label><b>{{'site.filter.filter' | translate}}: </b>{{filterSelect}}</label>
+  <label><b>{{'site.filter.filter' | translate}}: </b>{{filterSelect}}</label>
 
-<div *ngIf="!reloading; else reloadingBlock">
-  <!--*ngIf="fixtures.length > 0; else empty"-->
-  <div>
-    <app-jqxgrid #jqxgridComponent
-                 *ngIf="this.translate.currentLang === 'ru'"
-                 [columnsGrid]="columnsGrid"
-                 [listBoxSource]="listBoxSource"
-                 [sourceForJqxGrid]="sourceForJqxGrid"
-                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
-                 (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-jqxgrid>
-    <app-jqxgrid #jqxgridComponent
-                 *ngIf="this.translate.currentLang === 'en'"
-                 [columnsGrid]="columnsGridEng"
-                 [listBoxSource]="listBoxSourceEng"
-                 [sourceForJqxGrid]="sourceForJqxGrid"
-                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
-                 (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-jqxgrid>
-    <div
-      class="center mb2"
-      *ngIf="!noMoreItems; else "
-    >
-      <ng-template #loader>
-        <app-loader></app-loader>
-      </ng-template>
+  <div *ngIf="!reloading; else reloadingBlock">
+    <!--*ngIf="fixtures.length > 0; else empty"-->
+    <div>
+      <app-jqxgrid #jqxgridComponent
+                   *ngIf="this.translate.currentLang === 'ru'"
+                   [columnsGrid]="columnsGrid"
+                   [listBoxSource]="listBoxSource"
+                   [sourceForJqxGrid]="sourceForJqxGrid"
+                   (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                   (onRefreshChildGrid)="refreshChildGrid($event)"
+      ></app-jqxgrid>
+      <app-jqxgrid #jqxgridComponent
+                   *ngIf="this.translate.currentLang === 'en'"
+                   [columnsGrid]="columnsGridEng"
+                   [listBoxSource]="listBoxSourceEng"
+                   [sourceForJqxGrid]="sourceForJqxGrid"
+                   (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
+                   (onRefreshChildGrid)="refreshChildGrid($event)"
+      ></app-jqxgrid>
+      <div
+        class="center mb2"
+        *ngIf="!noMoreItems; else "
+      >
+        <ng-template #loader>
+          <app-loader></app-loader>
+        </ng-template>
+      </div>
     </div>
+    <ng-template #empty>
+      <div class="center">{{'site.grid.not-rows' | translate}}</div>
+    </ng-template>
   </div>
-  <ng-template #empty>
-    <div class="center">{{'site.grid.not-rows' | translate}}</div>
+
+  <ng-template #reloadingBlock>
+    <app-loader></app-loader>
   </ng-template>
+
+  <app-edit-form #editForm
+                 *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
+                 [settingWinForEditForm]="settingWinForEditForm"
+                 [sourceForEditForm]="sourceForEditForm"
+                 (onGetSourceForEditForm)="getSourceForEditForm()"
+                 (onDestroyEditForm)="destroyEditForm()"
+                 (onSaveEditFormBtn)="saveEditFormBtn()"
+  ></app-edit-form>
+  <app-edit-form #editForm
+                 *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
+                 [settingWinForEditForm]="settingWinForEditForm"
+                 [sourceForEditForm]="sourceForEditFormEng"
+                 (onGetSourceForEditForm)="getSourceForEditForm()"
+                 (onDestroyEditForm)="destroyEditForm()"
+                 (onSaveEditFormBtn)="saveEditFormBtn()"
+  ></app-edit-form>
+
+  <app-link-form #linkForm
+                 *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
+                 [sourceForLinkForm]="sourceForLinkForm"
+                 (onGetSourceForLinkForm)="getSourceForLinkForm()"
+                 (onDestroyLinkForm)="destroyLinkForm()"
+                 (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+  ></app-link-form>
+  <app-link-form #linkForm
+                 *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
+                 [sourceForLinkForm]="sourceForLinkFormEng"
+                 (onGetSourceForLinkForm)="getSourceForLinkForm()"
+                 (onDestroyLinkForm)="destroyLinkForm()"
+                 (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
+  ></app-link-form>
+
+  <app-event-window #eventWindow
+                    [warning]="warningEventWindow"
+                    (onOkEvenwinBtn)="okEvenwinBtn()"
+  ></app-event-window>
 </div>
 
-<ng-template #reloadingBlock>
-  <app-loader></app-loader>
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page')"
+  >
+  </app-not-right>
 </ng-template>
-
-<app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
-               [settingWinForEditForm]="settingWinForEditForm"
-               [sourceForEditForm]="sourceForEditForm"
-               (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onDestroyEditForm)="destroyEditForm()"
-               (onSaveEditFormBtn)="saveEditFormBtn()"
-></app-edit-form>
-<app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
-               [settingWinForEditForm]="settingWinForEditForm"
-               [sourceForEditForm]="sourceForEditFormEng"
-               (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onDestroyEditForm)="destroyEditForm()"
-               (onSaveEditFormBtn)="saveEditFormBtn()"
-></app-edit-form>
-
-<app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
-               [sourceForLinkForm]="sourceForLinkForm"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onDestroyLinkForm)="destroyLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
-></app-link-form>
-<app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
-               [sourceForLinkForm]="sourceForLinkFormEng"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onDestroyLinkForm)="destroyLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
-></app-link-form>
-
-<app-event-window #eventWindow
-                  [warning]="warningEventWindow"
-                  (onOkEvenwinBtn)="okEvenwinBtn()"
-></app-event-window>

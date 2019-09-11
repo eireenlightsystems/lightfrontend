@@ -1,9 +1,16 @@
-<app-componentlist-page #componentlistPageComponent
-                        [siteMap]="siteMap"
+<div *ngIf="siteMap[2].children[0].children[3].disabled === false; else notRightComponent">
+  <app-componentlist-page #componentlistPageComponent
+                          [siteMap]="siteMap"
+                          [heightGrid]="730"
+                          [isMasterGrid]="true"
+                          [settingButtonPanel]="settingComponentButtonPanel"
+  ></app-componentlist-page>
+</div>
 
-                        [heightGrid]="730"
-                        [isMasterGrid]="true"
-                        [settingButtonPanel]="settingComponentButtonPanel"
-></app-componentlist-page>
-
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.administration.right-page.component-page.component-page')"
+  >
+  </app-not-right>
+</ng-template>
 

@@ -1,6 +1,7 @@
 <div [style.width]="tabsWidth + '%'">
   <div [hidden]="!(this.router.url.substring(0, 21) === '/dictionary/equipment')">
     <app-equipment-type #equipmentTypeComponent
+                        [siteMap]="siteMap"
                         [heightGrid]="780"
                         [fixtureTypes]="fixtureTypes"
                         [nodeTypes]="nodeTypes"
@@ -14,6 +15,7 @@
   </div>
   <div [hidden]="!(this.router.url.substring(0, 22) === '/dictionary/contragent')">
     <app-contragent #contragentComponent
+                    [siteMap]="siteMap"
                     [heightGrid]="780"
                     [companies]="companies"
                     [persons]="persons"
@@ -26,6 +28,7 @@
   </div>
   <div [hidden]="!(this.router.url.substring(0, 20) === '/dictionary/contract')">
     <app-contract #contractComponent
+                  [siteMap]="siteMap"
                   [heightGrid]="780"
                   [contracts]="contracts"
                   [contractTypes]="contractTypes"

@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 // jqwidgets
 // app interfaces
 import {
-  FixtureType, GatewayType, NodeType, SensorType,
+  FixtureType, GatewayType, NavItem, NodeType, SensorType,
   SettingWinForEditForm,
   SourceForEditForm,
   SourceForJqxGrid
@@ -29,6 +29,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
 export class EquipmentTypeComponent implements OnInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() heightGrid: number;
   @Input() fixtureTypes: FixtureType[];
   @Input() nodeTypes: NodeType[];
@@ -1398,16 +1399,32 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
     let headline: any;
     switch (this.router.url) {
       case '/dictionary/equipment/fixturetype':
-        headline = this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.fixturetypes-headline');
+        if (this.siteMap[1].children[0].children[0].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.fixturetypes-headline');
+        }
         break;
       case '/dictionary/equipment/nodetype':
-        headline = this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.nodetypes-headline');
+        if (this.siteMap[1].children[0].children[1].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.nodetypes-headline');
+        }
         break;
       case '/dictionary/equipment/gatewaytype':
-        headline = this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.gatewaytypes-headline');
+        if (this.siteMap[1].children[0].children[2].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.gatewaytypes-headline');
+        }
         break;
       case '/dictionary/equipment/sensortype':
-        headline = this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.sensortypes-headline');
+        if (this.siteMap[1].children[0].children[3].disabled !== false) {
+          headline = this.translate.instant('site.menu.administration.right-page.not-right');
+        } else {
+          headline = this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.sensortypes-headline');
+        }
         break;
       default:
         headline = this.translate.instant('site.menu.dictionarys.dictionarys-headline');

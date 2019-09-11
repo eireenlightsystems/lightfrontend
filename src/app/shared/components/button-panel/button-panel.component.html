@@ -145,151 +145,167 @@
 <!--  </div>-->
 <!--</div>-->
 
+
+<!--<jqxTooltip [position]="'bottom'"-->
+<!--            [content]="ins">-->
+<!--  <jqxButton #insButton-->
+<!--             *ngIf="settingButtonPanel.add.visible"-->
+<!--             style="float: left"-->
+<!--             [theme]="'orange'"-->
+<!--             [width]="60"-->
+<!--             [height]="35"-->
+<!--             [disabled]="insDisabled"-->
+<!--             (click)="ins()"-->
+<!--  >-->
+<!--    <i class="material-icons">add</i>-->
+<!--  </jqxButton>-->
+<!--</jqxTooltip>-->
+
+
 <div class="fr" style="height: 22px">
-  <div style="float: left" *ngIf="settingButtonPanel.add.visible">
-    <button [disabled]="settingButtonPanel.add.disabled"
-            mat-button
-            matTooltip="{{'site.button.ins' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="ins()"
-    >
-      <i class="material-icons">add</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.add.visible"
+          mat-button
+          matTooltip="{{'site.button.ins' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="insDisabled || settingButtonPanel.add.disabled"
+          (click)="ins()"
+  >
+    <i class="material-icons icon-setting">add</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.upd.visible">
-    <button [disabled]="settingButtonPanel.upd.disabled"
-            mat-button
-            matTooltip="{{'site.button.upd' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="upd()"
-    >
-      <i class="material-icons">edit</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.upd.visible"
+          mat-button
+          matTooltip="{{'site.button.upd' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="updDisabled || settingButtonPanel.upd.disabled"
+          (click)="upd()"
+  >
+    <i class="material-icons icon-setting">edit</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.del.visible">
-    <button [disabled]="settingButtonPanel.del.disabled"
-            mat-button
-            matTooltip="{{'site.button.del' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="del()"
-    >
-      <i class="material-icons">delete</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.del.visible"
+          mat-button
+          matTooltip="{{'site.button.del' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="delDisabled || settingButtonPanel.del.disabled"
+          (click)="del()"
+  >
+    <i class="material-icons icon-setting">delete</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.refresh.visible">
-    <button [disabled]="settingButtonPanel.refresh.disabled"
-            mat-button
-            matTooltip="{{'site.button.refresh' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="refresh()"
-    >
-      <i class="small material-icons">refresh</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.refresh.visible"
+          mat-button
+          matTooltip="{{'site.button.refresh' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="refreshDisabled || settingButtonPanel.refresh.disabled"
+          (click)="refresh()"
+  >
+    <i class="material-icons icon-setting">refresh</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.setting.visible">
-    <button [disabled]="settingButtonPanel.setting.disabled"
-            mat-button
-            matTooltip="{{'site.button.setting' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="setting()"
-    >
-      <i class="material-icons">settings</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.setting.visible"
+          mat-button
+          matTooltip="{{'site.button.setting' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="settingDisabled || settingButtonPanel.setting.disabled"
+          (click)="setting()"
+  >
+    <i class="material-icons icon-setting">settings</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.filterList.visible">
-    <button [disabled]="settingButtonPanel.filterList.disabled"
-            mat-button
-            matTooltip="{{'site.button.filterList' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="filterList()"
-    >
-      <i class="material-icons">filter_list</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.filterList.visible"
+          mat-button
+          matTooltip="{{'site.button.filterList' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="filterListDisabled || settingButtonPanel.filterList.disabled"
+          (click)="filterList()"
+  >
+    <i class="material-icons icon-setting">filter_list</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.place.visible">
-    <button [disabled]="settingButtonPanel.place.disabled"
-            mat-button
-            matTooltip="{{'site.button.place' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="place()"
-    >
-      <i class="small material-icons">place</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.place.visible"
+          mat-button
+          matTooltip="{{'site.button.place' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="placeDisabled || settingButtonPanel.place.disabled"
+          (click)="place()"
+  >
+    <i class="material-icons icon-setting">place</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.pinDrop.visible">
-    <button [disabled]="settingButtonPanel.pinDrop.disabled"
-            mat-button
-            matTooltip="{{'site.button.pinDrop' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="pinDrop()"
-    >
-      <i class="small material-icons">pin_drop</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.pinDrop.visible"
+          mat-button
+          matTooltip="{{'site.button.pinDrop' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="pinDropDisabled || settingButtonPanel.pinDrop.disabled"
+          (click)="pinDrop()"
+  >
+    <i class="material-icons icon-setting">pin_drop</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.groupIn.visible">
-    <button [disabled]="settingButtonPanel.groupIn.disabled"
-            mat-button
-            matTooltip="{{'site.button.groupIn' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="groupIn()"
-    >
-      <i class="material-icons">file_download</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.groupIn.visible"
+          mat-button
+          matTooltip="{{'site.button.groupIn' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="groupInDisabled || settingButtonPanel.groupIn.disabled"
+          (click)="groupIn()"
+  >
+    <i class="material-icons icon-setting">file_download</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.groupOut.visible">
-    <button [disabled]="settingButtonPanel.groupOut.disabled"
-            mat-button
-            matTooltip="{{'site.button.groupOut' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="groupOut()"
-    >
-      <i class="material-icons">file_upload</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.groupOut.visible"
+          mat-button
+          matTooltip="{{'site.button.groupOut' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="groupOutDisabled || settingButtonPanel.groupOut.disabled"
+          (click)="groupOut()"
+  >
+    <i class="material-icons icon-setting">file_upload</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.switchOn.visible">
-    <button [disabled]="settingButtonPanel.switchOn.disabled"
-            mat-button
-            matTooltip="{{'site.button.switchOn' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            (click)="switchOn()"
-    >
-      <i class="material-icons" style="color: orange">highlight</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.switchOn.visible"
+          mat-button
+          matTooltip="{{'site.button.switchOn' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="switchOnDisabled || settingButtonPanel.switchOn.disabled"
+          (click)="switchOn()"
+  >
+    <i class="material-icons icon-setting" style="color: orange">highlight</i>
+  </button>
 
-  <div style="float: left" *ngIf="settingButtonPanel.switchOff.visible">
-    <button [disabled]="settingButtonPanel.switchOff.disabled"
-            mat-button
-            matTooltip="{{'site.button.switchOff' | translate}}"
-            matTooltipClass="tooltip"
-            appButtonSimpleStyle
-            appButtonSimpleStyle
-            (click)="switchOff()"
-    >
-      <i class="material-icons">highlight</i>
-    </button>
-  </div>
+  <button *ngIf="settingButtonPanel.switchOff.visible"
+          mat-button
+          matTooltip="{{'site.button.switchOff' | translate}}"
+          matTooltipClass="tooltip"
+          appButtonSimpleStyle
+          appWavesDirective
+          [disabled]="switchOffDisabled || settingButtonPanel.switchOff.disabled"
+          (click)="switchOff()"
+  >
+    <i class="material-icons icon-setting">highlight</i>
+  </button>
 </div>
 
 

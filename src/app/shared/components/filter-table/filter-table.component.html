@@ -16,14 +16,13 @@
                        [itemFilter]="itemFilter" #filterItemComponent
       ></app-filter-item>
     </div>
-    <div appButtonFilter>
-      <jqxButton
-        [theme]="sourceForFilter[0].theme"
-        [width]="100"
-        (click)="submitFilter()"
-      >
-        {{'site.forms.editforms.apply' | translate}}
-      </jqxButton>
-    </div>
+    <jqxButton
+      style="margin: 10px 2px 5px 150px"
+      [theme]="sourceForFilter[0].theme"
+      [width]="100"
+      (onClick)="submitFilter()"
+    >
+      {{'site.forms.editforms.apply' | translate}}
+    </jqxButton>
   </div>
 </jqxWindow>

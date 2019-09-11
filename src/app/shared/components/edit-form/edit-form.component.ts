@@ -3,6 +3,7 @@ import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
+import jqxButton = jqwidgets.jqxButton;
 // app interfaces
 import {SettingWinForEditForm, SourceForEditForm} from '../../interfaces';
 // app services
@@ -27,6 +28,8 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // define variables - link to view objects
   @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
+  @ViewChild('okButton', {static: false}) okButton: jqxButton;
+  @ViewChild('cancelButton', {static: false}) cancelButton: jqxButton;
 
   // other variables
 

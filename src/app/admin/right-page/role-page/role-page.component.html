@@ -1,8 +1,16 @@
-<app-role-md-page
-  [siteMap]="siteMap"
-  [companies]="companies"
+<div *ngIf="siteMap[2].children[0].children[2].disabled === false; else notRightComponent">
+  <app-role-md-page
+    [siteMap]="siteMap"
+    [companies]="companies"
+    [userSortcolumn]="userSortcolumn"
+    [userColumns]="userColumns"
+    [userListBoxSource]="userListBoxSource"
+  ></app-role-md-page>
+</div>
 
-  [userSortcolumn]="userSortcolumn"
-  [userColumns]="userColumns"
-  [userListBoxSource]="userListBoxSource"
-></app-role-md-page>
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.administration.right-page.role-page.role-page')"
+  >
+  </app-not-right>
+</ng-template>

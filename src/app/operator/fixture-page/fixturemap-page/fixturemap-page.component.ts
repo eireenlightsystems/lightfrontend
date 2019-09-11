@@ -9,7 +9,7 @@ import {TranslateService} from '@ngx-translate/core';
 // app interfaces
 import {
   Fixture, Contract, EquipmentType, HeightType, Installer, Substation,
-  FilterFixtureGroup, FixtureGroup, SettingWinForEditForm, SourceForEditForm, NavItem
+  FilterFixtureGroup, FixtureGroup, SettingWinForEditForm, SourceForEditForm, NavItem, FixtureType
 } from '../../../shared/interfaces';
 // app services
 import {FixtureService} from '../../../shared/services/fixture/fixture.service';
@@ -37,7 +37,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   // variables from parent component
   @Input() siteMap: NavItem[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
@@ -853,16 +853,16 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           if (this.typeEditWindow === 'ins') {
             sourceForEditForm[i].selectId = this.fixtureTypes[0].id.toString();
             sourceForEditForm[i].selectCode = this.fixtureTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).code;
+              (one: FixtureType) => one.id === +sourceForEditForm[i].selectId).code;
             sourceForEditForm[i].selectName = this.fixtureTypes.find(
-              (one: EquipmentType) => one.id === +sourceForEditForm[i].selectId).name;
+              (one: FixtureType) => one.id === +sourceForEditForm[i].selectId).name;
           }
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectId = this.selectFixture.fixtureTypeId.toString();
             sourceForEditForm[i].selectCode = this.fixtureTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.selectFixture.fixtureTypeId).code;
+              (sensorType: FixtureType) => sensorType.id === +this.selectFixture.fixtureTypeId).code;
             sourceForEditForm[i].selectName = this.fixtureTypes.find(
-              (sensorType: EquipmentType) => sensorType.id === +this.selectFixture.fixtureTypeId).name;
+              (sensorType: FixtureType) => sensorType.id === +this.selectFixture.fixtureTypeId).name;
             for (let j = 0; j < this.fixtureTypes.length; j++) {
               if (+this.fixtureTypes[j].id === +this.selectFixture.fixtureTypeId) {
                 sourceForEditForm[i].selectedIndex = j;

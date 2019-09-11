@@ -1,6 +1,7 @@
 // angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
 // app interfaces
@@ -8,7 +9,7 @@ import {
   Fixture, Contract, Owner, EquipmentType, HeightType, Installer, Substation,
   CommandStatus, CommandType,
   FixtureGroupType,
-  SettingButtonPanel, NavItem
+  SettingButtonPanel, NavItem, FixtureType
 } from '../../../shared/interfaces';
 // app services
 // app components
@@ -29,7 +30,7 @@ export class FixturegroupMdPageComponent implements OnInit {
   @Input() fixtureGroupOwners: Owner[];
   // fixture source
   @Input() ownerFixtures: Owner[];
-  @Input() fixtureTypes: EquipmentType[];
+  @Input() fixtureTypes: FixtureType[];
   @Input() substations: Substation[];
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
@@ -54,7 +55,9 @@ export class FixturegroupMdPageComponent implements OnInit {
   heightDeltaGrid = 55;
 
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

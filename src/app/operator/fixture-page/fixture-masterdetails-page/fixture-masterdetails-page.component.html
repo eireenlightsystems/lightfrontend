@@ -1,62 +1,69 @@
-<jqxSplitter #mainSplitter
-             [theme]="'material'"
-             [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
-             [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
-             (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
-             (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
-             (onExpanded)="expanded()"
->
-  <div class="splitter-panel">
-    <app-fixturelist-page #fixturelistPageComponent
-                          *ngIf="siteMap[0].children[0].children[0].children[0].disabled === false"
-                          [siteMap]="siteMap"
-                          [ownerFixtures]="ownerFixtures"
-                          [fixtureTypes]="fixtureTypes"
-                          [substations]="substations"
-                          [contractFixtures]="contractFixtures"
-                          [installers]="installers"
-                          [heightTypes]="heightTypes"
-                          [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
-                          [isMasterGrid]="true"
-                          [selectionmode]="selectionmode"
-                          [selectContractId]=""
-                          [selectNodeId]=""
-                          [fixtureGroupId]="fixtureGroupId"
-                          [settingButtonPanel]="settingFixtureButtonPanel"
-                          (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-fixturelist-page>
-  </div>
-  <div class="splitter-panel">
-    <mat-tab-group #matTabGroup [selectedIndex]="0">
-      <mat-tab label="{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.fixturecomlist-page' | translate}}">
-        <app-fixturecomlist-page #fixturecomlistPageComponent
-                                 *ngIf="siteMap[0].children[0].children[0].children[1].disabled === false"
-                                 [siteMap]="siteMap"
-                                 [commandTypes]="commandTypes"
-                                 [commandStatuses]="commandStatuses"
-                                 [settingButtonPanel]="settingFixtureComButtonPanel"
-                                 [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                                 [isMasterGrid]="false"
-                                 [selectionmode]="'checkbox'"
-                                 [selectFixtureId]="selectFixtureId"
-                                 (onRefreshChildGrid)="refreshChildGrid($event)"
-        ></app-fixturecomlist-page>
-      </mat-tab>
-      <mat-tab label="{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.fixturecomspeedlist-page' | translate}}">
-        <app-fixturecomspeedlist-page #fixturecomspeedlistPageComponent
-                                      *ngIf="siteMap[0].children[0].children[0].children[2].disabled === false"
-                                      [siteMap]="siteMap"
-                                      [speedDirectiones]="speedDirectiones"
-                                      [commandStatuses]="commandStatuses"
-                                      [settingButtonPanel]="settingFixtureSpeedButtonPanel"
-                                      [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
-                                      [isMasterGrid]="false"
-                                      [selectionmode]="'checkbox'"
-                                      [selectFixtureId]="selectFixtureId"
-                                      (onRefreshChildGrid)="refreshChildGrid($event)"
-        ></app-fixturecomspeedlist-page>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-</jqxSplitter>
+<div *ngIf="siteMap[0].children[0].children[0].disabled === false; else notRightComponent">
+  <jqxSplitter #mainSplitter
+               [theme]="'material'"
+               [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+               [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
+               (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+               (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
+               (onExpanded)="expanded()"
+  >
+    <div class="splitter-panel">
+      <app-fixturelist-page #fixturelistPageComponent
+                            [siteMap]="siteMap"
+                            [ownerFixtures]="ownerFixtures"
+                            [fixtureTypes]="fixtureTypes"
+                            [substations]="substations"
+                            [contractFixtures]="contractFixtures"
+                            [installers]="installers"
+                            [heightTypes]="heightTypes"
+                            [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
+                            [isMasterGrid]="true"
+                            [selectionmode]="selectionmode"
+                            [selectContractId]=""
+                            [selectNodeId]=""
+                            [fixtureGroupId]="fixtureGroupId"
+                            [settingButtonPanel]="settingFixtureButtonPanel"
+                            (onRefreshChildGrid)="refreshChildGrid($event)"
+      ></app-fixturelist-page>
+    </div>
+    <div class="splitter-panel">
+      <mat-tab-group #matTabGroup [selectedIndex]="0">
+        <mat-tab
+          label="{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.fixturecomlist-page' | translate}}">
+          <app-fixturecomlist-page #fixturecomlistPageComponent
+                                   [siteMap]="siteMap"
+                                   [commandTypes]="commandTypes"
+                                   [commandStatuses]="commandStatuses"
+                                   [settingButtonPanel]="settingFixtureComButtonPanel"
+                                   [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                   [isMasterGrid]="false"
+                                   [selectionmode]="'checkbox'"
+                                   [selectFixtureId]="selectFixtureId"
+                                   (onRefreshChildGrid)="refreshChildGrid($event)"
+          ></app-fixturecomlist-page>
+        </mat-tab>
+        <mat-tab
+          label="{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.fixturecomspeedlist-page' | translate}}">
+          <app-fixturecomspeedlist-page #fixturecomspeedlistPageComponent
+                                        [siteMap]="siteMap"
+                                        [speedDirectiones]="speedDirectiones"
+                                        [commandStatuses]="commandStatuses"
+                                        [settingButtonPanel]="settingFixtureSpeedButtonPanel"
+                                        [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
+                                        [isMasterGrid]="false"
+                                        [selectionmode]="'checkbox'"
+                                        [selectFixtureId]="selectFixtureId"
+                                        (onRefreshChildGrid)="refreshChildGrid($event)"
+          ></app-fixturecomspeedlist-page>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </jqxSplitter>
+</div>
 
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixture-masterdetails-page')"
+  >
+  </app-not-right>
+</ng-template>

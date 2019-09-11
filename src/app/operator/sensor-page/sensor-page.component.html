@@ -1,8 +1,18 @@
-<div style="margin: 10px 5px 5px 5px;"
+<div
+  *ngIf="siteMap[0].children[3].disabled === false; else notRightComponent"
+  style="margin: 10px 5px 5px 5px;"
 >
   <app-sensor-md-page #sensorMdPageComponent
-                       [ownerSensors]="ownerSensors"
-                       [sensorTypes]="sensorTypes"
-                       [contractSensors]="contractSensors"
+                      [siteMap]="siteMap"
+                      [ownerSensors]="ownerSensors"
+                      [sensorTypes]="sensorTypes"
+                      [contractSensors]="contractSensors"
   ></app-sensor-md-page>
 </div>
+
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.operator.sensor-page.sensor-page')"
+  >
+  </app-not-right>
+</ng-template>

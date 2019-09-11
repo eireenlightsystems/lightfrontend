@@ -237,6 +237,47 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
                         route: '',
                         children: []
                       },
+
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.fixturelist-page-groupIn',
+                        rolerightId: 0,
+                        componentName: 'fixturelist-page-groupIn',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.fixturelist-page-groupOut',
+                        rolerightId: 0,
+                        componentName: 'fixturelist-page-groupOut',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.fixturelist-page-place',
+                        rolerightId: 0,
+                        componentName: 'fixturelist-page-place',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.fixturelist-page-pinDrop',
+                        rolerightId: 0,
+                        componentName: 'fixturelist-page-pinDrop',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
                     ]
                   },
                   {
@@ -247,7 +288,38 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
                     expandable: false,
                     iconName: '',
                     route: '',
-                    children: []
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.fixturecomlist-page-del',
+                        rolerightId: 0,
+                        componentName: 'fixturecomlist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.fixturecomlist-page-switchOn',
+                        rolerightId: 0,
+                        componentName: 'fixturecomlist-page-switchOn',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.fixturecomlist-page-switchOff',
+                        rolerightId: 0,
+                        componentName: 'fixturecomlist-page-switchOff',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
                   },
                   {
                     displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.fixturecomspeedlist-page',
@@ -257,7 +329,28 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
                     expandable: false,
                     iconName: '',
                     route: '',
-                    children: []
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.fixturecomspeedlist-page-ins',
+                        rolerightId: 0,
+                        componentName: 'fixturecomspeedlist-page-ins',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.fixturecomspeedlist-page-del',
+                        rolerightId: 0,
+                        componentName: 'fixturecomspeedlist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
                   },
                 ]
               },
@@ -269,7 +362,69 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
                 expandable: false,
                 iconName: '',
                 route: '',
-                children: []
+                children: [
+                  {
+                    displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page',
+                    rolerightId: 0,
+                    componentName: 'fixture-grlist-page',
+                    disabled: true,
+                    expandable: false,
+                    iconName: '',
+                    route: '',
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page-ins',
+                        rolerightId: 0,
+                        componentName: 'fixture-grlist-page-ins',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page-upd',
+                        rolerightId: 0,
+                        componentName: 'fixture-grlist-page-upd',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page-del',
+                        rolerightId: 0,
+                        componentName: 'fixture-grlist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page-switchOn',
+                        rolerightId: 0,
+                        componentName: 'fixture-grlist-page-switchOn',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.fixture-grlist-page-switchOff',
+                        rolerightId: 0,
+                        componentName: 'fixture-grlist-page-switchOff',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
+                  }
+                ]
               },
               {
                 displayName: 'site.menu.operator.fixture-page.fixturemap-page.fixturemap-page',
@@ -290,7 +445,90 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             disabled: true,
             iconName: 'assistant_photo',
             route: '/operator/node',
-            children: []
+            children: [
+              {
+                displayName: 'site.menu.operator.node-page.node-masterdetails-page.node-masterdetails-page',
+                rolerightId: 0,
+                componentName: 'node-masterdetails-page',
+                disabled: true,
+                expandable: false,
+                iconName: '',
+                route: '',
+                children: [
+                  {
+                    displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page',
+                    rolerightId: 0,
+                    componentName: 'nodelist-page',
+                    disabled: true,
+                    expandable: false,
+                    iconName: '',
+                    route: '',
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page-ins',
+                        rolerightId: 0,
+                        componentName: 'nodelist-page-ins',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page-upd',
+                        rolerightId: 0,
+                        componentName: 'nodelist-page-upd',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page-del',
+                        rolerightId: 0,
+                        componentName: 'nodelist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page-groupIn',
+                        rolerightId: 0,
+                        componentName: 'nodelist-page-groupIn',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.node-page.node-masterdetails-page.nodelist-page.nodelist-page-groupOut',
+                        rolerightId: 0,
+                        componentName: 'nodelist-page-groupOut',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
+                  },
+                ]
+              },
+              {
+                displayName: 'site.menu.operator.node-page.nodemap-page.nodemap-page',
+                rolerightId: 0,
+                componentName: 'nodemap-page',
+                disabled: true,
+                expandable: false,
+                iconName: '',
+                route: '',
+                children: []
+              },
+            ]
           },
           {
             displayName: 'site.menu.operator.gateway-page.gateway-page',
@@ -299,7 +537,90 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             disabled: true,
             iconName: 'router',
             route: '/operator/gateway',
-            children: []
+            children: [
+              {
+                displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gateway-masterdetails-page',
+                rolerightId: 0,
+                componentName: 'gateway-masterdetails-page',
+                disabled: true,
+                expandable: false,
+                iconName: '',
+                route: '',
+                children: [
+                  {
+                    displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page',
+                    rolerightId: 0,
+                    componentName: 'gatewaylist-page',
+                    disabled: true,
+                    expandable: false,
+                    iconName: '',
+                    route: '',
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page-ins',
+                        rolerightId: 0,
+                        componentName: 'gatewaylist-page-ins',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page-upd',
+                        rolerightId: 0,
+                        componentName: 'gatewaylist-page-upd',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page-del',
+                        rolerightId: 0,
+                        componentName: 'gatewaylist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page-place',
+                        rolerightId: 0,
+                        componentName: 'gatewaylist-page-place',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.gateway-page.gateway-masterdetails-page.gatewaylist-page.gatewaylist-page-pinDrop',
+                        rolerightId: 0,
+                        componentName: 'gatewaylist-page-pinDrop',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
+                  },
+                ]
+              },
+              {
+                displayName: 'site.menu.operator.gateway-page.gatewaymap-page.gatewaymap-page',
+                rolerightId: 0,
+                componentName: 'gatewaymap-page',
+                disabled: true,
+                expandable: false,
+                iconName: '',
+                route: '',
+                children: []
+              },
+            ]
           },
           {
             displayName: 'site.menu.operator.sensor-page.sensor-page',
@@ -308,7 +629,80 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             disabled: true,
             iconName: 'hearing',
             route: '/operator/sensor',
-            children: []
+            children: [
+              {
+                displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensor-md-page',
+                rolerightId: 0,
+                componentName: 'sensor-md-page',
+                disabled: true,
+                expandable: false,
+                iconName: '',
+                route: '',
+                children: [
+                  {
+                    displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page',
+                    rolerightId: 0,
+                    componentName: 'sensorlist-page',
+                    disabled: true,
+                    expandable: false,
+                    iconName: '',
+                    route: '',
+                    children: [
+                      {
+                        displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page-ins',
+                        rolerightId: 0,
+                        componentName: 'sensorlist-page-ins',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page-upd',
+                        rolerightId: 0,
+                        componentName: 'sensorlist-page-upd',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page-del',
+                        rolerightId: 0,
+                        componentName: 'sensorlist-page-del',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page-place',
+                        rolerightId: 0,
+                        componentName: 'sensorlist-page-place',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                      {
+                        displayName: 'site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.sensorlist-page-pinDrop',
+                        rolerightId: 0,
+                        componentName: 'sensorlist-page-pinDrop',
+                        disabled: true,
+                        expandable: false,
+                        iconName: '',
+                        route: '',
+                        children: []
+                      },
+                    ]
+                  },
+                ]
+              },
+            ]
           },
         ]
       },
@@ -416,21 +810,21 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
             route: '/dictionary/contract',
             children: [
               {
-                displayName: 'site.menu.dictionarys.contract-page.contracttype.contracttypes',
-                rolerightId: 0,
-                componentName: 'contracttypes',
-                disabled: true,
-                iconName: 'insert_drive_file',
-                route: '/dictionary/contract/contracts-types',
-                children: []
-              },
-              {
                 displayName: 'site.menu.dictionarys.contract-page.contract.contracts',
                 rolerightId: 0,
                 componentName: 'contracts',
                 disabled: true,
                 iconName: 'list_alt',
                 route: '/dictionary/contract/contracts',
+                children: []
+              },
+              {
+                displayName: 'site.menu.dictionarys.contract-page.contracttype.contracttypes',
+                rolerightId: 0,
+                componentName: 'contracttypes',
+                disabled: true,
+                iconName: 'insert_drive_file',
+                route: '/dictionary/contract/contracts-types',
                 children: []
               },
             ]
@@ -739,14 +1133,12 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   getContracts() {
     this.oSubContracts = this.contractService.getAll().subscribe(items => {
       this.contracts = items;
-      // if (!isUndefined(this.dictionaryLayout)
-      //   && !isUndefined(this.dictionaryLayout.contractComponent)
-      //   && !isUndefined(this.dictionaryLayout.contractComponent.contractSimpleDictionary)) {
-      //   this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
-      //   this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      // }
       this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
-      this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout)
+        && !isUndefined(this.dictionaryLayout.contractComponent)
+        && !isUndefined(this.dictionaryLayout.contractComponent.contractSimpleDictionary)) {
+        this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -754,7 +1146,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubContractTypes = this.contractTypeService.getAll().subscribe(items => {
       this.contractTypes = items;
       this.dictionaryLayout.contractComponent.sourceForJqxGridContractTypes.grid.source = items;
-      this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary)) {
+        this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -762,7 +1156,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
       this.fixtureTypes = items;
       this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridFixtureType.grid.source = items;
-      this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary)) {
+        this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -770,7 +1166,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubNodeType = this.nodeTypeService.getAll().subscribe(items => {
       this.nodeTypes = items;
       this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridNodeType.grid.source = items;
-      this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary)) {
+        this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -778,7 +1176,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubGatewayType = this.gatewayTypeService.getAll().subscribe(items => {
       this.gatewayTypes = items;
       this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridGatewayType.grid.source = items;
-      this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary)) {
+        this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -786,7 +1186,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubSensorType = this.sensorTypeService.getAll().subscribe(items => {
       this.sensorTypes = items;
       this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridSensorType.grid.source = items;
-      this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary)) {
+        this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -794,7 +1196,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubCompanies = this.companyService.getAll().subscribe(items => {
       this.companies = items;
       this.dictionaryLayout.contragentComponent.sourceForJqxGridCompanies.grid.source = items;
-      this.dictionaryLayout.contragentComponent.companiesSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.contragentComponent.companiesSimpleDictionary)) {
+        this.dictionaryLayout.contragentComponent.companiesSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -802,7 +1206,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubPersons = this.personService.getAll().subscribe(items => {
       this.persons = items;
       this.dictionaryLayout.contragentComponent.sourceForJqxGridPersons.grid.source = items;
-      this.dictionaryLayout.contragentComponent.personsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.contragentComponent.personsSimpleDictionary)) {
+        this.dictionaryLayout.contragentComponent.personsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 
@@ -810,7 +1216,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.oSubSubstations = this.substationService.getAll().subscribe(items => {
       this.substations = items;
       this.dictionaryLayout.contragentComponent.sourceForJqxGridSubstations.grid.source = items;
-      this.dictionaryLayout.contragentComponent.substationsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      if (!isUndefined(this.dictionaryLayout.contragentComponent.substationsSimpleDictionary)) {
+        this.dictionaryLayout.contragentComponent.substationsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+      }
     });
   }
 }

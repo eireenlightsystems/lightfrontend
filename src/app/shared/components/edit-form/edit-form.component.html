@@ -17,25 +17,22 @@
                           *ngFor="let itemEditForm of sourceForEditForm" [itemEditForm]="itemEditForm"
       ></app-edit-form-item>
     </table>
-    <div class="fr" style="margin-left: 110px">
-      <div appButtonLink>
-        <jqxButton #okButton
-                   [theme]="settingWinForEditForm.theme"
-                   [width]="100"
-                   (onClick)="saveBtn()"
-        >
-          {{ 'site.forms.editforms.save' | translate }}
-        </jqxButton>
-      </div>
-      <div appButtonLink>
-        <jqxButton #cancelButton
-                   [theme]="settingWinForEditForm.theme"
-                   [width]="100"
-                   (onClick)="cancelBtn()"
-        >
-          {{ 'site.forms.editforms.cancel' | translate }}
-        </jqxButton>
-      </div>
+    <div class="fr" style="margin: 10px 0px 5px 27%">
+      <jqxButton #okButton
+                 [theme]="settingWinForEditForm.theme"
+                 [width]="100"
+                 (onClick)="saveBtn()"
+      >
+        {{ 'site.forms.editforms.save' | translate }}
+      </jqxButton>
+      <jqxButton #cancelButton
+                 style="margin-left: 5px"
+                 [theme]="settingWinForEditForm.theme"
+                 [width]="100"
+                 (onClick)="cancelBtn()"
+      >
+        {{ 'site.forms.editforms.cancel' | translate }}
+      </jqxButton>
     </div>
   </div>
 </jqxWindow>

@@ -28,25 +28,22 @@
              [selectionmode]="sourceForLinkForm.grid.selectionmode"
     >
     </jqxGrid>
-    <div class="fr">
-      <div appButtonLink>
-        <jqxButton #okButton
-                   [theme]="sourceForLinkForm.window.theme"
-                   [width]="100"
-                   (onClick)="saveBtn()"
-        >
-          {{'site.forms.editforms.save' | translate}}
-        </jqxButton>
-      </div>
-      <div appButtonLink>
-        <jqxButton #cancelButton
-                   [theme]="sourceForLinkForm.window.theme"
-                   [width]="100"
-                   (onClick)="cancelBtn()"
-        >
-          {{'site.forms.editforms.cancel' | translate}}
-        </jqxButton>
-      </div>
+    <div class="fr" style="margin: 10px 0px 5px 40%">
+      <jqxButton #okButton
+                 [theme]="sourceForLinkForm.window.theme"
+                 [width]="100"
+                 (onClick)="saveBtn()"
+      >
+        {{'site.forms.editforms.save' | translate}}
+      </jqxButton>
+      <jqxButton #cancelButton
+                 style="margin-left: 5px"
+                 [theme]="sourceForLinkForm.window.theme"
+                 [width]="100"
+                 (onClick)="cancelBtn()"
+      >
+        {{'site.forms.editforms.cancel' | translate}}
+      </jqxButton>
     </div>
   </div>
 </jqxWindow>

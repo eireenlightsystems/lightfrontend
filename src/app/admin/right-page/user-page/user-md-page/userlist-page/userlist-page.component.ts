@@ -725,23 +725,32 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     }
 
     if (this.typeEditWindow === 'ins') {
-      // ins
-      this.oSub = this.userService.ins(selectObject).subscribe(
-        response => {
-          selectObject.userId = +response;
-          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins')
-            + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
-        },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
-        () => {
-          // close edit window
-          this.editForm.closeDestroy();
-          // update data source
-          this.jqxgridComponent.refresh_ins(
-            selectObject.userId, selectObject);
-        }
-      );
+      // check
+      if (selectObject.login !== this.translate.instant('site.forms.editforms.empty')
+        && selectObject.password !== this.translate.instant('site.forms.editforms.empty')) {
+        // ins
+        this.oSub = this.userService.ins(selectObject).subscribe(
+          response => {
+            selectObject.userId = +response;
+            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins')
+              + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
+          },
+          error =>
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          () => {
+            // close edit window
+            this.editForm.closeDestroy();
+            // update data source
+            this.jqxgridComponent.refresh_ins(
+              selectObject.userId, selectObject);
+          }
+        );
+      } else {
+        this.eventWindow.okButtonDisabled(true);
+        this.actionEventWindow = 'check';
+        this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.ins-check');
+        this.eventWindow.openEventWindow();
+      }
     }
     if (this.typeEditWindow === 'upd') {
       // definde param befor upd

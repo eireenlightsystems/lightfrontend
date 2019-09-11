@@ -23,6 +23,7 @@ import {RolelistPageComponent} from '../role-page/role-md-page/rolelist-page/rol
 export class RolerightPageComponent implements OnInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() roleSiteMap: NavItem[];
   @Input() companies: CompanyDepartment[];
   @Input() theme: string;

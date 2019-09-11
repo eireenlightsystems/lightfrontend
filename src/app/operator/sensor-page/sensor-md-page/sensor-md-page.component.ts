@@ -1,8 +1,9 @@
 // angular lib
 import {Component, OnInit, OnDestroy, ViewChild, Input} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
-import {Contract, Owner, EquipmentType, SettingButtonPanel, NavItem} from '../../../shared/interfaces';
+import {Contract, Owner, SettingButtonPanel, NavItem, SensorType} from '../../../shared/interfaces';
 // app services
 // app components
 import {SensorlistPageComponent} from './sensorlist-page/sensorlist-page.component';
@@ -13,12 +14,12 @@ import {SensorlistPageComponent} from './sensorlist-page/sensorlist-page.compone
   templateUrl: './sensor-md-page.component.html',
   styleUrls: ['./sensor-md-page.component.css']
 })
-export class SensorMdPageComponent implements OnInit {
+export class SensorMdPageComponent implements OnInit, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerSensors: Owner[];
-  @Input() sensorTypes: EquipmentType[];
+  @Input() sensorTypes: SensorType[];
   @Input() contractSensors: Contract[];
 
   // determine the functions that need to be performed in the parent component
@@ -29,7 +30,9 @@ export class SensorMdPageComponent implements OnInit {
   // other variables
   settingSensorButtonPanel: SettingButtonPanel;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -86,4 +89,7 @@ export class SensorMdPageComponent implements OnInit {
     };
   }
 
+  ngOnDestroy() {
+
+  }
 }

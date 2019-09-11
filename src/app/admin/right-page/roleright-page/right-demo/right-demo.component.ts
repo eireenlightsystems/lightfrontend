@@ -26,6 +26,7 @@ import {CompanyDepartment, NavItem} from '../../../../shared/interfaces';
 export class RightDemoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // variables from parent component
+  @Input() siteMap: NavItem[];
   @Input() roleSiteMap: NavItem[];
   @Input() companies: CompanyDepartment[];
   @Input() theme: string;
