@@ -54,12 +54,8 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
   }
 
   ngOnInit() {
-
-    console.log('ngOnInit');
-
     this.refresh_refbook();
     this.define_defaultvalues();
-
     this.speedLevel.nativeElement.value = 10;
     this.speedLevelOutput.nativeElement.value = this.speedLevel.nativeElement.value;
   }
@@ -74,9 +70,6 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
   }
 
   destroy() {
-
-    console.log('destroy');
-
     if (this.oSub) {
       this.oSub.unsubscribe();
     }

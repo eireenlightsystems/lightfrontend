@@ -7,6 +7,8 @@ import {MatSidenav, MatTree, MatTreeFlatDataSource, MatTreeFlattener} from '@ang
 import {MediaMatcher} from '@angular/cdk/layout';
 import {TranslateService} from '@ngx-translate/core';
 import {isUndefined} from 'util';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import {HttpClient} from '@angular/common/http';
 // jqwidgets
 // app interfaces
 import {
@@ -69,6 +71,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dictionaryLayout', {static: false}) dictionaryLayout: DictionaryLayoutComponent;
 
   // other variables
+  version = '0.9.0';
   language = 'ru';
   aSub: Subscription;
   offset = 0;
@@ -140,6 +143,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               // service
               private auth: AuthService,
               public translate: TranslateService,
+              private http: HttpClient,
+              private ngxLoader: NgxUiLoaderService,
               // get rights info
               private userService: UserService,
               private componentService: ComponentService,
@@ -904,7 +909,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     // choose items for sidenav
     this.navItems = this.navItemsOperator;
 
-    //
+    // load dictionary
     this.getContracts();
     this.getContractTypes();
     this.getFixtureTypes();
@@ -914,6 +919,12 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getCompanies();
     this.getPersons();
     this.getSubstations();
+
+    // loading process
+    this.ngxLoader.start();
+    setTimeout(() => {
+      this.ngxLoader.stop();
+    }, 1500);
   }
 
   ngAfterViewInit() {

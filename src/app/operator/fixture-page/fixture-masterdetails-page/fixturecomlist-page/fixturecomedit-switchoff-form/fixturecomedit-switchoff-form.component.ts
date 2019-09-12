@@ -43,9 +43,6 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   }
 
   ngOnInit() {
-
-    console.log('ngOnInit');
-
   }
 
   ngAfterViewInit() {
@@ -58,9 +55,6 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   }
 
   destroy() {
-
-    console.log('destroy');
-
     if (this.editWindow) {
       this.editWindow.destroy();
     }

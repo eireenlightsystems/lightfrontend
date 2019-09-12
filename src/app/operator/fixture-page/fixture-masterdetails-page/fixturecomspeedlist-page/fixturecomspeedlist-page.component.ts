@@ -507,7 +507,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   getSourceForFilter() {
-    if (!!isUndefined(this.commandStatuses)) {
+    if (!isUndefined(this.commandStatuses)) {
       let sourceForFilter: any[];
       if (this.translate.currentLang === 'ru') {
         sourceForFilter = this.sourceForFilter;

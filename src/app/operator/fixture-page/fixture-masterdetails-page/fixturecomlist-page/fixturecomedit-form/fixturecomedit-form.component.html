@@ -2,7 +2,7 @@
            [theme]="'material'"
            [isModal]="true" [modalOpacity]="'0.3'"
            [width]="500" [maxWidth]="500" [minWidth]="500"
-           [height]="470" [maxHeight]="470" [minHeight]="470"
+           [height]="455" [maxHeight]="455" [minHeight]="455"
            (onClose)="closeDestroy()"
 >
   <div #windowHeader>
@@ -76,25 +76,22 @@
         </td>
       </tr>
     </table>
-    <div class="fr" style="margin-left: 150px">
-      <div appButtonLink>
-        <jqxButton #okButton
-                   [theme]="'material'"
-                   [width]="100"
-                   (onClick)="saveBtn()"
-        >
-          {{ 'site.forms.editforms.save' | translate }}
-        </jqxButton>
-      </div>
-      <div appButtonLink>
-        <jqxButton #cancelButton
-                   [theme]="'material'"
-                   [width]="100"
-                   (onClick)="cancelBtn()"
-        >
-          {{ 'site.forms.editforms.cancel' | translate }}
-        </jqxButton>
-      </div>
+    <div class="fr" style="margin: 10px 0px 0px 148px">
+      <jqxButton #okButton
+                 [theme]="'material'"
+                 [width]="100"
+                 (onClick)="saveBtn()"
+      >
+        {{ 'site.forms.editforms.save' | translate }}
+      </jqxButton>
+      <jqxButton #cancelButton
+                 style="margin-left: 4px"
+                 [theme]="'material'"
+                 [width]="100"
+                 (onClick)="cancelBtn()"
+      >
+        {{ 'site.forms.editforms.cancel' | translate }}
+      </jqxButton>
     </div>
   </div>
 </jqxWindow>

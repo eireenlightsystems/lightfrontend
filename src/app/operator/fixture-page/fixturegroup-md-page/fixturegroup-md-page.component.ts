@@ -226,6 +226,6 @@ export class FixturegroupMdPageComponent implements OnInit {
   }
 
   getHeightSplitter() {
-    return 775;
+    return 790;
   }
 }

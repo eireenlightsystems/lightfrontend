@@ -34,6 +34,7 @@
     "lodash": "^4.17.15",
     "materialize-css": "^1.0.0-rc.2",
     "ng5-slider": "^1.1.13",
+    "ngx-ui-loader": "^8.0.0",
     "rxjs": "^6.5.2",
     "ymaps": "^0.1.1",
     "zone.js": "^0.9.1"

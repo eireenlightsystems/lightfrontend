@@ -27,7 +27,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   @Input() siteMap: NavItem[];
   @Input() widthGrid: number;
   @Input() fixtureGroupId: string;
-  @Input() selectionmode: number;
+  @Input() selectionmode: string;
   // fixture source
   @Input() ownerFixtures: Owner[];
   @Input() fixtureTypes: FixtureType[];
@@ -291,7 +291,7 @@ export class FixtureMasterdetailsPageComponent implements OnInit {
   }
 
   getHeightSplitter() {
-    return 775;
+    return 790;
   }
 
 }

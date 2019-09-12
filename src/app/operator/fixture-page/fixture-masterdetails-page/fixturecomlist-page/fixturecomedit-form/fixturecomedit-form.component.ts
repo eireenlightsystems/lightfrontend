@@ -48,9 +48,6 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit() {
-
-    console.log('ngOnInit');
-
     this.workLevelOutput.nativeElement.value = this.workLevel.nativeElement.value;
     this.standbyLevelOutput.nativeElement.value = this.standbyLevel.nativeElement.value;
   }
@@ -67,9 +64,6 @@ export class FixturecomeditFormComponent implements OnInit, OnDestroy, AfterView
   }
 
   destroy() {
-
-    console.log('destroy');
-
     if (this.editWindow) {
       this.editWindow.destroy();
     }

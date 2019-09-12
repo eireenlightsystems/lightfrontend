@@ -127,8 +127,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {text: 'Адрес', datafield: 'geographFullName', width: 400},
           {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
           {text: 'Владелец', datafield: 'ownerCode', width: 150},
-          {text: 'Широта', datafield: 'n_coordinate', width: 150},
-          {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+          {text: 'Широта', datafield: 'n_coordinate', width: 150, hidden: true},
+          {text: 'Долгота', datafield: 'e_coordinate', width: 150, hidden: true},
           {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
           {text: 'Коментарий', datafield: 'comment', width: 150},
         ];
@@ -139,8 +139,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {label: 'Адрес', value: 'geographFullName', checked: true},
           {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
           {label: 'Владелец', value: 'ownerCode', checked: true},
-          {label: 'Широта', value: 'n_coordinate', checked: true},
-          {label: 'Долгота', value: 'e_coordinate', checked: true},
+          {label: 'Широта', value: 'n_coordinate', checked: false},
+          {label: 'Долгота', value: 'e_coordinate', checked: false},
           {label: 'Серийный номер', value: 'serialNumber', checked: true},
           {label: 'Коментарий', value: 'comment', checked: true},
         ];
@@ -151,8 +151,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {text: 'Address', datafield: 'geographFullName', width: 400},
           {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
           {text: 'Owner', datafield: 'ownerCode', width: 150},
-          {text: 'Latitude', datafield: 'n_coordinate', width: 150},
-          {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+          {text: 'Latitude', datafield: 'n_coordinate', width: 150, hidden: true},
+          {text: 'Longitude', datafield: 'e_coordinate', width: 150, hidden: true},
           {text: 'Serial number', datafield: 'serialNumber', width: 150},
           {text: 'Comments', datafield: 'comment', width: 150},
         ];
@@ -163,8 +163,8 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           {label: 'Address', value: 'geographFullName', checked: true},
           {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
           {label: 'Owner', value: 'ownerCode', checked: true},
-          {label: 'Latitude', value: 'n_coordinate', checked: true},
-          {label: 'Longitude', value: 'e_coordinate', checked: true},
+          {label: 'Latitude', value: 'n_coordinate', checked: false},
+          {label: 'Longitude', value: 'e_coordinate', checked: false},
           {label: 'Serial number', value: 'serialNumber', checked: true},
           {label: 'Comments', value: 'comment', checked: true},
         ];

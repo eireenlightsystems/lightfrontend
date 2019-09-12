@@ -44,6 +44,7 @@
         >
           <mat-icon class="routeIcon" style="margin-right: 10px">import_contacts</mat-icon>
           {{ 'site.menu.dictionarys.dictionarys' | translate }}
+          <mat-icon class="routeIcon" style="margin-left: 2px">keyboard_arrow_down</mat-icon>
         </button>
         <button *ngIf="siteMap[2].disabled === false"
                 [routerLink]="'/admin/right'"
@@ -396,3 +397,5 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
+
+<ngx-ui-loader></ngx-ui-loader>
