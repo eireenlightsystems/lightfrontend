@@ -1,4 +1,3 @@
-// @ts-ignore
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -8,6 +7,8 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {NgxDadataModule} from '@kolkov/ngx-dadata';
+import {MaterialModule} from './material-module';
+import {NgxUiLoaderModule, NgxUiLoaderConfig, SPINNER, POSITION, PB_DIRECTION} from 'ngx-ui-loader';
 
 import {jqxGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxgrid';
 import {jqxPivotGridComponent} from 'jqwidgets-scripts/jqwidgets-ts/angular_jqxpivotgrid';
@@ -44,6 +45,8 @@ import {EditFormItemComponent} from './components/edit-form/edit-form-item/edit-
 import {JqxgridComponent} from './components/jqxgrid/jqxgrid.component';
 import {SimpleDictionaryComponent} from './components/simple-dictionary/simple-dictionary.component';
 import {TreeViewComponent} from './components/tree-view/tree-view.component';
+import {NotRightComponent, NotRightDialogComponent} from './components/not-right/not-right.component';
+import {JqxpivotgridComponent} from './components/jqxpivotgrid/jqxpivotgrid.component';
 
 import {ButtonSettinggridDirective} from './directives/button-settinggrid.directive';
 import {ButtonSimpleStyleDirective} from './directives/button-simple-style.directive';
@@ -55,11 +58,23 @@ import {WavesDirectiveDirective} from './directives/waves-directive.directive';
 import {ButtonMenuDirective} from './directives/button-menu.directive';
 import {TextFontweightDirective} from './directives/text-fontweight.directive';
 import {ObjectPosition2Directive} from './directives/object-position2.directive';
-import {NotRightComponent} from './components/not-right/not-right.component';
-import {MaterialModule} from './material-module';
+import {BackgroundLightgreyDirective} from './directives/background-lightgrey.directive';
 
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+  bgsColor: 'yellow', // #EF5350
+  fgsColor: 'yellow',
+  bgsPosition: POSITION.bottomCenter,
+  bgsSize: 40,
+  bgsType: SPINNER.rectangleBounce, // background spinner type
+  fgsType: SPINNER.threeStrings, // foreground spinner type
+  pbDirection: PB_DIRECTION.leftToRight, // progress bar direction
+  pbThickness: 5, // progress bar thickness
+  bgsOpacity: 0.9,
+  hasProgressBar: false
+};
 
 @NgModule({
+  entryComponents: [NotRightComponent, NotRightDialogComponent],
   declarations: [
     jqxGridComponent,
     jqxPivotGridComponent,
@@ -96,6 +111,8 @@ import {MaterialModule} from './material-module';
     SimpleDictionaryComponent,
     TreeViewComponent,
     NotRightComponent,
+    NotRightDialogComponent,
+    JqxpivotgridComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -107,6 +124,8 @@ import {MaterialModule} from './material-module';
     ButtonMenuDirective,
     TextFontweightDirective,
     ObjectPosition2Directive,
+    BackgroundLightgreyDirective,
+
   ],
   imports: [
     BrowserModule,
@@ -126,8 +145,11 @@ import {MaterialModule} from './material-module';
       }
     }),
     MaterialModule,
+    NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
   ],
   exports: [
+    NgxUiLoaderModule,
+
     jqxGridComponent,
     jqxPivotGridComponent,
     jqxPivotDesignerComponent,
@@ -164,6 +186,8 @@ import {MaterialModule} from './material-module';
     SimpleDictionaryComponent,
     TreeViewComponent,
     NotRightComponent,
+    NotRightDialogComponent,
+    JqxpivotgridComponent,
 
     ButtonSettinggridDirective,
     ButtonSimpleStyleDirective,
@@ -175,6 +199,8 @@ import {MaterialModule} from './material-module';
     ButtonMenuDirective,
     TextFontweightDirective,
     ObjectPosition2Directive,
+    BackgroundLightgreyDirective,
+
   ]
 })
 export class SharedModule {

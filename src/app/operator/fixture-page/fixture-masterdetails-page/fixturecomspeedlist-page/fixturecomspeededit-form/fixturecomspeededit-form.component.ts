@@ -33,13 +33,12 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
   // define variables - link to view objects
   @ViewChild('editWindow', {static: false}) editWindow: jqxWindowComponent;
   @ViewChild('datebeg', {static: false}) datebeg: jqxDateTimeInputComponent;
-  @ViewChild('speedLevel', {static: true}) speedLevel: ElementRef;
-  @ViewChild('speedLevelOutput', {static: true}) speedLevelOutput: ElementRef;
   @ViewChild('speedDirectionId', {static: false}) id_speed_direction: jqxDropDownListComponent;
 
   // other variables
   commandSpeedSwitches: CommandSpeedSwitch[] = [];
   oSub: Subscription;
+  speedLevelSec = 10;
 
   // define variables for drop-down lists in the edit form
   source_speedDirection: any;
@@ -56,8 +55,6 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
   ngOnInit() {
     this.refresh_refbook();
     this.define_defaultvalues();
-    this.speedLevel.nativeElement.value = 10;
-    this.speedLevelOutput.nativeElement.value = this.speedLevel.nativeElement.value;
   }
 
   ngAfterViewInit() {
@@ -91,7 +88,7 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
     // command switch on
     commandSpeedSwitch.fixtureId = this.fixtureIds[0];
     commandSpeedSwitch.startDateTime = new DateTimeFormat().fromDataPickerString(this.datebeg.ngValue);
-    commandSpeedSwitch.speed = +this.speedLevel.nativeElement.value;
+    commandSpeedSwitch.speed = this.speedLevelSec;
     commandSpeedSwitch.speedDirectionId = +this.id_speed_direction.val();
     this.commandSpeedSwitches[0] = commandSpeedSwitch;
 
@@ -112,10 +109,6 @@ export class FixturecomspeededitFormComponent implements OnInit, AfterViewInit, 
 
   cancelBtn() {
     this.closeDestroy();
-  }
-
-  getSpeedLevel(event) {
-    this.speedLevelOutput.nativeElement.value = event.target.value;
   }
 
   // updating data sources for drop-down lists in the form

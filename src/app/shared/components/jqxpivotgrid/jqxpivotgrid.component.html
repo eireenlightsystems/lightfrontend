@@ -1,0 +1,39 @@
+<table>
+  <tr>
+    <td>
+      <jqxPivotDesigner #pivotDesigner
+                        [type]="pivotGrid"
+                        [width]="250"
+                        [height]="500">
+      </jqxPivotDesigner>
+    </td>
+    <td>
+      <jqxPivotGrid #pivotGrid
+                    [width]="getWidth()"
+                    [height]="500"
+                    [source]="pivotDataSource"
+                    [treeStyleRows]="false"
+                    [autoResize]="false"
+                    [multipleSelectionEnabled]="true"
+      >
+      </jqxPivotGrid>
+    </td>
+  </tr>
+</table>
+
+<jqxButton
+  style="margin: 5px 5px 5px 5px"
+  [theme]="'material'"
+  [width]="100"
+  (onClick)="expandRow()"
+>
+  {{ 'site.menu.report.expand' | translate }}
+</jqxButton>
+<jqxButton
+  style="margin: 5px 5px 5px 5px"
+  [theme]="'material'"
+  [width]="100"
+  (onClick)="collapseRow()"
+>
+  {{ 'site.menu.report.collapse' | translate }}
+</jqxButton>

@@ -1,8 +1,8 @@
 <jqxWindow #editWindow
            [theme]="'material'"
            [isModal]="true" [modalOpacity]="'0.3'"
-           [width]="500" [maxWidth]="500" [minWidth]="500"
-           [height]="455" [maxHeight]="455" [minHeight]="455"
+           [width]="widthEditWindow"
+           [height]="heightEditWindow"
            (onClose)="closeDestroy()"
 >
   <div #windowHeader>
@@ -13,7 +13,9 @@
   <div>
     <table>
       <tr>
-        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-on' | translate}}:</b></td>
+        <td align="right">
+          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-on' | translate}}
+            :</b></td>
         <td align="left">
           <div id="datebeg">
             <jqxDateTimeInput #datebeg
@@ -41,7 +43,8 @@
       </tr>
       <tr>
         <td align="right">
-          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-off' | translate}}:</b>
+          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.time-off' | translate}}
+            :</b>
         </td>
         <td align="left">
           <div id="dateend">
@@ -56,23 +59,35 @@
         </td>
       </tr>
       <tr>
-        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.work-mode' | translate}}:</b></td>
+        <td align="right">
+          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.work-mode' | translate}}
+            :</b>
+        </td>
         <td align="left">
-          <div class="fr">
-            <input #workLevel type="range" step="5" min="0" max="100"
-                   (input)="getWorkLevel($event)"/>
-            <output #workLevelOutput></output>
-          </div>
+          <mat-slider
+            style="width: 280px;"
+            [step]="5"
+            [value]="workLevelProc"
+            (input)="workLevelProc = $event.value"
+          >
+          </mat-slider>
+          {{ workLevelProc }}
         </td>
       </tr>
       <tr>
-        <td align="right"><b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.standby-mode' | translate}}:</b></td>
+        <td align="right">
+          <b>{{'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.standby-mode' | translate}}
+            :</b>
+        </td>
         <td align="left">
-          <div class="fr">
-           <input #standbyLevel type="range" step="5" min="0" max="100"
-                   (input)="getStandbyLevel($event)"/>
-            <output #standbyLevelOutput></output>
-          </div>
+          <mat-slider
+            style="width: 280px;"
+            [step]="5"
+            [value]="standbyLevelProc"
+            (input)="standbyLevelProc = $event.value"
+          >
+          </mat-slider>
+          {{ standbyLevelProc }}
         </td>
       </tr>
     </table>

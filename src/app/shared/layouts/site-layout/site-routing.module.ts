@@ -27,6 +27,9 @@ import {UserPageComponent} from '../../../admin/right-page/user-page/user-page.c
 import {RolePageComponent} from '../../../admin/right-page/role-page/role-page.component';
 import {ComponentPageComponent} from '../../../admin/right-page/component-page/component-page.component';
 import {RolerightPageComponent} from '../../../admin/right-page/roleright-page/roleright-page.component';
+import {ReportLayoutComponent} from './report-layout/report-layout.component';
+import {ReportCountFixturePageComponent} from '../../../report/report-countfixture-page/report-count-fixture-page.component';
+import {ReportPowerFixturePageComponent} from '../../../report/report-powerfixture-page/report-power-fixture-page.component';
 
 // canActivate: [AuthGuard] - защита роутов
 const routes: Routes = [
@@ -36,7 +39,7 @@ const routes: Routes = [
       {
         // path: 'operator', component: OperatorLayoutComponent, children: []
         path: 'operator', component: OperatorLayoutComponent, canActivate: [AuthGuard], children: [
-          {path: '', redirectTo: 'fixture', pathMatch: 'full'},
+          // {path: '', redirectTo: 'fixture', pathMatch: 'full'},
           {
             path: 'node', component: NodePageComponent, canActivate: [AuthGuard], children: [
               {path: 'nodelist', component: NodelistPageComponent},
@@ -105,6 +108,13 @@ const routes: Routes = [
               {path: 'components', component: ComponentPageComponent},
               {path: 'rolerights', component: RolerightPageComponent}
             ]}
+        ]
+      },
+      {
+        path: 'report', component: ReportLayoutComponent, canActivate: [AuthGuard], children: [
+          // {path: '', redirectTo: 'countfixture', pathMatch: 'full'},
+          {path: 'countfixture', component: ReportCountFixturePageComponent, canActivate: [AuthGuard], children: []},
+          {path: 'powerfixture', component: ReportPowerFixturePageComponent, canActivate: [AuthGuard], children: []}
         ]
       }
     ]

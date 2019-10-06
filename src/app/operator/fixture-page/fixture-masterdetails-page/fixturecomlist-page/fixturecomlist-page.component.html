@@ -19,17 +19,8 @@
   ></app-button-panel>
 
   <app-filter-table #filterForm
-                    *ngIf="isFilterFormInit && this.translate.currentLang === 'ru'"
+                    *ngIf="isFilterFormInit"
                     [sourceForFilter]="sourceForFilter"
-                    [isMasterGrid]="isMasterGrid"
-                    [coordinateX]="null"
-                    [coordinateY]="null"
-                    (onDestroyFilterForm)="destroyFilterForm()"
-                    (onFilter)="applyFilterFromFilter($event)"
-  ></app-filter-table>
-  <app-filter-table #filterForm
-                    *ngIf="isFilterFormInit && this.translate.currentLang === 'en'"
-                    [sourceForFilter]="sourceForFilterEng"
                     [isMasterGrid]="isMasterGrid"
                     [coordinateX]="null"
                     [coordinateY]="null"
@@ -43,17 +34,8 @@
     <!--*ngIf="nodes.length > 0; else empty"-->
     <div>
       <app-jqxgrid #jqxgridComponent
-                   *ngIf="this.translate.currentLang === 'ru'"
                    [columnsGrid]="columnsGrid"
                    [listBoxSource]="listBoxSource"
-                   [sourceForJqxGrid]="sourceForJqxGrid"
-                   (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
-                   (onRefreshChildGrid)="refreshChildGrid($event)"
-      ></app-jqxgrid>
-      <app-jqxgrid #jqxgridComponent
-                   *ngIf="this.translate.currentLang === 'en'"
-                   [columnsGrid]="columnsGridEng"
-                   [listBoxSource]="listBoxSourceEng"
                    [sourceForJqxGrid]="sourceForJqxGrid"
                    (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
                    (onRefreshChildGrid)="refreshChildGrid($event)"

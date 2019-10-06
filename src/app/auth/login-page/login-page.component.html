@@ -4,7 +4,7 @@
   (ngSubmit)="onSubmit()"
 >
   <div class="card-content">
-    <span class="card-title">Войти в систему</span>
+    <span class="card-title">{{ 'site.auth.authtitle' | translate }}</span>
     <div class="input-field">
       <input
         formControlName="login"
@@ -12,13 +12,13 @@
         type="text"
         [ngClass]="{'invalid': form.get('login').invalid && form.get('login').touched}"
       >
-      <label for="login">login:</label>
+      <label for="login">{{ 'site.auth.login' | translate }}:</label>
       <span
         class="helper-text red-text"
         *ngIf="form.get('login').invalid && form.get('login').touched"
       >
-        <span *ngIf="form.get('login').errors['required']">login не должен быть пустым</span>
-        <span *ngIf="form.get('login').errors['login']">Введите корректный login</span>
+        <span *ngIf="form.get('login').errors['required']">{{ 'site.auth.loginright1' | translate }}</span>
+        <span *ngIf="form.get('login').errors['login']">{{ 'site.auth.loginmessage' | translate }}</span>
       </span>
     </div>
     <div class="input-field">
@@ -28,15 +28,16 @@
         formControlName="password"
         [ngClass]="{'invalid': form.get('password').invalid && form.get('password').touched}"
       >
-      <label for="password">Пароль:</label>
+      <label for="password">{{ 'site.auth.password' | translate }}:</label>
       <span
         class="helper-text red-text"
         *ngIf="form.get('password').invalid && form.get('password').touched"
       >
-        <span *ngIf="form.get('password').errors['required']">Пароль не должен быть пустым</span>
-        <span *ngIf="form.get('password').errors['minlength'] && form.get('password').errors['minlength']['requiredLength']">
-          Пароль должен быть больше {{form.get('password').errors['minlength']['requiredLength']}} символов.
-          Сейчас {{form.get('password').errors['minlength']['actualLength']}}
+        <span *ngIf="form.get('password').errors['required']">{{ 'site.auth.passright1' | translate }}</span>
+        <span
+          *ngIf="form.get('password').errors['minlength'] && form.get('password').errors['minlength']['requiredLength']">
+          {{ 'site.auth.passright2' | translate }} {{form.get('password').errors['minlength']['requiredLength']}}.
+          {{ 'site.auth.passchnow' | translate }} {{form.get('password').errors['minlength']['actualLength']}}
         </span>
       </span>
     </div>
@@ -47,7 +48,7 @@
       appButtonSimpleStyle
       [disabled]="form.invalid || form.disabled"
     >
-      Войти
+      {{ 'site.auth.enter' | translate }}
     </button>
   </div>
 </form>

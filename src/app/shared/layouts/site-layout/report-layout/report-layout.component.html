@@ -1,0 +1,14 @@
+<div [style.width]="tabsWidth + '%'">
+  <app-report-countfixture-page
+    *ngIf="(this.router.url.substring(0, 20) === '/report/countfixture')"
+    [currentLang_] = "this.translate.currentLang"
+  ></app-report-countfixture-page>
+</div>
+
+<div [style.width]="tabsWidth + '%'">
+  <app-report-powerfixture-page
+    *ngIf="(this.router.url.substring(0, 20) === '/report/powerfixture')"
+    [currentLang_] = "this.translate.currentLang"
+  ></app-report-powerfixture-page>
+</div>
+

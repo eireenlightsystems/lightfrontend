@@ -1,9 +1,7 @@
-<!--<button (click)="matTree.treeControl.collapseAll()">collapseAll</button>-->
-<!--<button (click)="matTree.treeControl.expandAll()">expandAll</button>-->
-<div *ngIf="siteMap[2].children[0].children[0].disabled === false; else notRightComponent">
+<!--<div *ngIf="siteMap[2].children[0].children[0].disabled === false; else notRightComponent">-->
   <jqxSplitter #mainSplitter
                [theme]="'material'"
-               [width]="'99.9%'" [height]="getHeightSplitter()"
+               [width]="'100%'" [height]="getHeightSplitter()"
                [panels]="[{ size: '40%'}]"
   >
     <div class="splitter-panel">
@@ -69,14 +67,17 @@
       </cdk-virtual-scroll-viewport>
     </div>
   </jqxSplitter>
-</div>
+<!--</div>-->
 
-<ng-template #notRightComponent>
-  <app-not-right
-    [message]="translate.instant('site.menu.administration.right-page.roleright-page.roleright-page')"
-  >
-  </app-not-right>
-</ng-template>
+<!--<ng-template #notRightComponent>-->
+<!--  <app-not-right-->
+<!--    [message]="translate.instant('site.menu.administration.right-page.roleright-page.roleright-page')"-->
+<!--  >-->
+<!--  </app-not-right>-->
+<!--</ng-template>-->
+
+<!--<button (click)="matTree.treeControl.collapseAll()">collapseAll</button>-->
+<!--<button (click)="matTree.treeControl.expandAll()">expandAll</button>-->
 
 
 

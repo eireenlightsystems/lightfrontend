@@ -1,5 +1,18 @@
 {
   "site": {
+    "auth": {
+      "authtitle": "Sign in",
+      "enter": "Enter",
+      "login": "Username",
+      "loginright1": "Username must not be blank",
+      "loginmessage": "Enter a valid username",
+      "password": "Password",
+      "passright1": "Password must not be blank",
+      "passright2": "Password must have more characters than ",
+      "passchnow": "Now it is ",
+      "registered": "Now you can log in using your data",
+      "accessDenied": "To get started, log in to the system"
+    },
     "menu": {
       "operator": {
         "operation": "Operation",
@@ -257,6 +270,7 @@
         "right-page": {
           "right-page": "Rights",
           "right-demo": "Demonstration of Rights",
+          "rights-check": "* Rights check",
           "right-demo-comments": "You can see the rights settings on the example of the current user interface. Upon completion of editing rights, the current user rights settings go back.",
           "not-right": "No rights. Contact your administrator.",
           "roleright-page": {
@@ -306,6 +320,25 @@
             "edit-code": "Fill in the component code"
           }
         }
+      },
+      "report": {
+        "report": "Reports",
+        "report-countfixture-page": {
+          "report-countfixture-page": "Report of count of fixtures",
+          "byadress": "By adress",
+          "byowner": "By owner",
+          "bytype": "By fixture type",
+          "bycontract": "By contract",
+          "byinstaller": "By installer",
+          "bysubstation": "By substation",
+          "byheight": "By height of installation"
+        },
+        "report-powerfixture-page": {
+          "report-powerfixture-page": "Energy Report",
+          "bymonth": "By monthes"
+        },
+        "expand": "Expand",
+        "collapse": "Collapse"
       },
       "exit": "Exit"
     },

@@ -33,7 +33,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewInit {
 
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
+              public router: Router,
               // service
               public translate: TranslateService) {
   }

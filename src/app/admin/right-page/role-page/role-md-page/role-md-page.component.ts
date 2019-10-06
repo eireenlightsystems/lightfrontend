@@ -1,8 +1,10 @@
+// angular lib
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
-
+import {TranslateService} from '@ngx-translate/core';
+// jqwidgets
 import {jqxSplitterComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxsplitter';
-
+// app interfaces
 import {
   CompanyDepartment,
   FilterComponent,
@@ -12,7 +14,8 @@ import {
   Person,
   SettingButtonPanel
 } from '../../../../shared/interfaces';
-
+// app services
+// app components
 import {UserlistPageComponent} from '../../user-page/user-md-page/userlist-page/userlist-page.component';
 import {RolelistPageComponent} from './rolelist-page/rolelist-page.component';
 import {ComponentlistPageComponent} from '../../component-page/componentlist-page/componentlist-page.component';
@@ -25,7 +28,7 @@ import {ComponentlistPageComponent} from '../../component-page/componentlist-pag
 })
 export class RoleMdPageComponent implements OnInit {
 
-  // variables from master component
+  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() tabsWidth: number;
   // role source
@@ -35,6 +38,8 @@ export class RoleMdPageComponent implements OnInit {
   @Input() userSortcolumn: any[];
   @Input() userColumns: any[];
   @Input() userListBoxSource: any[];
+
+  // determine the functions that need to be performed in the parent component
 
   // define variables - link to view objects
   @ViewChild('rolelistPageComponent', {static: false}) rolelistPageComponent: RolelistPageComponent;
@@ -65,7 +70,9 @@ export class RoleMdPageComponent implements OnInit {
   sizeParentSplitter: any;
   sizeChildSplitter: any;
 
-  constructor() {
+  constructor(
+    // service
+    public translate: TranslateService) {
   }
 
   ngOnInit() {

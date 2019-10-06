@@ -13,6 +13,7 @@
                        [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                        [isMasterGrid]="true"
                        [settingButtonPanel]="settingUserButtonPanel"
+                       [currentLang_] = "this.translate.currentLang"
                        (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-userlist-page>
   </div>

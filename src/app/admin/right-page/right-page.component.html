@@ -1,69 +1,79 @@
-<!--(selectedIndexChange)="selectedTab()" [selectedIndex]="getSelectedIndex()"-->
-<!--    <ng-template matTabContent>-->
-<!--    </ng-template>-->
-<div *ngIf="siteMap[2].children[0].disabled === false; else notRightComponent">
-  <mat-tab-group #matTabGroup [selectedIndex]="0">
-    <mat-tab label="{{'site.menu.administration.right-page.roleright-page.roleright-page' | translate}}">
-      <div [style.width]="99.7 + '%'">
-        <mat-chip-list>
-          <mat-chip color="primary" selected
-                    style="margin: 10px 5px 10px 5px"
-                    appWavesDirective
-                    matTooltip="{{'site.menu.administration.right-page.right-demo-comments' | translate}}"
-                    matTooltipClass="tooltip"
-                    (click)="initRightDemoFormOpen()"
-          >
-            {{'site.menu.administration.right-page.right-demo' | translate}}
-          </mat-chip>
-        </mat-chip-list>
-        <app-roleright-page #rolerightPageComponent
-                            [theme]="theme"
-                            [siteMap]="siteMap"
-                            [roleSiteMap]="roleSiteMap"
-                            [heightSplitterRoleright]="745"
-                            [heightGridRoleright]="690"
-                            [companies]="companies"
-        ></app-roleright-page>
-      </div>
-    </mat-tab>
-    <mat-tab label="{{'site.menu.administration.right-page.user-page.user-page' | translate}}">
-      <div [style.width]="99.8 + '%'">
-        <app-user-page
-          [siteMap]="siteMap"
-          [persons]="persons"
-        ></app-user-page>
-      </div>
-    </mat-tab>
-    <mat-tab label="{{'site.menu.administration.right-page.role-page.role-page' | translate}}">
-      <div [style.width]="99.8 + '%'">
-        <app-role-page
-          [siteMap]="siteMap"
-          [companies]="companies"
-        ></app-role-page>
-      </div>
-    </mat-tab>
-    <mat-tab label="{{'site.menu.administration.right-page.component-page.component-page' | translate}}">
-      <div [style.width]="99.8 + '%'">
-        <app-component-page
-          [siteMap]="siteMap"
-        ></app-component-page>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+<!--<div *ngIf="siteMap[2].children[0].disabled === false; else notRightComponent">-->
+<mat-tab-group #matTabGroup [selectedIndex]="0">
+  <mat-tab label="{{'site.menu.administration.right-page.roleright-page.roleright-page' | translate}}">
 
-  <div *ngIf="isRightDemoFormInit">
-    <app-right-demo #rightDemoComponent
-                    [theme]="theme"
-                    [siteMap]="siteMap"
-                    [roleSiteMap]="siteMap"
-                    [heightSplitterRoleright]="515"
-                    [heightGridRoleright]="460"
-                    [companies]="companies"
-                    (onInitRightDemoForm)="initRightDemoFormClose()"
+<!--        <mat-chip-list>-->
+<!--          <mat-chip color="primary" selected-->
+<!--                    style="margin: 10px 5px 10px 5px"-->
+<!--                    appWavesDirective-->
+<!--                    matTooltip="{{'site.menu.administration.right-page.right-demo-comments' | translate}}"-->
+<!--                    matTooltipClass="tooltip"-->
+<!--                    (click)="initRightDemoFormOpen()"-->
+<!--          >-->
+<!--            {{'site.menu.administration.right-page.right-demo' | translate}}-->
+<!--          </mat-chip>-->
+<!--        </mat-chip-list>-->
+
+    <jqxButton style="margin: 10px 5px 10px 5px"
+               [theme]="theme"
+               matTooltip="{{'site.menu.administration.right-page.right-demo-comments' | translate}}"
+               matTooltipClass="tooltip"
+               [width]="170"
+               (click)="initRightDemoFormOpen()"
     >
-    </app-right-demo>
-  </div>
+      {{'site.menu.administration.right-page.right-demo' | translate}}
+    </jqxButton>
+
+    <div [style.width]="tabsWidth + '%'">
+      <app-roleright-page #rolerightPageComponent
+                          *ngIf="siteMap[2].children[0].children[0].disabled === false; else notRightComponent"
+                          [theme]="theme"
+                          [siteMap]="siteMap"
+                          [roleSiteMap]="roleSiteMap"
+                          [heightSplitterRoleright]="743"
+                          [heightGridRoleright]="689"
+                          [companies]="companies"
+      ></app-roleright-page>
+    </div>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.administration.right-page.user-page.user-page' | translate}}">
+    <div [style.width]="tabsWidth + '%'">
+      <app-user-page
+        [siteMap]="siteMap"
+        [persons]="persons"
+      ></app-user-page>
+    </div>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.administration.right-page.role-page.role-page' | translate}}">
+    <div [style.width]="tabsWidth + '%'">
+      <app-role-page
+        [siteMap]="siteMap"
+        [companies]="companies"
+      ></app-role-page>
+    </div>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.administration.right-page.component-page.component-page' | translate}}">
+    <div [style.width]="tabsWidth + '%'">
+      <app-component-page
+        [siteMap]="siteMap"
+      ></app-component-page>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+
+<div *ngIf="isRightDemoFormInit">
+  <app-right-demo #rightDemoComponent
+                  [theme]="theme"
+                  [siteMap]="siteMap"
+                  [roleSiteMap]="siteMap"
+                  [heightSplitterRoleright]="515"
+                  [heightGridRoleright]="460"
+                  [companies]="companies"
+                  (onInitRightDemoForm)="initRightDemoFormClose()"
+  >
+  </app-right-demo>
 </div>
+<!--</div>-->
 
 <ng-template #notRightComponent>
   <app-not-right

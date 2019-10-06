@@ -1,5 +1,5 @@
 // angular lib
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MaterializeService} from '../../../classes/materialize.service';
@@ -38,6 +38,8 @@ import {NodeService} from '../../../services/node/node.service';
 import {SensorService} from '../../../services/sensor/sensor.service';
 import {GatewayService} from '../../../services/gateway/gateway.service';
 import {FixtureService} from '../../../services/fixture/fixture.service';
+import {MediaMatcher} from '@angular/cdk/layout';
+
 // app components
 
 
@@ -66,6 +68,8 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   @ViewChild('floating', {static: false}) floatingRef: ElementRef;
 
   // other variables
+  mobileQuery: MediaQueryList;
+  private mobileQueryListener: () => void;
   // subscription
   // geographSub: Subscription;
   // fixture subscription
@@ -128,6 +132,8 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher,
     // service
     // fixture service
     private fixtureService: FixtureService,
@@ -157,6 +163,9 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
     private ownerSensorService: OwnerSensorService,
     // private contractSensorService: ContractSensorService,
   ) {
+    this.mobileQuery = media.matchMedia('(max-width: 1320px)');
+    this.mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this.mobileQueryListener);
   }
 
   ngOnInit() {
@@ -164,7 +173,9 @@ export class OperatorLayoutComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit() {
-    MaterializeService.initializeFloatingButton(this.floatingRef);
+    if (this.mobileQuery.matches === true) {
+      MaterializeService.initializeFloatingButton(this.floatingRef);
+    }
   }
 
   ngOnDestroy(): void {

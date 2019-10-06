@@ -52,11 +52,16 @@
             :</b>
         </td>
         <td align="left">
-          <div class="fr">
-            <input #speedLevel type="range" step="1" min="0" max="255"
-                   (input)="getSpeedLevel($event)"/>
-            <output #speedLevelOutput></output>
-          </div>
+          <mat-slider
+            style="width: 380px;"
+            [max]="255"
+            [min]="0"
+            [step]="5"
+            [value]="speedLevelSec"
+            (input)="speedLevelSec = $event.value"
+          >
+          </mat-slider>
+          {{ speedLevelSec }}
         </td>
       </tr>
     </table>

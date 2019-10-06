@@ -39,6 +39,7 @@
                                    [isMasterGrid]="false"
                                    [selectionmode]="'checkbox'"
                                    [selectFixtureId]="selectFixtureId"
+                                   [currentLang_] = "this.translate.currentLang"
                                    (onRefreshChildGrid)="refreshChildGrid($event)"
           ></app-fixturecomlist-page>
         </mat-tab>
@@ -53,6 +54,7 @@
                                         [isMasterGrid]="false"
                                         [selectionmode]="'checkbox'"
                                         [selectFixtureId]="selectFixtureId"
+                                        [currentLang_] = "this.translate.currentLang"
                                         (onRefreshChildGrid)="refreshChildGrid($event)"
           ></app-fixturecomspeedlist-page>
         </mat-tab>

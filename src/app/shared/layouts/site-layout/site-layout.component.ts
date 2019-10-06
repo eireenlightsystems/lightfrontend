@@ -1,5 +1,5 @@
 // angular lib
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {FlatTreeControl} from '@angular/cdk/tree';
@@ -7,7 +7,7 @@ import {MatSidenav, MatTree, MatTreeFlatDataSource, MatTreeFlattener} from '@ang
 import {MediaMatcher} from '@angular/cdk/layout';
 import {TranslateService} from '@ngx-translate/core';
 import {isUndefined} from 'util';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
+import {NgxUiLoaderService} from 'ngx-ui-loader';
 import {HttpClient} from '@angular/common/http';
 // jqwidgets
 // app interfaces
@@ -71,13 +71,14 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('dictionaryLayout', {static: false}) dictionaryLayout: DictionaryLayoutComponent;
 
   // other variables
-  version = '0.9.0';
-  language = 'ru';
+  version = '1.0.0';
+  language = 'en';
   aSub: Subscription;
   offset = 0;
   limit = 100000;
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
+  changeMenu = 1320; // 960
   // dictionary
   userSub: Subscription;
   componentSub: Subscription;
@@ -110,6 +111,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   sidenavWidthMax = 230;
   sidenavContentMarginLeft = 0;
   isSidenavMax = false;
+  screenHeight: number;
+  screenWidth: number;
   tabsWidth = 99.9;
   // Left tree-menu in mat-sidenav
   siteMap: NavItem[];
@@ -119,6 +122,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   navItemsContragent: NavItem[];
   navItemsContract: NavItem[];
   navItemsAdmin: NavItem[];
+  navItemsReport: NavItem[];
   private transformer = (node: NavItem, level: number) => {
     return {
       expandable: !!node.children && node.children.length > 0 && node.expandable === true,
@@ -140,6 +144,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private router: Router,
               changeDetectorRef: ChangeDetectorRef,
               media: MediaMatcher,
+              private ngZone: NgZone,
               // service
               private auth: AuthService,
               public translate: TranslateService,
@@ -159,12 +164,26 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               private personService: PersonService,
               private substationService: SubstationService
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this.mobileQuery = media.matchMedia(`(max-width: ${this.changeMenu}px)`);
     this.mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this.mobileQueryListener);
+
     // translate instructions
-    translate.addLangs(['en', 'ru']);
-    translate.setDefaultLang('ru');
+    // translate.addLangs(['en', 'ru']);
+    // translate.setDefaultLang('en');
+
+    // screen change
+    window.onresize = (e) => {
+      ngZone.run(() => {
+        // console.log(window.innerWidth);
+        // console.log(window.innerHeight);
+        this.screenHeight = window.innerHeight;
+        this.screenWidth = window.innerWidth;
+        if (this.screenWidth < 1300) {
+          this.tabsWidth = 99.9;
+        }
+      });
+    };
   }
 
   hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
@@ -173,6 +192,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     // get user list
     this.getUsers();
     // set current language
+    this.language = !isUndefined(this.translate.currentLang) ? this.translate.currentLang : 'en';
     this.translate.use(this.language);
 
     this.siteMap = [
@@ -892,6 +912,34 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         ]
       },
+      {
+        displayName: 'site.menu.report.report',
+        componentName: 'report-layout',
+        disabled: false,
+        expandable: true,
+        iconName: 'report',
+        route: '/report',
+        children: [
+          {
+            displayName: 'site.menu.report.report-countfixture-page.report-countfixture-page',
+            componentName: 'report-countfixture-page',
+            disabled: false,
+            expandable: false,
+            iconName: 'lightbulb_outline',
+            route: '/report/countfixture',
+            children: []
+          },
+          {
+            displayName: 'site.menu.report.report-powerfixture-page.report-powerfixture-page',
+            componentName: 'report-powerfixture-page',
+            disabled: false,
+            expandable: false,
+            iconName: 'flash_on',
+            route: '/report/powerfixture',
+            children: []
+          },
+        ]
+      },
     ];
 
     this.navItemsOperator = this.siteMap[0].children;
@@ -903,6 +951,8 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.navItemsContract = this.siteMap[1].children[2].children;
 
     this.navItemsAdmin = this.siteMap[2].children;
+
+    this.navItemsReport = this.siteMap[3].children;
 
     this.dataSourceOnMobile.data = this.siteMap;
 
@@ -995,6 +1045,9 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   chooseNavMenuItemByRout(rout: string) {
     switch (rout) {
+      case '/operator':
+        this.navItems = this.navItemsOperator;
+        break;
       case '/operator/fixture':
         this.navItems = this.navItemsOperator;
         break;
@@ -1050,6 +1103,15 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       case '/admin/right':
         this.navItems = this.navItemsAdmin;
         break;
+      case '/report':
+        this.navItems = this.navItemsReport;
+        break;
+      case '/report/countfixture':
+        this.navItems = this.navItemsReport;
+        break;
+      case '/report/powerfixture':
+        this.navItems = this.navItemsReport;
+        break;
       default:
         this.navItems = [{
           displayName: '',
@@ -1073,7 +1135,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isSidenavMax = !this.isSidenavMax;
 
     // change width sidenav-content
-    this.tabsWidth = 100 - (((this.sidenavWidthMin + 2) / window.innerWidth * 100));
+    this.tabsWidth = 100 - (((this.sidenavWidthMin + 2) / this.screenWidth * 100));
   }
 
   toggle() {
@@ -1083,7 +1145,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isSidenavMax = false;
 
     // change width sidenav-content
-    this.tabsWidth = this.tabsWidth === 99.9 ? 100 - (((this.sidenavWidthMin + 2) / window.innerWidth * 100)) : 99.9;
+    this.tabsWidth = this.tabsWidth === 99.9 ? 100 - (((this.sidenavWidthMin + 2) / this.screenWidth * 100)) : 99.9;
   }
 
   getUsers() {

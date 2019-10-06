@@ -33,6 +33,8 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   filterItems: Array<{ name: string, id: number }> = [];
   offsetWidth: any;
   offsetHeight: any;
+  widthFiltrWindow: number;
+  heightFiltrWindow: number;
 
   constructor(
     // service
@@ -42,6 +44,10 @@ export class FilterTableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.offsetWidth = document.body.offsetWidth;
     this.offsetHeight = document.body.offsetHeight;
+    this.widthFiltrWindow = 400;
+    this.heightFiltrWindow = 35 + (this.sourceForFilter.length * 70) + 65;
+    this.getCoordinateX();
+    this.getCoordinateY();
   }
 
   ngOnDestroy() {
@@ -81,12 +87,12 @@ export class FilterTableComponent implements OnInit, OnDestroy {
     this.onFilter.emit(this.filterItems);
   }
 
-  getHeight() {
-    return 35 + (this.sourceForFilter.length * 70) + 65;
-  }
-
   getCoordinateX() {
-    return !isNull(this.coordinateX) ? this.coordinateX : this.offsetWidth - 400 - 100;
+    if (this.widthFiltrWindow < this.offsetWidth) {
+      this.coordinateX = !isNull(this.coordinateX) ? this.coordinateX : (this.offsetWidth - this.widthFiltrWindow) * 0.8;
+    } else {
+      this.coordinateX = 20;
+    }
   }
 
   getCoordinateY() {
@@ -94,9 +100,9 @@ export class FilterTableComponent implements OnInit, OnDestroy {
     if (this.isMasterGrid) {
       coordY = 100;
     } else {
-      coordY = this.offsetHeight - this.getHeight() - 15;
+      coordY = this.offsetHeight - this.heightFiltrWindow - 15;
     }
-    return !isNull(this.coordinateY) ? this.coordinateY : coordY;
+    this.coordinateY = !isNull(this.coordinateY) ? this.coordinateY : coordY;
   }
 
   getFilterSelect() {

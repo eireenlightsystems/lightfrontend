@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
@@ -44,7 +44,7 @@ const STEP = 1000000000000;
   templateUrl: './userlist-page.component.html',
   styleUrls: ['./userlist-page.component.css']
 })
-export class UserlistPageComponent implements OnInit, OnDestroy {
+export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   // variables from parent component
 
@@ -62,6 +62,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang_: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -97,20 +98,20 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     notRoleId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
+  // sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
+  // sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
+  // sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   warningEventWindow = '';
@@ -126,50 +127,50 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // USER
     // definde columns
-    this.columnsGrid =
-      [
-        {text: 'userId', datafield: 'userId', width: 50},
-        {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-        {text: 'Логин', datafield: 'login', width: 150},
-        {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
-        {text: 'Наименование контрагента', datafield: 'contragentName', width: 150},
-        {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150},
-        {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250},
-        {text: 'Коментарий', datafield: 'comments', width: 250}
-      ];
-    this.listBoxSource =
-      [
-        {label: 'userId', value: 'userId', checked: true},
-        {label: 'contragentId', value: 'contragentId', checked: false},
-        {label: 'Логин', value: 'login', checked: true},
-        {label: 'Код контрагента', value: 'contragentCode', checked: true},
-        {label: 'Наименование контрагента', value: 'contragentName', checked: true},
-        {label: 'ИНН контрагента', value: 'contragentInn', checked: true},
-        {label: 'Адрес контрагента', value: 'contragentAdres', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'userId', datafield: 'userId', width: 50},
-        {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-        {text: 'Login', datafield: 'login', width: 150},
-        {text: 'Contractor code', datafield: 'contragentCode', width: 150},
-        {text: 'Contractor name', datafield: 'contragentName', width: 150},
-        {text: 'Contractor Inn', datafield: 'contragentInn', width: 150},
-        {text: 'Contractor adres', datafield: 'contragentAdres', width: 250},
-        {text: 'Comments', datafield: 'comments', width: 250}
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'userId', value: 'userId', checked: true},
-        {label: 'contragentId', value: 'contragentId', checked: false},
-        {label: 'Login', value: 'login', checked: true},
-        {label: 'Contractor code', value: 'contragentCode', checked: true},
-        {label: 'Contractor name', value: 'contragentName', checked: true},
-        {label: 'Contractor Inn', value: 'contragentInn', checked: true},
-        {label: 'Contractor adres', value: 'contragentAdres', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
+    // this.columnsGrid =
+    //   [
+    //     {text: 'userId', datafield: 'userId', width: 50},
+    //     {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+    //     {text: 'Логин', datafield: 'login', width: 150},
+    //     {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
+    //     {text: 'Наименование контрагента', datafield: 'contragentName', width: 150},
+    //     {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150},
+    //     {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250},
+    //     {text: 'Коментарий', datafield: 'comments', width: 250}
+    //   ];
+    // this.listBoxSource =
+    //   [
+    //     {label: 'userId', value: 'userId', checked: true},
+    //     {label: 'contragentId', value: 'contragentId', checked: false},
+    //     {label: 'Логин', value: 'login', checked: true},
+    //     {label: 'Код контрагента', value: 'contragentCode', checked: true},
+    //     {label: 'Наименование контрагента', value: 'contragentName', checked: true},
+    //     {label: 'ИНН контрагента', value: 'contragentInn', checked: true},
+    //     {label: 'Адрес контрагента', value: 'contragentAdres', checked: true},
+    //     {label: 'Коментарий', value: 'comments', checked: true}
+    //   ];
+    // this.columnsGridEng =
+    //   [
+    //     {text: 'userId', datafield: 'userId', width: 50},
+    //     {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+    //     {text: 'Login', datafield: 'login', width: 150},
+    //     {text: 'Contractor code', datafield: 'contragentCode', width: 150},
+    //     {text: 'Contractor name', datafield: 'contragentName', width: 150},
+    //     {text: 'Contractor Inn', datafield: 'contragentInn', width: 150},
+    //     {text: 'Contractor adres', datafield: 'contragentAdres', width: 250},
+    //     {text: 'Comments', datafield: 'comments', width: 250}
+    //   ];
+    // this.listBoxSourceEng =
+    //   [
+    //     {label: 'userId', value: 'userId', checked: true},
+    //     {label: 'contragentId', value: 'contragentId', checked: false},
+    //     {label: 'Login', value: 'login', checked: true},
+    //     {label: 'Contractor code', value: 'contragentCode', checked: true},
+    //     {label: 'Contractor name', value: 'contragentName', checked: true},
+    //     {label: 'Contractor Inn', value: 'contragentInn', checked: true},
+    //     {label: 'Contractor adres', value: 'contragentAdres', checked: true},
+    //     {label: 'Comments', value: 'comments', checked: true}
+    //   ];
 
     // jqxgrid
     this.sourceForJqxGrid = {
@@ -200,41 +201,41 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
     };
 
     // definde filter
-    this.sourceForFilter = [
-      {
-        name: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '380',
-        height: '40',
-        placeHolder: 'Контрагент:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '380',
-        height: '40',
-        placeHolder: 'Contractor:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
+    // this.sourceForFilter = [
+    //   {
+    //     name: 'persons',
+    //     type: 'jqxComboBox',
+    //     source: this.persons,
+    //     theme: 'material',
+    //     width: '380',
+    //     height: '40',
+    //     placeHolder: 'Контрагент:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     defaultValue: '',
+    //     selectId: ''
+    //   }
+    // ];
+    // this.sourceForFilterEng = [
+    //   {
+    //     name: 'persons',
+    //     type: 'jqxComboBox',
+    //     source: this.persons,
+    //     theme: 'material',
+    //     width: '380',
+    //     height: '40',
+    //     placeHolder: 'Contractor:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     defaultValue: '',
+    //     selectId: ''
+    //   }
+    // ];
 
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormUser',
-      name: this.translate.instant('site.forms.editforms.edit'),
+      name: 'Add/edit users',
       theme: 'material',
       isModal: true,
       modalOpacity: 0.3,
@@ -247,204 +248,492 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Контрагент:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'login',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Логин:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'password',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Пароль:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'persons',
-        type: 'jqxComboBox',
-        source: this.persons,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contractor:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'login',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Login:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'password',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Password:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
+    // this.sourceForEditForm = [
+    //   {
+    //     nameField: 'persons',
+    //     type: 'jqxComboBox',
+    //     source: this.persons,
+    //     theme: 'material',
+    //     width: '285',
+    //     height: '20',
+    //     placeHolder: 'Контрагент:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'login',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '20',
+    //     placeHolder: 'Логин:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'password',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '20',
+    //     placeHolder: 'Пароль:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'comments',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '100',
+    //     placeHolder: 'Комментарий:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   }
+    // ];
+    // this.sourceForEditFormEng = [
+    //   {
+    //     nameField: 'persons',
+    //     type: 'jqxComboBox',
+    //     source: this.persons,
+    //     theme: 'material',
+    //     width: '285',
+    //     height: '20',
+    //     placeHolder: 'Contractor:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'login',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '20',
+    //     placeHolder: 'Login:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'password',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '20',
+    //     placeHolder: 'Password:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   },
+    //   {
+    //     nameField: 'comments',
+    //     type: 'jqxTextArea',
+    //     source: [],
+    //     theme: 'material',
+    //     width: '280',
+    //     height: '100',
+    //     placeHolder: 'Comments:',
+    //     displayMember: 'code',
+    //     valueMember: 'id',
+    //     selectedIndex: null,
+    //     selectId: '',
+    //     selectCode: '',
+    //     selectName: ''
+    //   }
+    // ];
 
     // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkUser',
-        name: 'Выбрать пользователя',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'userId',
-        sortcolumn: ['userId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkUser',
-        name: 'Select users',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'userId',
-        sortcolumn: ['userId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
+    // this.sourceForLinkForm = {
+    //   window: {
+    //     code: 'linkUser',
+    //     name: 'Выбрать пользователя',
+    //     theme: 'material',
+    //     autoOpen: true,
+    //     isModal: true,
+    //     modalOpacity: 0.3,
+    //     width: 1200,
+    //     maxWidth: 1200,
+    //     minWidth: 500,
+    //     height: 500,
+    //     maxHeight: 800,
+    //     minHeight: 600
+    //
+    //   },
+    //   grid: {
+    //     source: [],
+    //     columns: this.columnsGrid,
+    //     theme: 'material',
+    //     width: 1186,
+    //     height: 485,
+    //     columnsresize: true,
+    //     sortable: true,
+    //     filterable: true,
+    //     altrows: true,
+    //     selectionmode: 'checkbox',
+    //     valueMember: 'userId',
+    //     sortcolumn: ['userId'],
+    //     sortdirection: 'desc',
+    //     selectId: []
+    //   }
+    // };
+    // this.sourceForLinkFormEng = {
+    //   window: {
+    //     code: 'linkUser',
+    //     name: 'Select users',
+    //     theme: 'material',
+    //     autoOpen: true,
+    //     isModal: true,
+    //     modalOpacity: 0.3,
+    //     width: 1200,
+    //     maxWidth: 1200,
+    //     minWidth: 500,
+    //     height: 500,
+    //     maxHeight: 800,
+    //     minHeight: 600
+    //
+    //   },
+    //   grid: {
+    //     source: [],
+    //     columns: this.columnsGridEng,
+    //     theme: 'material',
+    //     width: 1186,
+    //     height: 485,
+    //     columnsresize: true,
+    //     sortable: true,
+    //     filterable: true,
+    //     altrows: true,
+    //     selectionmode: 'checkbox',
+    //     valueMember: 'userId',
+    //     sortcolumn: ['userId'],
+    //     sortdirection: 'desc',
+    //     selectId: []
+    //   }
+    // };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngAfterViewInit() {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang_) {
+      if (changes.currentLang_.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'userId', datafield: 'userId', width: 50},
+            {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+            {text: 'Логин', datafield: 'login', width: 150},
+            {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
+            {text: 'Наименование контрагента', datafield: 'contragentName', width: 150},
+            {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150},
+            {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250},
+            {text: 'Коментарий', datafield: 'comments', width: 250}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'userId', value: 'userId', checked: true},
+            {label: 'contragentId', value: 'contragentId', checked: false},
+            {label: 'Логин', value: 'login', checked: true},
+            {label: 'Код контрагента', value: 'contragentCode', checked: true},
+            {label: 'Наименование контрагента', value: 'contragentName', checked: true},
+            {label: 'ИНН контрагента', value: 'contragentInn', checked: true},
+            {label: 'Адрес контрагента', value: 'contragentAdres', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'persons',
+            type: 'jqxComboBox',
+            source: this.persons,
+            theme: 'material',
+            width: '380',
+            height: '40',
+            placeHolder: 'Контрагент:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'persons',
+            type: 'jqxComboBox',
+            source: this.persons,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Контрагент:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'login',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Логин:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'password',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Пароль:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkUser',
+            name: 'Выбрать пользователя',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'userId',
+            sortcolumn: ['userId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'userId', datafield: 'userId', width: 50},
+            {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+            {text: 'Login', datafield: 'login', width: 150},
+            {text: 'Contractor code', datafield: 'contragentCode', width: 150},
+            {text: 'Contractor name', datafield: 'contragentName', width: 150},
+            {text: 'Contractor Inn', datafield: 'contragentInn', width: 150},
+            {text: 'Contractor adres', datafield: 'contragentAdres', width: 250},
+            {text: 'Comments', datafield: 'comments', width: 250}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'userId', value: 'userId', checked: true},
+            {label: 'contragentId', value: 'contragentId', checked: false},
+            {label: 'Login', value: 'login', checked: true},
+            {label: 'Contractor code', value: 'contragentCode', checked: true},
+            {label: 'Contractor name', value: 'contragentName', checked: true},
+            {label: 'Contractor Inn', value: 'contragentInn', checked: true},
+            {label: 'Contractor adres', value: 'contragentAdres', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'persons',
+            type: 'jqxComboBox',
+            source: this.persons,
+            theme: 'material',
+            width: '380',
+            height: '40',
+            placeHolder: 'Contractor:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'persons',
+            type: 'jqxComboBox',
+            source: this.persons,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contractor:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'login',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Login:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'password',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Password:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkUser',
+            name: 'Select users',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'userId',
+            sortcolumn: ['userId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -676,12 +965,13 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
   getSourceForFilter() {
     if (!isUndefined(this.persons)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      // if (this.translate.currentLang === 'ru') {
+      //   sourceForFilter = this.sourceForFilter;
+      // }
+      // if (this.translate.currentLang === 'en') {
+      //   sourceForFilter = this.sourceForFilterEng;
+      // }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'persons':
@@ -715,6 +1005,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
           break;
         case 'password':
           selectObject.password = this.editForm.sourceForEditForm[i].selectCode;
+          // this.editForm.sourceForEditForm[i].selectCode = '';
           break;
         case 'comments':
           selectObject.comments = this.editForm.sourceForEditForm[i].selectCode;
@@ -782,12 +1073,13 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
+    // if (this.translate.currentLang === 'ru') {
+    //   sourceForEditForm = this.sourceForEditForm;
+    // }
+    // if (this.translate.currentLang === 'en') {
+    //   sourceForEditForm = this.sourceForEditFormEng;
+    // }
+    sourceForEditForm = this.sourceForEditForm;
 
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
@@ -823,6 +1115,9 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
           if (this.typeEditWindow === 'upd') {
             sourceForEditForm[i].selectCode = this.jqxgridComponent.selectRow.login;
           }
+          break;
+        case 'password':
+          sourceForEditForm[i].selectCode = '';
           break;
         case 'comments':
           if (this.typeEditWindow === 'upd') {
@@ -883,7 +1178,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
         response => {
           this.sourceForLinkForm.grid.source = response;
           // ???
-          this.sourceForLinkFormEng.grid.source = response;
+          // this.sourceForLinkFormEng.grid.source = response;
 
           this.linkForm.refreshGrid();
         },
@@ -944,7 +1239,7 @@ export class UserlistPageComponent implements OnInit, OnDestroy {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
-      duration: 3000,
+      duration: 10000,
     });
   }
 }

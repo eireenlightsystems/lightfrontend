@@ -682,3 +682,32 @@ export interface ContractType {
   name: string;
   comments: string;
 }
+
+// Reports
+
+export interface ReportCountFixture {
+  region: string;
+  area: string;
+  city: string;
+  cityDistrict: string;
+  settlement: string;
+  street: string;
+  house: string;
+  codeContract: string;
+  codeFixtureType: string;
+  codeInstaller: string;
+  codeSubstation: string;
+  codeHeightType: string;
+  codeOwner: string;
+  fixtureId: number;
+  countFixture: number;
+}
+
+export interface ReportPowerFixture {
+  year: number;
+  monthName: string;
+  fixtureId: number;
+  hours: number;
+  kw: number;
+  rub: number;
+}

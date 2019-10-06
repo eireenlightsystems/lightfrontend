@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, AfterViewInit, Input} from '@angular/core';
+import {Component, EventEmitter, OnInit, OnDestroy, Output, ViewChild, AfterViewInit, Input, HostListener} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -35,18 +35,45 @@ export class FixturecomeditSwitchoffFormComponent implements OnInit, OnDestroy, 
   // other variables
   commandSwitchs: CommandSwitch[] = [];
   oSub: Subscription;
+  screenHeight: number;
+  screenWidth: number;
+  coordinateX: number;
+  coordinateY: number;
+  widthEditWindow = 500;
+  heightEditWindow = 175;
 
   constructor(private _snackBar: MatSnackBar,
               // service
               public translate: TranslateService,
               private fixturecommandService: CommandSwitchService) {
+    this.getScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+    this.getCoordinate();
+  }
+
+  getCoordinate() {
+    if (this.widthEditWindow < this.screenWidth) {
+      this.coordinateX = (this.screenWidth - this.widthEditWindow) / 2;
+    } else {
+      this.coordinateX = 20;
+    }
+    if (this.heightEditWindow < this.screenHeight) {
+      this.coordinateY = (this.screenHeight - this.heightEditWindow) / 2;
+    } else {
+      this.coordinateY = 20;
+    }
   }
 
   ngOnInit() {
   }
 
   ngAfterViewInit() {
-    this.position({x: 600, y: 90});
+    // this.position({x: this.coordinateX, y: this.coordinateY});
     this.dateend.value(new Date());
   }
 

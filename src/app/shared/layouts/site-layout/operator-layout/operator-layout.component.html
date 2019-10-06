@@ -61,7 +61,7 @@
   </div>
 </div>
 
-<div class="fixed-action-btn" #floating>
+<div *ngIf="mobileQuery.matches === true" class="fixed-action-btn" #floating>
   <a class="btn-floating btn-large waves-effect waves-orange red">
     <i class="large material-icons">add</i>
   </a>

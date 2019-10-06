@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -32,7 +32,7 @@ const STEP = 1000000000000;
   templateUrl: './fixturecomspeedlist-page.component.html',
   styleUrls: ['./fixturecomspeedlist-page.component.css']
 })
-export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
+export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -44,6 +44,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: any;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang_: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -63,8 +64,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: CommandSpeedSwitch[] = [];
   ids: number[] = [];
@@ -73,6 +72,10 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     iso8601TZ: {
       start: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0))),
       end: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+    },
+    dataPicker: {
+      start: () => new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
+      end: () => new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999)))
     }
   };
   // grid
@@ -84,12 +87,11 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     startDateTime: this.todayEndStart.iso8601TZ.start(),
     endDateTime: this.todayEndStart.iso8601TZ.end(),
     fixtureId: '',
-    statusId: this.commandSpeedSwitchDflt.statusId.toString(),
     // get the value from the interface package (from the table of default values) from the database
+    statusId: this.commandSpeedSwitchDflt.statusId.toString(),
     speedDirectionId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
@@ -106,40 +108,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // define columns
-    this.columnsGrid =
-      [
-        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-        {text: 'Время начала', datafield: 'startDateTime', width: 150},
-        {text: 'Скорость, сек', datafield: 'speed', width: 200},
-        {text: 'Статус', datafield: 'statusName', width: 200},
-        {text: 'Тип команды', datafield: 'speedDirectionName', width: 300},
-      ];
-    this.listBoxSource =
-      [
-        {label: 'commandId', value: 'commandId', checked: false},
-        {label: 'Время начала', value: 'startDateTime', checked: true},
-        {label: 'Скорость, сек', value: 'speed', checked: true},
-        {label: 'Статус', value: 'statusName', checked: true},
-        {label: 'Тип команды', value: 'speedDirectionName', checked: true},
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-        {text: 'Start date / time', datafield: 'startDateTime', width: 150},
-        {text: 'Speed, sec', datafield: 'speed', width: 200},
-        {text: 'Status', datafield: 'statusName', width: 200},
-        {text: 'Command type', datafield: 'speedDirectionName', width: 300},
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'commandId', value: 'commandId', checked: false},
-        {label: 'Start date / time', value: 'startDateTime', checked: true},
-        {label: 'Speed, sec', value: 'speed', checked: true},
-        {label: 'Status', value: 'statusName', checked: true},
-        {label: 'Command type', value: 'speedDirectionName', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -168,117 +136,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // define filter
-    this.commandSpeedSwitchDflt = this.commandSpeedSwitchService.dfltParams();
-    this.sourceForFilter = [
-      {
-        name: 'commandStatuses',
-        type: 'jqxComboBox',
-        source: this.commandStatuses,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Статус комманды:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'speedDirectiones',
-        type: 'jqxComboBox',
-        source: this.speedDirectiones,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Режим скорости:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'startDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Дата нач. интер.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
-      },
-      {
-        name: 'endDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Дата заве. интерв.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'commandStatuses',
-        type: 'jqxComboBox',
-        source: this.commandStatuses,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Command status:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'speedDirectiones',
-        type: 'jqxComboBox',
-        source: this.speedDirectiones,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Speed mode:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'startDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Start date inter.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
-      },
-      {
-        name: 'endDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'End date inter.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
-      }
-    ];
-
     // define edit form
 
     if (this.isMasterGrid) {
@@ -286,6 +143,168 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang_) {
+      if (changes.currentLang_.currentValue === 'ru') {
+        // define columns
+        this.columnsGrid =
+          [
+            {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+            {text: 'Время начала', datafield: 'startDateTime', width: 150},
+            {text: 'Скорость, сек', datafield: 'speed', width: 200},
+            {text: 'Статус', datafield: 'statusName', width: 200},
+            {text: 'Тип команды', datafield: 'speedDirectionName', width: 300},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'commandId', value: 'commandId', checked: false},
+            {label: 'Время начала', value: 'startDateTime', checked: true},
+            {label: 'Скорость, сек', value: 'speed', checked: true},
+            {label: 'Статус', value: 'statusName', checked: true},
+            {label: 'Тип команды', value: 'speedDirectionName', checked: true},
+          ];
+        // define filter
+        this.sourceForFilter = [
+          {
+            name: 'commandStatuses',
+            type: 'jqxComboBox',
+            source: this.commandStatuses,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Статус комманды:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.statusId,
+            selectId: this.filter.statusId
+          },
+          {
+            name: 'speedDirectiones',
+            type: 'jqxComboBox',
+            source: this.speedDirectiones,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Режим скорости:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.speedDirectionId,
+            selectId: this.filter.speedDirectionId
+          },
+          {
+            name: 'startDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Дата нач. интер.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.start(),
+            selectId: this.filter.startDateTime
+          },
+          {
+            name: 'endDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Дата заве. интерв.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.end(),
+            selectId: this.filter.endDateTime
+          }
+        ];
+      } else {
+        // define columns
+        this.columnsGrid =
+          [
+            {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+            {text: 'Start date / time', datafield: 'startDateTime', width: 150},
+            {text: 'Speed, sec', datafield: 'speed', width: 200},
+            {text: 'Status', datafield: 'statusName', width: 200},
+            {text: 'Command type', datafield: 'speedDirectionName', width: 300},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'commandId', value: 'commandId', checked: false},
+            {label: 'Start date / time', value: 'startDateTime', checked: true},
+            {label: 'Speed, sec', value: 'speed', checked: true},
+            {label: 'Status', value: 'statusName', checked: true},
+            {label: 'Command type', value: 'speedDirectionName', checked: true},
+          ];
+        // define filter
+        this.sourceForFilter = [
+          {
+            name: 'commandStatuses',
+            type: 'jqxComboBox',
+            source: this.commandStatuses,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Command status:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.statusId,
+            selectId: this.filter.statusId
+          },
+          {
+            name: 'speedDirectiones',
+            type: 'jqxComboBox',
+            source: this.speedDirectiones,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Speed mode:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.speedDirectionId,
+            selectId: this.filter.speedDirectionId
+          },
+          {
+            name: 'startDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Start date inter.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.start(),
+            selectId: this.filter.startDateTime
+          },
+          {
+            name: 'endDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'End date inter.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.end(),
+            selectId: this.filter.endDateTime
+          }
+        ];
+      }
+    }
+    if (changes.commandStatuses) {
+      if (!isUndefined(this.commandStatuses)) {
+        this.sourceForFilter[0].source = this.commandStatuses;
+        this.sourceForFilter[1].source = this.speedDirectiones;
+        // это такое же обновление строки состояния фильтра, как this.filterForm.getFilterSelect(); - нужно переделать
+        setTimeout(() => {
+          this.filterSelect = this.getFilterSelect();
+        }, 2000);
+      }
     }
   }
 
@@ -320,9 +339,9 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
     this.selectItemId = 0;
 
     // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.getSourceForFilter();
+    // }, 1000);
 
     // disabled/available buttons
     this.getAvailabilityButtons();
@@ -502,19 +521,16 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.filterSelect = this.filterForm.getFilterSelect();
+    // this.filterSelect = this.filterForm.getFilterSelect();
+    // это такое же обновление строки состояния фильтра, как this.filterForm.getFilterSelect(); - нужно переделать
+    this.filterSelect = this.getFilterSelect();
     this.refreshGrid();
   }
 
   getSourceForFilter() {
     if (!isUndefined(this.commandStatuses)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'commandStatuses':
@@ -531,6 +547,46 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  getFilterSelect() {
+    let filterSelect = '';
+    let sourceForFilter: any[];
+    sourceForFilter = this.sourceForFilter;
+    for (let i = 0; i < sourceForFilter.length; i++) {
+      if (sourceForFilter[i].selectId !== '') {
+        let selectValue: any;
+        switch (sourceForFilter[i].type) {
+          case 'jqxComboBox':
+            if (!isUndefined(sourceForFilter[i].source[0].code)) {
+              selectValue = sourceForFilter[i].source.find(
+                (one: any) => one.id === +sourceForFilter[i].selectId).code;
+            } else {
+              if (!isUndefined(sourceForFilter[i].source[0].name)) {
+                selectValue = sourceForFilter[i].source.find(
+                  (one: any) => one.id === +sourceForFilter[i].selectId).name;
+              } else {
+                selectValue = sourceForFilter[i].selectId;
+              }
+            }
+            break;
+          case 'jqxDateTimeInput':
+            selectValue = sourceForFilter[i].defaultValue;
+            break;
+          case 'ngxSuggestionAddress':
+            selectValue = sourceForFilter[i].defaultValue;
+            break;
+          default:
+            break;
+        }
+        if (filterSelect !== '') {
+          filterSelect = filterSelect + ' > ' + sourceForFilter[i].placeHolder + ' ' + selectValue;
+        } else {
+          filterSelect = sourceForFilter[i].placeHolder + ' ' + selectValue;
+        }
+      }
+    }
+    return filterSelect;
   }
 
   destroyFilterForm() {

@@ -1,5 +1,5 @@
 // angular lib
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 import {jqxWindowComponent} from 'jqwidgets-scripts/jqwidgets-ng/jqxwindow';
@@ -32,15 +32,39 @@ export class EditFormComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cancelButton', {static: false}) cancelButton: jqxButton;
 
   // other variables
+  screenHeight: number;
+  screenWidth: number;
+  coordinateX: number;
+  coordinateY: number;
 
 
   constructor(
     // service
     public translate: TranslateService) {
+    this.getScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  getScreenSize(event?) {
+    this.screenHeight = window.innerHeight;
+    this.screenWidth = window.innerWidth;
+  }
+
+  getCoordinate() {
+    if (this.settingWinForEditForm.width < this.screenWidth) {
+      this.coordinateX = (this.screenWidth - this.settingWinForEditForm.width) / 2;
+    } else {
+      this.coordinateX = 20;
+    }
+    if (this.settingWinForEditForm.height < this.screenHeight) {
+      this.coordinateY = (this.screenHeight - this.settingWinForEditForm.height) / 2;
+    } else {
+      this.coordinateY = 20;
+    }
   }
 
   ngOnInit() {
-
+    this.getCoordinate();
   }
 
   ngAfterViewInit() {

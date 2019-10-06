@@ -27,6 +27,7 @@
                            [selectionmode]="'checkbox'"
                            [isMasterGrid]="false"
                            [settingButtonPanel]="settingUserButtonPanel"
+                           [currentLang_] = "this.translate.currentLang"
                            (onRefreshChildGrid)="refreshChildGrid($event)"
         ></app-userlist-page>
       </mat-tab>

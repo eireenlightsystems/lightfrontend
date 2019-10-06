@@ -18,6 +18,7 @@ import {AuthLayoutComponent} from './shared/layouts/auth-layout/auth-layout.comp
 import {RegisterPageComponent} from './auth/register-page/register-page.component';
 import {TokenInterceptor} from './shared/classes/token.interceptor';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 
 @NgModule({
@@ -27,7 +28,6 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
     AuthLayoutComponent,
     RegisterPageComponent,
     NotFoundComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -40,6 +40,7 @@ import {NotFoundComponent} from './shared/components/not-found/not-found.compone
     SharedModule,
     MaterialModule,
     SiteModule,
+    TranslateModule,
   ],
   providers: [
     {

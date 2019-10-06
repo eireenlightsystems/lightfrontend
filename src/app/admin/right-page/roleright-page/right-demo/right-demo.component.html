@@ -4,11 +4,7 @@
            [isModal]="false"
            [modalOpacity]="0.3"
            [width]="1000"
-           [maxWidth]="1500"
-           [minWidth]="1000"
            [height]="610"
-           [maxHeight]="610"
-           [minHeight]="610"
            [showCloseButton]="false"
            [showCollapseButton]="true"
            [keyboardCloseKey]="''"
@@ -16,7 +12,6 @@
   <div>
     <i class="material-icons">thumb_up</i>
   </div>
-
   <div>
     <app-roleright-page #rolerightPageComponent
                         [theme]="theme"
@@ -26,11 +21,10 @@
                         [heightGridRoleright]="heightGridRoleright"
                         [companies]="companies"
     ></app-roleright-page>
-
     <jqxButton #closeButton
+               style="margin: 5px 0px 5px 450px"
                [theme]="theme"
                [width]="100"
-               style="margin: 5px 5px 5px 5px"
                (onClick)="closeDestroy()"
     >
       {{ 'site.forms.editforms.close' | translate }}

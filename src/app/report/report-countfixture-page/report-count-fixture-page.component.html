@@ -1,0 +1,47 @@
+<mat-tab-group #matTabGroup
+               [selectedIndex]="0"
+               (selectedTabChange)="selectedTabChange($event)"
+>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.byadress' | translate}}">
+    <!--    <ng-template matTabContent>-->
+    <!--    </ng-template>-->
+    <app-jqxpivotgrid #jqxpivotgrid1>
+    </app-jqxpivotgrid>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.byowner' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid2>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.bytype' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid3>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.bycontract' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid4>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.byinstaller' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid5>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.bysubstation' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid6>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="{{'site.menu.report.report-countfixture-page.byheight' | translate}}">
+    <ng-template matTabContent>
+      <app-jqxpivotgrid #jqxpivotgrid7>
+      </app-jqxpivotgrid>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

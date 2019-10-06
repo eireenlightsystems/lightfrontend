@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -33,7 +33,7 @@ const STEP = 1000000000000;
   templateUrl: './fixturecomlist-page.component.html',
   styleUrls: ['./fixturecomlist-page.component.css']
 })
-export class FixturecomlistPageComponent implements OnInit, OnDestroy {
+export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -44,6 +44,7 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang_: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -64,8 +65,6 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: CommandSwitch[] = [];
   ids: number[] = [];
@@ -74,6 +73,10 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     iso8601TZ: {
       start: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0))),
       end: () => new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
+    },
+    dataPicker: {
+      start: () => new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
+      end: () => new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999)))
     }
   };
   // grid
@@ -85,11 +88,10 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     startDateTime: this.todayEndStart.iso8601TZ.start(),
     endDateTime: this.todayEndStart.iso8601TZ.end(),
     fixtureId: '',
+    // get the value from the interface package (from the table of default values) from the database
     statusId: this.commandSwitchDflt.statusId.toString()
-    // значение получать из интерфейсного пакета (из таблицы значений по умолчанию) из БД
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
@@ -107,42 +109,6 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // definde columns
-    this.columnsGrid =
-      [
-        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-        {text: 'Время начала', datafield: 'startDateTime', width: 150},
-        {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
-        {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
-        {text: 'Статус', datafield: 'statusName', width: 200},
-
-      ];
-    this.listBoxSource =
-      [
-        {label: 'commandId', value: 'commandId', checked: false},
-        {label: 'Время начала', value: 'startDateTime', checked: true},
-        {label: 'Рабочий режим', value: 'workLevel', checked: true},
-        {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
-        {label: 'Статус', value: 'statusName', checked: true},
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
-        {text: 'Start date / time', datafield: 'startDateTime', width: 150},
-        {text: 'Work level', datafield: 'workLevel', width: 150},
-        {text: 'Standby level', datafield: 'standbyLevel', width: 150},
-        {text: 'Status', datafield: 'statusName', width: 200},
-
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'commandId', value: 'commandId', checked: false},
-        {label: 'Start date / time', value: 'startDateTime', checked: true},
-        {label: 'Work level', value: 'workLevel', checked: true},
-        {label: 'Standby level', value: 'standbyLevel', checked: true},
-        {label: 'Status', value: 'statusName', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -171,90 +137,6 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // define filter
-    this.sourceForFilter = [
-      {
-        name: 'commandStatuses',
-        type: 'jqxComboBox',
-        source: this.commandStatuses,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Статус комманды:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'startDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Дата нач. интер.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
-      },
-      {
-        name: 'endDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Дата заве. интерв.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'commandStatuses',
-        type: 'jqxComboBox',
-        source: this.commandStatuses,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Status of command:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'startDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Start date inter.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(0, 0, 0, 0))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(0, 0, 0, 0)))
-      },
-      {
-        name: 'endDateTime',
-        type: 'jqxDateTimeInput',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'End date inter.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: new DateTimeFormat().toDataPickerString(new Date(new Date().setHours(23, 59, 59, 999))),
-        selectId: new DateTimeFormat().toIso8601TZString(new Date(new Date().setHours(23, 59, 59, 999)))
-      }
-    ];
-
     // define edit form
 
     if (this.isMasterGrid) {
@@ -262,6 +144,145 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang_) {
+      if (changes.currentLang_.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+            {text: 'Время начала', datafield: 'startDateTime', width: 150},
+            {text: 'Рабочий режим', datafield: 'workLevel', width: 150},
+            {text: 'Дежурный режим', datafield: 'standbyLevel', width: 150},
+            {text: 'Статус', datafield: 'statusName', width: 200},
+
+          ];
+        this.listBoxSource =
+          [
+            {label: 'commandId', value: 'commandId', checked: false},
+            {label: 'Время начала', value: 'startDateTime', checked: true},
+            {label: 'Рабочий режим', value: 'workLevel', checked: true},
+            {label: 'Дежурный режим', value: 'standbyLevel', checked: true},
+            {label: 'Статус', value: 'statusName', checked: true},
+          ];
+
+        // define filter
+        this.sourceForFilter = [
+          {
+            name: 'commandStatuses',
+            type: 'jqxComboBox',
+            source: this.commandStatuses,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Статус комманды:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.statusId,
+            selectId: this.filter.statusId
+          },
+          {
+            name: 'startDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Дата нач. интер.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.start(),
+            selectId: this.filter.startDateTime
+          },
+          {
+            name: 'endDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Дата заве. интерв.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.end(),
+            selectId: this.filter.endDateTime
+          }
+        ];
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'commandId', datafield: 'commandId', width: 150, hidden: true},
+            {text: 'Start date / time', datafield: 'startDateTime', width: 150},
+            {text: 'Work level', datafield: 'workLevel', width: 150},
+            {text: 'Standby level', datafield: 'standbyLevel', width: 150},
+            {text: 'Status', datafield: 'statusName', width: 200},
+
+          ];
+        this.listBoxSource =
+          [
+            {label: 'commandId', value: 'commandId', checked: false},
+            {label: 'Start date / time', value: 'startDateTime', checked: true},
+            {label: 'Work level', value: 'workLevel', checked: true},
+            {label: 'Standby level', value: 'standbyLevel', checked: true},
+            {label: 'Status', value: 'statusName', checked: true},
+          ];
+
+        // define filter
+        this.sourceForFilter = [
+          {
+            name: 'commandStatuses',
+            type: 'jqxComboBox',
+            source: this.commandStatuses,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Status of command:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: this.filter.statusId,
+            selectId: this.filter.statusId
+          },
+          {
+            name: 'startDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Start date inter.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.start(),
+            selectId: this.filter.startDateTime
+          },
+          {
+            name: 'endDateTime',
+            type: 'jqxDateTimeInput',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'End date inter.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: this.todayEndStart.dataPicker.end(),
+            selectId: this.filter.endDateTime
+          }
+        ];
+      }
+    }
+    if (changes.commandStatuses) {
+      if (!isUndefined(this.commandStatuses)) {
+        this.sourceForFilter[0].source = this.commandStatuses;
+        // это такое же обновление строки состояния фильтра, как this.filterForm.getFilterSelect(); - нужно переделать
+        setTimeout(() => {
+          this.filterSelect = this.getFilterSelect();
+        }, 2000);
+      }
     }
   }
 
@@ -299,9 +320,9 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
     this.selectItemId = 0;
 
     // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
+    // setTimeout(() => {
+    //   this.getSourceForFilter();
+    // }, 1000);
 
     // disabled/available buttons
     this.getAvailabilityButtons();
@@ -474,19 +495,16 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    this.filterSelect = this.filterForm.getFilterSelect();
+    // this.filterSelect = this.filterForm.getFilterSelect();
+    // это такое же обновление строки состояния фильтра, как this.filterForm.getFilterSelect(); - нужно переделать
+    this.filterSelect = this.getFilterSelect();
     this.refreshGrid();
   }
 
   getSourceForFilter() {
     if (!isUndefined(this.commandStatuses)) {
-      let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      let sourceForFilter = this.sourceForFilter;
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'commandStatuses':
@@ -500,6 +518,46 @@ export class FixturecomlistPageComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  getFilterSelect() {
+    let filterSelect = '';
+    let sourceForFilter: any[];
+    sourceForFilter = this.sourceForFilter;
+    for (let i = 0; i < sourceForFilter.length; i++) {
+      if (sourceForFilter[i].selectId !== '') {
+        let selectValue: any;
+        switch (sourceForFilter[i].type) {
+          case 'jqxComboBox':
+            if (!isUndefined(sourceForFilter[i].source[0].code)) {
+              selectValue = sourceForFilter[i].source.find(
+                (one: any) => one.id === +sourceForFilter[i].selectId).code;
+            } else {
+              if (!isUndefined(sourceForFilter[i].source[0].name)) {
+                selectValue = sourceForFilter[i].source.find(
+                  (one: any) => one.id === +sourceForFilter[i].selectId).name;
+              } else {
+                selectValue = sourceForFilter[i].selectId;
+              }
+            }
+            break;
+          case 'jqxDateTimeInput':
+            selectValue = sourceForFilter[i].defaultValue;
+            break;
+          case 'ngxSuggestionAddress':
+            selectValue = sourceForFilter[i].defaultValue;
+            break;
+          default:
+            break;
+        }
+        if (filterSelect !== '') {
+          filterSelect = filterSelect + ' > ' + sourceForFilter[i].placeHolder + ' ' + selectValue;
+        } else {
+          filterSelect = sourceForFilter[i].placeHolder + ' ' + selectValue;
+        }
+      }
+    }
+    return filterSelect;
   }
 
   destroyFilterForm() {

@@ -58,39 +58,49 @@
           <mat-icon class="routeIcon" style="margin-right: 10px">settings</mat-icon>
           {{ 'site.menu.administration.administration' | translate }}
         </button>
-        <!--        [disabled]="siteMap[2].disabled"-->
+        <button *ngIf="siteMap[3].disabled === false"
+                [routerLink]="'/report'"
+                mat-button
+                class="button-top-menu"
+                style="width: 200px"
+                appWavesDirective
+                appButtonMenuDirective
+                (mouseup)="chooseNavMenuItem('/report')"
+        >
+          <mat-icon class="routeIcon" style="margin-right: 10px">report</mat-icon>
+          {{ 'site.menu.report.report' | translate }}
+        </button>
+
+        <mat-menu #dictionarys="matMenu">
+          <button *ngIf="siteMap[1].children[0].disabled === false"
+                  [routerLink]="'/dictionary/equipment'"
+                  mat-menu-item
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="chooseNavMenuItem('/dictionary/equipment')"
+          >
+            <mat-icon class="routeIcon" style="margin-right: 10px">build</mat-icon>
+            {{ 'site.menu.dictionarys.equipment-page.equipments' | translate }}
+          </button>
+          <button *ngIf="siteMap[1].children[1].disabled === false"
+                  [routerLink]="'/dictionary/contragent'"
+                  mat-menu-item
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="chooseNavMenuItem('/dictionary/contragent')"
+          >
+            <mat-icon class="routeIcon" style="margin-right: 10px">group</mat-icon>
+            {{ 'site.menu.dictionarys.contragent-page.contragents' | translate }}
+          </button>
+          <button *ngIf="siteMap[1].children[2].disabled === false"
+                  [routerLink]="'/dictionary/contract'"
+                  mat-menu-item
+                  appButtonMenuDirective [theme]="'light'"
+                  (click)="chooseNavMenuItem('/dictionary/contract')"
+          >
+            <mat-icon class="routeIcon" style="argin-right: 10px">list_alt</mat-icon>
+            {{ 'site.menu.dictionarys.contract-page.contracts' | translate }}
+          </button>
+        </mat-menu>
       </div>
-
-      <mat-menu #dictionarys="matMenu">
-        <button *ngIf="siteMap[1].children[0].disabled === false"
-                [routerLink]="'/dictionary/equipment'"
-                mat-menu-item
-                appButtonMenuDirective [theme]="'light'"
-                (click)="chooseNavMenuItem('/dictionary/equipment')"
-        >
-          <mat-icon class="routeIcon" style="margin-right: 10px">build</mat-icon>
-          {{ 'site.menu.dictionarys.equipment-page.equipments' | translate }}
-        </button>
-        <button *ngIf="siteMap[1].children[1].disabled === false"
-                [routerLink]="'/dictionary/contragent'"
-                mat-menu-item
-                appButtonMenuDirective [theme]="'light'"
-                (click)="chooseNavMenuItem('/dictionary/contragent')"
-        >
-          <mat-icon class="routeIcon" style="margin-right: 10px">group</mat-icon>
-          {{ 'site.menu.dictionarys.contragent-page.contragents' | translate }}
-        </button>
-        <button *ngIf="siteMap[1].children[2].disabled === false"
-                [routerLink]="'/dictionary/contract'"
-                mat-menu-item
-                appButtonMenuDirective [theme]="'light'"
-                (click)="chooseNavMenuItem('/dictionary/contract')"
-        >
-          <mat-icon class="routeIcon" style="argin-right: 10px">list_alt</mat-icon>
-          {{ 'site.menu.dictionarys.contract-page.contracts' | translate }}
-        </button>
-      </mat-menu>
-
       <span class="spacer"></span>
       <span>
         <button mat-button
@@ -129,6 +139,7 @@
   <mat-sidenav-container class="example-sidenav-container"
                          [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
                          (backdropClick)="snav.close()">
+
     <mat-sidenav #snav
                  [ngStyle]="{ 'width.px': sidenavWidth }"
                  class="example-sidenav"
@@ -175,6 +186,7 @@
       </button>
 
     </mat-sidenav>
+
     <mat-sidenav-content
       class="example-sidenav-content"
     >
@@ -231,6 +243,15 @@
                           (onUpdRights)="updRights()"
         ></app-admin-layout>
       </div>
+      <div [hidden]="!(this.router.url.substring(0,5) === '/repo')"
+           [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
+      >
+        <app-report-layout #reportLayoutComponent
+                           [theme]="'material'"
+                           [siteMap]="siteMap"
+                           [tabsWidth]="tabsWidth"
+        ></app-report-layout>
+      </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
@@ -251,30 +272,9 @@
       </div>
 
       <div class="button-top-menu">
-        <a href="http://eireenlight.ru:8100/home"><img class="button-top-menu" src="pictures/eireenlight.jpg"></a>
+        <a href="http://eireenlight.ru/home"><img class="button-top-menu" src="pictures/eireenlight.jpg"></a>
       </div>
 
-      <span class="spacer"></span>
-      <span>
-        <button mat-button
-                appWavesDirective
-                appButtonMenuDirective
-                appBackgroundLightredDirective
-                (click)="switchLanguage()"
-        >
-          <mat-icon>language</mat-icon>
-          {{ language }}
-        </button>
-      </span>
-      <span style="margin-left: 10px">
-        <button mat-button
-                appWavesDirective
-                appButtonMenuDirective
-                [matMenuTriggerFor]=useractions
-        >
-          {{ user.contragentCode }}
-        </button>
-      </span>
       <mat-menu #useractions="matMenu">
         <div style="margin-left: 15px">
           {{ user.login }}
@@ -393,6 +393,15 @@
           [companies]="companies"
           [persons]="persons"
         ></app-admin-layout>
+      </div>
+      <div [hidden]="!(this.router.url.substring(0,5) === '/repo')"
+           [ngStyle]="{ 'marginLeft.px': sidenavContentMarginLeft }"
+      >
+        <app-report-layout #reportLayoutComponent
+                           [theme]="'material'"
+                           [siteMap]="siteMap"
+                           [tabsWidth]="tabsWidth"
+        ></app-report-layout>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>

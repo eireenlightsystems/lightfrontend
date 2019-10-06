@@ -1,13 +1,16 @@
 <jqxWindow #editWindow
            [theme]="settingWinForEditForm.theme"
-           [isModal]="settingWinForEditForm.isModal" [modalOpacity]="settingWinForEditForm.modalOpacity"
-           [height]="settingWinForEditForm.height" [maxHeight]="settingWinForEditForm.maxHeight"
+           [isModal]="settingWinForEditForm.isModal"
+           [modalOpacity]="settingWinForEditForm.modalOpacity"
+           [height]="settingWinForEditForm.height"
+           [maxHeight]="settingWinForEditForm.maxHeight"
            [minHeight]="settingWinForEditForm.minHeight"
-           [width]="settingWinForEditForm.width" [maxWidth]="settingWinForEditForm.maxWidth"
+           [width]="settingWinForEditForm.width"
+           [maxWidth]="settingWinForEditForm.maxWidth"
            [minWidth]="settingWinForEditForm.minWidth"
-           [position]="{ x: settingWinForEditForm.coordX, y: settingWinForEditForm.coordY }"
            (onClose)="closeDestroy()"
 >
+<!--  [position]="{ x: this.coordinateX, y: this.coordinateY }"-->
   <div #windowHeader>
     <i class="material-icons">edit</i>
   </div>
