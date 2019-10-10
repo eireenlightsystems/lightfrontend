@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {isUndefined} from 'util';
 import {Subscription} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
@@ -34,7 +34,7 @@ const STEP = 1000000000000;
   templateUrl: './rolelist-page.component.html',
   styleUrls: ['./rolelist-page.component.css']
 })
-export class RolelistPageComponent implements OnInit, OnDestroy {
+export class RolelistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -44,6 +44,7 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -63,8 +64,6 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: Role[] = [];
   // grid
@@ -77,20 +76,17 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
     notUserId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   warningEventWindow = '';
@@ -103,53 +99,6 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // ROLE
-    // definde columns
-    this.columnsGrid =
-      [
-        {text: 'roleId', datafield: 'roleId', width: 50},
-        {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-        {text: 'Наименование', datafield: 'name', width: 200},
-        {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
-        {text: 'Наименование контрагента', datafield: 'contragentName', width: 150, hidden: true},
-        {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150, hidden: true},
-        {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250, hidden: true},
-        {text: 'Коментарий', datafield: 'comments', width: 350}
-      ];
-    this.listBoxSource =
-      [
-        {label: 'roleId', value: 'roleId', checked: true},
-        {label: 'contragentId', value: 'contragentId', checked: false},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Код контрагента', value: 'contragentCode', checked: true},
-        {label: 'Наименование контрагента', value: 'contragentName', checked: false},
-        {label: 'ИНН контрагента', value: 'contragentInn', checked: false},
-        {label: 'Адрес контрагента', value: 'contragentAdres', checked: false},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'roleId', datafield: 'roleId', width: 50},
-        {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-        {text: 'Name', datafield: 'name', width: 200},
-        {text: 'Contractor code', datafield: 'contragentCode', width: 150},
-        {text: 'Contractor name', datafield: 'contragentName', width: 150, hidden: true},
-        {text: 'Contractor Inn', datafield: 'contragentInn', width: 150, hidden: true},
-        {text: 'Contractor adres', datafield: 'contragentAdres', width: 250, hidden: true},
-        {text: 'Comments', datafield: 'comments', width: 350}
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'roleId', value: 'roleId', checked: true},
-        {label: 'contragentId', value: 'contragentId', checked: false},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Contractor code', value: 'contragentCode', checked: true},
-        {label: 'Contractor name', value: 'contragentName', checked: false},
-        {label: 'Contractor Inn', value: 'contragentInn', checked: false},
-        {label: 'Contractor adres', value: 'contragentAdres', checked: false},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -177,10 +126,6 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-    this.sourceForFilter = [];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormRole',
@@ -197,174 +142,238 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'companies',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Контрагент:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименование:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'companies',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contractor:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkRole',
-        name: 'Выбрать роль',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'roleId',
-        sortcolumn: ['roleId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkRole',
-        name: 'Select role',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'roleId',
-        sortcolumn: ['roleId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'roleId', datafield: 'roleId', width: 50},
+            {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+            {text: 'Наименование', datafield: 'name', width: 200},
+            {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
+            {text: 'Наименование контрагента', datafield: 'contragentName', width: 150, hidden: true},
+            {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150, hidden: true},
+            {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250, hidden: true},
+            {text: 'Коментарий', datafield: 'comments', width: 350}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'roleId', value: 'roleId', checked: true},
+            {label: 'contragentId', value: 'contragentId', checked: false},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Код контрагента', value: 'contragentCode', checked: true},
+            {label: 'Наименование контрагента', value: 'contragentName', checked: false},
+            {label: 'ИНН контрагента', value: 'contragentInn', checked: false},
+            {label: 'Адрес контрагента', value: 'contragentAdres', checked: false},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'companies',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Контрагент:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименование:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkRole',
+            name: 'Выбрать роль',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'roleId',
+            sortcolumn: ['roleId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'roleId', datafield: 'roleId', width: 50},
+            {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
+            {text: 'Name', datafield: 'name', width: 200},
+            {text: 'Contractor code', datafield: 'contragentCode', width: 150},
+            {text: 'Contractor name', datafield: 'contragentName', width: 150, hidden: true},
+            {text: 'Contractor Inn', datafield: 'contragentInn', width: 150, hidden: true},
+            {text: 'Contractor adres', datafield: 'contragentAdres', width: 250, hidden: true},
+            {text: 'Comments', datafield: 'comments', width: 350}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'roleId', value: 'roleId', checked: true},
+            {label: 'contragentId', value: 'contragentId', checked: false},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Contractor code', value: 'contragentCode', checked: true},
+            {label: 'Contractor name', value: 'contragentName', checked: false},
+            {label: 'Contractor Inn', value: 'contragentInn', checked: false},
+            {label: 'Contractor adres', value: 'contragentAdres', checked: false},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'companies',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contractor:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkRole',
+            name: 'Select role',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'roleId',
+            sortcolumn: ['roleId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -403,11 +412,6 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.getAll();
     this.selectItemId = 0;
-
-    // initialization source for filter
-    setTimeout(() => {
-      this.initSourceFilter();
-    }, 1000);
 
     // disabled/available buttons
     this.getAvailabilityButtons();
@@ -585,7 +589,11 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  initSourceFilter() {
+  getSourceForFilter() {
+
+  }
+
+  destroyFilterForm() {
 
   }
 
@@ -593,7 +601,6 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
 
   saveEditFormBtn() {
     const selectObject: Role = new Role();
-
     for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
       switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'companies':
@@ -620,8 +627,10 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.administration.right-page.role-page.ins')
             + selectObject.roleId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -645,8 +654,10 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.administration.right-page.role-page.upd')
             + this.jqxgridComponent.selectRow.roleId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -660,13 +671,7 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -730,6 +735,7 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
             },
             error => {
               this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
             },
             () => {
               this.linkForm.closeDestroy();
@@ -760,11 +766,11 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
       this.oSubForLinkWin = this.roleService.getAll(params).subscribe(
         response => {
           this.sourceForLinkForm.grid.source = response;
-          this.sourceForLinkFormEng.grid.source = response;
           this.linkForm.refreshGrid();
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         }
       );
     }
@@ -793,8 +799,10 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.administration.right-page.role-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -810,6 +818,7 @@ export class RolelistPageComponent implements OnInit, OnDestroy {
           },
           error => {
             this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
           },
           () => {
             // refresh table

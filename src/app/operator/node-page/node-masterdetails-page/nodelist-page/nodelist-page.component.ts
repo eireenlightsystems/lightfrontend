@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
@@ -34,7 +34,7 @@ const STEP = 1000000000000;
   styleUrls: ['./nodelist-page.component.css']
 })
 
-export class NodelistPageComponent implements OnInit, OnDestroy {
+export class NodelistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -46,6 +46,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -66,8 +67,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: Node[] = [];
   // grid
@@ -83,20 +82,17 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     gatewayId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   warningEventWindow = '';
@@ -110,52 +106,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // define columns for table
-    this.columnsGrid =
-      [
-        {text: 'nodeId', datafield: 'nodeId', width: 150},
-        {text: 'Договор', datafield: 'contractCode', width: 150},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
-        {text: 'Широта', datafield: 'n_coordinate', width: 150},
-        {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-        {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-        {text: 'Коментарий', datafield: 'comment', width: 150},
-      ];
-    this.listBoxSource =
-      [
-        {label: 'nodeId', value: 'nodeId', checked: true},
-        {label: 'Договор', value: 'contractCode', checked: true},
-        {label: 'Адрес', value: 'geographFullName', checked: true},
-        {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
-        {label: 'Широта', value: 'n_coordinate', checked: true},
-        {label: 'Долгота', value: 'e_coordinate', checked: true},
-        {label: 'Серийный номер', value: 'serialNumber', checked: true},
-        {label: 'Коментарий', value: 'comment', checked: true},
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'nodeId', datafield: 'nodeId', width: 150},
-        {text: 'Contract', datafield: 'contractCode', width: 150},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
-        {text: 'Latitude', datafield: 'n_coordinate', width: 150},
-        {text: 'Longitude', datafield: 'e_coordinate', width: 150},
-        {text: 'Serial number', datafield: 'serialNumber', width: 150},
-        {text: 'Comments', datafield: 'comment', width: 150},
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'nodeId', value: 'nodeId', checked: true},
-        {label: 'Contract', value: 'contractCode', checked: true},
-        {label: 'Address', value: 'geographFullName', checked: true},
-        {label: 'Node type', value: 'nodeTypeCode', checked: true},
-        {label: 'Latitude', value: 'n_coordinate', checked: true},
-        {label: 'Longitude', value: 'e_coordinate', checked: true},
-        {label: 'Serial number', value: 'serialNumber', checked: true},
-        {label: 'Comments', value: 'comment', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -183,91 +133,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-    this.sourceForFilter = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerNodes',
-        type: 'jqxComboBox',
-        source: this.ownerNodes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Владелец:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'nodeTypes',
-        type: 'jqxComboBox',
-        source: this.nodeTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Тип узла/столба:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerNodes',
-        type: 'jqxComboBox',
-        source: this.ownerNodes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Owner:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'nodeTypes',
-        type: 'jqxComboBox',
-        source: this.nodeTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Node type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormNode',
@@ -284,292 +149,432 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'contractNodes',
-        type: 'jqxComboBox',
-        source: this.contractNodes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Договор:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nodeTypes',
-        type: 'jqxComboBox',
-        source: this.nodeTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип узла:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'n_coordinate',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Координата север:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'e_coordinate',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Координата восток:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Серийный номер:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'contractNodes',
-        type: 'jqxComboBox',
-        source: this.contractNodes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contract:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nodeTypes',
-        type: 'jqxComboBox',
-        source: this.nodeTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Node type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'n_coordinate',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Latitude:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'e_coordinate',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Longitude:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Serial number:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkGatewayNodes',
-        name: 'Выбрать узлы',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'nodeId',
-        sortcolumn: ['nodeId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkGatewayNodes',
-        name: 'Choose nodes',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'nodeId',
-        sortcolumn: ['nodeId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'nodeId', datafield: 'nodeId', width: 150},
+            {text: 'Договор', datafield: 'contractCode', width: 150},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+            {text: 'Широта', datafield: 'n_coordinate', width: 150},
+            {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+            {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+            {text: 'Коментарий', datafield: 'comment', width: 150},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'nodeId', value: 'nodeId', checked: true},
+            {label: 'Договор', value: 'contractCode', checked: true},
+            {label: 'Адрес', value: 'geographFullName', checked: true},
+            {label: 'Тип узла', value: 'nodeTypeCode', checked: true},
+            {label: 'Широта', value: 'n_coordinate', checked: true},
+            {label: 'Долгота', value: 'e_coordinate', checked: true},
+            {label: 'Серийный номер', value: 'serialNumber', checked: true},
+            {label: 'Коментарий', value: 'comment', checked: true},
+          ];
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerNodes',
+            type: 'jqxComboBox',
+            source: this.ownerNodes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Владелец:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'nodeTypes',
+            type: 'jqxComboBox',
+            source: this.nodeTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Тип узла/столба:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'contractNodes',
+            type: 'jqxComboBox',
+            source: this.contractNodes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Договор:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nodeTypes',
+            type: 'jqxComboBox',
+            source: this.nodeTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип узла:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'n_coordinate',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Координата север:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'e_coordinate',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Координата восток:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Серийный номер:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkGatewayNodes',
+            name: 'Выбрать узлы',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'nodeId',
+            sortcolumn: ['nodeId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'nodeId', datafield: 'nodeId', width: 150},
+            {text: 'Contract', datafield: 'contractCode', width: 150},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
+            {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+            {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+            {text: 'Serial number', datafield: 'serialNumber', width: 150},
+            {text: 'Comments', datafield: 'comment', width: 150},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'nodeId', value: 'nodeId', checked: true},
+            {label: 'Contract', value: 'contractCode', checked: true},
+            {label: 'Address', value: 'geographFullName', checked: true},
+            {label: 'Node type', value: 'nodeTypeCode', checked: true},
+            {label: 'Latitude', value: 'n_coordinate', checked: true},
+            {label: 'Longitude', value: 'e_coordinate', checked: true},
+            {label: 'Serial number', value: 'serialNumber', checked: true},
+            {label: 'Comments', value: 'comment', checked: true},
+          ];
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerNodes',
+            type: 'jqxComboBox',
+            source: this.ownerNodes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Owner:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'nodeTypes',
+            type: 'jqxComboBox',
+            source: this.nodeTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Node type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'contractNodes',
+            type: 'jqxComboBox',
+            source: this.contractNodes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contract:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nodeTypes',
+            type: 'jqxComboBox',
+            source: this.nodeTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Node type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'n_coordinate',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Latitude:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'e_coordinate',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Longitude:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Serial number:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkGatewayNodes',
+            name: 'Choose nodes',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'nodeId',
+            sortcolumn: ['nodeId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -612,11 +617,6 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.selectItemId = 0;
 
-    // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -640,11 +640,14 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
       this.filter);
 
     this.oSub = this.nodeService.getAll(params).subscribe(nodes => {
-      this.items = this.items.concat(nodes);
-      this.noMoreItems = nodes.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
+        this.items = this.items.concat(nodes);
+        this.noMoreItems = nodes.length < STEP;
+        this.loading = false;
+        this.reloading = false;
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getAvailabilityButtons() {
@@ -814,12 +817,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.ownerNodes)
       && !isUndefined(this.nodeTypes)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'geographs':
@@ -886,8 +884,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.ins')
             + selectObject.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -915,8 +915,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.upd')
             + this.jqxgridComponent.selectRow.nodeId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -929,13 +931,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -1045,6 +1041,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
           },
           error => {
             this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
           },
           () => {
             this.linkForm.closeDestroy();
@@ -1065,11 +1062,11 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.sourceForLinkFormEng.grid.source = response;
         this.linkForm.refreshGrid();
       },
       error => {
         this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
       }
     );
   }
@@ -1096,8 +1093,10 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.operator.node-page.node-masterdetails-page.nodelist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -1112,6 +1111,7 @@ export class NodelistPageComponent implements OnInit, OnDestroy {
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           // refresh table

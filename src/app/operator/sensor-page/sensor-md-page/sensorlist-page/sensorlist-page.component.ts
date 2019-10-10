@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {MaterializeService} from '../../../../shared/classes/materialize.service';
 import {isUndefined} from 'util';
@@ -42,7 +42,7 @@ const STEP = 1000000000000;
   templateUrl: './sensorlist-page.component.html',
   styleUrls: ['./sensorlist-page.component.css']
 })
-export class SensorlistPageComponent implements OnInit, OnDestroy {
+export class SensorlistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -54,6 +54,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -74,8 +75,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: Sensor[] = [];
   // grid
@@ -91,20 +90,17 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     nodeId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   warningEventWindow = '';
@@ -118,91 +114,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // define columns
-    if (this.isMasterGrid) {
-      this.columnsGrid =
-        [
-          {text: 'sensorId', datafield: 'sensorId', width: 150},
-          {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
-          {text: 'Владелец', datafield: 'ownerCode', width: 150},
-          {text: 'Широта', datafield: 'n_coordinate', width: 150, hidden: true},
-          {text: 'Долгота', datafield: 'e_coordinate', width: 150, hidden: true},
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-        ];
-      this.listBoxSource =
-        [
-          {label: 'sensorId', value: 'sensorId', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
-          {label: 'Владелец', value: 'ownerCode', checked: true},
-          {label: 'Широта', value: 'n_coordinate', checked: false},
-          {label: 'Долгота', value: 'e_coordinate', checked: false},
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-        ];
-      this.columnsGridEng =
-        [
-          {text: 'sensorId', datafield: 'sensorId', width: 150},
-          {text: 'Contract', datafield: 'contractCode', width: 150},
-          {text: 'Address', datafield: 'geographFullName', width: 400},
-          {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
-          {text: 'Owner', datafield: 'ownerCode', width: 150},
-          {text: 'Latitude', datafield: 'n_coordinate', width: 150, hidden: true},
-          {text: 'Longitude', datafield: 'e_coordinate', width: 150, hidden: true},
-          {text: 'Serial number', datafield: 'serialNumber', width: 150},
-          {text: 'Comments', datafield: 'comment', width: 150},
-        ];
-      this.listBoxSourceEng =
-        [
-          {label: 'sensorId', value: 'sensorId', checked: true},
-          {label: 'Contract', value: 'contractCode', checked: true},
-          {label: 'Address', value: 'geographFullName', checked: true},
-          {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
-          {label: 'Owner', value: 'ownerCode', checked: true},
-          {label: 'Latitude', value: 'n_coordinate', checked: false},
-          {label: 'Longitude', value: 'e_coordinate', checked: false},
-          {label: 'Serial number', value: 'serialNumber', checked: true},
-          {label: 'Comments', value: 'comment', checked: true},
-        ];
-    } else {
-      this.columnsGrid =
-        [
-          {text: 'sensorId', datafield: 'sensorId', width: 150},
-          {text: 'Договор', datafield: 'contractCode', width: 150},
-          {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-        ];
-      this.listBoxSource =
-        [
-          {label: 'sensorId', value: 'sensorId', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: true},
-          {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-        ];
-      this.columnsGridEng =
-        [
-          {text: 'sensorId', datafield: 'sensorId', width: 150},
-          {text: 'Contract', datafield: 'contractCode', width: 150},
-          {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
-          {text: 'Serial number', datafield: 'serialNumber', width: 150},
-          {text: 'Comments', datafield: 'comment', width: 150},
-        ];
-      this.listBoxSourceEng =
-        [
-          {label: 'sensorId', value: 'sensorId', checked: true},
-          {label: 'Contract', value: 'contractCode', checked: true},
-          {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
-          {label: 'Serial number', value: 'serialNumber', checked: true},
-          {label: 'Comments', value: 'comment', checked: true},
-        ];
-    }
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -230,91 +141,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-    this.sourceForFilter = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerSensors',
-        type: 'jqxComboBox',
-        source: this.ownerSensors,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Владелец:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'sensorTypes',
-        type: 'jqxComboBox',
-        source: this.sensorTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Тип датчика:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerSensors',
-        type: 'jqxComboBox',
-        source: this.ownerSensors,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Owner:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'sensorTypes',
-        type: 'jqxComboBox',
-        source: this.sensorTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Sensor type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormSensor',
@@ -331,202 +157,384 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'contractSensors',
-        type: 'jqxComboBox',
-        source: this.contractSensors,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Договор:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'sensorTypes',
-        type: 'jqxComboBox',
-        source: this.sensorTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип датчика:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Серийный номер:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'contractSensors',
-        type: 'jqxComboBox',
-        source: this.contractSensors,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contract:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'sensorTypes',
-        type: 'jqxComboBox',
-        source: this.sensorTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Sensor type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Serial number:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkSensor',
-        name: 'Выбрать датчик',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'sensorId',
-        sortcolumn: ['sensorId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkSensor',
-        name: 'Choose sensors',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'sensorId',
-        sortcolumn: ['sensorId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        if (this.isMasterGrid) {
+          this.columnsGrid =
+            [
+              {text: 'sensorId', datafield: 'sensorId', width: 150},
+              {text: 'Договор', datafield: 'contractCode', width: 150},
+              {text: 'Адрес', datafield: 'geographFullName', width: 400},
+              {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
+              {text: 'Владелец', datafield: 'ownerCode', width: 150},
+              {text: 'Широта', datafield: 'n_coordinate', width: 150, hidden: true},
+              {text: 'Долгота', datafield: 'e_coordinate', width: 150, hidden: true},
+              {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+              {text: 'Коментарий', datafield: 'comment', width: 150},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'sensorId', value: 'sensorId', checked: true},
+              {label: 'Договор', value: 'contractCode', checked: true},
+              {label: 'Адрес', value: 'geographFullName', checked: true},
+              {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
+              {label: 'Владелец', value: 'ownerCode', checked: true},
+              {label: 'Широта', value: 'n_coordinate', checked: false},
+              {label: 'Долгота', value: 'e_coordinate', checked: false},
+              {label: 'Серийный номер', value: 'serialNumber', checked: true},
+              {label: 'Коментарий', value: 'comment', checked: true},
+            ];
+        } else {
+          this.columnsGrid =
+            [
+              {text: 'sensorId', datafield: 'sensorId', width: 150},
+              {text: 'Договор', datafield: 'contractCode', width: 150},
+              {text: 'Тип сенсора', datafield: 'sensorTypeCode', width: 150},
+              {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+              {text: 'Коментарий', datafield: 'comment', width: 150},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'sensorId', value: 'sensorId', checked: true},
+              {label: 'Договор', value: 'contractCode', checked: true},
+              {label: 'Тип сенсора', value: 'sensorTypeCode', checked: true},
+              {label: 'Серийный номер', value: 'serialNumber', checked: true},
+              {label: 'Коментарий', value: 'comment', checked: true},
+            ];
+        }
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerSensors',
+            type: 'jqxComboBox',
+            source: this.ownerSensors,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Владелец:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'sensorTypes',
+            type: 'jqxComboBox',
+            source: this.sensorTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Тип датчика:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractSensors',
+            type: 'jqxComboBox',
+            source: this.contractSensors,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Договор:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'sensorTypes',
+            type: 'jqxComboBox',
+            source: this.sensorTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип датчика:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Серийный номер:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkSensor',
+            name: 'Выбрать датчик',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'sensorId',
+            sortcolumn: ['sensorId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        if (this.isMasterGrid) {
+          this.columnsGrid =
+            [
+              {text: 'sensorId', datafield: 'sensorId', width: 150},
+              {text: 'Contract', datafield: 'contractCode', width: 150},
+              {text: 'Address', datafield: 'geographFullName', width: 400},
+              {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
+              {text: 'Owner', datafield: 'ownerCode', width: 150},
+              {text: 'Latitude', datafield: 'n_coordinate', width: 150, hidden: true},
+              {text: 'Longitude', datafield: 'e_coordinate', width: 150, hidden: true},
+              {text: 'Serial number', datafield: 'serialNumber', width: 150},
+              {text: 'Comments', datafield: 'comment', width: 150},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'sensorId', value: 'sensorId', checked: true},
+              {label: 'Contract', value: 'contractCode', checked: true},
+              {label: 'Address', value: 'geographFullName', checked: true},
+              {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
+              {label: 'Owner', value: 'ownerCode', checked: true},
+              {label: 'Latitude', value: 'n_coordinate', checked: false},
+              {label: 'Longitude', value: 'e_coordinate', checked: false},
+              {label: 'Serial number', value: 'serialNumber', checked: true},
+              {label: 'Comments', value: 'comment', checked: true},
+            ];
+        } else {
+          this.columnsGrid =
+            [
+              {text: 'sensorId', datafield: 'sensorId', width: 150},
+              {text: 'Contract', datafield: 'contractCode', width: 150},
+              {text: 'Sensor type', datafield: 'sensorTypeCode', width: 150},
+              {text: 'Serial number', datafield: 'serialNumber', width: 150},
+              {text: 'Comments', datafield: 'comment', width: 150},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'sensorId', value: 'sensorId', checked: true},
+              {label: 'Contract', value: 'contractCode', checked: true},
+              {label: 'Sensor type', value: 'sensorTypeCode', checked: true},
+              {label: 'Serial number', value: 'serialNumber', checked: true},
+              {label: 'Comments', value: 'comment', checked: true},
+            ];
+        }
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerSensors',
+            type: 'jqxComboBox',
+            source: this.ownerSensors,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Owner:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'sensorTypes',
+            type: 'jqxComboBox',
+            source: this.sensorTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Sensor type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractSensors',
+            type: 'jqxComboBox',
+            source: this.contractSensors,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contract:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'sensorTypes',
+            type: 'jqxComboBox',
+            source: this.sensorTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Sensor type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Serial number:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkSensor',
+            name: 'Choose sensors',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'sensorId',
+            sortcolumn: ['sensorId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -569,11 +577,6 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.selectItemId = 0;
 
-    // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -597,11 +600,14 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
       this.filter);
 
     this.oSub = this.sensorService.getAll(params).subscribe(sensors => {
-      this.items = this.items.concat(sensors);
-      this.noMoreItems = sensors.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
+        this.items = this.items.concat(sensors);
+        this.noMoreItems = sensors.length < STEP;
+        this.loading = false;
+        this.reloading = false;
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getAvailabilityButtons() {
@@ -771,12 +777,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.ownerSensors)
       && !isUndefined(this.sensorTypes)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'geographs':
@@ -838,8 +839,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.ins')
             + selectObject.sensorId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -864,8 +867,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.upd')
             + this.jqxgridComponent.selectRow.sensorId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -879,13 +884,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -969,6 +968,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           this.linkForm.closeDestroy();
@@ -983,11 +983,11 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.sensorService.getSensorNotInGroup().subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.sourceForLinkFormEng.grid.source = response;
         this.linkForm.refreshGrid();
       },
       error => {
         this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
       }
     );
   }
@@ -1008,8 +1008,10 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.operator.sensor-page.sensor-md-page.sensorlist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -1029,6 +1031,7 @@ export class SensorlistPageComponent implements OnInit, OnDestroy {
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           // refresh table

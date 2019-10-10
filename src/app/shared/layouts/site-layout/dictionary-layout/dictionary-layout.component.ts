@@ -1,6 +1,7 @@
 // angular lib
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
 import {
@@ -19,6 +20,7 @@ import {
 import {ContractComponent} from '../../../../dictionary/contract/contract.component';
 import {EquipmentTypeComponent} from '../../../../dictionary/equipment-type/equipment-type.component';
 import {ContragentComponent} from '../../../../dictionary/contragent/contragent.component';
+
 
 @Component({
   selector: 'app-dictionary-layout',
@@ -63,6 +65,7 @@ export class DictionaryLayoutComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               public router: Router,
               // service
+              public translate: TranslateService
   ) {
   }
 

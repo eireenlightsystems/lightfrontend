@@ -26,15 +26,6 @@ import {EditFormComponent} from '../../../../../shared/components/edit-form/edit
 import {LinkFormComponent} from '../../../../../shared/components/link-form/link-form.component';
 import {EventWindowComponent} from '../../../../../shared/components/event-window/event-window.component';
 
-// angular lib
-
-// jqwidgets
-
-// app interfaces
-
-// app services
-
-// app components
 
 const STEP = 1000000000000;
 
@@ -47,14 +38,6 @@ const STEP = 1000000000000;
 export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   // variables from parent component
-
-  // determine the functions that need to be performed in the parent component
-
-  // define variables - link to view objects
-
-  // other variables
-
-  // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() persons: Person[];
   @Input() selectRoleId: number;
@@ -62,7 +45,7 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
-  @Input() currentLang_: string;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -125,53 +108,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
   }
 
   ngOnInit() {
-    // USER
-    // definde columns
-    // this.columnsGrid =
-    //   [
-    //     {text: 'userId', datafield: 'userId', width: 50},
-    //     {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-    //     {text: 'Логин', datafield: 'login', width: 150},
-    //     {text: 'Код контрагента', datafield: 'contragentCode', width: 150},
-    //     {text: 'Наименование контрагента', datafield: 'contragentName', width: 150},
-    //     {text: 'ИНН контрагента', datafield: 'contragentInn', width: 150},
-    //     {text: 'Адрес контрагента', datafield: 'contragentAdres', width: 250},
-    //     {text: 'Коментарий', datafield: 'comments', width: 250}
-    //   ];
-    // this.listBoxSource =
-    //   [
-    //     {label: 'userId', value: 'userId', checked: true},
-    //     {label: 'contragentId', value: 'contragentId', checked: false},
-    //     {label: 'Логин', value: 'login', checked: true},
-    //     {label: 'Код контрагента', value: 'contragentCode', checked: true},
-    //     {label: 'Наименование контрагента', value: 'contragentName', checked: true},
-    //     {label: 'ИНН контрагента', value: 'contragentInn', checked: true},
-    //     {label: 'Адрес контрагента', value: 'contragentAdres', checked: true},
-    //     {label: 'Коментарий', value: 'comments', checked: true}
-    //   ];
-    // this.columnsGridEng =
-    //   [
-    //     {text: 'userId', datafield: 'userId', width: 50},
-    //     {text: 'contragentId', datafield: 'contragentId', width: 150, hidden: true},
-    //     {text: 'Login', datafield: 'login', width: 150},
-    //     {text: 'Contractor code', datafield: 'contragentCode', width: 150},
-    //     {text: 'Contractor name', datafield: 'contragentName', width: 150},
-    //     {text: 'Contractor Inn', datafield: 'contragentInn', width: 150},
-    //     {text: 'Contractor adres', datafield: 'contragentAdres', width: 250},
-    //     {text: 'Comments', datafield: 'comments', width: 250}
-    //   ];
-    // this.listBoxSourceEng =
-    //   [
-    //     {label: 'userId', value: 'userId', checked: true},
-    //     {label: 'contragentId', value: 'contragentId', checked: false},
-    //     {label: 'Login', value: 'login', checked: true},
-    //     {label: 'Contractor code', value: 'contragentCode', checked: true},
-    //     {label: 'Contractor name', value: 'contragentName', checked: true},
-    //     {label: 'Contractor Inn', value: 'contragentInn', checked: true},
-    //     {label: 'Contractor adres', value: 'contragentAdres', checked: true},
-    //     {label: 'Comments', value: 'comments', checked: true}
-    //   ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -199,39 +135,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
         selectId: []
       }
     };
-
-    // definde filter
-    // this.sourceForFilter = [
-    //   {
-    //     name: 'persons',
-    //     type: 'jqxComboBox',
-    //     source: this.persons,
-    //     theme: 'material',
-    //     width: '380',
-    //     height: '40',
-    //     placeHolder: 'Контрагент:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     defaultValue: '',
-    //     selectId: ''
-    //   }
-    // ];
-    // this.sourceForFilterEng = [
-    //   {
-    //     name: 'persons',
-    //     type: 'jqxComboBox',
-    //     source: this.persons,
-    //     theme: 'material',
-    //     width: '380',
-    //     height: '40',
-    //     placeHolder: 'Contractor:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     defaultValue: '',
-    //     selectId: ''
-    //   }
-    // ];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormUser',
@@ -248,198 +151,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
       coordX: 500,
       coordY: 65
     };
-    // this.sourceForEditForm = [
-    //   {
-    //     nameField: 'persons',
-    //     type: 'jqxComboBox',
-    //     source: this.persons,
-    //     theme: 'material',
-    //     width: '285',
-    //     height: '20',
-    //     placeHolder: 'Контрагент:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'login',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '20',
-    //     placeHolder: 'Логин:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'password',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '20',
-    //     placeHolder: 'Пароль:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'comments',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '100',
-    //     placeHolder: 'Комментарий:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   }
-    // ];
-    // this.sourceForEditFormEng = [
-    //   {
-    //     nameField: 'persons',
-    //     type: 'jqxComboBox',
-    //     source: this.persons,
-    //     theme: 'material',
-    //     width: '285',
-    //     height: '20',
-    //     placeHolder: 'Contractor:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'login',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '20',
-    //     placeHolder: 'Login:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'password',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '20',
-    //     placeHolder: 'Password:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   },
-    //   {
-    //     nameField: 'comments',
-    //     type: 'jqxTextArea',
-    //     source: [],
-    //     theme: 'material',
-    //     width: '280',
-    //     height: '100',
-    //     placeHolder: 'Comments:',
-    //     displayMember: 'code',
-    //     valueMember: 'id',
-    //     selectedIndex: null,
-    //     selectId: '',
-    //     selectCode: '',
-    //     selectName: ''
-    //   }
-    // ];
-
-    // definde link form
-    // this.sourceForLinkForm = {
-    //   window: {
-    //     code: 'linkUser',
-    //     name: 'Выбрать пользователя',
-    //     theme: 'material',
-    //     autoOpen: true,
-    //     isModal: true,
-    //     modalOpacity: 0.3,
-    //     width: 1200,
-    //     maxWidth: 1200,
-    //     minWidth: 500,
-    //     height: 500,
-    //     maxHeight: 800,
-    //     minHeight: 600
-    //
-    //   },
-    //   grid: {
-    //     source: [],
-    //     columns: this.columnsGrid,
-    //     theme: 'material',
-    //     width: 1186,
-    //     height: 485,
-    //     columnsresize: true,
-    //     sortable: true,
-    //     filterable: true,
-    //     altrows: true,
-    //     selectionmode: 'checkbox',
-    //     valueMember: 'userId',
-    //     sortcolumn: ['userId'],
-    //     sortdirection: 'desc',
-    //     selectId: []
-    //   }
-    // };
-    // this.sourceForLinkFormEng = {
-    //   window: {
-    //     code: 'linkUser',
-    //     name: 'Select users',
-    //     theme: 'material',
-    //     autoOpen: true,
-    //     isModal: true,
-    //     modalOpacity: 0.3,
-    //     width: 1200,
-    //     maxWidth: 1200,
-    //     minWidth: 500,
-    //     height: 500,
-    //     maxHeight: 800,
-    //     minHeight: 600
-    //
-    //   },
-    //   grid: {
-    //     source: [],
-    //     columns: this.columnsGridEng,
-    //     theme: 'material',
-    //     width: 1186,
-    //     height: 485,
-    //     columnsresize: true,
-    //     sortable: true,
-    //     filterable: true,
-    //     altrows: true,
-    //     selectionmode: 'checkbox',
-    //     valueMember: 'userId',
-    //     sortcolumn: ['userId'],
-    //     sortdirection: 'desc',
-    //     selectId: []
-    //   }
-    // };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
@@ -454,8 +165,8 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.currentLang_) {
-      if (changes.currentLang_.currentValue === 'ru') {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
         // definde columns
         this.columnsGrid =
           [
@@ -776,11 +487,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
     this.getAll();
     this.selectItemId = 0;
 
-    // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -965,12 +671,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
   getSourceForFilter() {
     if (!isUndefined(this.persons)) {
       let sourceForFilter: any[];
-      // if (this.translate.currentLang === 'ru') {
-      //   sourceForFilter = this.sourceForFilter;
-      // }
-      // if (this.translate.currentLang === 'en') {
-      //   sourceForFilter = this.sourceForFilterEng;
-      // }
       sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
@@ -992,7 +692,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
 
   saveEditFormBtn() {
     const selectObject: User = new User();
-
     for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
       switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'persons':
@@ -1005,7 +704,6 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
           break;
         case 'password':
           selectObject.password = this.editForm.sourceForEditForm[i].selectCode;
-          // this.editForm.sourceForEditForm[i].selectCode = '';
           break;
         case 'comments':
           selectObject.comments = this.editForm.sourceForEditForm[i].selectCode;
@@ -1015,33 +713,44 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
       }
     }
 
+    // check
+    if (isUndefined(selectObject.login) || selectObject.login === '') {
+      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.login-warning'),
+        this.translate.instant('site.forms.editforms.ok'));
+      return;
+    }
+    if (isUndefined(selectObject.password) || selectObject.password === '') {
+      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.pass-warning'),
+        this.translate.instant('site.forms.editforms.ok'));
+      return;
+    }
+    if (selectObject.login === this.translate.instant('site.forms.editforms.empty')
+      || selectObject.password === this.translate.instant('site.forms.editforms.empty')) {
+      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.default-warning'),
+        this.translate.instant('site.forms.editforms.ok'));
+      return;
+    }
+
     if (this.typeEditWindow === 'ins') {
-      // check
-      if (selectObject.login !== this.translate.instant('site.forms.editforms.empty')
-        && selectObject.password !== this.translate.instant('site.forms.editforms.empty')) {
-        // ins
-        this.oSub = this.userService.ins(selectObject).subscribe(
-          response => {
-            selectObject.userId = +response;
-            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins')
-              + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
-          },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
-          () => {
-            // close edit window
-            this.editForm.closeDestroy();
-            // update data source
-            this.jqxgridComponent.refresh_ins(
-              selectObject.userId, selectObject);
-          }
-        );
-      } else {
-        this.eventWindow.okButtonDisabled(true);
-        this.actionEventWindow = 'check';
-        this.warningEventWindow = this.translate.instant('site.menu.administration.right-page.user-page.ins-check');
-        this.eventWindow.openEventWindow();
-      }
+      // ins
+      this.oSub = this.userService.ins(selectObject).subscribe(
+        response => {
+          selectObject.userId = +response;
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.ins')
+            + selectObject.userId, this.translate.instant('site.forms.editforms.ok'));
+        },
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
+        () => {
+          // close edit window
+          this.editForm.closeDestroy();
+          // update data source
+          this.jqxgridComponent.refresh_ins(
+            selectObject.userId, selectObject);
+        }
+      );
     }
     if (this.typeEditWindow === 'upd') {
       // definde param befor upd
@@ -1058,8 +767,10 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
           this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.upd')
             + this.jqxgridComponent.selectRow.userId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -1073,14 +784,7 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    // if (this.translate.currentLang === 'ru') {
-    //   sourceForEditForm = this.sourceForEditForm;
-    // }
-    // if (this.translate.currentLang === 'en') {
-    //   sourceForEditForm = this.sourceForEditFormEng;
-    // }
     sourceForEditForm = this.sourceForEditForm;
-
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -1146,6 +850,7 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
           },
           error => {
             this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
           },
           () => {
             // this.linkForm.hide();
@@ -1177,13 +882,11 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
       this.oSubForLinkWin = this.userService.getAll(params).subscribe(
         response => {
           this.sourceForLinkForm.grid.source = response;
-          // ???
-          // this.sourceForLinkFormEng.grid.source = response;
-
           this.linkForm.refreshGrid();
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         }
       );
     }
@@ -1212,8 +915,10 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
             this.openSnackBar(this.translate.instant('site.menu.administration.right-page.user-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -1228,6 +933,7 @@ export class UserlistPageComponent implements OnInit, OnChanges, AfterViewInit, 
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           // refresh table

@@ -7,7 +7,6 @@
        [hidden]="!(this.router.url === '/dictionary/contract/contracts')"
        class="table_border">
     <app-simple-dictionary #contractSimpleDictionary
-                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContracts"
                            [columnsGrid]="columnsGridContracts"
                            [listBoxSource]="listBoxSourceContracts"
@@ -20,45 +19,18 @@
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"
     ></app-simple-dictionary>
-    <app-simple-dictionary #contractSimpleDictionary
-                           *ngIf="this.translate.currentLang === 'en'"
-                           [typeDictionary]="dictionaryContracts"
-                           [columnsGrid]="columnsGridContractsEng"
-                           [listBoxSource]="listBoxSourceContractsEng"
-                           [sourceForJqxGrid]="sourceForJqxGridContracts"
-                           [settingWinForEditForm]="settingWinForEditFormContracts"
-                           [sourceForEditForm]="sourceForEditFormContractsEng"
-                           [companies]="companies"
-                           [contractTypes]="this.sourceForJqxGridContractTypes.grid.source"
-                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
-                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-dictionary>
   </div>
 
   <div *ngIf="siteMap[1].children[2].children[1].disabled === false"
        [hidden]="!(this.router.url === '/dictionary/contract/contracts-types')"
        class="table_border">
     <app-simple-dictionary #contractTypeSimpleDictionary
-                           *ngIf="this.translate.currentLang === 'ru'"
                            [typeDictionary]="dictionaryContractTypes"
                            [columnsGrid]="columnsGridContractTypes"
                            [listBoxSource]="listBoxSourceContractTypes"
                            [sourceForJqxGrid]="sourceForJqxGridContractTypes"
                            [settingWinForEditForm]="settingWinForEditFormContractTypes"
                            [sourceForEditForm]="sourceForEditFormContractTypes"
-                           (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
-                           (onSaveEditFormBtn)="saveEditFormBtn($event)"
-                           (onOkEvenwinBtn)="okEvenwinBtn($event)"
-    ></app-simple-dictionary>
-    <app-simple-dictionary #contractTypeSimpleDictionary
-                           *ngIf="this.translate.currentLang === 'en'"
-                           [typeDictionary]="dictionaryContractTypes"
-                           [columnsGrid]="columnsGridContractTypesEng"
-                           [listBoxSource]="listBoxSourceContractTypesEng"
-                           [sourceForJqxGrid]="sourceForJqxGridContractTypes"
-                           [settingWinForEditForm]="settingWinForEditFormContractTypes"
-                           [sourceForEditForm]="sourceForEditFormContractTypesEng"
                            (onGetSourceForJqxGrid)="getSourceForJqxGrid($event)"
                            (onSaveEditFormBtn)="saveEditFormBtn($event)"
                            (onOkEvenwinBtn)="okEvenwinBtn($event)"

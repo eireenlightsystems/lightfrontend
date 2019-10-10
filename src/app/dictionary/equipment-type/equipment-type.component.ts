@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
   templateUrl: './equipment-type.component.html',
   styleUrls: ['./equipment-type.component.css']
 })
-export class EquipmentTypeComponent implements OnInit, OnDestroy {
+export class EquipmentTypeComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -35,6 +35,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   @Input() nodeTypes: NodeType[];
   @Input() gatewayTypes: GatewayType[];
   @Input() sensorTypes: SensorType[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetFixtureTypes = new EventEmitter();
@@ -65,20 +66,12 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   sourceForJqxGridSensorType: SourceForJqxGrid;
   columnsGridFixtureTypes: any[];
   listBoxSourceFixtureTypes: any[];
-  columnsGridFixtureTypesEng: any[];
-  listBoxSourceFixtureTypesEng: any[];
   columnsGridNodeTypes: any[];
   listBoxSourceNodeTypes: any[];
-  columnsGridNodeTypesEng: any[];
-  listBoxSourceNodeTypesEng: any[];
   columnsGridGatewayTypes: any[];
   listBoxSourceGatewayTypes: any[];
-  columnsGridGatewayTypesEng: any[];
-  listBoxSourceGatewayTypesEng: any[];
   columnsGridSensorTypes: any[];
   listBoxSourceSensorTypes: any[];
-  columnsGridSensorTypesEng: any[];
-  listBoxSourceSensorTypesEng: any[];
   // filter
   // edit form
   settingWinForEditFormFixtureType: SettingWinForEditForm;
@@ -89,10 +82,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
   sourceForEditFormNodeType: SourceForEditForm[];
   sourceForEditFormGatewayType: SourceForEditForm[];
   sourceForEditFormSensorType: SourceForEditForm[];
-  sourceForEditFormFixtureTypeEng: SourceForEditForm[];
-  sourceForEditFormNodeTypeEng: SourceForEditForm[];
-  sourceForEditFormGatewayTypeEng: SourceForEditForm[];
-  sourceForEditFormSensorTypeEng: SourceForEditForm[];
   // link form
   // event form
 
@@ -110,74 +99,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // FIXTURETYPE
-    // definde columns
-    this.columnsGridFixtureTypes =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Модель', datafield: 'model', width: 150},
-        {text: 'Высота', datafield: 'height', width: 150},
-        {text: 'Ширина', datafield: 'width', width: 150},
-        {text: 'Длина', datafield: 'length', width: 150},
-        {text: 'Вес', datafield: 'weight', width: 150},
-        {text: 'Число ламп', datafield: 'countlamp', width: 150},
-        {text: 'Энергопотребление', datafield: 'power', width: 150},
-        {text: 'Коэффициент мощности', datafield: 'cos', width: 150},
-        {text: 'Степень защиты', datafield: 'ip', width: 150},
-        {text: 'Энергосбережение', datafield: 'efficiency', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceFixtureTypes =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Модель', value: 'model', checked: true},
-        {label: 'Высота', value: 'height', checked: true},
-        {label: 'Ширина', value: 'width', checked: true},
-        {label: 'Вес', value: 'weight', checked: true},
-        {label: 'Число ламп', value: 'countlamp', checked: true},
-        {label: 'Энергопотребление', value: 'power', checked: true},
-        {label: 'Коэффициент мощности', value: 'cos', checked: true},
-        {label: 'Степень защиты', value: 'ip', checked: true},
-        {label: 'Энергосбережение', value: 'efficiency', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridFixtureTypesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Model', datafield: 'model', width: 150},
-        {text: 'Height', datafield: 'height', width: 150},
-        {text: 'Width', datafield: 'width', width: 150},
-        {text: 'Length', datafield: 'length', width: 150},
-        {text: 'Weight', datafield: 'weight', width: 150},
-        {text: 'Number of lamps', datafield: 'countlamp', width: 150},
-        {text: 'Power consumption', datafield: 'power', width: 150},
-        {text: 'Power factor', datafield: 'cos', width: 150},
-        {text: 'Security rating', datafield: 'ip', width: 150},
-        {text: 'Energy Saving', datafield: 'efficiency', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceFixtureTypesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Model', value: 'model', checked: true},
-        {label: 'Height', value: 'height', checked: true},
-        {label: 'Width', value: 'width', checked: true},
-        {label: 'Weight', value: 'weight', checked: true},
-        {label: 'Number of lamps', value: 'countlamp', checked: true},
-        {label: 'Power consumption', value: 'power', checked: true},
-        {label: 'Power factor', value: 'cos', checked: true},
-        {label: 'Security rating', value: 'ip', checked: true},
-        {label: 'Energy Saving', value: 'efficiency', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridFixtureType = {
       listbox: {
@@ -205,9 +126,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormFixtureType = {
       code: 'editFormFixture',
@@ -224,445 +142,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormFixtureType = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Модель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-
-      {
-        nameField: 'height',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Высота:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'width',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Ширина:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'length',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Длина:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'weight',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Вес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-
-      {
-        nameField: 'countlamp',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Число ламп:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'power',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Энергопотребление:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'cos',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Коэффициент мощности:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'ip',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Степень защиты:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'efficiency',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Энергосбережение:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormFixtureTypeEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Model:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'height',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Height:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'width',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Width:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'length',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Length:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'weight',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Weight:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'countlamp',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Number of lamps:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'power',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Power consumption:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'cos',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Power factor:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'ip',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Security rating:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'efficiency',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Energy Saving:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // NODETYPE
-    // definde columns
-    this.columnsGridNodeTypes =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Модель', datafield: 'model', width: 150},
-        {text: 'Высота столба/узла', datafield: 'height', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceNodeTypes =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Модель', value: 'model', checked: true},
-        {label: 'Высота столба/узла', value: 'height', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true},
-      ];
-    this.columnsGridNodeTypesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Model', datafield: 'model', width: 150},
-        {text: 'Height', datafield: 'height', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceNodeTypesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Model', value: 'model', checked: true},
-        {label: 'Height', value: 'height', checked: true},
-        {label: 'Comments', value: 'comments', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGridNodeType = {
       listbox: {
@@ -690,9 +170,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormNodeType = {
       code: 'editFormNode',
@@ -709,202 +186,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormNodeType = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Модель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'height',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Высота столба/узла:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormNodeTypeEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Model:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'height',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Height:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // GATEWAYTYPE
-    // definde columns
-    this.columnsGridGatewayTypes =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Модель', datafield: 'model', width: 150},
-        {text: 'Стандарт связи', datafield: 'communicationStandard', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceGatewayTypes =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Модель', value: 'model', checked: true},
-        {label: 'Стандарт связи', value: 'communicationStandard', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true},
-      ];
-    this.columnsGridGatewayTypesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Model', datafield: 'model', width: 150},
-        {text: 'Communication standard', datafield: 'communicationStandard', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceGatewayTypesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Model', value: 'model', checked: true},
-        {label: 'Communication standard', value: 'communicationStandard', checked: true},
-        {label: 'Comments', value: 'comments', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGridGatewayType = {
       listbox: {
@@ -932,9 +214,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormGatewayType = {
       code: 'editFormGateway',
@@ -951,202 +230,7 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormGatewayType = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Модель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'communicationStandard',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Стандарт связи:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormGatewayTypeEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Model:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'communicationStandard',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Communication standard:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // SENSORTYPE
-    // definde columns
-    this.columnsGridSensorTypes =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Модель', datafield: 'model', width: 150},
-        {text: 'Радиус действия', datafield: 'detectionRange', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceSensorTypes =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Модель', value: 'model', checked: true},
-        {label: 'Радиус действия', value: 'detectionRange', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true},
-      ];
-    this.columnsGridSensorTypesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Model', datafield: 'model', width: 150},
-        {text: 'Radius of action', datafield: 'detectionRange', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150},
-      ];
-    this.listBoxSourceSensorTypesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Model', value: 'model', checked: true},
-        {label: 'Radius of action', value: 'detectionRange', checked: true},
-        {label: 'Comments', value: 'comments', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGridSensorType = {
       listbox: {
@@ -1174,9 +258,6 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormSensorType = {
       code: 'editFormSensor',
@@ -1193,162 +274,1059 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormSensorType = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Модель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'detectionRange',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Радиус действия:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormSensorTypeEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '0',
-        selectName: ''
-      },
-      {
-        nameField: 'model',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Model:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'detectionRange',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Radius of action:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
+  }
 
-    // definde link form
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGridFixtureTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Модель', datafield: 'model', width: 150},
+            {text: 'Высота', datafield: 'height', width: 150},
+            {text: 'Ширина', datafield: 'width', width: 150},
+            {text: 'Длина', datafield: 'length', width: 150},
+            {text: 'Вес', datafield: 'weight', width: 150},
+            {text: 'Число ламп', datafield: 'countlamp', width: 150},
+            {text: 'Энергопотребление', datafield: 'power', width: 150},
+            {text: 'Коэффициент мощности', datafield: 'cos', width: 150},
+            {text: 'Степень защиты', datafield: 'ip', width: 150},
+            {text: 'Энергосбережение', datafield: 'efficiency', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceFixtureTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Модель', value: 'model', checked: true},
+            {label: 'Высота', value: 'height', checked: true},
+            {label: 'Ширина', value: 'width', checked: true},
+            {label: 'Вес', value: 'weight', checked: true},
+            {label: 'Число ламп', value: 'countlamp', checked: true},
+            {label: 'Энергопотребление', value: 'power', checked: true},
+            {label: 'Коэффициент мощности', value: 'cos', checked: true},
+            {label: 'Степень защиты', value: 'ip', checked: true},
+            {label: 'Энергосбережение', value: 'efficiency', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        this.columnsGridNodeTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Модель', datafield: 'model', width: 150},
+            {text: 'Высота столба/узла', datafield: 'height', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceNodeTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Модель', value: 'model', checked: true},
+            {label: 'Высота столба/узла', value: 'height', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true},
+          ];
+        this.columnsGridGatewayTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Модель', datafield: 'model', width: 150},
+            {text: 'Стандарт связи', datafield: 'communicationStandard', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceGatewayTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Модель', value: 'model', checked: true},
+            {label: 'Стандарт связи', value: 'communicationStandard', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true},
+          ];
+        this.columnsGridSensorTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Модель', datafield: 'model', width: 150},
+            {text: 'Радиус действия', datafield: 'detectionRange', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceSensorTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Модель', value: 'model', checked: true},
+            {label: 'Радиус действия', value: 'detectionRange', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true},
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormFixtureType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Модель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+
+          {
+            nameField: 'height',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Высота:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'width',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Ширина:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'length',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Длина:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'weight',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Вес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+
+          {
+            nameField: 'countlamp',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Число ламп:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'power',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Энергопотребление:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'cos',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Коэффициент мощности:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'ip',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Степень защиты:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'efficiency',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Энергосбережение:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormNodeType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Модель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'height',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Высота столба/узла:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormGatewayType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Модель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'communicationStandard',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Стандарт связи:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormSensorType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Модель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'detectionRange',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Радиус действия:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      } else {
+        // definde columns
+        this.columnsGridFixtureTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Model', datafield: 'model', width: 150},
+            {text: 'Height', datafield: 'height', width: 150},
+            {text: 'Width', datafield: 'width', width: 150},
+            {text: 'Length', datafield: 'length', width: 150},
+            {text: 'Weight', datafield: 'weight', width: 150},
+            {text: 'Number of lamps', datafield: 'countlamp', width: 150},
+            {text: 'Power consumption', datafield: 'power', width: 150},
+            {text: 'Power factor', datafield: 'cos', width: 150},
+            {text: 'Security rating', datafield: 'ip', width: 150},
+            {text: 'Energy Saving', datafield: 'efficiency', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceFixtureTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Model', value: 'model', checked: true},
+            {label: 'Height', value: 'height', checked: true},
+            {label: 'Width', value: 'width', checked: true},
+            {label: 'Weight', value: 'weight', checked: true},
+            {label: 'Number of lamps', value: 'countlamp', checked: true},
+            {label: 'Power consumption', value: 'power', checked: true},
+            {label: 'Power factor', value: 'cos', checked: true},
+            {label: 'Security rating', value: 'ip', checked: true},
+            {label: 'Energy Saving', value: 'efficiency', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        this.columnsGridNodeTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Model', datafield: 'model', width: 150},
+            {text: 'Height', datafield: 'height', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceNodeTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Model', value: 'model', checked: true},
+            {label: 'Height', value: 'height', checked: true},
+            {label: 'Comments', value: 'comments', checked: true},
+          ];
+        this.columnsGridGatewayTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Model', datafield: 'model', width: 150},
+            {text: 'Communication standard', datafield: 'communicationStandard', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceGatewayTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Model', value: 'model', checked: true},
+            {label: 'Communication standard', value: 'communicationStandard', checked: true},
+            {label: 'Comments', value: 'comments', checked: true},
+          ];
+        this.columnsGridSensorTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Model', datafield: 'model', width: 150},
+            {text: 'Radius of action', datafield: 'detectionRange', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150},
+          ];
+        this.listBoxSourceSensorTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Model', value: 'model', checked: true},
+            {label: 'Radius of action', value: 'detectionRange', checked: true},
+            {label: 'Comments', value: 'comments', checked: true},
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormFixtureType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Model:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'height',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Height:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'width',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Width:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'length',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Length:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'weight',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Weight:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'countlamp',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Number of lamps:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'power',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Power consumption:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'cos',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Power factor:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'ip',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Security rating:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'efficiency',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Energy Saving:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormNodeType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Model:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'height',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Height:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormGatewayType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Model:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'communicationStandard',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Communication standard:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormSensorType = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '0',
+            selectName: ''
+          },
+          {
+            nameField: 'model',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Model:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'detectionRange',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Radius of action:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -1449,8 +1427,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.fixtureTypeSimpleDictionary.editForm.closeDestroy();
@@ -1482,8 +1462,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.upd')
                 + this.fixtureTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.fixtureTypeSimpleDictionary.editForm.closeDestroy();
@@ -1505,8 +1487,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.nodeTypeSimpleDictionary.editForm.closeDestroy();
@@ -1530,8 +1514,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.upd')
                 + this.nodeTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.nodeTypeSimpleDictionary.editForm.closeDestroy();
@@ -1553,8 +1539,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.gatewayTypeSimpleDictionary.editForm.closeDestroy();
@@ -1578,8 +1566,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.upd')
                 + this.gatewayTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.gatewayTypeSimpleDictionary.editForm.closeDestroy();
@@ -1603,8 +1593,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.sensorTypeSimpleDictionary.editForm.closeDestroy();
@@ -1628,8 +1620,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.upd')
                 + this.sensorTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.sensorTypeSimpleDictionary.editForm.closeDestroy();
@@ -1659,8 +1653,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.fixturetype.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1678,8 +1674,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.nodetype.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.nodeTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1697,8 +1695,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.gatewaytype.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1716,8 +1716,10 @@ export class EquipmentTypeComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.equipment-page.sensortype.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.sensorTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

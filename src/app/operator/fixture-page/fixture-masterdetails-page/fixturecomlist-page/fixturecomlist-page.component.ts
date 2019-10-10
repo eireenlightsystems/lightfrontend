@@ -44,7 +44,7 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
-  @Input() currentLang_: string;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -137,8 +137,6 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
       }
     };
 
-    // define edit form
-
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
@@ -148,8 +146,8 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.currentLang_) {
-      if (changes.currentLang_.currentValue === 'ru') {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
         // definde columns
         this.columnsGrid =
           [
@@ -319,11 +317,6 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
     this.reloading = true;
     this.selectItemId = 0;
 
-    // initialization source for filter
-    // setTimeout(() => {
-    //   this.getSourceForFilter();
-    // }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -347,17 +340,20 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
       this.filter
     );
     this.oSub = this.commandSwitchService.getAll(params).subscribe(commandSwitches => {
-      // Link statusName
-      const commandSwitchesStatusName = commandSwitches;
-      commandSwitchesStatusName.forEach(currentCommand => {
-        currentCommand.statusName = this.commandStatuses.find(
-          (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
+        // Link statusName
+        const commandSwitchesStatusName = commandSwitches;
+        commandSwitchesStatusName.forEach(currentCommand => {
+          currentCommand.statusName = this.commandStatuses.find(
+            (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
+        });
+        this.items = this.items.concat(commandSwitchesStatusName);
+        this.noMoreItems = commandSwitches.length < STEP;
+        this.loading = false;
+        this.reloading = false;
+      },
+      error => {
+        console.log(error.error.message);
       });
-      this.items = this.items.concat(commandSwitchesStatusName);
-      this.noMoreItems = commandSwitches.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
   }
 
   getAvailabilityButtons() {
@@ -594,8 +590,10 @@ export class FixturecomlistPageComponent implements OnInit, OnChanges, OnDestroy
             this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomlist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del(this.ids);
           }

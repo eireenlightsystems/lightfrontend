@@ -51,6 +51,7 @@ import {SubstationService} from '../../services/contragent/substation.service';
 // app components
 import {AdminLayoutComponent} from './admin-layout/admin-layout.component';
 import {DictionaryLayoutComponent} from './dictionary-layout/dictionary-layout.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -145,6 +146,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               changeDetectorRef: ChangeDetectorRef,
               media: MediaMatcher,
               private ngZone: NgZone,
+              private _snackBar: MatSnackBar,
               // service
               private auth: AuthService,
               public translate: TranslateService,
@@ -191,6 +193,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // get user list
     this.getUsers();
+
     // set current language
     this.language = !isUndefined(this.translate.currentLang) ? this.translate.currentLang : 'en';
     this.translate.use(this.language);
@@ -859,7 +862,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         displayName: 'site.menu.administration.administration',
         componentName: 'admin-layout',
-        disabled: false,
+        disabled: true,
         expandable: true,
         iconName: 'settings',
         route: '/admin',
@@ -867,7 +870,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             displayName: 'site.menu.administration.right-page.right-page',
             componentName: 'right-page',
-            disabled: false,
+            disabled: true,
             expandable: false,
             iconName: 'thumb_up',
             route: '/admin/right',
@@ -875,7 +878,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               {
                 displayName: 'site.menu.administration.right-page.roleright-page.roleright-page',
                 componentName: 'roleright-page',
-                disabled: false,
+                disabled: true,
                 expandable: false,
                 iconName: 'settings',
                 route: '/admin/right/rolerights',
@@ -884,7 +887,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               {
                 displayName: 'site.menu.administration.right-page.user-page.user-page',
                 componentName: 'user-page',
-                disabled: false,
+                disabled: true,
                 expandable: false,
                 iconName: 'settings',
                 route: '/admin/right/users',
@@ -893,7 +896,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               {
                 displayName: 'site.menu.administration.right-page.role-page.role-page',
                 componentName: 'role-page',
-                disabled: false,
+                disabled: true,
                 expandable: false,
                 iconName: 'settings',
                 route: '/admin/right/roles',
@@ -902,7 +905,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
               {
                 displayName: 'site.menu.administration.right-page.component-page.component-page',
                 componentName: 'component-page',
-                disabled: false,
+                disabled: true,
                 expandable: false,
                 iconName: 'settings',
                 route: '/admin/right/components',
@@ -915,7 +918,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         displayName: 'site.menu.report.report',
         componentName: 'report-layout',
-        disabled: false,
+        disabled: true,
         expandable: true,
         iconName: 'report',
         route: '/report',
@@ -923,7 +926,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             displayName: 'site.menu.report.report-countfixture-page.report-countfixture-page',
             componentName: 'report-countfixture-page',
-            disabled: false,
+            disabled: true,
             expandable: false,
             iconName: 'lightbulb_outline',
             route: '/report/countfixture',
@@ -932,7 +935,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             displayName: 'site.menu.report.report-powerfixture-page.report-powerfixture-page',
             componentName: 'report-powerfixture-page',
-            disabled: false,
+            disabled: true,
             expandable: false,
             iconName: 'flash_on',
             route: '/report/powerfixture',
@@ -956,20 +959,6 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.dataSourceOnMobile.data = this.siteMap;
 
-    // choose items for sidenav
-    this.navItems = this.navItemsOperator;
-
-    // load dictionary
-    this.getContracts();
-    this.getContractTypes();
-    this.getFixtureTypes();
-    this.getNodeTypes();
-    this.getGatewayTypes();
-    this.getSensorTypes();
-    this.getCompanies();
-    this.getPersons();
-    this.getSubstations();
-
     // loading process
     this.ngxLoader.start();
     setTimeout(() => {
@@ -978,10 +967,7 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // open min sidenav
-    this.toggle();
-    // update NavMenuItems
-    this.chooseNavMenuItemByRout(this.router.url);
+
   }
 
   ngOnDestroy(): void {
@@ -1159,11 +1145,37 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
         notRoleId: ''
       });
 
-    this.userSub = this.userService.getAll(params).subscribe(users => {
-      this.users = users;
-      this.user = users.find((one: User) => one.login === localStorage.getItem('login'));
-      this.getComponents();
-    });
+    this.userSub = this.userService.getAll(params).subscribe(
+      users => {
+        this.users = users;
+        this.user = users.find((one: User) => one.login === localStorage.getItem('login'));
+      },
+      error => {
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
+      },
+      () => {
+        this.getComponents();
+
+        // choose items for sidenav
+        // this.navItems = this.navItemsOperator;
+        // open min sidenav
+        this.toggle();
+        // update NavMenuItems
+        this.chooseNavMenuItemByRout(this.router.url);
+
+        // load dictionary
+        this.getContracts();
+        this.getContractTypes();
+        this.getFixtureTypes();
+        this.getNodeTypes();
+        this.getGatewayTypes();
+        this.getSensorTypes();
+        this.getCompanies();
+        this.getPersons();
+        this.getSubstations();
+      }
+    );
   }
 
   // get all components with rights of user
@@ -1178,11 +1190,16 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       });
 
     this.componentSub = this.componentService.getAll(params).subscribe(components => {
-      this.components = components;
-      // .filter((one: Components) => one.rights === 'false')
-      // update rights siteMap
-      this.updRights();
-    });
+        this.components = components;
+      },
+      error => {
+        this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
+      },
+      () => {
+        this.updRights();
+      }
+    );
   }
 
   // update rights
@@ -1205,93 +1222,127 @@ export class SiteLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getContracts() {
     this.oSubContracts = this.contractService.getAll().subscribe(items => {
-      this.contracts = items;
-      this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout)
-        && !isUndefined(this.dictionaryLayout.contractComponent)
-        && !isUndefined(this.dictionaryLayout.contractComponent.contractSimpleDictionary)) {
-        this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        this.contracts = items;
+        this.dictionaryLayout.contractComponent.sourceForJqxGridContracts.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout)
+          && !isUndefined(this.dictionaryLayout.contractComponent)
+          && !isUndefined(this.dictionaryLayout.contractComponent.contractSimpleDictionary)) {
+          this.dictionaryLayout.contractComponent.contractSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
       }
-    });
+    );
   }
 
   getContractTypes() {
     this.oSubContractTypes = this.contractTypeService.getAll().subscribe(items => {
-      this.contractTypes = items;
-      this.dictionaryLayout.contractComponent.sourceForJqxGridContractTypes.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary)) {
-        this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.contractTypes = items;
+        this.dictionaryLayout.contractComponent.sourceForJqxGridContractTypes.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary)) {
+          this.dictionaryLayout.contractComponent.contractTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getFixtureTypes() {
     this.oSubFixtureType = this.fixtureTypeService.getAll().subscribe(items => {
-      this.fixtureTypes = items;
-      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridFixtureType.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary)) {
-        this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.fixtureTypes = items;
+        this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridFixtureType.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary)) {
+          this.dictionaryLayout.equipmentTypeComponent.fixtureTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getNodeTypes() {
     this.oSubNodeType = this.nodeTypeService.getAll().subscribe(items => {
-      this.nodeTypes = items;
-      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridNodeType.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary)) {
-        this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.nodeTypes = items;
+        this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridNodeType.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary)) {
+          this.dictionaryLayout.equipmentTypeComponent.nodeTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getGatewayTypes() {
     this.oSubGatewayType = this.gatewayTypeService.getAll().subscribe(items => {
-      this.gatewayTypes = items;
-      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridGatewayType.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary)) {
-        this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.gatewayTypes = items;
+        this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridGatewayType.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary)) {
+          this.dictionaryLayout.equipmentTypeComponent.gatewayTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getSensorTypes() {
     this.oSubSensorType = this.sensorTypeService.getAll().subscribe(items => {
-      this.sensorTypes = items;
-      this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridSensorType.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary)) {
-        this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.sensorTypes = items;
+        this.dictionaryLayout.equipmentTypeComponent.sourceForJqxGridSensorType.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary)) {
+          this.dictionaryLayout.equipmentTypeComponent.sensorTypeSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getCompanies() {
     this.oSubCompanies = this.companyService.getAll().subscribe(items => {
-      this.companies = items;
-      this.dictionaryLayout.contragentComponent.sourceForJqxGridCompanies.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.contragentComponent.companiesSimpleDictionary)) {
-        this.dictionaryLayout.contragentComponent.companiesSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.companies = items;
+        this.dictionaryLayout.contragentComponent.sourceForJqxGridCompanies.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.contragentComponent.companiesSimpleDictionary)) {
+          this.dictionaryLayout.contragentComponent.companiesSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getPersons() {
     this.oSubPersons = this.personService.getAll().subscribe(items => {
-      this.persons = items;
-      this.dictionaryLayout.contragentComponent.sourceForJqxGridPersons.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.contragentComponent.personsSimpleDictionary)) {
-        this.dictionaryLayout.contragentComponent.personsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
-    });
+        this.persons = items;
+        this.dictionaryLayout.contragentComponent.sourceForJqxGridPersons.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.contragentComponent.personsSimpleDictionary)) {
+          this.dictionaryLayout.contragentComponent.personsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getSubstations() {
     this.oSubSubstations = this.substationService.getAll().subscribe(items => {
-      this.substations = items;
-      this.dictionaryLayout.contragentComponent.sourceForJqxGridSubstations.grid.source = items;
-      if (!isUndefined(this.dictionaryLayout.contragentComponent.substationsSimpleDictionary)) {
-        this.dictionaryLayout.contragentComponent.substationsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
-      }
+        this.substations = items;
+        this.dictionaryLayout.contragentComponent.sourceForJqxGridSubstations.grid.source = items;
+        if (!isUndefined(this.dictionaryLayout.contragentComponent.substationsSimpleDictionary)) {
+          this.dictionaryLayout.contragentComponent.substationsSimpleDictionary.jqxgridComponent.refresh_jqxgGrid();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 10000,
     });
   }
 }

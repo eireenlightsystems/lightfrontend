@@ -44,7 +44,7 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
   @Input() isMasterGrid: any;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
-  @Input() currentLang_: string;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -136,8 +136,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
       }
     };
 
-    // define edit form
-
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
@@ -147,8 +145,8 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.currentLang_) {
-      if (changes.currentLang_.currentValue === 'ru') {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
         // define columns
         this.columnsGrid =
           [
@@ -338,11 +336,6 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
     this.reloading = true;
     this.selectItemId = 0;
 
-    // initialization source for filter
-    // setTimeout(() => {
-    //   this.getSourceForFilter();
-    // }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -366,22 +359,25 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
       this.filter
     );
     this.oSub = this.commandSpeedSwitchService.getAll(params).subscribe(commandSpeeds => {
-      // Link statusName
-      const commandSpeedName = commandSpeeds;
-      commandSpeedName.forEach(currentCommand => {
-        currentCommand.statusName = this.commandStatuses.find(
-          (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
+        // Link statusName
+        const commandSpeedName = commandSpeeds;
+        commandSpeedName.forEach(currentCommand => {
+          currentCommand.statusName = this.commandStatuses.find(
+            (currentStatus: CommandStatus) => currentStatus.id === currentCommand.statusId).name;
+        });
+        // Link speedDirectionsName
+        commandSpeedName.forEach(currentCommand => {
+          currentCommand.speedDirectionName = this.speedDirectiones.find(
+            (currentSpeedDirection: CommandType) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
+        });
+        this.items = this.items.concat(commandSpeedName);
+        this.noMoreItems = commandSpeeds.length < STEP;
+        this.loading = false;
+        this.reloading = false;
+      },
+      error => {
+        console.log(error.error.message);
       });
-      // Link speedDirectionsName
-      commandSpeedName.forEach(currentCommand => {
-        currentCommand.speedDirectionName = this.speedDirectiones.find(
-          (currentSpeedDirection: CommandType) => currentSpeedDirection.id === currentCommand.speedDirectionId).name;
-      });
-      this.items = this.items.concat(commandSpeedName);
-      this.noMoreItems = commandSpeeds.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
   }
 
   getAvailabilityButtons() {
@@ -615,8 +611,10 @@ export class FixturecomspeedlistPageComponent implements OnInit, OnChanges, OnDe
               'site.menu.operator.fixture-page.fixture-masterdetails-page.fixturecomspeedlist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del(this.ids);
           }

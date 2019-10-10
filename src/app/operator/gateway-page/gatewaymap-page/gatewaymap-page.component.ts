@@ -1,5 +1,17 @@
 // angular lib
-import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {isUndefined} from 'util';
@@ -24,13 +36,14 @@ declare var ymaps: any;
   templateUrl: './gatewaymap-page.component.html',
   styleUrls: ['./gatewaymap-page.component.css']
 })
-export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GatewaymapPageComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
   @Input() ownerGateways: Owner[];
   @Input() gatewayTypes: EquipmentType[];
   @Input() contractGateways: Contract[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -46,7 +59,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   zoom = 17;
   draggableIcon = false;
   nodeColumns: any[];
-  nodeColumnsEng: any[];
   //
   oSub: Subscription;
   oSubGatewayGroups: Subscription;
@@ -60,7 +72,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   actionEventWindow = '';
@@ -78,99 +89,117 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   ngOnInit() {
-    // definde columns
-    this.nodeColumns =
-      [
-        {text: 'nodeId', datafield: 'nodeId', width: 150},
-        {text: 'Договор', datafield: 'contractCode', width: 150},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
-        {text: 'Владелец', datafield: 'ownerCode', width: 150},
-        {text: 'Широта', datafield: 'n_coordinate', width: 150},
-        {text: 'Долгота', datafield: 'e_coordinate', width: 150},
-        {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-        {text: 'Коментарий', datafield: 'comment', width: 150},
-      ];
-    this.nodeColumnsEng =
-      [
-        {text: 'nodeId', datafield: 'nodeId', width: 150},
-        {text: 'Contract', datafield: 'contractCode', width: 150},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
-        {text: 'Owner', datafield: 'ownerCode', width: 150},
-        {text: 'Latitude', datafield: 'n_coordinate', width: 150},
-        {text: 'Longitude', datafield: 'e_coordinate', width: 150},
-        {text: 'Serial number', datafield: 'serialNumber', width: 150},
-        {text: 'Comments', datafield: 'comment', width: 150},
-      ];
 
-    // Definde filter
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkGatewayNodes',
-        name: 'Выбрать узлы',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
+  }
 
-      },
-      grid: {
-        source: [],
-        columns: this.nodeColumns,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'nodeId',
-        sortcolumn: ['nodeId'],
-        sortdirection: 'desc',
-        selectId: []
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.nodeColumns =
+          [
+            {text: 'nodeId', datafield: 'nodeId', width: 150},
+            {text: 'Договор', datafield: 'contractCode', width: 150},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Тип узла', datafield: 'nodeTypeCode', width: 150},
+            {text: 'Владелец', datafield: 'ownerCode', width: 150},
+            {text: 'Широта', datafield: 'n_coordinate', width: 150},
+            {text: 'Долгота', datafield: 'e_coordinate', width: 150},
+            {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+            {text: 'Коментарий', datafield: 'comment', width: 150},
+          ];
+        // definde filter
+
+        // definde edit form
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkGatewayNodes',
+            name: 'Выбрать узлы',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.nodeColumns,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'nodeId',
+            sortcolumn: ['nodeId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        this.nodeColumns =
+          [
+            {text: 'nodeId', datafield: 'nodeId', width: 150},
+            {text: 'Contract', datafield: 'contractCode', width: 150},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Node type', datafield: 'nodeTypeCode', width: 150},
+            {text: 'Owner', datafield: 'ownerCode', width: 150},
+            {text: 'Latitude', datafield: 'n_coordinate', width: 150},
+            {text: 'Longitude', datafield: 'e_coordinate', width: 150},
+            {text: 'Serial number', datafield: 'serialNumber', width: 150},
+            {text: 'Comments', datafield: 'comment', width: 150},
+          ];
+        // definde filter
+
+        // definde edit form
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkGatewayNodes',
+            name: 'Choose nodes',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.nodeColumns,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'nodeId',
+            sortcolumn: ['nodeId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
       }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkGatewayNodes',
-        name: 'Choose nodes',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.nodeColumnsEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'nodeId',
-        sortcolumn: ['nodeId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
+    }
   }
 
   ngAfterViewInit() {
@@ -201,23 +230,29 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // get gateway groups
   getGatewayGroups() {
     this.oSubGatewayGroups = this.gatewayService.getAllWithoutParam().subscribe(gateways => {
-      this.gatewayGroups = gateways;
-      if (!isUndefined(this.myMap)) {
-        // init list box gateway groups
-        this.listBoxInit();
-      }
-    });
+        this.gatewayGroups = gateways;
+        if (!isUndefined(this.myMap)) {
+          // init list box gateway groups
+          this.listBoxInit();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   // get nodes in gateway group
   getNodesInGroup(gatewayId: number) {
     this.oSubNodesInGroup = this.nodeService.getNodeInGroup(gatewayId).subscribe(nodes => {
-      this.nodeInGroups = nodes;
-      this.selectGatewayId = gatewayId;
-      if (!isUndefined(this.myMap)) {
-        this.addItemsToMap();
-      }
-    });
+        this.nodeInGroups = nodes;
+        this.selectGatewayId = gatewayId;
+        if (!isUndefined(this.myMap)) {
+          this.addItemsToMap();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   // refresh Map
@@ -496,6 +531,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
       },
       error => {
         this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
       },
       () => {
         // refresh map
@@ -524,6 +560,7 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           this.linkForm.closeDestroy();
@@ -537,7 +574,6 @@ export class GatewaymapPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.oSubForLinkWin = this.nodeService.getNodeInGroup(1).subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.sourceForLinkFormEng.grid.source = response;
         this.linkForm.refreshGrid();
       },
       error => {

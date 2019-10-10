@@ -1,5 +1,5 @@
 // angular lib
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -25,7 +25,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
   templateUrl: './contract.component.html',
   styleUrls: ['./contract.component.css']
 })
-export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContractComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -33,6 +33,7 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() contracts: Contract[];
   @Input() contractTypes: ContractType[];
   @Input() companies: CompanyDepartment[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetContracts = new EventEmitter();
@@ -53,20 +54,14 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
   sourceForJqxGridContractTypes: SourceForJqxGrid;
   columnsGridContracts: any[];
   listBoxSourceContracts: any[];
-  columnsGridContractsEng: any[];
-  listBoxSourceContractsEng: any[];
   columnsGridContractTypes: any[];
   listBoxSourceContractTypes: any[];
-  columnsGridContractTypesEng: any[];
-  listBoxSourceContractTypesEng: any[];
   // filter
   // edit form
   settingWinForEditFormContracts: SettingWinForEditForm;
   settingWinForEditFormContractTypes: SettingWinForEditForm;
   sourceForEditFormContracts: SourceForEditForm[];
   sourceForEditFormContractTypes: SourceForEditForm[];
-  sourceForEditFormContractsEng: SourceForEditForm[];
-  sourceForEditFormContractTypesEng: SourceForEditForm[];
   // link form
   // event form
 
@@ -83,60 +78,6 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     // CONTRACT
-    // definde columns
-    this.columnsGridContracts =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
-        {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
-        {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
-        {text: 'Тип контракта', datafield: 'contractTypeCode', width: 150},
-        {text: 'Отправитель', datafield: 'senderCode', width: 150},
-        {text: 'Получатель', datafield: 'recipientCode', width: 150},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceContracts =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'contractTypeId', value: 'contractTypeId', checked: false},
-        {label: 'senderId', value: 'senderId', checked: false},
-        {label: 'recipientId', value: 'recipientId', checked: false},
-        {label: 'Тип контракта', value: 'contractTypeCode', checked: true},
-        {label: 'Отправитель', value: 'senderCode', checked: true},
-        {label: 'Получатель', value: 'recipientCode', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridContractsEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
-        {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
-        {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
-        {text: 'Contract type', datafield: 'contractTypeCode', width: 150},
-        {text: 'Sender', datafield: 'senderCode', width: 150},
-        {text: 'Recipient', datafield: 'recipientCode', width: 150},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceContractsEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'contractTypeId', value: 'contractTypeId', checked: false},
-        {label: 'senderId', value: 'senderId', checked: false},
-        {label: 'recipientId', value: 'recipientId', checked: false},
-        {label: 'Contract type', value: 'contractTypeCode', checked: true},
-        {label: 'Sender', value: 'senderCode', checked: true},
-        {label: 'Recipient', value: 'recipientCode', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridContracts = {
       listbox: {
@@ -164,9 +105,6 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormContracts = {
       code: 'editFormContract',
@@ -183,224 +121,7 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormContracts = [
-      {
-        nameField: 'contractTypes',
-        type: 'jqxComboBox',
-        source: [],
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип контракта:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'senders',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Отправитель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'recipients',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Получатель:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormContractsEng = [
-      {
-        nameField: 'contractTypes',
-        type: 'jqxComboBox',
-        source: [],
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contract type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'senders',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Sender:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'recipients',
-        type: 'jqxComboBox',
-        source: this.companies,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Recipient:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // CONTRACTTYPE
-    // definde columns
-    this.columnsGridContractTypes =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceContractTypes =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridContractTypesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceContractTypesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridContractTypes = {
       listbox: {
@@ -428,9 +149,6 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormContractTypes = {
       code: 'editFormContractType',
@@ -447,106 +165,388 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormContractTypes = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormContractTypesEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
   }
 
   ngAfterViewInit() {
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGridContracts =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
+            {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
+            {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
+            {text: 'Тип контракта', datafield: 'contractTypeCode', width: 150},
+            {text: 'Отправитель', datafield: 'senderCode', width: 150},
+            {text: 'Получатель', datafield: 'recipientCode', width: 150},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceContracts =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'contractTypeId', value: 'contractTypeId', checked: false},
+            {label: 'senderId', value: 'senderId', checked: false},
+            {label: 'recipientId', value: 'recipientId', checked: false},
+            {label: 'Тип контракта', value: 'contractTypeCode', checked: true},
+            {label: 'Отправитель', value: 'senderCode', checked: true},
+            {label: 'Получатель', value: 'recipientCode', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        this.columnsGridContractTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceContractTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormContracts = [
+          {
+            nameField: 'contractTypes',
+            type: 'jqxComboBox',
+            source: [],
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип контракта:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'senders',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Отправитель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'recipients',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Получатель:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormContractTypes = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      } else {
+        // definde columns
+        this.columnsGridContracts =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'contractTypeId', datafield: 'contractTypeId', width: 150, hidden: true},
+            {text: 'senderId', datafield: 'senderId', width: 150, hidden: true},
+            {text: 'recipientId', datafield: 'recipientId', width: 150, hidden: true},
+            {text: 'Contract type', datafield: 'contractTypeCode', width: 150},
+            {text: 'Sender', datafield: 'senderCode', width: 150},
+            {text: 'Recipient', datafield: 'recipientCode', width: 150},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceContracts =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'contractTypeId', value: 'contractTypeId', checked: false},
+            {label: 'senderId', value: 'senderId', checked: false},
+            {label: 'recipientId', value: 'recipientId', checked: false},
+            {label: 'Contract type', value: 'contractTypeCode', checked: true},
+            {label: 'Sender', value: 'senderCode', checked: true},
+            {label: 'Recipient', value: 'recipientCode', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        this.columnsGridContractTypes =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceContractTypes =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormContracts = [
+          {
+            nameField: 'contractTypes',
+            type: 'jqxComboBox',
+            source: [],
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contract type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'senders',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Sender:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'recipients',
+            type: 'jqxComboBox',
+            source: this.companies,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Recipient:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormContractTypes = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -635,8 +635,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.contractSimpleDictionary.editForm.closeDestroy();
@@ -665,8 +667,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.upd')
                 + this.contractSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.contractSimpleDictionary.editForm.closeDestroy();
@@ -689,8 +693,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.contractTypeSimpleDictionary.editForm.closeDestroy();
@@ -713,8 +719,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.upd')
                 + this.contractTypeSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.contractTypeSimpleDictionary.editForm.closeDestroy();
@@ -745,8 +753,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contract.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.contractSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -764,8 +774,10 @@ export class ContractComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.contract-page.contracttype.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.contractTypeSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

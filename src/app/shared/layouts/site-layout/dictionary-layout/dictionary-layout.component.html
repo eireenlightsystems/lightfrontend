@@ -7,6 +7,7 @@
                         [nodeTypes]="nodeTypes"
                         [gatewayTypes]="gatewayTypes"
                         [sensorTypes]="sensorTypes"
+                        [currentLang]="this.translate.currentLang"
                         (onGetFixtureTypes)="getFixtureTypes()"
                         (onGetNodeTypes)="getNodeTypes()"
                         (onGetGatewayTypes)="getGatewayTypes()"
@@ -20,6 +21,7 @@
                     [companies]="companies"
                     [persons]="persons"
                     [substations]="substations"
+                    [currentLang]="this.translate.currentLang"
                     (onGetCompanies)="getCompanies()"
                     (onGetPersons)="getPersons()"
                     (onGetSubstations)="getSubstations()"
@@ -33,6 +35,7 @@
                   [contracts]="contracts"
                   [contractTypes]="contractTypes"
                   [companies]="companies"
+                  [currentLang]="this.translate.currentLang"
                   (onGetContracts)="getContracts()"
                   (onGetContractTypes)="getContractTypes()"
     >

@@ -17,20 +17,10 @@
 <label><b>{{'site.filter.filter' | translate}}: </b>{{filterSelect}}</label>
 
 <div *ngIf="!reloading; else reloadingBlock">
-  <!--*ngIf="nodes.length > 0; else empty"-->
   <div>
     <app-jqxgrid #jqxgridComponent
-                 *ngIf="this.translate.currentLang === 'ru'"
                  [columnsGrid]="columnsGrid"
                  [listBoxSource]="listBoxSource"
-                 [sourceForJqxGrid]="sourceForJqxGrid"
-                 (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
-                 (onRefreshChildGrid)="refreshChildGrid($event)"
-    ></app-jqxgrid>
-    <app-jqxgrid #jqxgridComponent
-                 *ngIf="this.translate.currentLang === 'en'"
-                 [columnsGrid]="columnsGridEng"
-                 [listBoxSource]="listBoxSourceEng"
                  [sourceForJqxGrid]="sourceForJqxGrid"
                  (onGetSourceForJqxGrid)="getSourceForJqxGrid()"
                  (onRefreshChildGrid)="refreshChildGrid($event)"
@@ -54,32 +44,17 @@
 </ng-template>
 
 <app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
+               *ngIf="isEditFormInit"
                [settingWinForEditForm]="settingWinForEditForm"
                [sourceForEditForm]="sourceForEditForm"
                (onGetSourceForEditForm)="getSourceForEditForm()"
                (onDestroyEditForm)="destroyEditForm()"
                (onSaveEditFormBtn)="saveEditFormBtn()"
 ></app-edit-form>
-<app-edit-form #editForm
-               *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
-               [settingWinForEditForm]="settingWinForEditForm"
-               [sourceForEditForm]="sourceForEditFormEng"
-               (onGetSourceForEditForm)="getSourceForEditForm()"
-               (onDestroyEditForm)="destroyEditForm()"
-               (onSaveEditFormBtn)="saveEditFormBtn()"
-></app-edit-form>
 
 <app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'ru'"
+               *ngIf="isLinkFormInit"
                [sourceForLinkForm]="sourceForLinkForm"
-               (onGetSourceForLinkForm)="getSourceForLinkForm()"
-               (onDestroyLinkForm)="destroyLinkForm()"
-               (onSaveLinkFormBtn)="saveLinkFormBtn($event)"
-></app-link-form>
-<app-link-form #linkForm
-               *ngIf="isLinkFormInit && this.translate.currentLang === 'en'"
-               [sourceForLinkForm]="sourceForLinkFormEng"
                (onGetSourceForLinkForm)="getSourceForLinkForm()"
                (onDestroyLinkForm)="destroyLinkForm()"
                (onSaveLinkFormBtn)="saveLinkFormBtn($event)"

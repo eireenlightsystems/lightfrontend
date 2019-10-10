@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {isNull, isUndefined} from 'util';
 import {Subscription} from 'rxjs';
 import {MatSnackBar} from '@angular/material';
@@ -33,7 +33,7 @@ const STEP = 1000000000000;
   templateUrl: './componentlist-page.component.html',
   styleUrls: ['./componentlist-page.component.css']
 })
-export class ComponentlistPageComponent implements OnInit, OnDestroy {
+export class ComponentlistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -42,6 +42,7 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -62,8 +63,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: Components[] = [];
   // grid
@@ -76,20 +75,17 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     userId: '',
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
-  isFilterVisible = false;
+  isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   // event form
   warningEventWindow = '';
@@ -106,37 +102,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     // for (let i = 0; i < this.siteMap.length; i++) {
     //   this.saveComponentsToDb(this.siteMap[i]);
     // }
-
-    // COMPONENT
-    // definde columns
-    this.columnsGrid =
-      [
-        {text: 'componentId', datafield: 'componentId', width: 50},
-        {text: 'Код', datafield: 'code', width: 250},
-        {text: 'Наименование', datafield: 'name', width: 350},
-        {text: 'Коментарий', datafield: 'comments', width: 350}
-      ];
-    this.listBoxSource =
-      [
-        {label: 'componentId', value: 'componentId', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'componentId', datafield: 'componentId', width: 50},
-        {text: 'Code', datafield: 'code', width: 250},
-        {text: 'Name', datafield: 'name', width: 350},
-        {text: 'Comments', datafield: 'comments', width: 350}
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'componentId', value: 'componentId', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
 
     // jqxgrid
     this.sourceForJqxGrid = {
@@ -166,9 +131,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       }
     };
 
-    // definde filter
-    this.sourceForFilter = [];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormComponent',
@@ -185,174 +147,222 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '70',
-        placeHolder: 'Наименование:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkComponent',
-        name: 'Выбрать компонент',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'componentId',
-        sortcolumn: ['componentId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkComponent',
-        name: 'Select component',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'componentId',
-        sortcolumn: ['componentId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'componentId', datafield: 'componentId', width: 50},
+            {text: 'Код', datafield: 'code', width: 250},
+            {text: 'Наименование', datafield: 'name', width: 350},
+            {text: 'Коментарий', datafield: 'comments', width: 350}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'componentId', value: 'componentId', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '70',
+            placeHolder: 'Наименование:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkComponent',
+            name: 'Выбрать компонент',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'componentId',
+            sortcolumn: ['componentId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'componentId', datafield: 'componentId', width: 50},
+            {text: 'Code', datafield: 'code', width: 250},
+            {text: 'Name', datafield: 'name', width: 350},
+            {text: 'Comments', datafield: 'comments', width: 350}
+          ];
+        this.listBoxSource =
+          [
+            {label: 'componentId', value: 'componentId', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkComponent',
+            name: 'Select component',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'componentId',
+            sortcolumn: ['componentId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -394,11 +404,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.getAll();
     this.selectItemId = 0;
-
-    // initialization source for filter
-    setTimeout(() => {
-      this.initSourceFilter();
-    }, 1000);
 
     // disabled/available buttons
     this.getAvailabilityButtons();
@@ -566,7 +571,11 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
     this.refreshGrid();
   }
 
-  initSourceFilter() {
+  getSourceForFilter() {
+
+  }
+
+  destroyFilterForm() {
 
   }
 
@@ -574,7 +583,6 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
 
   saveEditFormBtn() {
     const selectObject: Components = new Components();
-
     for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
       switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'code':
@@ -590,64 +598,65 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
           break;
       }
     }
-    if (!isUndefined(selectObject.code) && selectObject.code !== '') {
-      if (this.typeEditWindow === 'ins') {
-        // ins
-        this.oSub = this.componentService.ins(selectObject).subscribe(
-          response => {
-            selectObject.componentId = +response;
-            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.ins')
-              + selectObject.componentId, this.translate.instant('site.forms.editforms.ok'));
-          },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
-          () => {
-            // close edit window
-            this.editForm.closeDestroy();
-            // update data source
-            this.jqxgridComponent.refresh_ins(
-              selectObject.componentId, selectObject);
-          }
-        );
-      }
-      if (this.typeEditWindow === 'upd') {
-        // definde param befor upd
-        this.jqxgridComponent.selectRow.code = selectObject.code;
-        this.jqxgridComponent.selectRow.name = selectObject.name;
-        this.jqxgridComponent.selectRow.comments = selectObject.comments;
 
-        // upd
-        this.oSub = this.componentService.upd(this.jqxgridComponent.selectRow).subscribe(
-          response => {
-            this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.upd')
-              + this.jqxgridComponent.selectRow.componentId, this.translate.instant('site.forms.editforms.ok'));
-          },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
-          () => {
-            // close edit window
-            this.editForm.closeDestroy();
-            // update data source
-            this.jqxgridComponent.refresh_upd(
-              this.jqxgridComponent.selectRow.componentId, this.jqxgridComponent.selectRow);
-          }
-        );
-      }
-    } else {
-      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.edit-code')
-        + this.jqxgridComponent.selectRow.componentId, this.translate.instant('site.forms.editforms.ok'));
+    // check
+    if (isUndefined(selectObject.code) || selectObject.code === '') {
+      this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.edit-code'),
+        this.translate.instant('site.forms.editforms.ok'));
+      return;
+    }
+
+    if (this.typeEditWindow === 'ins') {
+      // ins
+      this.oSub = this.componentService.ins(selectObject).subscribe(
+        response => {
+          selectObject.componentId = +response;
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.ins')
+            + selectObject.componentId, this.translate.instant('site.forms.editforms.ok'));
+        },
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
+        () => {
+          // close edit window
+          this.editForm.closeDestroy();
+          // update data source
+          this.jqxgridComponent.refresh_ins(
+            selectObject.componentId, selectObject);
+        }
+      );
+    }
+    if (this.typeEditWindow === 'upd') {
+      // definde param befor upd
+      this.jqxgridComponent.selectRow.code = selectObject.code;
+      this.jqxgridComponent.selectRow.name = selectObject.name;
+      this.jqxgridComponent.selectRow.comments = selectObject.comments;
+
+      // upd
+      this.oSub = this.componentService.upd(this.jqxgridComponent.selectRow).subscribe(
+        response => {
+          this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.upd')
+            + this.jqxgridComponent.selectRow.componentId, this.translate.instant('site.forms.editforms.ok'));
+        },
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
+        () => {
+          // close edit window
+          this.editForm.closeDestroy();
+          // update data source
+          this.jqxgridComponent.refresh_upd(
+            this.jqxgridComponent.selectRow.componentId, this.jqxgridComponent.selectRow);
+        }
+      );
     }
   }
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -695,8 +704,10 @@ export class ComponentlistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.administration.right-page.component-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }

@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
@@ -26,7 +26,7 @@ import {SimpleDictionaryComponent} from '../../shared/components/simple-dictiona
   templateUrl: './contragent.component.html',
   styleUrls: ['./contragent.component.css']
 })
-export class ContragentComponent implements OnInit, OnDestroy {
+export class ContragentComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -34,6 +34,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
   @Input() companies: CompanyDepartment[];
   @Input() persons: Person[];
   @Input() substations: Substation[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onGetCompanies = new EventEmitter();
@@ -60,16 +61,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
   sourceForJqxGridSubstations: SourceForJqxGrid;
   columnsGridCompanies: any[];
   listBoxSourceCompanies: any[];
-  columnsGridCompaniesEng: any[];
-  listBoxSourceCompaniesEng: any[];
   columnsGridPersons: any[];
   listBoxSourcePersons: any[];
-  columnsGridPersonsEng: any[];
-  listBoxSourcePersonsEng: any[];
   columnsGridSubstations: any[];
   listBoxSourceSubstations: any[];
-  columnsGridSubstationsEng: any[];
-  listBoxSourceSubstationsEng: any[];
   // filter
   // edit form
   settingWinForEditFormCompanies: SettingWinForEditForm;
@@ -78,9 +73,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
   sourceForEditFormCompanies: SourceForEditForm[];
   sourceForEditFormPersons: SourceForEditForm[];
   sourceForEditFormSubstations: SourceForEditForm[];
-  sourceForEditFormCompaniesEng: SourceForEditForm[];
-  sourceForEditFormPersonsEng: SourceForEditForm[];
-  sourceForEditFormSubstationsEng: SourceForEditForm[];
   // link form
   // event form
 
@@ -97,102 +89,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.orgForms = [
-      {
-        id: 1,
-        code: ' пусто',
-        name: ' пусто'
-      },
-      {
-        id: 2,
-        code: 'ООО',
-        name: 'Общество с ограничеснной отвественностью'
-      },
-      {
-        id: 3,
-        code: 'АО',
-        name: 'Акционерное общество'
-      },
-      {
-        id: 4,
-        code: 'ИП',
-        name: 'Индивидуальный предприниматель'
-      }
-    ];
-    // this.orgFormsEng = [
-    //   {
-    //     id: 1,
-    //     code: this.translate.instant('site.forms.editforms.empty'),
-    //     name: this.translate.instant('site.forms.editforms.empty')
-    //   },
-    //   {
-    //     id: 2,
-    //     code: 'LLC',
-    //     name: 'Limited liability company'
-    //   },
-    //   {
-    //     id: 3,
-    //     code: 'JSC',
-    //     name: 'Joint-Stock Company'
-    //   },
-    //   {
-    //     id: 4,
-    //     code: 'IE',
-    //     name: 'Individual entrepreneur'
-    //   }
-    // ];
-
     // COMPANY
-    // definde columns
-    this.columnsGridCompanies =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'ИНН', datafield: 'inn', width: 150},
-        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-        {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceCompanies =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Адрес', value: 'geographFullName', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'ИНН', value: 'inn', checked: true},
-        {label: 'orgFormId', value: 'orgFormId', checked: false},
-        {label: 'Организационная форма', value: 'orgFormCode', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridCompaniesEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'INN', datafield: 'inn', width: 150},
-        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-        {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceCompaniesEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Address', value: 'geographFullName', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'INN', value: 'inn', checked: true},
-        {label: 'orgFormId', value: 'orgFormId', checked: false},
-        {label: 'Organizational form', value: 'orgFormCode', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridCompanies = {
       listbox: {
@@ -220,9 +117,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormCompanies = {
       code: 'editFormCompany',
@@ -239,246 +133,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormCompanies = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'без адрес'
-      },
-
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '40',
-        placeHolder: 'Код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '60',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'ИНН:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'orgForms',
-        type: 'jqxComboBox',
-        source: this.orgForms,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Орг. форма:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormCompaniesEng = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'без адрес'
-      },
-
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '40',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '60',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'INN:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'orgForms',
-        type: 'jqxComboBox',
-        source: this.orgForms,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Organizational form:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // PERSON
-    // definde columns
-    this.columnsGridPersons =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'ИНН', datafield: 'inn', width: 150},
-        {text: 'Имя', datafield: 'nameFirst', width: 150},
-        {text: 'Фамилия', datafield: 'nameSecond', width: 150},
-        {text: 'Отчество', datafield: 'nameThird', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourcePersons =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Адрес', value: 'geographFullName', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'ИНН', value: 'inn', checked: true},
-        {label: 'Имя', value: 'nameFirst', checked: true},
-        {label: 'Фамилия', value: 'nameSecond', checked: true},
-        {label: 'Отчество', value: 'nameThird', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridPersonsEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'INN', datafield: 'inn', width: 150},
-        {text: 'Second name', datafield: 'nameFirst', width: 150},
-        {text: 'Second name', datafield: 'nameSecond', width: 150},
-        {text: 'Third name', datafield: 'nameThird', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourcePersonsEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Address', value: 'geographFullName', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'INN', value: 'inn', checked: true},
-        {label: 'First name', value: 'nameFirst', checked: true},
-        {label: 'Second name', value: 'nameSecond', checked: true},
-        {label: 'Third name', value: 'nameThird', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridPersons = {
       listbox: {
@@ -506,9 +161,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormPersons = {
       code: 'editFormPerson',
@@ -525,278 +177,7 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormPersons = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'найти адрес'
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'ИНН:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameFirst',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Имя:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameSecond',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Фамилия:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameThird',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Отчество:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormPersonsEng = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'найти адрес'
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'INN:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameFirst',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'First name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameSecond',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Second name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'nameThird',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Third name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-
     // SUBSTATION
-    // definde columns
-    this.columnsGridSubstations =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Код', datafield: 'code', width: 150},
-        {text: 'Наименование', datafield: 'name', width: 150},
-        {text: 'ИНН', datafield: 'inn', width: 150},
-        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-        {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
-        {text: 'Мощность', datafield: 'power', width: 150},
-        {text: 'Коментарий', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceSubstations =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Адрес', value: 'geographFullName', checked: true},
-        {label: 'Код', value: 'code', checked: true},
-        {label: 'Наименование', value: 'name', checked: true},
-        {label: 'ИНН', value: 'inn', checked: true},
-        {label: 'orgFormId', value: 'orgFormId', checked: false},
-        {label: 'Организационная форма', value: 'orgFormCode', checked: true},
-        {label: 'Мощность', value: 'power', checked: true},
-        {label: 'Коментарий', value: 'comments', checked: true}
-      ];
-    this.columnsGridSubstationsEng =
-      [
-        {text: 'Id', datafield: 'id', width: 50},
-        {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Code', datafield: 'code', width: 150},
-        {text: 'Name', datafield: 'name', width: 150},
-        {text: 'INN', datafield: 'inn', width: 150},
-        {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
-        {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
-        {text: 'Power', datafield: 'power', width: 150},
-        {text: 'Comments', datafield: 'comments', width: 150}
-      ];
-    this.listBoxSourceSubstationsEng =
-      [
-        {label: 'Id', value: 'id', checked: true},
-        {label: 'geographId', value: 'geographId', checked: false},
-        {label: 'Address', value: 'geographFullName', checked: true},
-        {label: 'Code', value: 'code', checked: true},
-        {label: 'Name', value: 'name', checked: true},
-        {label: 'INN', value: 'inn', checked: true},
-        {label: 'orgFormId', value: 'orgFormId', checked: false},
-        {label: 'Organizational form', value: 'orgFormCode', checked: true},
-        {label: 'Power', value: 'power', checked: true},
-        {label: 'Comments', value: 'comments', checked: true}
-      ];
-
     // jqxgrid
     this.sourceForJqxGridSubstations = {
       listbox: {
@@ -824,9 +205,6 @@ export class ContragentComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-
     // definde edit form
     this.settingWinForEditFormSubstations = {
       code: 'editFormSubstation',
@@ -843,222 +221,832 @@ export class ContragentComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditFormSubstations = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'найти адрес'
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '40',
-        placeHolder: 'Код:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '60',
-        placeHolder: 'Наименоваие:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'ИНН:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'orgForms',
-        type: 'jqxComboBox',
-        source: this.orgForms,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Орг. форма:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'power',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Мощнось:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormSubstationsEng = [
-      {
-        nameField: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '300',
-        height: '20',
-        placeHolder: 'Address:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: 'найти адрес'
-      },
-      {
-        nameField: 'code',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '40',
-        placeHolder: 'Code:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'name',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '60',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'inn',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'INN:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'orgForms',
-        type: 'jqxComboBox',
-        source: this.orgForms,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Organizational form:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'power',
-        type: 'jqxNumberInput',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Power:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comments',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
+  }
 
-    // definde link form
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        this.orgForms = [
+          {
+            id: 1,
+            code: ' пусто',
+            name: ' пусто'
+          },
+          {
+            id: 2,
+            code: 'ООО',
+            name: 'Общество с ограничеснной отвественностью'
+          },
+          {
+            id: 3,
+            code: 'АО',
+            name: 'Акционерное общество'
+          },
+          {
+            id: 4,
+            code: 'ИП',
+            name: 'Индивидуальный предприниматель'
+          }
+        ];
+        // definde columns
+        this.columnsGridCompanies =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'ИНН', datafield: 'inn', width: 150},
+            {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+            {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceCompanies =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Адрес', value: 'geographFullName', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'ИНН', value: 'inn', checked: true},
+            {label: 'orgFormId', value: 'orgFormId', checked: false},
+            {label: 'Организационная форма', value: 'orgFormCode', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        this.columnsGridPersons =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'ИНН', datafield: 'inn', width: 150},
+            {text: 'Имя', datafield: 'nameFirst', width: 150},
+            {text: 'Фамилия', datafield: 'nameSecond', width: 150},
+            {text: 'Отчество', datafield: 'nameThird', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourcePersons =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Адрес', value: 'geographFullName', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'ИНН', value: 'inn', checked: true},
+            {label: 'Имя', value: 'nameFirst', checked: true},
+            {label: 'Фамилия', value: 'nameSecond', checked: true},
+            {label: 'Отчество', value: 'nameThird', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        this.columnsGridSubstations =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Код', datafield: 'code', width: 150},
+            {text: 'Наименование', datafield: 'name', width: 150},
+            {text: 'ИНН', datafield: 'inn', width: 150},
+            {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+            {text: 'Организационная форма', datafield: 'orgFormCode', width: 150},
+            {text: 'Мощность', datafield: 'power', width: 150},
+            {text: 'Коментарий', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceSubstations =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Адрес', value: 'geographFullName', checked: true},
+            {label: 'Код', value: 'code', checked: true},
+            {label: 'Наименование', value: 'name', checked: true},
+            {label: 'ИНН', value: 'inn', checked: true},
+            {label: 'orgFormId', value: 'orgFormId', checked: false},
+            {label: 'Организационная форма', value: 'orgFormCode', checked: true},
+            {label: 'Мощность', value: 'power', checked: true},
+            {label: 'Коментарий', value: 'comments', checked: true}
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormCompanies = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'без адрес'
+          },
+
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '40',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '60',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'ИНН:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'orgForms',
+            type: 'jqxComboBox',
+            source: this.orgForms,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Орг. форма:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormPersons = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'найти адрес'
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'ИНН:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameFirst',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Имя:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameSecond',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Фамилия:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameThird',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Отчество:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormSubstations = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'найти адрес'
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '40',
+            placeHolder: 'Код:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '60',
+            placeHolder: 'Наименоваие:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'ИНН:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'orgForms',
+            type: 'jqxComboBox',
+            source: this.orgForms,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Орг. форма:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'power',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Мощнось:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      } else {
+        this.orgForms = [
+          {
+            id: 1,
+            code: ' empty',
+            name: ' empty'
+          },
+          {
+            id: 2,
+            code: 'LLC',
+            name: 'Limited liability company'
+          },
+          {
+            id: 3,
+            code: 'JSC',
+            name: 'Joint-Stock Company'
+          },
+          {
+            id: 4,
+            code: 'IE',
+            name: 'Individual entrepreneur'
+          }
+        ];
+        // definde columns
+        this.columnsGridCompanies =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'INN', datafield: 'inn', width: 150},
+            {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+            {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceCompanies =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Address', value: 'geographFullName', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'INN', value: 'inn', checked: true},
+            {label: 'orgFormId', value: 'orgFormId', checked: false},
+            {label: 'Organizational form', value: 'orgFormCode', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        this.columnsGridPersons =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'INN', datafield: 'inn', width: 150},
+            {text: 'Second name', datafield: 'nameFirst', width: 150},
+            {text: 'Second name', datafield: 'nameSecond', width: 150},
+            {text: 'Third name', datafield: 'nameThird', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourcePersons =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Address', value: 'geographFullName', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'INN', value: 'inn', checked: true},
+            {label: 'First name', value: 'nameFirst', checked: true},
+            {label: 'Second name', value: 'nameSecond', checked: true},
+            {label: 'Third name', value: 'nameThird', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        this.columnsGridSubstations =
+          [
+            {text: 'Id', datafield: 'id', width: 50},
+            {text: 'geographId', datafield: 'geographId', width: 150, hidden: true},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Code', datafield: 'code', width: 150},
+            {text: 'Name', datafield: 'name', width: 150},
+            {text: 'INN', datafield: 'inn', width: 150},
+            {text: 'orgFormId', datafield: 'orgFormId', width: 150, hidden: true},
+            {text: 'Organizational form', datafield: 'orgFormCode', width: 150},
+            {text: 'Power', datafield: 'power', width: 150},
+            {text: 'Comments', datafield: 'comments', width: 150}
+          ];
+        this.listBoxSourceSubstations =
+          [
+            {label: 'Id', value: 'id', checked: true},
+            {label: 'geographId', value: 'geographId', checked: false},
+            {label: 'Address', value: 'geographFullName', checked: true},
+            {label: 'Code', value: 'code', checked: true},
+            {label: 'Name', value: 'name', checked: true},
+            {label: 'INN', value: 'inn', checked: true},
+            {label: 'orgFormId', value: 'orgFormId', checked: false},
+            {label: 'Organizational form', value: 'orgFormCode', checked: true},
+            {label: 'Power', value: 'power', checked: true},
+            {label: 'Comments', value: 'comments', checked: true}
+          ];
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditFormCompanies = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'без адрес'
+          },
+
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '40',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '60',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'INN:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'orgForms',
+            type: 'jqxComboBox',
+            source: this.orgForms,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Organizational form:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormPersons = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'найти адрес'
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'INN:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameFirst',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'First name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameSecond',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Second name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'nameThird',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Third name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        this.sourceForEditFormSubstations = [
+          {
+            nameField: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '300',
+            height: '20',
+            placeHolder: 'Address:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: 'найти адрес'
+          },
+          {
+            nameField: 'code',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '40',
+            placeHolder: 'Code:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'name',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '60',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'inn',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'INN:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'orgForms',
+            type: 'jqxComboBox',
+            source: this.orgForms,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Organizational form:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'power',
+            type: 'jqxNumberInput',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Power:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comments',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -1158,8 +1146,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.companiesSimpleDictionary.editForm.closeDestroy();
@@ -1186,8 +1176,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.upd')
                 + this.companiesSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.companiesSimpleDictionary.editForm.closeDestroy();
@@ -1219,8 +1211,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.personsSimpleDictionary.editForm.closeDestroy();
@@ -1247,8 +1241,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.upd')
                 + this.personsSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.personsSimpleDictionary.editForm.closeDestroy();
@@ -1284,8 +1280,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.ins')
                 + selectObject.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.substationsSimpleDictionary.editForm.closeDestroy();
@@ -1313,8 +1311,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
               this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.upd')
                 + this.substationsSimpleDictionary.jqxgridComponent.selectRow.id, this.translate.instant('site.forms.editforms.ok'));
             },
-            error =>
-              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+            error => {
+              this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+              console.log(error.error.message);
+            },
             () => {
               // close edit window
               this.substationsSimpleDictionary.editForm.closeDestroy();
@@ -1345,8 +1345,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.company.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.companiesSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1364,8 +1366,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.person.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.personsSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp
@@ -1383,8 +1387,10 @@ export class ContragentComponent implements OnInit, OnDestroy {
                 this.openSnackBar(this.translate.instant('site.menu.dictionarys.contragent-page.substation.del'),
                   this.translate.instant('site.forms.editforms.ok'));
               },
-              error =>
-                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+              error => {
+                this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+                console.log(error.error.message);
+              },
               () => {
                 this.substationsSimpleDictionary.jqxgridComponent.refresh_del([+okEvenwinObject.id]);
                 // refresh temp

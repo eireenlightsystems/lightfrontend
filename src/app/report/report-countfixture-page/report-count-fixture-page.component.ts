@@ -6,7 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 // jqwidgets
 // app interfaces
-import {ReportCountFixture} from '../../shared/interfaces';
+import {NavItem, ReportCountFixture} from '../../shared/interfaces';
 // app services
 import {ReportFixtureService} from '../../shared/services/report/report-fixture.service';
 // app components
@@ -21,7 +21,8 @@ import {JqxpivotgridComponent} from '../../shared/components/jqxpivotgrid/jqxpiv
 export class ReportCountFixturePageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   // variables from parent component
-  @Input() currentLang_: string;
+  @Input() siteMap: NavItem[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @ViewChild('matTabGroup', {static: false}) matTabGroup: MatTabGroup;
@@ -156,8 +157,8 @@ export class ReportCountFixturePageComponent implements OnInit, OnChanges, After
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.currentLang_) {
-      if (changes.currentLang_.currentValue === 'ru') {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
         // by adress
         this.currRows1 = [
           {dataField: 'city', text: 'Город', width: 150},
@@ -412,9 +413,12 @@ export class ReportCountFixturePageComponent implements OnInit, OnChanges, After
 
   getReportCountFixtures() {
     this.oSubReportCountFixtures = this.reportFixtureService.getReportCountFixture().subscribe(items => {
-      this.reportCountFixtures = items;
-      this.getSourceForJqxPivotGrid1();
-    });
+        this.reportCountFixtures = items;
+        this.getSourceForJqxPivotGrid1();
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getSourceForJqxPivotGrid() {

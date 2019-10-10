@@ -72,7 +72,7 @@ export class UserMdPageComponent implements OnInit {
         disabled: false,
       },
       upd: {
-        visible: true,
+        visible: false,
         disabled: false,
       },
       del: {

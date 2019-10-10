@@ -1,5 +1,17 @@
 // angular lib
-import {AfterViewInit, Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription, timer} from 'rxjs';
 import {isUndefined} from 'util';
@@ -33,7 +45,7 @@ declare var ymaps: any;
   templateUrl: './fixturemap-page.component.html',
   styleUrls: ['./fixturemap-page.component.css']
 })
-export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FixturemapPageComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -42,6 +54,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   @Input() contractFixtures: Contract[];
   @Input() installers: Installer[];
   @Input() heightTypes: HeightType[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshGrid = new EventEmitter();
@@ -80,7 +93,6 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   isEditFormSwitchOnInit = false;
   isEditFormSwitchOffInit = false;
@@ -114,220 +126,6 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'contractFixtures',
-        type: 'jqxComboBox',
-        source: this.contractFixtures,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Договор:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип светильника:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Подстанция:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'installers',
-        type: 'jqxComboBox',
-        source: this.installers,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Установщик:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'heightTypes',
-        type: 'jqxComboBox',
-        source: this.heightTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип высоты:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Серийный номер:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'contractFixtures',
-        type: 'jqxComboBox',
-        source: this.contractFixtures,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contract:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Fixture type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Substation:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'installers',
-        type: 'jqxComboBox',
-        source: this.installers,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Installer:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'heightTypes',
-        type: 'jqxComboBox',
-        source: this.heightTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Height:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Serial number:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
 
     // get all fixtures
     this.getAll();
@@ -340,6 +138,242 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   ngAfterViewInit() {
     // init map
     this.mapInit();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractFixtures',
+            type: 'jqxComboBox',
+            source: this.contractFixtures,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Договор:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип светильника:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Подстанция:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'installers',
+            type: 'jqxComboBox',
+            source: this.installers,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Установщик:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'heightTypes',
+            type: 'jqxComboBox',
+            source: this.heightTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип высоты:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Серийный номер:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      } else {
+        // definde columns
+
+        // definde filter
+
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractFixtures',
+            type: 'jqxComboBox',
+            source: this.contractFixtures,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contract:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Fixture type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Substation:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'installers',
+            type: 'jqxComboBox',
+            source: this.installers,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Installer:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'heightTypes',
+            type: 'jqxComboBox',
+            source: this.heightTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Height:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Serial number:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -361,36 +395,45 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
   // get fixture groups
   getFixtureGroups() {
     this.oSubFixtureGroups = this.fixtureGroupService.getAll(this.filterFixtureGroups).subscribe(fixtureGroups => {
-      this.fixtureGroups = fixtureGroups;
-      if (!isUndefined(this.myMap)) {
-        // init list box fixture groups
-        this.listBoxInit();
-      }
-    });
+        this.fixtureGroups = fixtureGroups;
+        if (!isUndefined(this.myMap)) {
+          // init list box fixture groups
+          this.listBoxInit();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   // get nodes in gateway group
   getFixturesInGroup(fixtureGroupId: number) {
     this.oSub = this.fixtureService.getFixtureInGroup(fixtureGroupId.toString()).subscribe(fixtures => {
-      this.fixtures = fixtures;
-      this.selectFixtureGroupId = fixtureGroupId;
-      if (!isUndefined(this.myMap)) {
-        // place the objects
-        this.addItemsToMap();
-      }
-    });
+        this.fixtures = fixtures;
+        this.selectFixtureGroupId = fixtureGroupId;
+        if (!isUndefined(this.myMap)) {
+          // place the objects
+          this.addItemsToMap();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   // get a set of objects
   getAll() {
     this.oSub = this.fixtureService.getAll({}).subscribe(fixtures => {
-      this.fixtures = fixtures;
-      if (!isUndefined(this.myMap)) {
-        this.myMap.setCenter([fixtures[0].n_coordinate, fixtures[0].e_coordinate], this.zoom);
-        // place the objects
-        this.addItemsToMap();
-      }
-    });
+        this.fixtures = fixtures;
+        if (!isUndefined(this.myMap)) {
+          this.myMap.setCenter([fixtures[0].n_coordinate, fixtures[0].e_coordinate], this.zoom);
+          // place the objects
+          this.addItemsToMap();
+        }
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   // refresh Map
@@ -796,8 +839,10 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
           this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.upd')
             + selectObject.fixtureId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -810,13 +855,7 @@ export class FixturemapPageComponent implements OnInit, OnDestroy, AfterViewInit
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;

@@ -2,17 +2,9 @@
   <div id="fixture_yamaps"></div>
 
   <app-edit-form #editForm
-                 *ngIf="isEditFormInit && this.translate.currentLang === 'ru'"
+                 *ngIf="isEditFormInit"
                  [settingWinForEditForm]="settingWinForEditForm"
                  [sourceForEditForm]="sourceForEditForm"
-                 (onGetSourceForEditForm)="getSourceForEditForm()"
-                 (onDestroyEditForm)="destroyEditForm()"
-                 (onSaveEditFormBtn)="saveEditFormBtn()"
-  ></app-edit-form>
-  <app-edit-form #editForm
-                 *ngIf="isEditFormInit && this.translate.currentLang === 'en'"
-                 [settingWinForEditForm]="settingWinForEditForm"
-                 [sourceForEditForm]="sourceForEditFormEng"
                  (onGetSourceForEditForm)="getSourceForEditForm()"
                  (onDestroyEditForm)="destroyEditForm()"
                  (onSaveEditFormBtn)="saveEditFormBtn()"

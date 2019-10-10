@@ -5,7 +5,7 @@ import {Subscription} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 // jqwidgets
 // app interfaces
-import {ReportPowerFixture} from '../../shared/interfaces';
+import {NavItem, ReportPowerFixture} from '../../shared/interfaces';
 // app services
 import {ReportFixtureService} from '../../shared/services/report/report-fixture.service';
 // app components
@@ -20,7 +20,8 @@ import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 export class ReportPowerFixturePageComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   // variables from parent component
-  @Input() currentLang_: string;
+  @Input() siteMap: NavItem[];
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @ViewChild('matTabGroup', {static: false}) matTabGroup: MatTabGroup;
@@ -60,8 +61,8 @@ export class ReportPowerFixturePageComponent implements OnInit, OnChanges, After
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.currentLang_) {
-      if (changes.currentLang_.currentValue === 'ru') {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
         this.currRows = [
           {dataField: 'year', text: 'Год', width: 150},
           {dataField: 'fixtureId', text: 'ID'}
@@ -128,9 +129,12 @@ export class ReportPowerFixturePageComponent implements OnInit, OnChanges, After
 
   getReportPowerFixtures() {
     this.oSubReportPowerFixtures = this.reportFixtureService.getReportPowerFixture().subscribe(items => {
-      this.reportPowerFixtures = items;
-      this.getSourceForJqxPivotGrid();
-    });
+        this.reportPowerFixtures = items;
+        this.getSourceForJqxPivotGrid();
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getSourceForJqxPivotGrid() {

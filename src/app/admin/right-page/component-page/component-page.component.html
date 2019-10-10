@@ -1,9 +1,11 @@
-<div *ngIf="siteMap[2].children[0].children[3].disabled === false; else notRightComponent">
+<div *ngIf="siteMap[2].children[0].children[3].disabled === false; else notRightComponent"
+     [style.width]="'99.9%'">
   <app-componentlist-page #componentlistPageComponent
                           [siteMap]="siteMap"
                           [heightGrid]="730"
                           [isMasterGrid]="true"
                           [settingButtonPanel]="settingComponentButtonPanel"
+                          [currentLang]="this.translate.currentLang"
   ></app-componentlist-page>
 </div>
 

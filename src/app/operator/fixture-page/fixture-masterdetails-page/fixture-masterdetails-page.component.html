@@ -1,7 +1,7 @@
 <div *ngIf="siteMap[0].children[0].children[0].disabled === false; else notRightComponent">
   <jqxSplitter #mainSplitter
                [theme]="'material'"
-               [width]="'100%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
+               [width]="'99.9%'" [height]="getHeightSplitter()" [orientation]="'horizontal'"
                [panels]="[{ size: getHeightSplitter()*0.6, collapsible: false }, { size: getHeightSplitter()*0.4}]"
                (onResize)="resize(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
                (onCollapsed)="collapsed(mainSplitter.attrPanels[0].size, mainSplitter.attrPanels[1].size)"
@@ -23,6 +23,7 @@
                             [selectNodeId]=""
                             [fixtureGroupId]="fixtureGroupId"
                             [settingButtonPanel]="settingFixtureButtonPanel"
+                            [currentLang]="this.translate.currentLang"
                             (onRefreshChildGrid)="refreshChildGrid($event)"
       ></app-fixturelist-page>
     </div>
@@ -39,7 +40,7 @@
                                    [isMasterGrid]="false"
                                    [selectionmode]="'checkbox'"
                                    [selectFixtureId]="selectFixtureId"
-                                   [currentLang_] = "this.translate.currentLang"
+                                   [currentLang]="this.translate.currentLang"
                                    (onRefreshChildGrid)="refreshChildGrid($event)"
           ></app-fixturecomlist-page>
         </mat-tab>
@@ -54,7 +55,7 @@
                                         [isMasterGrid]="false"
                                         [selectionmode]="'checkbox'"
                                         [selectFixtureId]="selectFixtureId"
-                                        [currentLang_] = "this.translate.currentLang"
+                                        [currentLang]="this.translate.currentLang"
                                         (onRefreshChildGrid)="refreshChildGrid($event)"
           ></app-fixturecomspeedlist-page>
         </mat-tab>

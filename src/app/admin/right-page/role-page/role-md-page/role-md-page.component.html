@@ -13,6 +13,7 @@
                        [heightGrid]="mainSplitter.attrPanels[0].size - this.heightDeltaParentGrid"
                        [isMasterGrid]="true"
                        [settingButtonPanel]="settingRoleButtonPanel"
+                       [currentLang]="this.translate.currentLang"
                        (onRefreshChildGrid)="refreshChildGrid($event)"
     ></app-rolelist-page>
   </div>
@@ -27,7 +28,7 @@
                            [selectionmode]="'checkbox'"
                            [isMasterGrid]="false"
                            [settingButtonPanel]="settingUserButtonPanel"
-                           [currentLang_] = "this.translate.currentLang"
+                           [currentLang]="this.translate.currentLang"
                            (onRefreshChildGrid)="refreshChildGrid($event)"
         ></app-userlist-page>
       </mat-tab>
@@ -37,6 +38,7 @@
                                 [selectRoleId]="selectRoleId"
                                 [heightGrid]="mainSplitter.attrPanels[1].size - this.heightDeltaChildGrid"
                                 [isMasterGrid]="false"
+                                [currentLang]="this.translate.currentLang"
                                 [settingButtonPanel]="settingComponentButtonPanel"
         ></app-componentlist-page>
       </mat-tab>

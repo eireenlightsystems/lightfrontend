@@ -24,6 +24,7 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
+  @Input() tabsWidth: number;
   @Input() roleSiteMap: NavItem[];
   @Input() companies: CompanyDepartment[];
   @Input() theme: string;
@@ -160,8 +161,10 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.ins')
             + response, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
 
         }
@@ -172,8 +175,10 @@ export class RolerightPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.administration.right-page.roleright-page.del'),
             this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.message);
+        },
         () => {
 
         }

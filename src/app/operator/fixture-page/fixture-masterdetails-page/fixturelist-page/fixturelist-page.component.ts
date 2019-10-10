@@ -1,5 +1,5 @@
 // angular lib
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
@@ -42,7 +42,7 @@ const STEP = 1000000000000;
   templateUrl: './fixturelist-page.component.html',
   styleUrls: ['./fixturelist-page.component.css']
 })
-export class FixturelistPageComponent implements OnInit, OnDestroy {
+export class FixturelistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -59,6 +59,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() selectionmode: string;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -80,8 +81,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: Fixture[] = [];
   // grid
@@ -99,7 +98,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     nodeId: ''
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   modes = [
@@ -115,16 +113,13 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   typeEditWindow = '';
   // link form
   oSubForLinkWin: Subscription;
   oSubLink: Subscription;
   sourceForLinkForm: SourceForLinkForm;
-  sourceForLinkFormEng: SourceForLinkForm;
   sourceGrFixForLinkForm: SourceForLinkForm;
-  sourceGrFixForLinkFormEng: SourceForLinkForm;
   isLinkFormInit = false;
   isLinkFormGrFixInit = false;
   // event form
@@ -139,115 +134,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // definde columns
-    if (this.isMasterGrid) {
-      this.columnsGrid =
-        [
-          {text: 'fixtureId', datafield: 'fixtureId', width: 150},
-          {text: 'Адрес', datafield: 'geographFullName', width: 400},
-          {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
-          {text: 'Владелец', datafield: 'ownerCode', width: 150},
-          {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
-          {text: 'Подстанция', datafield: 'substationCode', width: 150},
-          {text: 'Установщик', datafield: 'installerCode', width: 150, hidden: true},
-          {text: 'Высота', datafield: 'heightTypeCode', width: 150},
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-          {text: 'Режим', datafield: 'flgLight', width: 150, hidden: true},
-        ];
-      this.listBoxSource =
-        [
-          {label: 'fixtureId', value: 'fixtureId', checked: true},
-          {label: 'Адрес', value: 'geographFullName', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: false},
-          {label: 'Владелец', value: 'ownerCode', checked: true},
-          {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
-          {label: 'Подстанция', value: 'substationCode', checked: true},
-          {label: 'Установщик', value: 'installerCode', checked: false},
-          {label: 'Высота', value: 'heightTypeCode', checked: true},
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-          {label: 'Режим', value: 'flgLight', checked: false},
-        ];
-      this.columnsGridEng =
-        [
-          {text: 'fixtureId', datafield: 'fixtureId', width: 150},
-          {text: 'Address', datafield: 'geographFullName', width: 400},
-          {text: 'Contract', datafield: 'contractCode', width: 150, hidden: true},
-          {text: 'Owner', datafield: 'ownerCode', width: 150},
-          {text: 'Type of fixture', datafield: 'fixtureTypeCode', width: 150},
-          {text: 'Substation', datafield: 'substationCode', width: 150},
-          {text: 'Installer', datafield: 'installerCode', width: 150, hidden: true},
-          {text: 'Height', datafield: 'heightTypeCode', width: 150},
-          {text: 'Serial number', datafield: 'serialNumber', width: 150},
-          {text: 'Comments', datafield: 'comment', width: 150},
-          {text: 'Mode', datafield: 'flgLight', width: 150, hidden: true},
-        ];
-      this.listBoxSourceEng =
-        [
-          {label: 'fixtureId', value: 'fixtureId', checked: true},
-          {label: 'Address', value: 'geographFullName', checked: true},
-          {label: 'Contract', value: 'contractCode', checked: false},
-          {label: 'Owner', value: 'ownerCode', checked: true},
-          {label: 'Type of fixture', value: 'fixtureTypeCode', checked: true},
-          {label: 'Substation', value: 'substationCode', checked: true},
-          {label: 'Installer', value: 'installerCode', checked: false},
-          {label: 'Height', value: 'heightTypeCode', checked: true},
-          {label: 'Serial number', value: 'serialNumber', checked: true},
-          {label: 'Comments', value: 'comment', checked: true},
-          {label: 'Mode', value: 'flgLight', checked: false},
-        ];
-    } else {
-      this.columnsGrid =
-        [
-          {text: 'fixtureId', datafield: 'fixtureId', width: 150},
-          {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
-          {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
-          {text: 'Подстанция', datafield: 'substationCode', width: 150},
-          {text: 'Установщик', datafield: 'installerCode', width: 150, hidden: true},
-          {text: 'Высота', datafield: 'heightTypeCode', width: 150},
-          {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
-          {text: 'Коментарий', datafield: 'comment', width: 150},
-          {text: 'Режим', datafield: 'flgLight', width: 150, hidden: true},
-        ];
-      this.listBoxSource =
-        [
-          {label: 'fixtureId', value: 'fixtureId', checked: true},
-          {label: 'Договор', value: 'contractCode', checked: false},
-          {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
-          {label: 'Подстанция', value: 'substationCode', checked: true},
-          {label: 'Установщик', value: 'installerCode', checked: false},
-          {label: 'Высота', value: 'heightTypeCode', checked: true},
-          {label: 'Серийный номер', value: 'serialNumber', checked: true},
-          {label: 'Коментарий', value: 'comment', checked: true},
-          {label: 'Режим', value: 'flgLight', checked: false},
-        ];
-      this.columnsGridEng =
-        [
-          {text: 'fixtureId', datafield: 'fixtureId', width: 150},
-          {text: 'Contract', datafield: 'contractCode', width: 150, hidden: true},
-          {text: 'Type of fixture', datafield: 'fixtureTypeCode', width: 150},
-          {text: 'Substation', datafield: 'substationCode', width: 150},
-          {text: 'Installer', datafield: 'installerCode', width: 150, hidden: true},
-          {text: 'Height', datafield: 'heightTypeCode', width: 150},
-          {text: 'Serial number', datafield: 'serialNumber', width: 150},
-          {text: 'Comments', datafield: 'comment', width: 150},
-          {text: 'Mode', datafield: 'flgLight', width: 150, hidden: true},
-        ];
-      this.listBoxSourceEng =
-        [
-          {label: 'fixtureId', value: 'fixtureId', checked: true},
-          {label: 'Contract', value: 'contractCode', checked: false},
-          {label: 'Type of fixture', value: 'fixtureTypeCode', checked: true},
-          {label: 'Substation', value: 'substationCode', checked: true},
-          {label: 'Installer', value: 'installerCode', checked: false},
-          {label: 'Height', value: 'heightTypeCode', checked: true},
-          {label: 'Serial number', value: 'serialNumber', checked: true},
-          {label: 'Comments', value: 'comment', checked: true},
-          {label: 'Mode', value: 'flgLight', checked: false},
-        ];
-    }
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -275,143 +161,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // definde filter
-    this.sourceForFilter = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Адрес:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerFixtures',
-        type: 'jqxComboBox',
-        source: this.ownerFixtures,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Владелец:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Тип светильника:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Подстанция:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'modes',
-        type: 'jqxComboBox',
-        source: this.modes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Вкл./выкл.:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'geographs',
-        type: 'ngxSuggestionAddress',
-        source: [],
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Adres:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'ownerFixtures',
-        type: 'jqxComboBox',
-        source: this.ownerFixtures,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Owner:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Fixture type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Substation:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'modes',
-        type: 'jqxComboBox',
-        source: this.modes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Mode:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormFixture',
@@ -428,356 +177,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'contractFixtures',
-        type: 'jqxComboBox',
-        source: this.contractFixtures,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Договор:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип светильника:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Подстанция:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'installers',
-        type: 'jqxComboBox',
-        source: this.installers,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Установщик:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'heightTypes',
-        type: 'jqxComboBox',
-        source: this.heightTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип высоты:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Серийный номер:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Комментарий:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'contractFixtures',
-        type: 'jqxComboBox',
-        source: this.contractFixtures,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Contract:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Fixture type:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'substations',
-        type: 'jqxComboBox',
-        source: this.substations,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Substation:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'installers',
-        type: 'jqxComboBox',
-        source: this.installers,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Installer:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'heightTypes',
-        type: 'jqxComboBox',
-        source: this.heightTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Height:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'serialNumber',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '20',
-        placeHolder: 'Serial number:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'comment',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Comments:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
-    this.sourceForLinkForm = {
-      window: {
-        code: 'linkNodeFixtures',
-        name: 'Выбрать светильники',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'fixtureId',
-        sortcolumn: ['fixtureId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceGrFixForLinkForm = {
-      window: {
-        code: 'linkGrFixFixtures',
-        name: 'Выбрать светильники',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGrid,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-
-        valueMember: 'fixtureId',
-        sortcolumn: ['fixtureId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceForLinkFormEng = {
-      window: {
-        code: 'linkNodeFixtures',
-        name: 'Choose fixtures',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-        valueMember: 'fixtureId',
-        sortcolumn: ['fixtureId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
-    this.sourceGrFixForLinkFormEng = {
-      window: {
-        code: 'linkGrFixFixtures',
-        name: 'Choose fixtures',
-        theme: 'material',
-        autoOpen: true,
-        isModal: true,
-        modalOpacity: 0.3,
-        width: 1200,
-        maxWidth: 1200,
-        minWidth: 500,
-        height: 500,
-        maxHeight: 800,
-        minHeight: 600
-
-      },
-      grid: {
-        source: [],
-        columns: this.columnsGridEng,
-        theme: 'material',
-        width: 1186,
-        height: 485,
-        columnsresize: true,
-        sortable: true,
-        filterable: true,
-        altrows: true,
-        selectionmode: 'checkbox',
-
-        valueMember: 'fixtureId',
-        sortcolumn: ['fixtureId'],
-        sortdirection: 'desc',
-        selectId: []
-      }
-    };
 
     if (this.isMasterGrid) {
       if (+this.fixtureGroupId === 0) {
@@ -788,6 +187,614 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        if (this.isMasterGrid) {
+          this.columnsGrid =
+            [
+              {text: 'fixtureId', datafield: 'fixtureId', width: 150},
+              {text: 'Адрес', datafield: 'geographFullName', width: 400},
+              {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
+              {text: 'Владелец', datafield: 'ownerCode', width: 150},
+              {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
+              {text: 'Подстанция', datafield: 'substationCode', width: 150},
+              {text: 'Установщик', datafield: 'installerCode', width: 150, hidden: true},
+              {text: 'Высота', datafield: 'heightTypeCode', width: 150},
+              {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+              {text: 'Коментарий', datafield: 'comment', width: 150},
+              {text: 'Режим', datafield: 'flgLight', width: 150, hidden: true},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'fixtureId', value: 'fixtureId', checked: true},
+              {label: 'Адрес', value: 'geographFullName', checked: true},
+              {label: 'Договор', value: 'contractCode', checked: false},
+              {label: 'Владелец', value: 'ownerCode', checked: true},
+              {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
+              {label: 'Подстанция', value: 'substationCode', checked: true},
+              {label: 'Установщик', value: 'installerCode', checked: false},
+              {label: 'Высота', value: 'heightTypeCode', checked: true},
+              {label: 'Серийный номер', value: 'serialNumber', checked: true},
+              {label: 'Коментарий', value: 'comment', checked: true},
+              {label: 'Режим', value: 'flgLight', checked: false},
+            ];
+        } else {
+          this.columnsGrid =
+            [
+              {text: 'fixtureId', datafield: 'fixtureId', width: 150},
+              {text: 'Договор', datafield: 'contractCode', width: 150, hidden: true},
+              {text: 'Тип светильника', datafield: 'fixtureTypeCode', width: 150},
+              {text: 'Подстанция', datafield: 'substationCode', width: 150},
+              {text: 'Установщик', datafield: 'installerCode', width: 150, hidden: true},
+              {text: 'Высота', datafield: 'heightTypeCode', width: 150},
+              {text: 'Серийный номер', datafield: 'serialNumber', width: 150},
+              {text: 'Коментарий', datafield: 'comment', width: 150},
+              {text: 'Режим', datafield: 'flgLight', width: 150, hidden: true},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'fixtureId', value: 'fixtureId', checked: true},
+              {label: 'Договор', value: 'contractCode', checked: false},
+              {label: 'Тип светильника', value: 'fixtureTypeCode', checked: true},
+              {label: 'Подстанция', value: 'substationCode', checked: true},
+              {label: 'Установщик', value: 'installerCode', checked: false},
+              {label: 'Высота', value: 'heightTypeCode', checked: true},
+              {label: 'Серийный номер', value: 'serialNumber', checked: true},
+              {label: 'Коментарий', value: 'comment', checked: true},
+              {label: 'Режим', value: 'flgLight', checked: false},
+            ];
+        }
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Адрес:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerFixtures',
+            type: 'jqxComboBox',
+            source: this.ownerFixtures,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Владелец:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Тип светильника:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Подстанция:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'modes',
+            type: 'jqxComboBox',
+            source: this.modes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Вкл./выкл.:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractFixtures',
+            type: 'jqxComboBox',
+            source: this.contractFixtures,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Договор:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип светильника:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Подстанция:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'installers',
+            type: 'jqxComboBox',
+            source: this.installers,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Установщик:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'heightTypes',
+            type: 'jqxComboBox',
+            source: this.heightTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип высоты:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Серийный номер:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Комментарий:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkNodeFixtures',
+            name: 'Выбрать светильники',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'fixtureId',
+            sortcolumn: ['fixtureId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+        this.sourceGrFixForLinkForm = {
+          window: {
+            code: 'linkGrFixFixtures',
+            name: 'Выбрать светильники',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+
+            valueMember: 'fixtureId',
+            sortcolumn: ['fixtureId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      } else {
+        // definde columns
+        if (this.isMasterGrid) {
+          this.columnsGrid =
+            [
+              {text: 'fixtureId', datafield: 'fixtureId', width: 150},
+              {text: 'Address', datafield: 'geographFullName', width: 400},
+              {text: 'Contract', datafield: 'contractCode', width: 150, hidden: true},
+              {text: 'Owner', datafield: 'ownerCode', width: 150},
+              {text: 'Type of fixture', datafield: 'fixtureTypeCode', width: 150},
+              {text: 'Substation', datafield: 'substationCode', width: 150},
+              {text: 'Installer', datafield: 'installerCode', width: 150, hidden: true},
+              {text: 'Height', datafield: 'heightTypeCode', width: 150},
+              {text: 'Serial number', datafield: 'serialNumber', width: 150},
+              {text: 'Comments', datafield: 'comment', width: 150},
+              {text: 'Mode', datafield: 'flgLight', width: 150, hidden: true},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'fixtureId', value: 'fixtureId', checked: true},
+              {label: 'Address', value: 'geographFullName', checked: true},
+              {label: 'Contract', value: 'contractCode', checked: false},
+              {label: 'Owner', value: 'ownerCode', checked: true},
+              {label: 'Type of fixture', value: 'fixtureTypeCode', checked: true},
+              {label: 'Substation', value: 'substationCode', checked: true},
+              {label: 'Installer', value: 'installerCode', checked: false},
+              {label: 'Height', value: 'heightTypeCode', checked: true},
+              {label: 'Serial number', value: 'serialNumber', checked: true},
+              {label: 'Comments', value: 'comment', checked: true},
+              {label: 'Mode', value: 'flgLight', checked: false},
+            ];
+        } else {
+          this.columnsGrid =
+            [
+              {text: 'fixtureId', datafield: 'fixtureId', width: 150},
+              {text: 'Contract', datafield: 'contractCode', width: 150, hidden: true},
+              {text: 'Type of fixture', datafield: 'fixtureTypeCode', width: 150},
+              {text: 'Substation', datafield: 'substationCode', width: 150},
+              {text: 'Installer', datafield: 'installerCode', width: 150, hidden: true},
+              {text: 'Height', datafield: 'heightTypeCode', width: 150},
+              {text: 'Serial number', datafield: 'serialNumber', width: 150},
+              {text: 'Comments', datafield: 'comment', width: 150},
+              {text: 'Mode', datafield: 'flgLight', width: 150, hidden: true},
+            ];
+          this.listBoxSource =
+            [
+              {label: 'fixtureId', value: 'fixtureId', checked: true},
+              {label: 'Contract', value: 'contractCode', checked: false},
+              {label: 'Type of fixture', value: 'fixtureTypeCode', checked: true},
+              {label: 'Substation', value: 'substationCode', checked: true},
+              {label: 'Installer', value: 'installerCode', checked: false},
+              {label: 'Height', value: 'heightTypeCode', checked: true},
+              {label: 'Serial number', value: 'serialNumber', checked: true},
+              {label: 'Comments', value: 'comment', checked: true},
+              {label: 'Mode', value: 'flgLight', checked: false},
+            ];
+        }
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'geographs',
+            type: 'ngxSuggestionAddress',
+            source: [],
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Adres:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'ownerFixtures',
+            type: 'jqxComboBox',
+            source: this.ownerFixtures,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Owner:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Fixture type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Substation:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'modes',
+            type: 'jqxComboBox',
+            source: this.modes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Mode:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'contractFixtures',
+            type: 'jqxComboBox',
+            source: this.contractFixtures,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Contract:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Fixture type:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'substations',
+            type: 'jqxComboBox',
+            source: this.substations,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Substation:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'installers',
+            type: 'jqxComboBox',
+            source: this.installers,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Installer:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'heightTypes',
+            type: 'jqxComboBox',
+            source: this.heightTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Height:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'serialNumber',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '20',
+            placeHolder: 'Serial number:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'comment',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Comments:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+        this.sourceForLinkForm = {
+          window: {
+            code: 'linkNodeFixtures',
+            name: 'Choose fixtures',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+            valueMember: 'fixtureId',
+            sortcolumn: ['fixtureId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+        this.sourceGrFixForLinkForm = {
+          window: {
+            code: 'linkGrFixFixtures',
+            name: 'Choose fixtures',
+            theme: 'material',
+            autoOpen: true,
+            isModal: true,
+            modalOpacity: 0.3,
+            width: 1200,
+            maxWidth: 1200,
+            minWidth: 500,
+            height: 500,
+            maxHeight: 800,
+            minHeight: 600
+
+          },
+          grid: {
+            source: [],
+            columns: this.columnsGrid,
+            theme: 'material',
+            width: 1186,
+            height: 485,
+            columnsresize: true,
+            sortable: true,
+            filterable: true,
+            altrows: true,
+            selectionmode: 'checkbox',
+
+            valueMember: 'fixtureId',
+            sortcolumn: ['fixtureId'],
+            sortdirection: 'desc',
+            selectId: []
+          }
+        };
+      }
     }
   }
 
@@ -830,11 +837,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.getAll();
     this.selectItemId = 0;
 
-    // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -858,17 +860,23 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         },
         this.filter);
       this.oSub = this.fixtureService.getAll(params).subscribe(fixtures => {
-        this.items = this.items.concat(fixtures);
-        this.noMoreItems = fixtures.length < STEP;
-        this.loading = false;
-        this.reloading = false;
-      });
+          this.items = this.items.concat(fixtures);
+          this.noMoreItems = fixtures.length < STEP;
+          this.loading = false;
+          this.reloading = false;
+        },
+        error => {
+          console.log(error.error.message);
+        });
     } else {
       this.oSub = this.fixtureService.getFixtureInGroup(this.fixtureGroupId).subscribe(fixtures => {
-        this.items = fixtures;
-        this.loading = false;
-        this.reloading = false;
-      });
+          this.items = fixtures;
+          this.loading = false;
+          this.reloading = false;
+        },
+        error => {
+          console.log(error.error.message);
+        });
     }
   }
 
@@ -1063,12 +1071,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
       && !isUndefined(this.fixtureTypes)
       && !isUndefined(this.substations)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'ownerFixtures':
@@ -1100,7 +1103,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   saveEditFormBtn() {
     const selectObject: Fixture = new Fixture();
-
     for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
       switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'contractFixtures':
@@ -1137,7 +1139,6 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     if (this.typeEditWindow === 'ins') {
       // definde param befor ins
       selectObject.nodeId = !isUndefined(this.selectNodeId) ? +this.selectNodeId : 1;
-
       if (selectObject.nodeId === 1) {
         selectObject.e_coordinate = 0;
         selectObject.n_coordinate = 0;
@@ -1150,8 +1151,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.ins')
             + selectObject.fixtureId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -1182,8 +1185,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.upd')
             + this.jqxgridComponent.selectRow.fixtureId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -1197,13 +1202,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -1359,6 +1358,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           },
           error => {
             this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
           },
           () => {
             this.linkForm.closeDestroy();
@@ -1375,6 +1375,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
           },
           error => {
             this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
           },
           () => {
             this.linkFormGrFix.closeDestroy();
@@ -1395,11 +1396,11 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.fixtureService.getAll({nodeId: 1}).subscribe(
       response => {
         this.sourceForLinkForm.grid.source = response;
-        this.sourceForLinkFormEng.grid.source = response;
         this.linkForm.refreshGrid();
       },
       error => {
         this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
       }
     );
   }
@@ -1408,11 +1409,11 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
     this.oSubForLinkWin = this.fixtureService.getFixtureInGroup('1').subscribe(
       response => {
         this.sourceGrFixForLinkForm.grid.source = response;
-        this.sourceGrFixForLinkFormEng.grid.source = response;
         this.linkFormGrFix.refreshGrid();
       },
       error => {
         this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+        console.log(error.error.message);
       }
     );
   }
@@ -1444,8 +1445,10 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixture-masterdetails-page.fixturelist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'))
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
@@ -1461,6 +1464,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           // refresh table
@@ -1477,6 +1481,7 @@ export class FixturelistPageComponent implements OnInit, OnDestroy {
         },
         error => {
           this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
         },
         () => {
           // refresh table

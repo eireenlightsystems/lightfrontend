@@ -1,11 +1,20 @@
-<mat-tab-group #matTabGroup
-               [selectedIndex]="0"
-               (selectedTabChange)="selectedTabChange($event)"
->
-  <mat-tab label="{{'site.menu.report.report-powerfixture-page.bymonth' | translate}}">
-    <!--    <ng-template matTabContent>-->
-    <!--    </ng-template>-->
-    <app-jqxpivotgrid #jqxpivotgrid>
-    </app-jqxpivotgrid>
-  </mat-tab>
-</mat-tab-group>
+<div *ngIf="siteMap[3].children[1].disabled === false; else notRightComponent">
+  <mat-tab-group #matTabGroup
+                 [selectedIndex]="0"
+                 (selectedTabChange)="selectedTabChange($event)"
+  >
+    <mat-tab label="{{'site.menu.report.report-powerfixture-page.bymonth' | translate}}">
+      <!--    <ng-template matTabContent>-->
+      <!--    </ng-template>-->
+      <app-jqxpivotgrid #jqxpivotgrid>
+      </app-jqxpivotgrid>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<ng-template #notRightComponent>
+  <app-not-right
+    [message]="translate.instant('site.menu.report.report-powerfixture-page.report-powerfixture-page')"
+  >
+  </app-not-right>
+</ng-template>

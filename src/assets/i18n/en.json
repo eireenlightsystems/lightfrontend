@@ -281,7 +281,6 @@
           "user-page": {
             "user-page": "Users",
             "ins": "User has been added, id = ",
-            "ins-check": "You must correctly enter the username and password",
             "upd": "User has been updated, id = ",
             "upd-warning": "You should select a user to edit",
             "del": "The user has been deleted!",
@@ -292,7 +291,10 @@
             "groupIn-warning2": "You should select users to bind to the role",
             "groupOut": "Users removed from the role!",
             "groupOut-warning": "You should choose a user to decouple from the role",
-            "groupOut-question": "Unlink user from role?"
+            "groupOut-question": "Unlink user from role?",
+            "default-warning": "Username or password cannot be the default",
+            "login-warning": "Username cannot be empty",
+            "pass-warning": "Password cannot be empty"
           },
           "role-page": {
             "role-page": "Roles",
@@ -324,7 +326,7 @@
       "report": {
         "report": "Reports",
         "report-countfixture-page": {
-          "report-countfixture-page": "Report of count of fixtures",
+          "report-countfixture-page": "Count of fixtures reports",
           "byadress": "By adress",
           "byowner": "By owner",
           "bytype": "By fixture type",
@@ -334,7 +336,7 @@
           "byheight": "By height of installation"
         },
         "report-powerfixture-page": {
-          "report-powerfixture-page": "Energy Report",
+          "report-powerfixture-page": "Energy reports",
           "bymonth": "By monthes"
         },
         "expand": "Expand",

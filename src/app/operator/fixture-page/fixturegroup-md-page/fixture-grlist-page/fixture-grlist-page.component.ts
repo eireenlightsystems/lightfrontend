@@ -1,5 +1,5 @@
 // angular lib
-import {Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, ViewChild, EventEmitter, Output, SimpleChanges, OnChanges} from '@angular/core';
 import {Subscription} from 'rxjs/index';
 import {isUndefined} from 'util';
 import {TranslateService} from '@ngx-translate/core';
@@ -35,7 +35,7 @@ const STEP = 1000000000000;
   templateUrl: './fixture-grlist-page.component.html',
   styleUrls: ['./fixture-grlist-page.component.css']
 })
-export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
+export class FixtureGrlistPageComponent implements OnInit, OnChanges, OnDestroy {
 
   // variables from parent component
   @Input() siteMap: NavItem[];
@@ -48,6 +48,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   @Input() isMasterGrid: boolean;
   @Input() isButtonPanelVisible: boolean;
   @Input() settingButtonPanel: SettingButtonPanel;
+  @Input() currentLang: string;
 
   // determine the functions that need to be performed in the parent component
   @Output() onRefreshChildGrid = new EventEmitter<number>();
@@ -70,8 +71,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   noMoreItems = false;
   columnsGrid: any[];
   listBoxSource: any[];
-  columnsGridEng: any[];
-  listBoxSourceEng: any[];
   // main
   items: FixtureGroup[] = [];
   // grid
@@ -84,13 +83,11 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     fixtureGroupTypeId: '',
   };
   sourceForFilter: SourceForFilter[];
-  sourceForFilterEng: SourceForFilter[];
   isFilterFormInit = false;
   filterSelect = '';
   // edit form
   settingWinForEditForm: SettingWinForEditForm;
   sourceForEditForm: SourceForEditForm[];
-  sourceForEditFormEng: SourceForEditForm[];
   isEditFormInit = false;
   isEditFormSwitchOnInit = false;
   isEditFormSwitchOffInit = false;
@@ -109,40 +106,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // define columns for table
-    this.columnsGrid =
-      [
-        {text: 'fixtureGroupId', datafield: 'fixtureGroupId', width: 150},
-        {text: 'Название', datafield: 'fixtureGroupName', width: 200},
-        {text: 'Адрес', datafield: 'geographFullName', width: 400},
-        {text: 'Тип групы', datafield: 'fixtureGroupTypeName', width: 200},
-        {text: 'Владелец', datafield: 'ownerCode', width: 200},
-      ];
-    this.listBoxSource =
-      [
-        {label: 'fixtureGroupId', value: 'fixtureGroupId', checked: true},
-        {label: 'Название', value: 'fixtureGroupName', checked: true},
-        {label: 'Адрес', value: 'geographFullName', checked: true},
-        {label: 'Тип групы', value: 'fixtureGroupTypeName', checked: true},
-        {label: 'Владелец', value: 'ownerCode', checked: true},
-      ];
-    this.columnsGridEng =
-      [
-        {text: 'fixtureGroupId', datafield: 'fixtureGroupId', width: 150},
-        {text: 'Name', datafield: 'fixtureGroupName', width: 200},
-        {text: 'Address', datafield: 'geographFullName', width: 400},
-        {text: 'Group type', datafield: 'fixtureGroupTypeName', width: 200},
-        {text: 'Owner', datafield: 'ownerCode', width: 200},
-      ];
-    this.listBoxSourceEng =
-      [
-        {label: 'fixtureGroupId', value: 'fixtureGroupId', checked: true},
-        {label: 'Name', value: 'fixtureGroupName', checked: true},
-        {label: 'Address', value: 'geographFullName', checked: true},
-        {label: 'Group type', value: 'fixtureGroupTypeName', checked: true},
-        {label: 'Owner', value: 'ownerCode', checked: true},
-      ];
-
     // jqxgrid
     this.sourceForJqxGrid = {
       listbox: {
@@ -170,65 +133,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
         selectId: []
       }
     };
-
-    // define filter
-    this.sourceForFilter = [
-      {
-        name: 'fixtureGroupOwners',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupOwners,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Владелец:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'fixtureGroupTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Тип группы:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-    this.sourceForFilterEng = [
-      {
-        name: 'fixtureGroupOwners',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupOwners,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Owner:',
-        displayMember: 'code',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      },
-      {
-        name: 'fixtureGroupTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupTypes,
-        theme: 'material',
-        width: '380',
-        height: '45',
-        placeHolder: 'Group type:',
-        displayMember: 'name',
-        valueMember: 'id',
-        defaultValue: '',
-        selectId: ''
-      }
-    ];
-
     // definde edit form
     this.settingWinForEditForm = {
       code: 'editFormFixtureGr',
@@ -245,108 +149,212 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       coordX: 500,
       coordY: 65
     };
-    this.sourceForEditForm = [
-      {
-        nameField: 'fixtureGroupOwners',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupOwners,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Владелец:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureGroupTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Тип группы:',
-        displayMember: 'name',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureGroupName',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Наименование:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-    this.sourceForEditFormEng = [
-      {
-        nameField: 'fixtureGroupOwners',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupOwners,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Owner:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureGroupTypes',
-        type: 'jqxComboBox',
-        source: this.fixtureGroupTypes,
-        theme: 'material',
-        width: '285',
-        height: '20',
-        placeHolder: 'Group type:',
-        displayMember: 'name',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      },
-      {
-        nameField: 'fixtureGroupName',
-        type: 'jqxTextArea',
-        source: [],
-        theme: 'material',
-        width: '280',
-        height: '100',
-        placeHolder: 'Name:',
-        displayMember: 'code',
-        valueMember: 'id',
-        selectedIndex: null,
-        selectId: '',
-        selectCode: '',
-        selectName: ''
-      }
-    ];
-
-    // definde link form
 
     if (this.isMasterGrid) {
       this.refreshGrid();
     } else {
       // disabled/available buttons
       this.getAvailabilityButtons();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentLang) {
+      if (changes.currentLang.currentValue === 'ru') {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'fixtureGroupId', datafield: 'fixtureGroupId', width: 150},
+            {text: 'Название', datafield: 'fixtureGroupName', width: 200},
+            {text: 'Адрес', datafield: 'geographFullName', width: 400},
+            {text: 'Тип групы', datafield: 'fixtureGroupTypeName', width: 200},
+            {text: 'Владелец', datafield: 'ownerCode', width: 200},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'fixtureGroupId', value: 'fixtureGroupId', checked: true},
+            {label: 'Название', value: 'fixtureGroupName', checked: true},
+            {label: 'Адрес', value: 'geographFullName', checked: true},
+            {label: 'Тип групы', value: 'fixtureGroupTypeName', checked: true},
+            {label: 'Владелец', value: 'ownerCode', checked: true},
+          ];
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'fixtureGroupOwners',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupOwners,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Владелец:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'fixtureGroupTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Тип группы:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'fixtureGroupOwners',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupOwners,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Владелец:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureGroupTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Тип группы:',
+            displayMember: 'name',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureGroupName',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Наименование:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      } else {
+        // definde columns
+        this.columnsGrid =
+          [
+            {text: 'fixtureGroupId', datafield: 'fixtureGroupId', width: 150},
+            {text: 'Name', datafield: 'fixtureGroupName', width: 200},
+            {text: 'Address', datafield: 'geographFullName', width: 400},
+            {text: 'Group type', datafield: 'fixtureGroupTypeName', width: 200},
+            {text: 'Owner', datafield: 'ownerCode', width: 200},
+          ];
+        this.listBoxSource =
+          [
+            {label: 'fixtureGroupId', value: 'fixtureGroupId', checked: true},
+            {label: 'Name', value: 'fixtureGroupName', checked: true},
+            {label: 'Address', value: 'geographFullName', checked: true},
+            {label: 'Group type', value: 'fixtureGroupTypeName', checked: true},
+            {label: 'Owner', value: 'ownerCode', checked: true},
+          ];
+        // definde filter
+        this.sourceForFilter = [
+          {
+            name: 'fixtureGroupOwners',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupOwners,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Owner:',
+            displayMember: 'code',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          },
+          {
+            name: 'fixtureGroupTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupTypes,
+            theme: 'material',
+            width: '380',
+            height: '45',
+            placeHolder: 'Group type:',
+            displayMember: 'name',
+            valueMember: 'id',
+            defaultValue: '',
+            selectId: ''
+          }
+        ];
+        // definde edit form
+        this.sourceForEditForm = [
+          {
+            nameField: 'fixtureGroupOwners',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupOwners,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Owner:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureGroupTypes',
+            type: 'jqxComboBox',
+            source: this.fixtureGroupTypes,
+            theme: 'material',
+            width: '285',
+            height: '20',
+            placeHolder: 'Group type:',
+            displayMember: 'name',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          },
+          {
+            nameField: 'fixtureGroupName',
+            type: 'jqxTextArea',
+            source: [],
+            theme: 'material',
+            width: '280',
+            height: '100',
+            placeHolder: 'Name:',
+            displayMember: 'code',
+            valueMember: 'id',
+            selectedIndex: null,
+            selectId: '',
+            selectCode: '',
+            selectName: ''
+          }
+        ];
+        // definde link form
+
+      }
     }
   }
 
@@ -386,11 +394,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     this.reloading = true;
     this.selectItemId = 0;
 
-    // initialization source for filter
-    setTimeout(() => {
-      this.getSourceForFilter();
-    }, 1000);
-
     // disabled/available buttons
     this.getAvailabilityButtons();
 
@@ -414,11 +417,14 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
       this.filter);
 
     this.oSub = this.fixtureGroupService.getAll(params).subscribe(fixtureGroups => {
-      this.items = this.items.concat(fixtureGroups);
-      this.noMoreItems = fixtureGroups.length < STEP;
-      this.loading = false;
-      this.reloading = false;
-    });
+        this.items = this.items.concat(fixtureGroups);
+        this.noMoreItems = fixtureGroups.length < STEP;
+        this.loading = false;
+        this.reloading = false;
+      },
+      error => {
+        console.log(error.error.message);
+      });
   }
 
   getAvailabilityButtons() {
@@ -576,12 +582,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
     if (!isUndefined(this.fixtureGroupOwners)
       && !isUndefined(this.fixtureGroupTypes)) {
       let sourceForFilter: any[];
-      if (this.translate.currentLang === 'ru') {
-        sourceForFilter = this.sourceForFilter;
-      }
-      if (this.translate.currentLang === 'en') {
-        sourceForFilter = this.sourceForFilterEng;
-      }
+      sourceForFilter = this.sourceForFilter;
       for (let i = 0; i < sourceForFilter.length; i++) {
         switch (sourceForFilter[i].name) {
           case 'fixtureGroupOwners':
@@ -605,7 +606,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
 
   saveEditFormBtn() {
     const selectObject: FixtureGroup = new FixtureGroup();
-
     for (let i = 0; i < this.editForm.sourceForEditForm.length; i++) {
       switch (this.editForm.sourceForEditForm[i].nameField) {
         case 'fixtureGroupOwners':
@@ -626,7 +626,6 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
 
     if (this.typeEditWindow === 'ins') {
       // definde param befor ins
-
       // ins
       this.oSub = this.fixtureGroupService.ins(selectObject).subscribe(
         response => {
@@ -634,8 +633,10 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.ins')
             + selectObject.fixtureGroupId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -659,8 +660,10 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
           this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.upd')
             + this.jqxgridComponent.selectRow.fixtureGroupId, this.translate.instant('site.forms.editforms.ok'));
         },
-        error =>
-          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+        error => {
+          this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+          console.log(error.error.message);
+        },
         () => {
           // close edit window
           this.editForm.closeDestroy();
@@ -674,13 +677,7 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
 
   getSourceForEditForm() {
     let sourceForEditForm: any[];
-    if (this.translate.currentLang === 'ru') {
-      sourceForEditForm = this.sourceForEditForm;
-    }
-    if (this.translate.currentLang === 'en') {
-      sourceForEditForm = this.sourceForEditFormEng;
-    }
-
+    sourceForEditForm = this.sourceForEditForm;
     for (let i = 0; i < sourceForEditForm.length; i++) {
       if (this.typeEditWindow === 'ins') {
         sourceForEditForm[i].selectedIndex = 0;
@@ -777,8 +774,10 @@ export class FixtureGrlistPageComponent implements OnInit, OnDestroy {
             this.openSnackBar(this.translate.instant('site.menu.operator.fixture-page.fixturegroup-md-page.fixture-grlist-page.del'),
               this.translate.instant('site.forms.editforms.ok'));
           },
-          error =>
-            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok')),
+          error => {
+            this.openSnackBar(error.error.message, this.translate.instant('site.forms.editforms.ok'));
+            console.log(error.error.message);
+          },
           () => {
             this.jqxgridComponent.refresh_del([+id]);
           }
