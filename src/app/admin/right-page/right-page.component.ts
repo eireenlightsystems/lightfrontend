@@ -27,7 +27,7 @@ import {RightDemoComponent} from './roleright-page/right-demo/right-demo.compone
   templateUrl: './right-page.component.html',
   styleUrls: ['./right-page.component.css']
 })
-export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class RightPageComponent implements OnInit,  OnDestroy {
 
   // variables from master component
   @Input() theme: string;
@@ -56,10 +56,6 @@ export class RightPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.roleSiteMap = cloneDeep(this.siteMap);
-  }
-
-  ngAfterViewInit() {
-
   }
 
   ngOnDestroy() {
